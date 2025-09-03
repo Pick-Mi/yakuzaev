@@ -4,15 +4,36 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import { ArrowLeft, Phone, Chrome, MessageSquare } from 'lucide-react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 
+// Country codes data
+const countryCodes = [
+  { code: '+91', country: 'India', flag: '🇮🇳' },
+  { code: '+1', country: 'United States', flag: '🇺🇸' },
+  { code: '+44', country: 'United Kingdom', flag: '🇬🇧' },
+  { code: '+86', country: 'China', flag: '🇨🇳' },
+  { code: '+81', country: 'Japan', flag: '🇯🇵' },
+  { code: '+49', country: 'Germany', flag: '🇩🇪' },
+  { code: '+33', country: 'France', flag: '🇫🇷' },
+  { code: '+39', country: 'Italy', flag: '🇮🇹' },
+  { code: '+7', country: 'Russia', flag: '🇷🇺' },
+  { code: '+55', country: 'Brazil', flag: '🇧🇷' },
+  { code: '+61', country: 'Australia', flag: '🇦🇺' },
+  { code: '+82', country: 'South Korea', flag: '🇰🇷' },
+  { code: '+34', country: 'Spain', flag: '🇪🇸' },
+  { code: '+52', country: 'Mexico', flag: '🇲🇽' },
+  { code: '+31', country: 'Netherlands', flag: '🇳🇱' },
+];
+
 const Auth = () => {
   const [step, setStep] = useState<'phone' | 'otp'>('phone');
-  const [phone, setPhone] = useState('');
+  const [countryCode, setCountryCode] = useState('+91'); // Default to India
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [otp, setOtp] = useState('');
   const [loading, setLoading] = useState(false);
   
@@ -29,9 +50,9 @@ const Auth = () => {
     }
   }, [user, navigate, from]);
 
-  const validatePhoneNumber = (phoneNumber: string): string | null => {
+  const validatePhoneNumber = (fullPhone: string): string | null => {
     // Remove all non-digit characters except +
-    const cleaned = phoneNumber.replace(/[^\d+]/g, '');
+    const cleaned = fullPhone.replace(/[^\d+]/g, '');
     
     // Check if it starts with + and has at least 10 digits
     if (!cleaned.startsWith('+')) {
@@ -52,8 +73,9 @@ const Auth = () => {
     e.preventDefault();
     setLoading(true);
 
-    // Validate phone number format
-    const validationError = validatePhoneNumber(phone);
+    // Combine country code with phone number
+    const fullPhone = countryCode + phoneNumber;
+    const validationError = validatePhoneNumber(fullPhone);
     if (validationError) {
       toast({
         title: "Invalid Phone Number",
@@ -65,9 +87,7 @@ const Auth = () => {
     }
 
     try {
-      // Clean the phone number before sending
-      const cleanedPhone = phone.replace(/[^\d+]/g, '');
-      const { error } = await signInWithPhone(cleanedPhone);
+      const { error } = await signInWithPhone(fullPhone);
 
       if (error) {
         toast({
@@ -98,8 +118,8 @@ const Auth = () => {
     setLoading(true);
 
     try {
-      const cleanedPhone = phone.replace(/[^\d+]/g, '');
-      const { error } = await verifyOTP(cleanedPhone, otp);
+      const fullPhone = countryCode + phoneNumber;
+      const { error } = await verifyOTP(fullPhone, otp);
 
       if (error) {
         toast({
@@ -163,7 +183,7 @@ const Auth = () => {
             <CardDescription>
               {step === 'phone' 
                 ? 'Enter your mobile number to get started' 
-                : `We sent a verification code to ${phone}`
+                : `We sent a verification code to ${countryCode}${phoneNumber}`
               }
             </CardDescription>
           </CardHeader>
@@ -195,20 +215,41 @@ const Auth = () => {
                 <form onSubmit={handlePhoneSubmit} className="space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="phone">Phone Number</Label>
-                    <div className="relative">
-                      <Phone className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                      <Input
-                        id="phone"
-                        type="tel"
-                        placeholder="+1234567890"
-                        value={phone}
-                        onChange={(e) => setPhone(e.target.value)}
-                        className="pl-10"
-                        required
-                      />
+                    <div className="flex gap-2">
+                      {/* Country Code Selector */}
+                      <Select value={countryCode} onValueChange={setCountryCode}>
+                        <SelectTrigger className="w-32 bg-background/50 backdrop-blur-sm border-input/50">
+                          <SelectValue placeholder="Country" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-background/95 backdrop-blur-sm border-border/50 z-50">
+                          {countryCodes.map((country) => (
+                            <SelectItem key={country.code} value={country.code} className="hover:bg-accent/50">
+                              <div className="flex items-center gap-2">
+                                <span>{country.flag}</span>
+                                <span>{country.code}</span>
+                                <span className="text-xs text-muted-foreground">{country.country}</span>
+                              </div>
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      
+                      {/* Phone Number Input */}
+                      <div className="relative flex-1">
+                        <Phone className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                        <Input
+                          id="phone"
+                          type="tel"
+                          placeholder="1234567890"
+                          value={phoneNumber}
+                          onChange={(e) => setPhoneNumber(e.target.value)}
+                          className="pl-10"
+                          required
+                        />
+                      </div>
                     </div>
                     <p className="text-xs text-muted-foreground">
-                      Enter with country code (e.g., +1234567890)
+                      We'll send you a verification code via SMS
                     </p>
                   </div>
                   
@@ -264,6 +305,7 @@ const Auth = () => {
                     onClick={() => {
                       setStep('phone');
                       setOtp('');
+                      setPhoneNumber('');
                     }}
                   >
                     Try different number
