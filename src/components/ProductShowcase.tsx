@@ -7,19 +7,19 @@ import { useCart } from "@/hooks/useCart";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 
-// Import product images
-import headphones from "@/assets/headphones.jpg";
-import smartphone from "@/assets/smartphone.jpg";
-import laptop from "@/assets/laptop.jpg";
-import smartwatch from "@/assets/smartwatch.jpg";
+// Import EV bike images
+import evBike1 from "@/assets/ev-bike-1.jpg";
+import evBike2 from "@/assets/ev-bike-2.jpg";
+import evBike3 from "@/assets/ev-bike-3.jpg";
+import evBike4 from "@/assets/ev-bike-4.jpg";
 
 const products = [
   {
     id: 1,
-    name: "Premium Wireless Headphones",
-    price: "$199",
-    originalPrice: "$249",
-    image: headphones,
+    name: "Premium Electric Bike",
+    price: "$2,199",
+    originalPrice: "$2,549",
+    image: evBike1,
     rating: 5,
     reviewCount: 128,
     badge: "20% OFF",
@@ -27,33 +27,33 @@ const products = [
   },
   {
     id: 2,
-    name: "Latest Smartphone Pro",
-    price: "$899",
-    originalPrice: "$999",
-    image: smartphone,
+    name: "Electric Mountain Bike Pro",
+    price: "$3,299",
+    originalPrice: "$3,699",
+    image: evBike2,
     rating: 4,
     reviewCount: 89,
-    badge: "10% OFF",
+    badge: "15% OFF",
     recommended: true
   },
   {
     id: 3,
-    name: "Ultra-Thin Laptop",
-    price: "$1,299",
-    image: laptop,
+    name: "Urban Commuter E-Bike",
+    price: "$1,899",
+    image: evBike3,
     rating: 5,
     reviewCount: 45,
     recommended: false
   },
   {
     id: 4,
-    name: "Smart Fitness Watch",
-    price: "$299",
-    originalPrice: "$349",
-    image: smartwatch,
+    name: "Foldable Electric Bike",
+    price: "$1,599",
+    originalPrice: "$1,799",
+    image: evBike4,
     rating: 4,
     reviewCount: 167,
-    badge: "15% OFF",
+    badge: "12% OFF",
     recommended: true
   }
 ];

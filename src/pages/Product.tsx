@@ -8,62 +8,62 @@ import Header from "@/components/Header";
 import { ArrowLeft, Star, Heart, Shield, Truck, RotateCcw, Minus, Plus } from "lucide-react";
 import { useState } from "react";
 
-// Import product images
-import headphones from "@/assets/headphones.jpg";
-import smartphone from "@/assets/smartphone.jpg";
-import laptop from "@/assets/laptop.jpg";
-import smartwatch from "@/assets/smartwatch.jpg";
+// Import EV bike images
+import evBike1 from "@/assets/ev-bike-1.jpg";
+import evBike2 from "@/assets/ev-bike-2.jpg";
+import evBike3 from "@/assets/ev-bike-3.jpg";
+import evBike4 from "@/assets/ev-bike-4.jpg";
 
 const products = [
   {
     id: 1,
-    name: "Premium Wireless Headphones",
-    price: "$199",
-    originalPrice: "$249",
-    image: headphones,
+    name: "Premium Electric Bike",
+    price: "$2,199",
+    originalPrice: "$2,549",
+    image: evBike1,
     rating: 5,
     reviewCount: 128,
     badge: "20% OFF",
     recommended: true,
-    description: "Experience crystal-clear audio with our premium wireless headphones featuring active noise cancellation, 30-hour battery life, and premium comfort padding.",
-    features: ["Active Noise Cancellation", "30-hour Battery Life", "Premium Comfort", "Crystal Clear Audio", "Wireless Freedom"]
+    description: "Experience the future of commuting with our premium electric bike featuring powerful motor, long-range battery, and smart connectivity for the modern rider.",
+    features: ["High-Performance Motor", "80km Range Battery", "Smart Connectivity", "Premium Comfort", "Eco-Friendly Transport"]
   },
   {
     id: 2,
-    name: "Latest Smartphone Pro",
-    price: "$899",
-    originalPrice: "$999",
-    image: smartphone,
+    name: "Electric Mountain Bike Pro",
+    price: "$3,299",
+    originalPrice: "$3,699",
+    image: evBike2,
     rating: 4,
     reviewCount: 89,
-    badge: "10% OFF",
+    badge: "15% OFF",
     recommended: true,
-    description: "The latest smartphone with cutting-edge technology, professional camera system, and lightning-fast performance for all your needs.",
-    features: ["Pro Camera System", "Lightning Fast Performance", "All-Day Battery", "Premium Design", "5G Ready"]
+    description: "Conquer any terrain with our professional electric mountain bike featuring advanced suspension, all-terrain tires, and rugged durability for extreme adventures.",
+    features: ["Advanced Suspension", "All-Terrain Performance", "Rugged Durability", "Professional Grade", "Adventure Ready"]
   },
   {
     id: 3,
-    name: "Ultra-Thin Laptop",
-    price: "$1,299",
-    image: laptop,
+    name: "Urban Commuter E-Bike",
+    price: "$1,899",
+    image: evBike3,
     rating: 5,
     reviewCount: 45,
     recommended: false,
-    description: "Ultra-portable laptop with powerful performance, stunning display, and all-day battery life for professionals on the go.",
-    features: ["Ultra-Portable Design", "Powerful Performance", "Stunning Display", "All-Day Battery", "Professional Ready"]
+    description: "Perfect for city commuting with lightweight design, integrated lights, and theft protection for safe and efficient urban transportation.",
+    features: ["Lightweight Design", "Integrated Safety Lights", "Theft Protection", "City Optimized", "Efficient Commuting"]
   },
   {
     id: 4,
-    name: "Smart Fitness Watch",
-    price: "$299",
-    originalPrice: "$349",
-    image: smartwatch,
+    name: "Foldable Electric Bike",
+    price: "$1,599",
+    originalPrice: "$1,799",
+    image: evBike4,
     rating: 4,
     reviewCount: 167,
-    badge: "15% OFF",
+    badge: "12% OFF",
     recommended: true,
-    description: "Track your fitness goals with our smart watch featuring advanced health monitoring, GPS tracking, and smart notifications.",
-    features: ["Advanced Health Monitoring", "GPS Tracking", "Smart Notifications", "Water Resistant", "Long Battery Life"]
+    description: "Maximum portability with our foldable electric bike featuring compact design, easy storage, and powerful performance for urban mobility.",
+    features: ["Compact Foldable Design", "Easy Storage", "Portable Performance", "Urban Mobility", "Space Saving"]
   }
 ];
 
