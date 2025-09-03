@@ -1,34 +1,42 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useCart } from "@/hooks/useCart";
+import { useAuth } from "@/hooks/useAuth";
+import Header from "@/components/Header";
 import { ArrowLeft, Minus, Plus, Trash2, ShoppingBag } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const Cart = () => {
   const { items, updateQuantity, removeFromCart, itemCount, total } = useCart();
+  const { user } = useAuth();
 
   if (items.length === 0) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center space-y-6">
-          <ShoppingBag className="w-24 h-24 text-muted-foreground mx-auto" />
-          <div className="space-y-2">
-            <h1 className="text-2xl font-bold text-foreground">Your cart is empty</h1>
-            <p className="text-muted-foreground">Add some products to get started</p>
+      <>
+        <Header />
+        <div className="min-h-screen bg-background flex items-center justify-center">
+          <div className="text-center space-y-6">
+            <ShoppingBag className="w-24 h-24 text-muted-foreground mx-auto" />
+            <div className="space-y-2">
+              <h1 className="text-2xl font-bold text-foreground">Your cart is empty</h1>
+              <p className="text-muted-foreground">Add some products to get started</p>
+            </div>
+            <Link to="/">
+              <Button variant="ai" size="lg">
+                <ArrowLeft className="w-4 h-4" />
+                Continue Shopping
+              </Button>
+            </Link>
           </div>
-          <Link to="/">
-            <Button variant="ai" size="lg">
-              <ArrowLeft className="w-4 h-4" />
-              Continue Shopping
-            </Button>
-          </Link>
         </div>
-      </div>
+      </>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background py-8">
+    <>
+      <Header />
+      <div className="min-h-screen bg-background py-8">
       <div className="container mx-auto px-4">
         <div className="mb-8">
           <Link to="/">
@@ -134,7 +142,7 @@ const Cart = () => {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
