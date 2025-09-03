@@ -29,12 +29,45 @@ const Auth = () => {
     }
   }, [user, navigate, from]);
 
+  const validatePhoneNumber = (phoneNumber: string): string | null => {
+    // Remove all non-digit characters except +
+    const cleaned = phoneNumber.replace(/[^\d+]/g, '');
+    
+    // Check if it starts with + and has at least 10 digits
+    if (!cleaned.startsWith('+')) {
+      return 'Phone number must start with country code (e.g., +1)';
+    }
+    
+    // Extract digits only (without +)
+    const digits = cleaned.substring(1);
+    
+    if (digits.length < 10 || digits.length > 15) {
+      return 'Phone number must be between 10-15 digits';
+    }
+    
+    return null;
+  };
+
   const handlePhoneSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
+    // Validate phone number format
+    const validationError = validatePhoneNumber(phone);
+    if (validationError) {
+      toast({
+        title: "Invalid Phone Number",
+        description: validationError,
+        variant: "destructive",
+      });
+      setLoading(false);
+      return;
+    }
+
     try {
-      const { error } = await signInWithPhone(phone);
+      // Clean the phone number before sending
+      const cleanedPhone = phone.replace(/[^\d+]/g, '');
+      const { error } = await signInWithPhone(cleanedPhone);
 
       if (error) {
         toast({
@@ -65,7 +98,8 @@ const Auth = () => {
     setLoading(true);
 
     try {
-      const { error } = await verifyOTP(phone, otp);
+      const cleanedPhone = phone.replace(/[^\d+]/g, '');
+      const { error } = await verifyOTP(cleanedPhone, otp);
 
       if (error) {
         toast({
@@ -166,7 +200,7 @@ const Auth = () => {
                       <Input
                         id="phone"
                         type="tel"
-                        placeholder="+1 (555) 123-4567"
+                        placeholder="+1234567890"
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
                         className="pl-10"
@@ -174,7 +208,7 @@ const Auth = () => {
                       />
                     </div>
                     <p className="text-xs text-muted-foreground">
-                      We'll send you a verification code via SMS
+                      Enter with country code (e.g., +1234567890)
                     </p>
                   </div>
                   
