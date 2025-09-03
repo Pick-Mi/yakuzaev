@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Star, Eye, Heart } from "lucide-react";
 
 interface ProductCardProps {
+  id: number;
   name: string;
   price: string;
   originalPrice?: string;
@@ -12,9 +13,12 @@ interface ProductCardProps {
   reviewCount: number;
   badge?: string;
   recommended?: boolean;
+  onQuickView?: (product: any) => void;
+  onAddToCart?: (product: any) => void;
 }
 
 const ProductCard = ({ 
+  id,
   name, 
   price, 
   originalPrice, 
@@ -22,8 +26,12 @@ const ProductCard = ({
   rating, 
   reviewCount, 
   badge,
-  recommended = false 
+  recommended = false,
+  onQuickView,
+  onAddToCart
 }: ProductCardProps) => {
+  
+  const product = { id, name, price, originalPrice, image, rating, reviewCount, badge, recommended };
   return (
     <Card className="group relative overflow-hidden bg-gradient-card border-0 shadow-product hover:shadow-hover transition-all duration-300 hover:-translate-y-2 cursor-pointer">
       {/* AI Recommended badge */}
@@ -59,7 +67,12 @@ const ProductCard = ({
         
         {/* Quick view overlay */}
         <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center">
-          <Button variant="product" size="sm" className="transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
+          <Button 
+            variant="product" 
+            size="sm" 
+            className="transform translate-y-4 group-hover:translate-y-0 transition-all duration-300"
+            onClick={() => onQuickView?.(product)}
+          >
             <Eye className="w-4 h-4" />
             Quick View
           </Button>
@@ -98,6 +111,7 @@ const ProductCard = ({
           variant="default" 
           size="sm" 
           className="w-full opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300"
+          onClick={() => onAddToCart?.(product)}
         >
           Add to Cart
         </Button>
