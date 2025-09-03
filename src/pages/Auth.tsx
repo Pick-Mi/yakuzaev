@@ -6,18 +6,17 @@ import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
-import { ArrowLeft, Mail, Lock, User, Chrome } from 'lucide-react';
+import { ArrowLeft, Phone, Chrome, MessageSquare } from 'lucide-react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 
 const Auth = () => {
-  const [isSignUp, setIsSignUp] = useState(false);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [displayName, setDisplayName] = useState('');
+  const [step, setStep] = useState<'phone' | 'otp'>('phone');
+  const [phone, setPhone] = useState('');
+  const [otp, setOtp] = useState('');
   const [loading, setLoading] = useState(false);
   
-  const { signIn, signUp, signInWithGoogle, user } = useAuth();
+  const { signInWithPhone, verifyOTP, signInWithGoogle, user } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
   const location = useLocation();
@@ -30,32 +29,56 @@ const Auth = () => {
     }
   }, [user, navigate, from]);
 
-  const handleEmailAuth = async (e: React.FormEvent) => {
+  const handlePhoneSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      const { error } = isSignUp 
-        ? await signUp(email, password, displayName)
-        : await signIn(email, password);
+      const { error } = await signInWithPhone(phone);
 
       if (error) {
         toast({
-          title: "Authentication Error",
+          title: "Phone Authentication Error",
           description: error.message,
           variant: "destructive",
         });
       } else {
         toast({
-          title: isSignUp ? "Account Created!" : "Welcome Back!",
-          description: isSignUp 
-            ? "Please check your email to confirm your account."
-            : "You have been signed in successfully.",
+          title: "OTP Sent!",
+          description: "Please check your phone for the verification code.",
         });
-        
-        if (!isSignUp) {
-          navigate(from, { replace: true });
-        }
+        setStep('otp');
+      }
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: "An unexpected error occurred. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleOTPSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const { error } = await verifyOTP(phone, otp);
+
+      if (error) {
+        toast({
+          title: "Verification Error",
+          description: error.message,
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Welcome!",
+          description: "You have been signed in successfully.",
+        });
+        navigate(from, { replace: true });
       }
     } catch (error: any) {
       toast({
@@ -101,113 +124,119 @@ const Auth = () => {
         <Card className="shadow-xl border-0 bg-gradient-card">
           <CardHeader className="space-y-2 text-center">
             <CardTitle className="text-2xl font-bold">
-              {isSignUp ? 'Create Account' : 'Welcome Back'}
+              {step === 'phone' ? 'Sign In with Phone' : 'Enter Verification Code'}
             </CardTitle>
             <CardDescription>
-              {isSignUp 
-                ? 'Sign up to complete your purchase' 
-                : 'Sign in to continue your shopping'
+              {step === 'phone' 
+                ? 'Enter your mobile number to get started' 
+                : `We sent a verification code to ${phone}`
               }
             </CardDescription>
           </CardHeader>
           
           <CardContent className="space-y-6">
-            {/* Google Sign In */}
-            <Button
-              variant="outline"
-              className="w-full"
-              onClick={handleGoogleSignIn}
-              disabled={loading}
-            >
-              <Chrome className="w-4 h-4" />
-              Continue with Google
-            </Button>
-            
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <Separator />
-              </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-card px-2 text-muted-foreground">Or</span>
-              </div>
-            </div>
-            
-            {/* Email Sign In/Up Form */}
-            <form onSubmit={handleEmailAuth} className="space-y-4">
-              {isSignUp && (
-                <div className="space-y-2">
-                  <Label htmlFor="displayName">Display Name</Label>
-                  <div className="relative">
-                    <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      id="displayName"
-                      type="text"
-                      placeholder="Enter your name"
-                      value={displayName}
-                      onChange={(e) => setDisplayName(e.target.value)}
-                      className="pl-10"
-                      required={isSignUp}
-                    />
+            {step === 'phone' ? (
+              <>
+                {/* Google Sign In */}
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  onClick={handleGoogleSignIn}
+                  disabled={loading}
+                >
+                  <Chrome className="w-4 h-4" />
+                  Continue with Google
+                </Button>
+                
+                <div className="relative">
+                  <div className="absolute inset-0 flex items-center">
+                    <Separator />
+                  </div>
+                  <div className="relative flex justify-center text-xs uppercase">
+                    <span className="bg-card px-2 text-muted-foreground">Or</span>
                   </div>
                 </div>
-              )}
-              
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="Enter your email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="pl-10"
-                    required
-                  />
+                
+                {/* Phone Number Form */}
+                <form onSubmit={handlePhoneSubmit} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="phone">Phone Number</Label>
+                    <div className="relative">
+                      <Phone className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                      <Input
+                        id="phone"
+                        type="tel"
+                        placeholder="+1 (555) 123-4567"
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                        className="pl-10"
+                        required
+                      />
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      We'll send you a verification code via SMS
+                    </p>
+                  </div>
+                  
+                  <Button 
+                    type="submit" 
+                    variant="hero" 
+                    className="w-full" 
+                    disabled={loading}
+                  >
+                    {loading ? 'Sending...' : 'Send Verification Code'}
+                  </Button>
+                </form>
+              </>
+            ) : (
+              <>
+                {/* OTP Verification Form */}
+                <form onSubmit={handleOTPSubmit} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="otp">Verification Code</Label>
+                    <div className="relative">
+                      <MessageSquare className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                      <Input
+                        id="otp"
+                        type="text"
+                        placeholder="Enter 6-digit code"
+                        value={otp}
+                        onChange={(e) => setOtp(e.target.value)}
+                        className="pl-10 text-center text-lg tracking-widest"
+                        maxLength={6}
+                        required
+                      />
+                    </div>
+                  </div>
+                  
+                  <Button 
+                    type="submit" 
+                    variant="hero" 
+                    className="w-full" 
+                    disabled={loading || otp.length !== 6}
+                  >
+                    {loading ? 'Verifying...' : 'Verify Code'}
+                  </Button>
+                </form>
+                
+                {/* Back to phone */}
+                <div className="text-center text-sm">
+                  <span className="text-muted-foreground">
+                    Didn't receive the code?
+                  </span>{' '}
+                  <button
+                    type="button"
+                    className="text-primary hover:underline font-medium"
+                    onClick={() => {
+                      setStep('phone');
+                      setOtp('');
+                    }}
+                  >
+                    Try different number
+                  </button>
                 </div>
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    id="password"
-                    type="password"
-                    placeholder="Enter your password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="pl-10"
-                    required
-                    minLength={6}
-                  />
-                </div>
-              </div>
-              
-              <Button 
-                type="submit" 
-                variant="hero" 
-                className="w-full" 
-                disabled={loading}
-              >
-                {loading ? 'Processing...' : (isSignUp ? 'Create Account' : 'Sign In')}
-              </Button>
-            </form>
-            
-            {/* Toggle Sign In/Up */}
-            <div className="text-center text-sm">
-              <span className="text-muted-foreground">
-                {isSignUp ? 'Already have an account?' : "Don't have an account?"}
-              </span>{' '}
-              <button
-                type="button"
-                className="text-primary hover:underline font-medium"
-                onClick={() => setIsSignUp(!isSignUp)}
-              >
-                {isSignUp ? 'Sign In' : 'Sign Up'}
-              </button>
-            </div>
+              </>
+            )}
           </CardContent>
         </Card>
       </div>
