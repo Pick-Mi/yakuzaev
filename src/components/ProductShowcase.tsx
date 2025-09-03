@@ -65,9 +65,8 @@ const ProductShowcase = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  const handleQuickView = (product: any) => {
-    setSelectedProduct(product);
-    setIsDetailOpen(true);
+  const handleProductClick = (product: any) => {
+    navigate(`/product/${product.id}`);
   };
 
   const handleAddToCart = (product: any) => {
@@ -107,7 +106,7 @@ const ProductShowcase = () => {
             <ProductCard 
               key={product.id} 
               {...product} 
-              onQuickView={handleQuickView}
+              onProductClick={handleProductClick}
               onAddToCart={handleAddToCart}
             />
           ))}
@@ -121,14 +120,6 @@ const ProductShowcase = () => {
           </Button>
         </div>
 
-        {/* Product Detail Modal */}
-        <ProductDetail
-          product={selectedProduct}
-          isOpen={isDetailOpen}
-          onClose={() => setIsDetailOpen(false)}
-          onAddToCart={handleAddToCart}
-          onBuyNow={handleBuyNow}
-        />
       </div>
     </section>
   );

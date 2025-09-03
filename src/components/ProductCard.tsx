@@ -13,7 +13,7 @@ interface ProductCardProps {
   reviewCount: number;
   badge?: string;
   recommended?: boolean;
-  onQuickView?: (product: any) => void;
+  onProductClick?: (product: any) => void;
   onAddToCart?: (product: any) => void;
 }
 
@@ -27,13 +27,16 @@ const ProductCard = ({
   reviewCount, 
   badge,
   recommended = false,
-  onQuickView,
+  onProductClick,
   onAddToCart
 }: ProductCardProps) => {
   
   const product = { id, name, price, originalPrice, image, rating, reviewCount, badge, recommended };
   return (
-    <Card className="group relative overflow-hidden bg-gradient-card border-0 shadow-product hover:shadow-hover transition-all duration-300 hover:-translate-y-2 cursor-pointer">
+    <Card 
+      className="group relative overflow-hidden bg-gradient-card border-0 shadow-product hover:shadow-hover transition-all duration-300 hover:-translate-y-2 cursor-pointer"
+      onClick={() => onProductClick?.(product)}
+    >
       {/* AI Recommended badge */}
       {recommended && (
         <div className="absolute top-3 left-3 z-10">
@@ -65,16 +68,15 @@ const ProductCard = ({
           className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110"
         />
         
-        {/* Quick view overlay */}
+        {/* View Product overlay */}
         <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center">
           <Button 
             variant="product" 
             size="sm" 
             className="transform translate-y-4 group-hover:translate-y-0 transition-all duration-300"
-            onClick={() => onQuickView?.(product)}
           >
             <Eye className="w-4 h-4" />
-            Quick View
+            View Product
           </Button>
         </div>
       </div>
@@ -111,7 +113,10 @@ const ProductCard = ({
           variant="default" 
           size="sm" 
           className="w-full opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300"
-          onClick={() => onAddToCart?.(product)}
+          onClick={(e) => {
+            e.stopPropagation();
+            onAddToCart?.(product);
+          }}
         >
           Add to Cart
         </Button>
