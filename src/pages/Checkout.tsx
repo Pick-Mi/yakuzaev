@@ -74,6 +74,12 @@ const Checkout = () => {
   }, [user]);
 
   const handlePlaceOrder = async () => {
+    console.log('Place Order clicked - starting process');
+    console.log('User:', user);
+    console.log('Items:', items);
+    console.log('Payment method:', paymentMethod);
+    console.log('Shipping info:', shippingInfo);
+    
     setIsProcessing(true);
     
     try {
@@ -83,8 +89,17 @@ const Checkout = () => {
         const price = parseFloat(priceStr.replace('$', ''));
         return sum + (price * item.quantity);
       }, 0);
+      
+      console.log('Total amount calculated:', totalAmount);
 
       // Create the order in the database
+      console.log('About to insert order with data:', {
+        customer_id: user?.id,
+        total_amount: totalAmount,
+        status: 'pending',
+        payment_method: paymentMethod,
+      });
+      
       const { data: orderData, error: orderError } = await supabase
         .from('orders')
         .insert({
@@ -117,6 +132,7 @@ const Checkout = () => {
         .select()
         .single();
 
+      console.log('Order insertion result:', { orderData, orderError });
       if (orderError) throw orderError;
 
       // Create order items
