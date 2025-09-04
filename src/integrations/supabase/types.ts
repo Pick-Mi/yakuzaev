@@ -14,32 +14,378 @@ export type Database = {
   }
   public: {
     Tables: {
+      blog_posts: {
+        Row: {
+          author_id: string | null
+          category_id: string | null
+          content: string
+          created_at: string
+          excerpt: string | null
+          featured_image: string | null
+          id: string
+          published_at: string | null
+          slug: string
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          author_id?: string | null
+          category_id?: string | null
+          content: string
+          created_at?: string
+          excerpt?: string | null
+          featured_image?: string | null
+          id?: string
+          published_at?: string | null
+          slug: string
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          author_id?: string | null
+          category_id?: string | null
+          content?: string
+          created_at?: string
+          excerpt?: string | null
+          featured_image?: string | null
+          id?: string
+          published_at?: string | null
+          slug?: string
+          status?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "blog_posts_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      categories: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          slug?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      order_items: {
+        Row: {
+          created_at: string
+          id: string
+          order_id: string
+          product_id: string
+          quantity: number
+          total_price: number
+          unit_price: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          order_id: string
+          product_id: string
+          quantity?: number
+          total_price: number
+          unit_price: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          order_id?: string
+          product_id?: string
+          quantity?: number
+          total_price?: number
+          unit_price?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_items_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_items_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      orders: {
+        Row: {
+          billing_address: Json | null
+          created_at: string
+          customer_id: string | null
+          id: string
+          notes: string | null
+          shipping_address: Json | null
+          status: string
+          total_amount: number
+          updated_at: string
+        }
+        Insert: {
+          billing_address?: Json | null
+          created_at?: string
+          customer_id?: string | null
+          id?: string
+          notes?: string | null
+          shipping_address?: Json | null
+          status?: string
+          total_amount?: number
+          updated_at?: string
+        }
+        Update: {
+          billing_address?: Json | null
+          created_at?: string
+          customer_id?: string | null
+          id?: string
+          notes?: string | null
+          shipping_address?: Json | null
+          status?: string
+          total_amount?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      products: {
+        Row: {
+          category_id: string | null
+          cost_price: number | null
+          created_at: string
+          description: string | null
+          id: string
+          image_url: string | null
+          images: Json | null
+          is_active: boolean
+          name: string
+          price: number
+          sku: string | null
+          slug: string
+          stock_quantity: number
+          updated_at: string
+          variants: Json | null
+        }
+        Insert: {
+          category_id?: string | null
+          cost_price?: number | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          images?: Json | null
+          is_active?: boolean
+          name: string
+          price?: number
+          sku?: string | null
+          slug: string
+          stock_quantity?: number
+          updated_at?: string
+          variants?: Json | null
+        }
+        Update: {
+          category_id?: string | null
+          cost_price?: number | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          images?: Json | null
+          is_active?: boolean
+          name?: string
+          price?: number
+          sku?: string | null
+          slug?: string
+          stock_quantity?: number
+          updated_at?: string
+          variants?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "products_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
+          address_type: string | null
+          apartment_unit: string | null
           avatar_url: string | null
+          billing_apartment_unit: string | null
+          billing_city: string | null
+          billing_country: string | null
+          billing_postal_code: string | null
+          billing_state_province: string | null
+          billing_street_address: string | null
+          city: string | null
+          country: string | null
           created_at: string
+          customer_notes: string | null
+          customer_status: string | null
+          customer_type: string | null
+          date_of_birth: string | null
           display_name: string | null
+          email: string | null
+          email_notifications: boolean | null
+          first_name: string | null
+          gender: string | null
           id: string
+          is_verified: boolean | null
+          last_name: string | null
+          last_order_date: string | null
+          loyalty_points: number | null
+          marketing_consent: boolean | null
+          newsletter_subscription: boolean | null
           phone: string | null
+          postal_code: string | null
+          preferred_payment_method: string | null
+          sms_notifications: boolean | null
+          state_province: string | null
+          street_address: string | null
+          stripe_customer_id: string | null
+          total_orders: number | null
+          total_spent: number | null
           updated_at: string
+          user_id: string
+          username: string | null
+          verification_date: string | null
+        }
+        Insert: {
+          address_type?: string | null
+          apartment_unit?: string | null
+          avatar_url?: string | null
+          billing_apartment_unit?: string | null
+          billing_city?: string | null
+          billing_country?: string | null
+          billing_postal_code?: string | null
+          billing_state_province?: string | null
+          billing_street_address?: string | null
+          city?: string | null
+          country?: string | null
+          created_at?: string
+          customer_notes?: string | null
+          customer_status?: string | null
+          customer_type?: string | null
+          date_of_birth?: string | null
+          display_name?: string | null
+          email?: string | null
+          email_notifications?: boolean | null
+          first_name?: string | null
+          gender?: string | null
+          id?: string
+          is_verified?: boolean | null
+          last_name?: string | null
+          last_order_date?: string | null
+          loyalty_points?: number | null
+          marketing_consent?: boolean | null
+          newsletter_subscription?: boolean | null
+          phone?: string | null
+          postal_code?: string | null
+          preferred_payment_method?: string | null
+          sms_notifications?: boolean | null
+          state_province?: string | null
+          street_address?: string | null
+          stripe_customer_id?: string | null
+          total_orders?: number | null
+          total_spent?: number | null
+          updated_at?: string
+          user_id: string
+          username?: string | null
+          verification_date?: string | null
+        }
+        Update: {
+          address_type?: string | null
+          apartment_unit?: string | null
+          avatar_url?: string | null
+          billing_apartment_unit?: string | null
+          billing_city?: string | null
+          billing_country?: string | null
+          billing_postal_code?: string | null
+          billing_state_province?: string | null
+          billing_street_address?: string | null
+          city?: string | null
+          country?: string | null
+          created_at?: string
+          customer_notes?: string | null
+          customer_status?: string | null
+          customer_type?: string | null
+          date_of_birth?: string | null
+          display_name?: string | null
+          email?: string | null
+          email_notifications?: boolean | null
+          first_name?: string | null
+          gender?: string | null
+          id?: string
+          is_verified?: boolean | null
+          last_name?: string | null
+          last_order_date?: string | null
+          loyalty_points?: number | null
+          marketing_consent?: boolean | null
+          newsletter_subscription?: boolean | null
+          phone?: string | null
+          postal_code?: string | null
+          preferred_payment_method?: string | null
+          sms_notifications?: boolean | null
+          state_province?: string | null
+          street_address?: string | null
+          stripe_customer_id?: string | null
+          total_orders?: number | null
+          total_spent?: number | null
+          updated_at?: string
+          user_id?: string
+          username?: string | null
+          verification_date?: string | null
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
           user_id: string
         }
         Insert: {
-          avatar_url?: string | null
           created_at?: string
-          display_name?: string | null
           id?: string
-          phone?: string | null
-          updated_at?: string
+          role: Database["public"]["Enums"]["app_role"]
           user_id: string
         }
         Update: {
-          avatar_url?: string | null
           created_at?: string
-          display_name?: string | null
           id?: string
-          phone?: string | null
-          updated_at?: string
+          role?: Database["public"]["Enums"]["app_role"]
           user_id?: string
         }
         Relationships: []
@@ -49,10 +395,20 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      create_default_admin: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "manager" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -179,6 +535,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "manager", "user"],
+    },
   },
 } as const
