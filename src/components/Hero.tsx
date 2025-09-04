@@ -33,7 +33,7 @@ const Hero = () => {
           
           {/* CTA buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
-            <Button variant="hero" size="lg" className="group">
+            <Button variant="cta" size="lg" className="group">
               Explore Products
               <Zap className="w-4 h-4 group-hover:animate-pulse" />
             </Button>
