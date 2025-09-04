@@ -10,6 +10,7 @@ import { ArrowLeft, CreditCard, Shield, Lock } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 const Checkout = () => {
   const { items, itemCount, total, clearCart } = useCart();
@@ -39,16 +40,83 @@ const Checkout = () => {
   const handlePlaceOrder = async () => {
     setIsProcessing(true);
     
-    // Simulate order processing
-    setTimeout(() => {
+    try {
+      // Calculate total amount for database storage
+      const totalAmount = items.reduce((sum, item) => {
+        const priceStr = typeof item.price === 'string' ? item.price : String(item.price);
+        const price = parseFloat(priceStr.replace('$', ''));
+        return sum + (price * item.quantity);
+      }, 0);
+
+      // Create the order in the database
+      const { data: orderData, error: orderError } = await supabase
+        .from('orders')
+        .insert({
+          customer_id: user?.id,
+          total_amount: totalAmount,
+          status: 'pending',
+          shipping_address: {
+            fullName: shippingInfo.fullName,
+            email: shippingInfo.email,
+            phone: shippingInfo.phone,
+            address: shippingInfo.address,
+            city: shippingInfo.city,
+            state: shippingInfo.state,
+            zipCode: shippingInfo.zipCode,
+            country: shippingInfo.country
+          },
+          billing_address: {
+            cardName: paymentInfo.cardName,
+            cardNumber: paymentInfo.cardNumber.slice(-4) // Only store last 4 digits
+          }
+        })
+        .select()
+        .single();
+
+      if (orderError) throw orderError;
+
+      // Create order items
+      const orderItems = items.map(item => {
+        const priceStr = typeof item.price === 'string' ? item.price : String(item.price);
+        const unitPrice = parseFloat(priceStr.replace('$', ''));
+        return {
+          order_id: orderData.id,
+          product_id: String(item.id),
+          quantity: item.quantity,
+          unit_price: unitPrice,
+          total_price: unitPrice * item.quantity
+        };
+      });
+
+      const { error: itemsError } = await supabase
+        .from('order_items')
+        .insert(orderItems);
+
+      if (itemsError) throw itemsError;
+
+      // Update order status to completed
+      await supabase
+        .from('orders')
+        .update({ status: 'completed' })
+        .eq('id', orderData.id);
+
       clearCart();
       setIsProcessing(false);
       toast({
         title: "Order placed successfully!",
-        description: "You will receive a confirmation email shortly.",
+        description: `Your order #${orderData.id.slice(0, 8)} has been confirmed.`,
       });
       navigate("/");
-    }, 2000);
+      
+    } catch (error) {
+      console.error('Error placing order:', error);
+      setIsProcessing(false);
+      toast({
+        title: "Error placing order",
+        description: "Please try again later.",
+        variant: "destructive"
+      });
+    }
   };
 
   if (items.length === 0) {
