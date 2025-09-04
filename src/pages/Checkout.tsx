@@ -107,6 +107,77 @@ const Checkout = () => {
           total_amount: totalAmount,
           status: 'pending',
           payment_method: paymentMethod,
+          payment_status: 'pending',
+          order_source: 'web',
+          order_type: 'regular',
+          
+          // Complete order items data with product details
+          order_items_data: items.map(item => ({
+            id: item.id,
+            name: item.name,
+            price: typeof item.price === 'string' ? item.price : String(item.price),
+            quantity: item.quantity,
+            image: item.image,
+            selectedVariant: item.selectedVariant || null,
+            totalPrice: (typeof item.price === 'string' 
+              ? parseFloat(item.price.replace('$', '')) 
+              : item.price) * item.quantity
+          })),
+          
+          // Complete customer details
+          customer_details: {
+            userId: user?.id,
+            name: shippingInfo.fullName,
+            email: shippingInfo.email,
+            phone: shippingInfo.phone,
+            isVerified: userProfile?.is_verified || false,
+            customerType: userProfile?.customer_type || 'individual',
+            loyaltyPoints: userProfile?.loyalty_points || 0
+          },
+          
+          // Complete delivery address
+          delivery_address: {
+            fullName: shippingInfo.fullName,
+            email: shippingInfo.email,
+            phone: shippingInfo.phone,
+            streetAddress: shippingInfo.address,
+            city: shippingInfo.city,
+            state: shippingInfo.state,
+            zipCode: shippingInfo.zipCode,
+            country: shippingInfo.country,
+            addressType: 'delivery'
+          },
+          
+          // Payment details based on payment method
+          payment_details: paymentMethod === 'card' ? {
+            method: 'card',
+            cardName: paymentInfo.cardName,
+            cardLast4: paymentInfo.cardNumber.slice(-4),
+            expiryDate: paymentInfo.expiryDate
+          } : paymentMethod === 'bank' ? {
+            method: 'netbanking',
+            bankName: paymentInfo.bankName,
+            accountLast4: paymentInfo.accountNumber.slice(-4)
+          } : paymentMethod === 'upi' ? {
+            method: 'upi',
+            upiId: paymentInfo.upiId
+          } : {
+            method: 'cod',
+            description: 'Cash on Delivery'
+          },
+          
+          // Order summary
+          order_summary: {
+            itemCount: items.length,
+            totalItems: items.reduce((sum, item) => sum + item.quantity, 0),
+            subtotal: totalAmount,
+            discountAmount: 0,
+            taxAmount: 0,
+            shippingCharge: 0,
+            finalTotal: totalAmount
+          },
+          
+          // Legacy fields for backward compatibility
           shipping_address: {
             fullName: shippingInfo.fullName,
             email: shippingInfo.email,
@@ -127,7 +198,13 @@ const Checkout = () => {
             upiId: paymentInfo.upiId
           } : {
             method: 'Cash on Delivery'
-          }
+          },
+          
+          // Additional fields
+          discount_amount: 0,
+          tax_amount: 0,
+          shipping_charge: 0,
+          estimated_delivery_date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString() // 7 days from now
         })
         .select()
         .single();

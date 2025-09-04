@@ -143,36 +143,75 @@ export type Database = {
         Row: {
           billing_address: Json | null
           created_at: string
+          customer_details: Json | null
           customer_id: string | null
+          delivery_address: Json | null
+          delivery_instructions: string | null
+          discount_amount: number | null
+          estimated_delivery_date: string | null
           id: string
           notes: string | null
+          order_items_data: Json | null
+          order_source: string | null
+          order_summary: Json | null
+          order_type: string | null
+          payment_details: Json | null
           payment_method: string | null
+          payment_status: string | null
           shipping_address: Json | null
+          shipping_charge: number | null
           status: string
+          tax_amount: number | null
           total_amount: number
           updated_at: string
         }
         Insert: {
           billing_address?: Json | null
           created_at?: string
+          customer_details?: Json | null
           customer_id?: string | null
+          delivery_address?: Json | null
+          delivery_instructions?: string | null
+          discount_amount?: number | null
+          estimated_delivery_date?: string | null
           id?: string
           notes?: string | null
+          order_items_data?: Json | null
+          order_source?: string | null
+          order_summary?: Json | null
+          order_type?: string | null
+          payment_details?: Json | null
           payment_method?: string | null
+          payment_status?: string | null
           shipping_address?: Json | null
+          shipping_charge?: number | null
           status?: string
+          tax_amount?: number | null
           total_amount?: number
           updated_at?: string
         }
         Update: {
           billing_address?: Json | null
           created_at?: string
+          customer_details?: Json | null
           customer_id?: string | null
+          delivery_address?: Json | null
+          delivery_instructions?: string | null
+          discount_amount?: number | null
+          estimated_delivery_date?: string | null
           id?: string
           notes?: string | null
+          order_items_data?: Json | null
+          order_source?: string | null
+          order_summary?: Json | null
+          order_type?: string | null
+          payment_details?: Json | null
           payment_method?: string | null
+          payment_status?: string | null
           shipping_address?: Json | null
+          shipping_charge?: number | null
           status?: string
+          tax_amount?: number | null
           total_amount?: number
           updated_at?: string
         }
