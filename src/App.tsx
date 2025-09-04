@@ -10,6 +10,7 @@ import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Cart from "./pages/Cart";
 import Product from "./pages/Product";
+import Profile from "./pages/Profile";
 import Checkout from "./pages/Checkout";
 import NotFound from "./pages/NotFound";
 
@@ -27,6 +28,11 @@ const App = () => (
               <Route path="/" element={<Index />} />
               <Route path="/auth" element={<Auth />} />
               <Route path="/product/:id" element={<Product />} />
+              <Route path="/profile" element={
+                <ProtectedRoute>
+                  <Profile />
+                </ProtectedRoute>
+              } />
               <Route path="/cart" element={
                 <ProtectedRoute>
                   <Cart />

@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { useCart } from "@/hooks/useCart";
-import { ShoppingCart, User, LogOut } from "lucide-react";
+import { ShoppingCart, User, LogOut, Settings, CreditCard, MapPin } from "lucide-react";
 import { Link } from "react-router-dom";
 import {
   DropdownMenu,
@@ -48,17 +48,36 @@ const Header = () => {
                   <User className="w-5 h-5" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56">
-                <div className="flex items-center justify-start gap-2 p-2">
-                  <div className="flex flex-col space-y-1 leading-none">
-                    <p className="text-sm font-medium">{user.email}</p>
-                  </div>
-                </div>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={handleSignOut}>
-                  <LogOut className="w-4 h-4 mr-2" />
-                  Sign Out
-                </DropdownMenuItem>
+               <DropdownMenuContent align="end" className="w-56">
+                 <div className="flex items-center justify-start gap-2 p-2">
+                   <div className="flex flex-col space-y-1 leading-none">
+                     <p className="text-sm font-medium">{user.email}</p>
+                   </div>
+                 </div>
+                 <DropdownMenuSeparator />
+                 <Link to="/profile">
+                   <DropdownMenuItem>
+                     <User className="w-4 h-4 mr-2" />
+                     Profile Details
+                   </DropdownMenuItem>
+                 </Link>
+                 <Link to="/profile?tab=address">
+                   <DropdownMenuItem>
+                     <MapPin className="w-4 h-4 mr-2" />
+                     Address Details
+                   </DropdownMenuItem>
+                 </Link>
+                 <Link to="/profile?tab=payment">
+                   <DropdownMenuItem>
+                     <CreditCard className="w-4 h-4 mr-2" />
+                     Payment Details
+                   </DropdownMenuItem>
+                 </Link>
+                 <DropdownMenuSeparator />
+                 <DropdownMenuItem onClick={handleSignOut}>
+                   <LogOut className="w-4 h-4 mr-2" />
+                   Sign Out
+                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
