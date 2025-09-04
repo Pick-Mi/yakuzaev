@@ -6,66 +6,8 @@ import { useCart } from "@/hooks/useCart";
 import { useToast } from "@/hooks/use-toast";
 import Header from "@/components/Header";
 import { ArrowLeft, Star, Heart, Shield, Truck, RotateCcw, Minus, Plus } from "lucide-react";
-import { useState } from "react";
-
-// Import EV bike images
-import evBike1 from "@/assets/ev-bike-1.jpg";
-import evBike2 from "@/assets/ev-bike-2.jpg";
-import evBike3 from "@/assets/ev-bike-3.jpg";
-import evBike4 from "@/assets/ev-bike-4.jpg";
-
-const products = [
-  {
-    id: 1,
-    name: "Premium Electric Bike",
-    price: "$2,199",
-    originalPrice: "$2,549",
-    image: evBike1,
-    rating: 5,
-    reviewCount: 128,
-    badge: "20% OFF",
-    recommended: true,
-    description: "Experience the future of commuting with our premium electric bike featuring powerful motor, long-range battery, and smart connectivity for the modern rider.",
-    features: ["High-Performance Motor", "80km Range Battery", "Smart Connectivity", "Premium Comfort", "Eco-Friendly Transport"]
-  },
-  {
-    id: 2,
-    name: "Electric Mountain Bike Pro",
-    price: "$3,299",
-    originalPrice: "$3,699",
-    image: evBike2,
-    rating: 4,
-    reviewCount: 89,
-    badge: "15% OFF",
-    recommended: true,
-    description: "Conquer any terrain with our professional electric mountain bike featuring advanced suspension, all-terrain tires, and rugged durability for extreme adventures.",
-    features: ["Advanced Suspension", "All-Terrain Performance", "Rugged Durability", "Professional Grade", "Adventure Ready"]
-  },
-  {
-    id: 3,
-    name: "Urban Commuter E-Bike",
-    price: "$1,899",
-    image: evBike3,
-    rating: 5,
-    reviewCount: 45,
-    recommended: false,
-    description: "Perfect for city commuting with lightweight design, integrated lights, and theft protection for safe and efficient urban transportation.",
-    features: ["Lightweight Design", "Integrated Safety Lights", "Theft Protection", "City Optimized", "Efficient Commuting"]
-  },
-  {
-    id: 4,
-    name: "Foldable Electric Bike",
-    price: "$1,599",
-    originalPrice: "$1,799",
-    image: evBike4,
-    rating: 4,
-    reviewCount: 167,
-    badge: "12% OFF",
-    recommended: true,
-    description: "Maximum portability with our foldable electric bike featuring compact design, easy storage, and powerful performance for urban mobility.",
-    features: ["Compact Foldable Design", "Easy Storage", "Portable Performance", "Urban Mobility", "Space Saving"]
-  }
-];
+import { useState, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 const Product = () => {
   const { id } = useParams();
@@ -73,36 +15,98 @@ const Product = () => {
   const { addToCart } = useCart();
   const { toast } = useToast();
   const [quantity, setQuantity] = useState(1);
+  const [product, setProduct] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
-  const product = products.find(p => p.id === parseInt(id || "0"));
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        // Using any type to bypass the current type limitations
+        const response = await (supabase as any)
+          .from('products')
+          .select('id, name, price, image_url, images, description, variants, is_active')
+          .eq('id', id)
+          .eq('is_active', true)
+          .single();
 
-  if (!product) {
+        if (response.error) throw response.error;
+
+        if (response.data) {
+          const fetchedProduct = {
+            id: response.data.id,
+            name: response.data.name,
+            price: `$${response.data.price}`,
+            image: response.data.images && response.data.images.length > 0 ? response.data.images[0] : response.data.image_url,
+            rating: 5, // Default rating
+            reviewCount: Math.floor(Math.random() * 200) + 10,
+            recommended: true,
+            description: response.data.description || "High-quality electric bike for modern transportation.",
+            features: ["Premium Quality", "Long Range Battery", "Smart Features", "Eco-Friendly", "Comfortable Ride"],
+            variants: response.data.variants || []
+          };
+          setProduct(fetchedProduct);
+        }
+      } catch (error) {
+        console.error('Error fetching product:', error);
+        toast({
+          title: "Error",
+          description: "Failed to load product",
+          variant: "destructive"
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (id) {
+      fetchProduct();
+    }
+  }, [id, toast]);
+
+  const handleAddToCart = () => {
+    if (product) {
+      addToCart({ ...product, quantity });
+      toast({
+        title: "Added to cart",
+        description: `${product.name} has been added to your cart.`,
+      });
+    }
+  };
+
+  const handleBuyNow = () => {
+    if (product) {
+      addToCart({ ...product, quantity });
+      navigate('/checkout');
+    }
+  };
+
+  if (loading) {
     return (
       <div className="min-h-screen bg-background">
         <Header />
-        <div className="container mx-auto px-4 py-20 text-center">
-          <h1 className="text-2xl font-bold text-foreground mb-4">Product not found</h1>
-          <Button onClick={() => navigate("/")} variant="ai">
-            <ArrowLeft className="w-4 h-4" />
-            Back to Home
-          </Button>
+        <div className="container mx-auto px-4 py-8">
+          <p className="text-center text-muted-foreground">Loading product...</p>
         </div>
       </div>
     );
   }
 
-  const handleAddToCart = () => {
-    addToCart({ ...product, quantity });
-    toast({
-      title: "Added to cart",
-      description: `${product.name} has been added to your cart.`,
-    });
-  };
-
-  const handleBuyNow = () => {
-    addToCart({ ...product, quantity });
-    navigate('/checkout');
-  };
+  if (!product) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <div className="container mx-auto px-4 py-8">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold mb-4">Product not found</h1>
+            <Button onClick={() => navigate('/')} variant="outline">
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Home
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -176,7 +180,7 @@ const Product = () => {
             <div>
               <h3 className="text-lg font-semibold text-foreground mb-3">Key Features</h3>
               <ul className="space-y-2">
-                {product.features.map((feature, index) => (
+                {product.features.map((feature: string, index: number) => (
                   <li key={index} className="flex items-center gap-2">
                     <div className="w-2 h-2 bg-primary rounded-full" />
                     <span className="text-muted-foreground">{feature}</span>
@@ -210,7 +214,7 @@ const Product = () => {
             {/* Action Buttons */}
             <div className="space-y-4">
               <Button 
-                variant="hero" 
+                variant="cta" 
                 size="lg" 
                 className="w-full"
                 onClick={handleBuyNow}
