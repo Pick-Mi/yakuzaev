@@ -17,6 +17,7 @@ const Product = () => {
   const [quantity, setQuantity] = useState(1);
   const [product, setProduct] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [selectedVariant, setSelectedVariant] = useState<any>(null);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -32,19 +33,44 @@ const Product = () => {
         if (response.error) throw response.error;
 
         if (response.data) {
+          // Parse images if it's a JSON string
+          let parsedImages = [];
+          try {
+            parsedImages = typeof response.data.images === 'string' 
+              ? JSON.parse(response.data.images) 
+              : response.data.images || [];
+          } catch (e) {
+            parsedImages = [];
+          }
+
+          // Parse variants if it's a JSON string
+          let parsedVariants = [];
+          try {
+            parsedVariants = typeof response.data.variants === 'string' 
+              ? JSON.parse(response.data.variants) 
+              : response.data.variants || [];
+          } catch (e) {
+            parsedVariants = [];
+          }
+
           const fetchedProduct = {
             id: response.data.id,
             name: response.data.name,
-            price: `$${response.data.price}`,
-            image: response.data.images && response.data.images.length > 0 ? response.data.images[0] : response.data.image_url,
+            price: response.data.price,
+            images: parsedImages,
+            image: parsedImages.length > 0 ? parsedImages[0] : response.data.image_url,
             rating: 5, // Default rating
             reviewCount: Math.floor(Math.random() * 200) + 10,
             recommended: true,
-            description: response.data.description || "High-quality electric bike for modern transportation.",
-            features: ["Premium Quality", "Long Range Battery", "Smart Features", "Eco-Friendly", "Comfortable Ride"],
-            variants: response.data.variants || []
+            description: response.data.description || "High-quality product for your needs.",
+            variants: parsedVariants
           };
           setProduct(fetchedProduct);
+          
+          // Set first variant as default selected
+          if (parsedVariants.length > 0) {
+            setSelectedVariant(parsedVariants[0]);
+          }
         }
       } catch (error) {
         console.error('Error fetching product:', error);
@@ -65,19 +91,35 @@ const Product = () => {
 
   const handleAddToCart = () => {
     if (product) {
-      addToCart({ ...product, quantity });
+      const productToAdd = {
+        ...product,
+        quantity,
+        selectedVariant: selectedVariant,
+        price: selectedVariant ? selectedVariant.price : product.price
+      };
+      addToCart(productToAdd);
       toast({
         title: "Added to cart",
-        description: `${product.name} has been added to your cart.`,
+        description: `${product.name}${selectedVariant ? ` (${selectedVariant.name})` : ''} has been added to your cart.`,
       });
     }
   };
 
   const handleBuyNow = () => {
     if (product) {
-      addToCart({ ...product, quantity });
+      const productToAdd = {
+        ...product,
+        quantity,
+        selectedVariant: selectedVariant,
+        price: selectedVariant ? selectedVariant.price : product.price
+      };
+      addToCart(productToAdd);
       navigate('/checkout');
     }
+  };
+
+  const getCurrentPrice = () => {
+    return selectedVariant ? selectedVariant.price : product?.price || 0;
   };
 
   if (loading) {
@@ -124,22 +166,35 @@ const Product = () => {
         </Button>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          {/* Product Image */}
-          <div className="relative">
-            <img 
-              src={product.image} 
-              alt={product.name}
-              className="w-full aspect-square object-cover rounded-2xl"
-            />
-            {product.recommended && (
-              <Badge className="absolute top-4 left-4 bg-primary text-white">
-                AI Recommended
-              </Badge>
-            )}
-            {product.badge && (
-              <Badge variant="destructive" className="absolute top-4 right-4">
-                {product.badge}
-              </Badge>
+          {/* Product Images */}
+          <div className="space-y-4">
+            {/* Main Image */}
+            <div className="relative">
+              <img 
+                src={product.image} 
+                alt={product.name}
+                className="w-full aspect-square object-cover rounded-2xl"
+              />
+              {product.recommended && (
+                <Badge className="absolute top-4 left-4 bg-primary text-white">
+                  AI Recommended
+                </Badge>
+              )}
+            </div>
+            
+            {/* Additional Images */}
+            {product.images && product.images.length > 1 && (
+              <div className="grid grid-cols-4 gap-2">
+                {product.images.map((image: string, index: number) => (
+                  <img
+                    key={index}
+                    src={image}
+                    alt={`${product.name} ${index + 1}`}
+                    className="aspect-square object-cover rounded-lg cursor-pointer hover:opacity-80 transition-opacity"
+                    onClick={() => setProduct({...product, image})}
+                  />
+                ))}
+              </div>
             )}
           </div>
 
@@ -163,31 +218,71 @@ const Product = () => {
 
               {/* Price */}
               <div className="flex items-center gap-3 mb-6">
-                <span className="text-3xl font-bold text-primary">{product.price}</span>
-                {product.originalPrice && (
-                  <span className="text-xl text-muted-foreground line-through">{product.originalPrice}</span>
+                <span className="text-3xl font-bold text-primary">${getCurrentPrice()}</span>
+                {selectedVariant && selectedVariant.price !== product.price && (
+                  <span className="text-xl text-muted-foreground line-through">${product.price}</span>
                 )}
               </div>
             </div>
 
             {/* Description */}
-            <div>
-              <h3 className="text-lg font-semibold text-foreground mb-3">Description</h3>
-              <p className="text-muted-foreground leading-relaxed">{product.description}</p>
-            </div>
+            {product.description && (
+              <div>
+                <h3 className="text-lg font-semibold text-foreground mb-3">Description</h3>
+                <p className="text-muted-foreground leading-relaxed">{product.description}</p>
+              </div>
+            )}
 
-            {/* Features */}
-            <div>
-              <h3 className="text-lg font-semibold text-foreground mb-3">Key Features</h3>
-              <ul className="space-y-2">
-                {product.features.map((feature: string, index: number) => (
-                  <li key={index} className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-primary rounded-full" />
-                    <span className="text-muted-foreground">{feature}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            {/* Variants */}
+            {product.variants && product.variants.length > 0 && (
+              <div>
+                <h3 className="text-lg font-semibold text-foreground mb-3">Available Variants</h3>
+                <div className="space-y-3">
+                  {product.variants.map((variant: any, index: number) => (
+                    <Card 
+                      key={variant.id || index} 
+                      className={`cursor-pointer transition-all ${
+                        selectedVariant?.id === variant.id 
+                          ? 'border-primary bg-primary/5' 
+                          : 'border-border hover:border-primary/50'
+                      }`}
+                      onClick={() => setSelectedVariant(variant)}
+                    >
+                      <CardContent className="p-4">
+                        <div className="flex justify-between items-start">
+                          <div className="flex-1">
+                            <h4 className="font-medium text-foreground mb-1">{variant.name}</h4>
+                            {variant.batteryDetails && (
+                              <p className="text-sm text-muted-foreground mb-2">
+                                Battery: {variant.batteryDetails}
+                              </p>
+                            )}
+                            {variant.colors && variant.colors.length > 0 && (
+                              <div className="flex items-center gap-2">
+                                <span className="text-sm text-muted-foreground">Colors:</span>
+                                <div className="flex gap-1">
+                                  {variant.colors.map((color: string, colorIndex: number) => (
+                                    <span 
+                                      key={colorIndex}
+                                      className="px-2 py-1 text-xs bg-accent rounded-md text-accent-foreground"
+                                    >
+                                      {color}
+                                    </span>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                          <div className="text-right">
+                            <span className="text-lg font-bold text-primary">${variant.price}</span>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Quantity Selector */}
             <div>
