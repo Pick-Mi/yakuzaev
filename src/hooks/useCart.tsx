@@ -1,18 +1,19 @@
 import { useState, useContext, createContext, ReactNode } from 'react';
 
 interface CartItem {
-  id: number;
+  id: number | string;
   name: string;
-  price: string;
+  price: string | number;
   image: string;
   quantity: number;
+  selectedVariant?: any;
 }
 
 interface CartContextType {
   items: CartItem[];
   addToCart: (item: Omit<CartItem, 'quantity'> & { quantity?: number }) => void;
-  removeFromCart: (id: number) => void;
-  updateQuantity: (id: number, quantity: number) => void;
+  removeFromCart: (id: number | string) => void;
+  updateQuantity: (id: number | string, quantity: number) => void;
   clearCart: () => void;
   itemCount: number;
   total: string;
@@ -37,11 +38,11 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
-  const removeFromCart = (id: number) => {
+  const removeFromCart = (id: number | string) => {
     setItems(current => current.filter(item => item.id !== id));
   };
 
-  const updateQuantity = (id: number, quantity: number) => {
+  const updateQuantity = (id: number | string, quantity: number) => {
     if (quantity <= 0) {
       removeFromCart(id);
       return;
@@ -60,7 +61,13 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   const itemCount = items.reduce((total, item) => total + item.quantity, 0);
 
   const total = items.reduce((sum, item) => {
-    const price = parseFloat(item.price.replace('$', '').replace(',', ''));
+    // Handle both string prices (like "$23") and number prices (like 23)
+    let price: number;
+    if (typeof item.price === 'string') {
+      price = parseFloat(item.price.replace('$', '').replace(',', ''));
+    } else {
+      price = typeof item.price === 'number' ? item.price : 0;
+    }
     return sum + (price * item.quantity);
   }, 0).toFixed(2);
 

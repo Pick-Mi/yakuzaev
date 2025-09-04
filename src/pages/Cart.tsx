@@ -66,33 +66,35 @@ const Cart = () => {
                       <div className="flex-1 space-y-3">
                         <div className="flex justify-between items-start">
                           <h3 className="font-semibold text-foreground">{item.name}</h3>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => removeFromCart(item.id)}
-                            className="text-destructive hover:text-destructive"
-                          >
+                           <Button
+                             variant="ghost"
+                             size="icon"
+                             onClick={() => removeFromCart(item.id)}
+                             className="text-destructive hover:text-destructive"
+                           >
                             <Trash2 className="w-4 h-4" />
                           </Button>
                         </div>
                         
-                        <div className="flex justify-between items-center">
-                          <span className="text-lg font-bold text-primary">{item.price}</span>
+                         <div className="flex justify-between items-center">
+                           <span className="text-lg font-bold text-primary">
+                             ${typeof item.price === 'number' ? item.price : item.price.replace('$', '')}
+                           </span>
                           
-                          <div className="flex items-center gap-2">
-                            <Button
-                              variant="outline"
-                              size="icon"
-                              onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                            >
+                           <div className="flex items-center gap-2">
+                             <Button
+                               variant="outline"
+                               size="icon"
+                               onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                             >
                               <Minus className="w-3 h-3" />
                             </Button>
                             <span className="w-8 text-center font-medium">{item.quantity}</span>
-                            <Button
-                              variant="outline"
-                              size="icon"
-                              onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                            >
+                             <Button
+                               variant="outline"
+                               size="icon"
+                               onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                             >
                               <Plus className="w-3 h-3" />
                             </Button>
                           </div>
