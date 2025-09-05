@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { useCart } from "@/hooks/useCart";
-import { ShoppingCart, User, LogOut, Settings, CreditCard, MapPin } from "lucide-react";
+import { ShoppingCart, User, LogOut, Settings, CreditCard, MapPin, Package } from "lucide-react";
 import { Link } from "react-router-dom";
 import {
   DropdownMenu,
@@ -67,13 +67,19 @@ const Header = () => {
                      Address Details
                    </DropdownMenuItem>
                  </Link>
-                 <Link to="/profile?tab=payment">
-                   <DropdownMenuItem>
-                     <CreditCard className="w-4 h-4 mr-2" />
-                     Payment Details
-                   </DropdownMenuItem>
-                 </Link>
-                 <DropdownMenuSeparator />
+                  <Link to="/profile?tab=payment">
+                    <DropdownMenuItem>
+                      <CreditCard className="w-4 h-4 mr-2" />
+                      Payment Details
+                    </DropdownMenuItem>
+                  </Link>
+                  <Link to="/orders">
+                    <DropdownMenuItem>
+                      <Package className="w-4 h-4 mr-2" />
+                      My Orders
+                    </DropdownMenuItem>
+                  </Link>
+                  <DropdownMenuSeparator />
                  <DropdownMenuItem onClick={handleSignOut}>
                    <LogOut className="w-4 h-4 mr-2" />
                    Sign Out
