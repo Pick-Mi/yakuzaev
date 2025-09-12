@@ -94,6 +94,21 @@ export type Database = {
         }
         Relationships: []
       }
+      kv_store_eecafcd0: {
+        Row: {
+          key: string
+          value: Json
+        }
+        Insert: {
+          key: string
+          value: Json
+        }
+        Update: {
+          key?: string
+          value?: Json
+        }
+        Relationships: []
+      }
       order_items: {
         Row: {
           created_at: string
