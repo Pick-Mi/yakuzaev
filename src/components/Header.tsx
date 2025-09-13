@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
+import { useProfile } from "@/hooks/useProfile";
 import { useCart } from "@/hooks/useCart";
 import { ShoppingCart, User, LogOut, Settings, CreditCard, MapPin, Package } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -14,6 +15,7 @@ import { Badge } from "@/components/ui/badge";
 
 const Header = () => {
   const { user, signOut } = useAuth();
+  const { displayName } = useProfile();
   const { itemCount } = useCart();
 
   const handleSignOut = async () => {
@@ -44,8 +46,9 @@ const Header = () => {
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon">
+                <Button variant="ghost" className="flex items-center gap-2 h-auto px-3 py-2">
                   <User className="w-5 h-5" />
+                  <span className="text-sm font-medium">{displayName}</span>
                 </Button>
               </DropdownMenuTrigger>
                <DropdownMenuContent align="end" className="w-56">
