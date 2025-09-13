@@ -31,8 +31,8 @@ const countryCodes = [
 ];
 
 const Auth = () => {
-  const [authMethod, setAuthMethod] = useState<'email' | 'phone'>('email');
-  const [step, setStep] = useState<'phone' | 'otp' | 'email'>('email');
+  const [authMethod, setAuthMethod] = useState<'email' | 'phone'>('phone');
+  const [step, setStep] = useState<'phone' | 'otp' | 'email'>('phone');
   const [isSignUp, setIsSignUp] = useState(false);
   const [countryCode, setCountryCode] = useState('+91');
   const [phoneNumber, setPhoneNumber] = useState('');
