@@ -18,10 +18,13 @@ export const useProfile = () => {
 
   useEffect(() => {
     if (!user) {
+      console.log('useProfile: No user found, skipping profile fetch');
       setProfile(null);
       setLoading(false);
       return;
     }
+
+    console.log('useProfile: Fetching profile for user:', user.id);
 
     const fetchProfile = async () => {
       try {
@@ -29,16 +32,37 @@ export const useProfile = () => {
           .from('profiles')
           .select('id, display_name, first_name, last_name, email, username')
           .eq('user_id', user.id)
-          .single();
+          .maybeSingle(); // Use maybeSingle to handle case where profile doesn't exist
 
         if (error) {
           console.error('Error fetching profile:', error);
           setProfile(null);
-        } else {
+        } else if (data) {
+          console.log('Profile data fetched successfully:', data);
           setProfile(data);
+        } else {
+          console.log('No profile found for user, creating default profile');
+          // Create a default profile if none exists
+          const { data: newProfile, error: createError } = await supabase
+            .from('profiles')
+            .insert({
+              user_id: user.id,
+              email: user.email,
+              display_name: user.email?.split('@')[0] || 'User'
+            })
+            .select('id, display_name, first_name, last_name, email, username')
+            .single();
+
+          if (createError) {
+            console.error('Error creating profile:', createError);
+            setProfile(null);
+          } else {
+            console.log('Profile created successfully:', newProfile);
+            setProfile(newProfile);
+          }
         }
       } catch (error) {
-        console.error('Error fetching profile:', error);
+        console.error('Error in fetchProfile:', error);
         setProfile(null);
       } finally {
         setLoading(false);

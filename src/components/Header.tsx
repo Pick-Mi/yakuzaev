@@ -15,7 +15,8 @@ import { Badge } from "@/components/ui/badge";
 
 const Header = () => {
   const { user, signOut } = useAuth();
-  const { displayName } = useProfile();
+  const { displayName, loading: profileLoading } = useProfile();
+  console.log('Header: user =', user, 'displayName =', displayName, 'profileLoading =', profileLoading);
   const { itemCount } = useCart();
 
   const handleSignOut = async () => {
