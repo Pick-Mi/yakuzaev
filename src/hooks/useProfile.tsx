@@ -5,6 +5,7 @@ import { useAuth } from './useAuth';
 interface Profile {
   id: string;
   display_name: string | null;
+  username: string | null;
   first_name: string | null;
   last_name: string | null;
   email: string | null;
@@ -26,7 +27,7 @@ export const useProfile = () => {
       try {
         const { data, error } = await supabase
           .from('profiles')
-          .select('id, display_name, first_name, last_name, email')
+          .select('id, display_name, first_name, last_name, email, username')
           .eq('user_id', user.id)
           .single();
 
@@ -51,6 +52,7 @@ export const useProfile = () => {
     if (!profile) return user?.email || 'User';
     
     if (profile.display_name) return profile.display_name;
+    if (profile.username) return profile.username;
     if (profile.first_name && profile.last_name) {
       return `${profile.first_name} ${profile.last_name}`;
     }
@@ -60,9 +62,35 @@ export const useProfile = () => {
     return profile.email || user?.email || 'User';
   };
 
+  const refreshProfile = async () => {
+    if (user) {
+      setLoading(true);
+      try {
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('id, display_name, first_name, last_name, email, username')
+          .eq('user_id', user.id)
+          .single();
+
+        if (error) {
+          console.error('Error fetching profile:', error);
+          setProfile(null);
+        } else {
+          setProfile(data);
+        }
+      } catch (error) {
+        console.error('Error fetching profile:', error);
+        setProfile(null);
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
   return {
     profile,
     loading,
     displayName: getDisplayName(),
+    refreshProfile,
   };
 };

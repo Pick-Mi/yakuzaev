@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
+import { useProfile } from "@/hooks/useProfile";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -17,6 +18,7 @@ import { ArrowLeft, Save, User, MapPin, CreditCard, Bell, Shield } from "lucide-
 
 const Profile = () => {
   const { user } = useAuth();
+  const { refreshProfile } = useProfile();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { toast } = useToast();
@@ -25,6 +27,7 @@ const Profile = () => {
   const [saving, setSaving] = useState(false);
   
   const [profile, setProfile] = useState({
+    display_name: "",
     username: "",
     first_name: "",
     last_name: "",
@@ -103,7 +106,10 @@ const Profile = () => {
     try {
       const { error } = await (supabase as any)
         .from('profiles')
-        .update(profile)
+        .upsert({
+          user_id: user?.id,
+          ...profile
+        })
         .eq('user_id', user?.id);
 
       if (error) throw error;
@@ -112,6 +118,10 @@ const Profile = () => {
         title: "Success",
         description: "Profile updated successfully",
       });
+
+      // Refresh the profile data to ensure the display name is updated in header
+      await refreshProfile();
+      await fetchProfile();
     } catch (error) {
       console.error('Error saving profile:', error);
       toast({
@@ -188,6 +198,16 @@ const Profile = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <Label htmlFor="display_name">Display Name</Label>
+                  <Input
+                    id="display_name"
+                    value={profile.display_name}
+                    onChange={(e) => handleInputChange("display_name", e.target.value)}
+                    placeholder="Enter display name"
+                  />
+                </div>
+                
                 <div className="space-y-2">
                   <Label htmlFor="username">Username</Label>
                   <Input
@@ -300,7 +320,7 @@ const Profile = () => {
                     <p className="text-sm text-muted-foreground">Total Orders</p>
                   </div>
                   <div className="text-center">
-                    <p className="text-2xl font-bold text-primary">${profile.total_spent}</p>
+                    <p className="text-2xl font-bold text-primary">₹{profile.total_spent}</p>
                     <p className="text-sm text-muted-foreground">Total Spent</p>
                   </div>
                   <div className="text-center">
