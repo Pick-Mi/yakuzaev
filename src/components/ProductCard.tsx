@@ -37,14 +37,6 @@ const ProductCard = ({
       className="group relative overflow-hidden bg-gradient-card border-0 shadow-product hover:shadow-hover transition-all duration-300 hover:-translate-y-2 cursor-pointer"
       onClick={() => onProductClick?.(product)}
     >
-      {/* AI Recommended badge */}
-      {recommended && (
-        <div className="absolute top-3 left-3 z-10">
-          <Badge className="bg-primary text-white border-0 shadow-lg">
-            AI Recommended
-          </Badge>
-        </div>
-      )}
       
       {/* Discount badge */}
       {badge && (

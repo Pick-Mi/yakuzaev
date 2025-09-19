@@ -30,11 +30,11 @@ const Products = () => {
         const formattedProducts = response.data?.map((product: any) => ({
           id: product.id,
           name: product.name,
-          price: `$${product.price}`,
+          price: `₹${product.price}`,
           image: product.images && product.images.length > 0 ? product.images[0] : product.image_url,
           rating: 5,
           reviewCount: Math.floor(Math.random() * 200) + 10,
-          recommended: true,
+          recommended: false,
           description: product.description,
           variants: product.variants
         })) || [];
