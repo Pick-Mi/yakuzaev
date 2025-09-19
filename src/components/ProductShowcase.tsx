@@ -116,7 +116,12 @@ const ProductShowcase = () => {
         
         {/* View all button */}
         <div className="text-center">
-          <Button variant="cta" size="lg" className="group">
+          <Button 
+            variant="cta" 
+            size="lg" 
+            className="group"
+            onClick={() => navigate('/products')}
+          >
             View All Products
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </Button>
