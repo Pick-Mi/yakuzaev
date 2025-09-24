@@ -14,6 +14,45 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_audit_logs: {
+        Row: {
+          accessed_columns: string[] | null
+          action_type: string
+          additional_metadata: Json | null
+          admin_user_id: string
+          created_at: string
+          id: string
+          ip_address: unknown | null
+          target_table: string
+          target_user_id: string | null
+          user_agent: string | null
+        }
+        Insert: {
+          accessed_columns?: string[] | null
+          action_type: string
+          additional_metadata?: Json | null
+          admin_user_id: string
+          created_at?: string
+          id?: string
+          ip_address?: unknown | null
+          target_table: string
+          target_user_id?: string | null
+          user_agent?: string | null
+        }
+        Update: {
+          accessed_columns?: string[] | null
+          action_type?: string
+          additional_metadata?: Json | null
+          admin_user_id?: string
+          created_at?: string
+          id?: string
+          ip_address?: unknown | null
+          target_table?: string
+          target_user_id?: string | null
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
       blog_posts: {
         Row: {
           author_id: string | null
@@ -456,6 +495,31 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: undefined
       }
+      get_customer_profile_admin: {
+        Args: { p_customer_id: string }
+        Returns: {
+          created_at: string
+          customer_status: string
+          display_name: string
+          email: string
+          first_name: string
+          id: string
+          last_name: string
+          phone: string
+          total_orders: number
+          total_spent: number
+          updated_at: string
+          user_id: string
+        }[]
+      }
+      get_customer_sensitive_data: {
+        Args: {
+          p_customer_id: string
+          p_justification: string
+          p_requested_fields?: string[]
+        }
+        Returns: Json
+      }
       get_public_products: {
         Args: Record<PropertyKey, never>
         Returns: {
@@ -481,6 +545,15 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      log_admin_access: {
+        Args: {
+          p_accessed_columns?: string[]
+          p_action_type: string
+          p_target_table?: string
+          p_target_user_id?: string
+        }
+        Returns: string
       }
     }
     Enums: {
