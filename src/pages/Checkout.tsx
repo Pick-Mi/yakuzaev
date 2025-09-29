@@ -605,6 +605,38 @@ const Checkout = () => {
                   </div>
                 </div>
                 
+                {/* PayU Payment Component */}
+                {paymentMethod === 'payu' && (
+                  <PayUPayment
+                    orderId={`ORDER_${Date.now()}`}
+                    amount={parseFloat(total.replace('$', ''))}
+                    productInfo={`Order with ${itemCount} items`}
+                    customerDetails={{
+                      firstName: shippingInfo.fullName,
+                      email: shippingInfo.email,
+                      phone: shippingInfo.phone
+                    }}
+                    onSuccess={(paymentData) => {
+                      console.log('Payment successful:', paymentData);
+                      clearCart();
+                      toast({
+                        title: "Payment successful!",
+                        description: "Your order has been placed successfully.",
+                      });
+                      navigate("/payment/success");
+                    }}
+                    onFailure={(error) => {
+                      console.error('Payment failed:', error);
+                      toast({
+                        title: "Payment failed",
+                        description: "Please try again or use a different payment method.",
+                        variant: "destructive"
+                      });
+                    }}
+                    disabled={isProcessing || !shippingInfo.fullName || !shippingInfo.email || !shippingInfo.phone}
+                  />
+                )}
+
                 {/* Place Order Button */}
                 {paymentMethod !== 'payu' && (
                   <Button 
