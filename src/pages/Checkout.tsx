@@ -6,6 +6,7 @@ import { Separator } from "@/components/ui/separator";
 import { useCart } from "@/hooks/useCart";
 import { useAuth } from "@/hooks/useAuth";
 import Header from "@/components/Header";
+import PayUPayment from "@/components/PayUPayment";
 import { ArrowLeft, CreditCard, Shield, Lock, Edit, Banknote, Smartphone, Truck } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
@@ -412,7 +413,15 @@ const Checkout = () => {
               </CardHeader>
               <CardContent className="space-y-4">
                 <RadioGroup value={paymentMethod} onValueChange={setPaymentMethod}>
-                  <div className="flex items-center space-x-2 p-4 border rounded-lg cursor-pointer hover:bg-accent/50">
+                   <div className="flex items-center space-x-2 p-4 border rounded-lg cursor-pointer hover:bg-accent/50">
+                     <RadioGroupItem value="payu" id="payu" />
+                     <Label htmlFor="payu" className="flex items-center gap-2 cursor-pointer">
+                       <CreditCard className="w-5 h-5" />
+                       PayU Payment Gateway
+                     </Label>
+                   </div>
+                   
+                   <div className="flex items-center space-x-2 p-4 border rounded-lg cursor-pointer hover:bg-accent/50">
                     <RadioGroupItem value="card" id="card" />
                     <Label htmlFor="card" className="flex items-center gap-2 cursor-pointer">
                       <CreditCard className="w-5 h-5" />
@@ -448,7 +457,7 @@ const Checkout = () => {
             </Card>
 
             {/* Payment Details */}
-            {paymentMethod !== 'cod' && (
+            {paymentMethod !== 'cod' && paymentMethod !== 'payu' && (
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
@@ -597,22 +606,24 @@ const Checkout = () => {
                 </div>
                 
                 {/* Place Order Button */}
-                <Button 
-                  variant="hero" 
-                  size="lg" 
-                  className="w-full"
-                  onClick={handlePlaceOrder}
-                  disabled={isProcessing}
-                >
-                  {isProcessing ? (
-                    "Processing..."
-                  ) : (
-                    <>
-                      <Lock className="w-4 h-4" />
-                      Place Order
-                    </>
-                  )}
-                </Button>
+                {paymentMethod !== 'payu' && (
+                  <Button 
+                    variant="hero" 
+                    size="lg" 
+                    className="w-full"
+                    onClick={handlePlaceOrder}
+                    disabled={isProcessing}
+                  >
+                    {isProcessing ? (
+                      "Processing..."
+                    ) : (
+                      <>
+                        <Lock className="w-4 h-4" />
+                        Place Order
+                      </>
+                    )}
+                  </Button>
+                )}
                 
                 <div className="text-xs text-center text-muted-foreground">
                   By placing your order, you agree to our Terms of Service and Privacy Policy
