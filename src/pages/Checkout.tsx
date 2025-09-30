@@ -612,9 +612,9 @@ const Checkout = () => {
                     amount={parseFloat(total.replace('$', ''))}
                     productInfo={`Order with ${itemCount} items`}
                     customerDetails={{
-                      firstName: shippingInfo.fullName,
-                      email: shippingInfo.email,
-                      phone: shippingInfo.phone
+                      firstName: shippingInfo.fullName || 'Customer',
+                      email: shippingInfo.email || user?.email || 'customer@example.com',
+                      phone: shippingInfo.phone || '9999999999'
                     }}
                     onSuccess={(paymentData) => {
                       console.log('Payment successful:', paymentData);
@@ -633,7 +633,7 @@ const Checkout = () => {
                         variant: "destructive"
                       });
                     }}
-                    disabled={isProcessing || !shippingInfo.fullName || !shippingInfo.email || !shippingInfo.phone}
+                    disabled={isProcessing}
                   />
                 )}
 
