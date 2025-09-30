@@ -90,52 +90,29 @@ export default function PayUPayment({
 
       console.log('PayU payment params received:', paymentResponse);
 
-      // Create form dynamically and submit to PayU
+      // Create form and submit using a more reliable approach
       const form = document.createElement('form');
       form.method = 'POST';
       form.action = paymentResponse.payuUrl;
       form.target = '_self';
-      form.style.display = 'none';
 
       // Add all PayU parameters as hidden inputs
       Object.entries(paymentResponse.paymentParams).forEach(([key, value]) => {
         const input = document.createElement('input');
         input.type = 'hidden';
         input.name = key;
-        input.value = String(value || ''); // Handle null/undefined values
+        input.value = String(value || '');
         form.appendChild(input);
       });
 
-      // Log form data for debugging
-      console.log('Form action:', form.action);
-      console.log('Form data:', new FormData(form));
-      
-      // Add form to body, submit, then remove
+      // Append form to body
       document.body.appendChild(form);
       
-      // Use setTimeout to ensure form is properly added to DOM
-      setTimeout(() => {
-        try {
-          form.submit();
-          // Don't remove immediately, PayU might need the form
-          setTimeout(() => {
-            if (document.body.contains(form)) {
-              document.body.removeChild(form);
-            }
-          }, 1000);
-        } catch (submitError) {
-          console.error('Form submission error:', submitError);
-          setIsProcessing(false);
-          toast({
-            title: "Submission Error",
-            description: "Failed to redirect to payment gateway. Please try again.",
-            variant: "destructive"
-          });
-          if (document.body.contains(form)) {
-            document.body.removeChild(form);
-          }
-        }
-      }, 100);
+      console.log('Submitting PayU form to:', paymentResponse.payuUrl);
+      console.log('Form parameters:', paymentResponse.paymentParams);
+      
+      // Submit the form immediately
+      form.submit();
 
     } catch (error) {
       console.error('PayU payment error:', error);
