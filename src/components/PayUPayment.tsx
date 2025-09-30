@@ -95,20 +95,47 @@ export default function PayUPayment({
       form.method = 'POST';
       form.action = paymentResponse.payuUrl;
       form.target = '_self';
+      form.style.display = 'none';
 
       // Add all PayU parameters as hidden inputs
       Object.entries(paymentResponse.paymentParams).forEach(([key, value]) => {
         const input = document.createElement('input');
         input.type = 'hidden';
         input.name = key;
-        input.value = String(value);
+        input.value = String(value || ''); // Handle null/undefined values
         form.appendChild(input);
       });
 
-      // Submit form to redirect to PayU
+      // Log form data for debugging
+      console.log('Form action:', form.action);
+      console.log('Form data:', new FormData(form));
+      
+      // Add form to body, submit, then remove
       document.body.appendChild(form);
-      form.submit();
-      document.body.removeChild(form);
+      
+      // Use setTimeout to ensure form is properly added to DOM
+      setTimeout(() => {
+        try {
+          form.submit();
+          // Don't remove immediately, PayU might need the form
+          setTimeout(() => {
+            if (document.body.contains(form)) {
+              document.body.removeChild(form);
+            }
+          }, 1000);
+        } catch (submitError) {
+          console.error('Form submission error:', submitError);
+          setIsProcessing(false);
+          toast({
+            title: "Submission Error",
+            description: "Failed to redirect to payment gateway. Please try again.",
+            variant: "destructive"
+          });
+          if (document.body.contains(form)) {
+            document.body.removeChild(form);
+          }
+        }
+      }, 100);
 
     } catch (error) {
       console.error('PayU payment error:', error);
