@@ -89,11 +89,10 @@ export default function PayUPayment({
 
       console.log('PayU payment params received:', paymentResponse);
 
-      // Create hidden form for PayU redirection
+      // Create and submit form for PayU redirection
       const form = document.createElement('form');
       form.method = 'POST';
       form.action = paymentResponse.payuUrl;
-      form.style.display = 'none';
 
       // Add all PayU parameters
       Object.entries(paymentResponse.paymentParams).forEach(([key, value]) => {
@@ -106,10 +105,15 @@ export default function PayUPayment({
 
       document.body.appendChild(form);
       
-      console.log('Submitting to PayU with params:', paymentResponse.paymentParams);
+      console.log('Submitting to PayU...');
       
-      // Submit immediately
+      // Submit the form
       form.submit();
+      
+      // Remove form after submission
+      setTimeout(() => {
+        document.body.removeChild(form);
+      }, 100);
 
     } catch (error) {
       console.error('PayU payment error:', error);
