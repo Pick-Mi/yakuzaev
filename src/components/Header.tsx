@@ -31,14 +31,6 @@ const Header = () => {
         </Link>
         
         <div className="flex items-center gap-4">
-          {/* Get Payment Button */}
-          <Link to="/get-payment">
-            <Button variant="default" size="sm">
-              <CreditCard className="w-4 h-4 mr-2" />
-              Get Payment
-            </Button>
-          </Link>
-          
           {/* Cart Button */}
           <Link to="/cart">
             <Button variant="ghost" size="icon" className="relative">
