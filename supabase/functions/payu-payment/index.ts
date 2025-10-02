@@ -163,8 +163,8 @@ serve(async (req) => {
           salt
         )
 
-        // PayU test environment URL (use https://secure.payu.in/_payment for production)
-        const payuUrl = 'https://test.payu.in/_payment'
+        // PayU production environment URL
+        const payuUrl = 'https://secure.payu.in/_payment'
         
         const paymentParams = {
           key: merchantKey,
