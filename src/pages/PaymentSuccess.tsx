@@ -191,13 +191,18 @@ export default function PaymentSuccess() {
                     </div>
                   </div>
                   
-                  <div className="flex gap-2">
-                    <Button onClick={handleViewOrders} className="flex-1">
-                      View Orders
+                  <div className="flex flex-col gap-2">
+                    <Button onClick={() => navigate(`/orders/${paymentDetails.orderId}`)} className="w-full">
+                      View Order Details
                     </Button>
-                    <Button variant="outline" onClick={handleContinueShopping} className="flex-1">
-                      Continue Shopping
-                    </Button>
+                    <div className="flex gap-2">
+                      <Button variant="outline" onClick={handleViewOrders} className="flex-1">
+                        All Orders
+                      </Button>
+                      <Button variant="outline" onClick={handleContinueShopping} className="flex-1">
+                        Continue Shopping
+                      </Button>
+                    </div>
                   </div>
                 </div>
               )}

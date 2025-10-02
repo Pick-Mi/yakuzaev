@@ -7,6 +7,18 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
+import { useToast } from "@/hooks/use-toast";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { format } from "date-fns";
 import { 
   ArrowLeft, 
@@ -17,7 +29,8 @@ import {
   MapPin,
   CreditCard,
   User,
-  Calendar
+  Calendar,
+  XCircle
 } from "lucide-react";
 
 interface Order {
@@ -41,8 +54,10 @@ const OrderDetails = () => {
   const { id } = useParams<{ id: string }>();
   const { user } = useAuth();
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
+  const [cancelling, setCancelling] = useState(false);
 
   useEffect(() => {
     if (user && id) {
@@ -125,6 +140,46 @@ const OrderDetails = () => {
     return stepStatus === currentStatus.toLowerCase();
   };
 
+  const handleCancelOrder = async () => {
+    if (!order || !user) return;
+    
+    setCancelling(true);
+    try {
+      // Update order status to cancelled
+      const { error: updateError } = await supabase
+        .from('orders')
+        .update({ 
+          status: 'cancelled',
+          payment_status: 'refunded'
+        })
+        .eq('id', order.id)
+        .eq('customer_id', user.id);
+
+      if (updateError) throw updateError;
+
+      toast({
+        title: "Order Cancelled",
+        description: "Your order has been cancelled and refund will be processed within 5-7 business days.",
+      });
+
+      // Refresh order data
+      await fetchOrder();
+    } catch (error) {
+      console.error('Error cancelling order:', error);
+      toast({
+        title: "Cancellation Failed",
+        description: "Unable to cancel order. Please contact support.",
+        variant: "destructive"
+      });
+    } finally {
+      setCancelling(false);
+    }
+  };
+
+  const canCancelOrder = (status: string) => {
+    return ['pending', 'confirmed', 'processing'].includes(status.toLowerCase());
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -154,17 +209,52 @@ const OrderDetails = () => {
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
           {/* Header */}
-          <div className="flex items-center gap-4 mb-8">
-            <Button 
-              variant="ghost" 
-              size="icon"
-              onClick={() => navigate('/orders')}
-            >
-              <ArrowLeft className="w-5 h-5" />
-            </Button>
-            <div>
-              <h1 className="text-3xl font-bold">Order Details</h1>
-              <p className="text-muted-foreground">Order #{order.id.slice(-8)}</p>
+          <div className="flex items-center justify-between mb-8 flex-wrap gap-4">
+            <div className="flex items-center gap-4">
+              <Button 
+                variant="ghost" 
+                size="icon"
+                onClick={() => navigate('/orders')}
+              >
+                <ArrowLeft className="w-5 h-5" />
+              </Button>
+              <div>
+                <h1 className="text-3xl font-bold">Order Details</h1>
+                <p className="text-muted-foreground">Order #{order.id.slice(-8)}</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              {canCancelOrder(order.status) && (
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button variant="destructive" size="sm" disabled={cancelling}>
+                      <XCircle className="w-4 h-4 mr-2" />
+                      Cancel Order
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Cancel Order & Request Refund?</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        This will cancel your order and initiate a refund. The amount will be credited back to your original payment method within 5-7 business days.
+                        This action cannot be undone.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Keep Order</AlertDialogCancel>
+                      <AlertDialogAction onClick={handleCancelOrder} disabled={cancelling}>
+                        {cancelling ? "Cancelling..." : "Cancel & Refund"}
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              )}
+              {order.status.toLowerCase() === 'cancelled' && (
+                <Badge variant="destructive" className="text-sm">
+                  <XCircle className="w-4 h-4 mr-1" />
+                  Order Cancelled
+                </Badge>
+              )}
             </div>
           </div>
 
