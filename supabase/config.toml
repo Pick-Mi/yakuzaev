@@ -1,4 +1,1 @@
 project_id = "tqhwoizjlvjdiuemirsy"
-
-[functions.payu-payment]
-verify_jwt = true

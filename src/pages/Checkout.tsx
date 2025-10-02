@@ -4,7 +4,6 @@ import { Separator } from "@/components/ui/separator";
 import { useCart } from "@/hooks/useCart";
 import { useAuth } from "@/hooks/useAuth";
 import Header from "@/components/Header";
-import PayUPayment from "@/components/PayUPayment";
 import { ArrowLeft } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
@@ -123,41 +122,16 @@ const Checkout = () => {
               
               <Separator />
               
-              {/* PayU Payment Component */}
+              {/* Payment Section */}
               <div className="space-y-3">
-                <PayUPayment
-                  orderId={`ORDER_${Date.now()}`}
-                  amount={(() => {
-                    const numericTotal = parseFloat(total.replace(/[^0-9.]/g, ''));
-                    return isNaN(numericTotal) || numericTotal <= 0 ? 0 : numericTotal;
-                  })()}
-                  productInfo={`Order with ${itemCount} items`}
-                  customerDetails={{
-                    firstName: userProfile?.first_name || userProfile?.display_name || 'Customer',
-                    email: userProfile?.email || user?.email || 'customer@example.com',
-                    phone: userProfile?.phone || '9999999999'
-                  }}
-                  onSuccess={(paymentData) => {
-                    console.log('Payment successful:', paymentData);
-                    clearCart();
-                    toast({
-                      title: "Payment successful!",
-                      description: "Your order has been placed successfully.",
-                    });
-                    navigate("/payment/success");
-                  }}
-                  onFailure={(error) => {
-                    console.error('Payment failed:', error);
-                    toast({
-                      title: "Payment failed",
-                      description: "Please try again.",
-                      variant: "destructive"
-                    });
-                  }}
-                />
+                <div className="p-4 bg-accent/50 rounded-lg text-center">
+                  <p className="text-muted-foreground">
+                    Payment gateway integration coming soon
+                  </p>
+                </div>
                 
                 <p className="text-xs text-center text-muted-foreground">
-                  By proceeding to payment, you agree to our Terms of Service and Privacy Policy
+                  By proceeding, you agree to our Terms of Service and Privacy Policy
                 </p>
               </div>
             </CardContent>
