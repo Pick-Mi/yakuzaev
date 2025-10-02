@@ -90,60 +90,27 @@ export default function PayUPayment({
 
       console.log('PayU payment params received:', paymentResponse);
 
-      // Most reliable method for payment gateway redirects
-      const payuUrl = paymentResponse.payuUrl;
-      const params = paymentResponse.paymentParams;
-      
-      console.log('PayU URL:', payuUrl);
-      console.log('PayU Parameters:', params);
-      
-      // Create a visible form for better compatibility
+      // Create hidden form for PayU redirection
       const form = document.createElement('form');
       form.method = 'POST';
-      form.action = payuUrl;
-      form.style.display = 'block'; // Make it visible temporarily
-      form.style.position = 'fixed';
-      form.style.top = '50%';
-      form.style.left = '50%';
-      form.style.transform = 'translate(-50%, -50%)';
-      form.style.zIndex = '9999';
-      form.style.background = 'white';
-      form.style.padding = '20px';
-      form.style.border = '1px solid #ccc';
-      form.innerHTML = '<p>Redirecting to PayU...</p>';
-      
-      // Add all PayU parameters as hidden inputs
-      Object.entries(params).forEach(([key, value]) => {
+      form.action = paymentResponse.payuUrl;
+      form.style.display = 'none';
+
+      // Add all PayU parameters
+      Object.entries(paymentResponse.paymentParams).forEach(([key, value]) => {
         const input = document.createElement('input');
         input.type = 'hidden';
         input.name = key;
         input.value = String(value || '');
         form.appendChild(input);
       });
-      
-      // Add a submit button (required by some browsers for auto-submit)
-      const submitBtn = document.createElement('input');
-      submitBtn.type = 'submit';
-      submitBtn.value = 'Continue to PayU';
-      submitBtn.style.display = 'block';
-      submitBtn.style.margin = '10px auto';
-      form.appendChild(submitBtn);
-      
-      // Append form to body
+
       document.body.appendChild(form);
       
-      // Auto-submit after a short delay
-      setTimeout(() => {
-        console.log('Auto-submitting PayU form...');
-        form.submit();
-      }, 1000);
+      console.log('Submitting to PayU with params:', paymentResponse.paymentParams);
       
-      // Manual submit option
-      submitBtn.onclick = (e) => {
-        e.preventDefault();
-        console.log('Manual submit clicked');
-        form.submit();
-      };
+      // Submit immediately
+      form.submit();
 
     } catch (error) {
       console.error('PayU payment error:', error);
