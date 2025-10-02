@@ -86,7 +86,7 @@ const Checkout = () => {
                       <h4 className="font-semibold">{item.name}</h4>
                       {item.selectedVariant && (
                         <p className="text-sm text-muted-foreground">
-                          Variant: {item.selectedVariant}
+                          Variant: {typeof item.selectedVariant === 'string' ? item.selectedVariant : item.selectedVariant.name}
                         </p>
                       )}
                       <div className="flex justify-between items-center mt-2">
