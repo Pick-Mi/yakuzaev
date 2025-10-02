@@ -127,7 +127,10 @@ const Checkout = () => {
               <div className="space-y-3">
                 <PayUPayment
                   orderId={`ORDER_${Date.now()}`}
-                  amount={parseFloat(total.replace('$', ''))}
+                  amount={(() => {
+                    const numericTotal = parseFloat(total.replace(/[^0-9.]/g, ''));
+                    return isNaN(numericTotal) || numericTotal <= 0 ? 0 : numericTotal;
+                  })()}
                   productInfo={`Order with ${itemCount} items`}
                   customerDetails={{
                     firstName: userProfile?.first_name || userProfile?.display_name || 'Customer',

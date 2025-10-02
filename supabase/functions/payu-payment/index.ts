@@ -142,6 +142,11 @@ serve(async (req) => {
         const paymentData: PayUPaymentRequest = body.paymentData
         console.log('Initiating PayU payment:', paymentData)
 
+        // Validate amount
+        if (!paymentData.amount || paymentData.amount <= 0) {
+          throw new Error('Invalid payment amount')
+        }
+
         // Generate hash for payment request
         const hash = await generateHash(
           merchantKey,
