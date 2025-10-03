@@ -147,16 +147,23 @@ serve(async (req) => {
           throw new Error('Invalid payment amount')
         }
 
+        // Generate unique transaction ID (order ID + timestamp)
+        const uniqueTxnId = `${paymentData.orderId}_${Date.now()}`
+        console.log('Generated unique txnid:', uniqueTxnId)
+
+        // Store the unique txnid in udf2 for reference
+        const udf2 = paymentData.orderId // Store original order ID in udf2
+
         // Generate hash for payment request
         const hash = await generateHash(
           merchantKey,
-          paymentData.orderId,
+          uniqueTxnId,
           paymentData.amount.toString(),
           paymentData.productInfo,
           paymentData.firstName,
           paymentData.email,
           paymentData.udf1 || '',
-          paymentData.udf2 || '',
+          udf2,
           paymentData.udf3 || '',
           paymentData.udf4 || '',
           paymentData.udf5 || '',
@@ -168,7 +175,7 @@ serve(async (req) => {
         
         const paymentParams = {
           key: merchantKey,
-          txnid: paymentData.orderId,
+          txnid: uniqueTxnId,
           amount: paymentData.amount.toString(),
           productinfo: paymentData.productInfo,
           firstname: paymentData.firstName,
@@ -177,7 +184,7 @@ serve(async (req) => {
           surl: paymentData.surl,
           furl: paymentData.furl,
           udf1: paymentData.udf1 || '',
-          udf2: paymentData.udf2 || '',
+          udf2: udf2,
           udf3: paymentData.udf3 || '',
           udf4: paymentData.udf4 || '',
           udf5: paymentData.udf5 || '',
@@ -231,6 +238,11 @@ serve(async (req) => {
         // Update order status based on PayU response
         const orderStatus = responseData.status === 'success' ? 'completed' : 'failed'
         const paymentStatus = responseData.status === 'success' ? 'completed' : 'failed'
+        
+        // Extract order ID from udf2 (we stored it there during initiation)
+        const orderId = responseData.udf2
+        
+        console.log('Updating order:', orderId, 'with payment status:', paymentStatus)
 
         const { error: updateError } = await supabaseClient
           .from('orders')
@@ -247,7 +259,7 @@ serve(async (req) => {
               addedon: responseData.addedon
             }
           })
-          .eq('id', responseData.txnid)
+          .eq('id', orderId)
 
         if (updateError) {
           console.error('Error updating order:', updateError)
@@ -255,7 +267,8 @@ serve(async (req) => {
         }
 
         console.log('Payment verification completed:', {
-          orderId: responseData.txnid,
+          orderId: orderId,
+          txnid: responseData.txnid,
           status: responseData.status,
           mihpayid: responseData.mihpayid
         })
@@ -264,7 +277,8 @@ serve(async (req) => {
           JSON.stringify({
             success: true,
             paymentStatus: responseData.status,
-            orderId: responseData.txnid,
+            orderId: orderId,
+            txnid: responseData.txnid,
             mihpayid: responseData.mihpayid
           }),
           { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
