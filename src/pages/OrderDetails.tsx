@@ -18,14 +18,17 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { format } from "date-fns";
 import { 
   Package, 
-  Truck, 
   CheckCircle, 
-  Clock, 
-  MapPin,
-  CreditCard,
   User,
   ChevronRight,
   Home,
@@ -35,6 +38,7 @@ import {
   Info
 } from "lucide-react";
 import Header from "@/components/Header";
+import PayUPayment from "@/components/PayUPayment";
 
 interface Order {
   id: string;
@@ -64,6 +68,7 @@ const OrderDetails = () => {
   const [cancelling, setCancelling] = useState(false);
   const [showAllUpdates, setShowAllUpdates] = useState(false);
   const [showPriceBreakdown, setShowPriceBreakdown] = useState(false);
+  const [showPaymentDialog, setShowPaymentDialog] = useState(false);
 
   useEffect(() => {
     if (user && id) {
@@ -185,6 +190,36 @@ const OrderDetails = () => {
     return ['pending', 'confirmed', 'processing'].includes(status.toLowerCase());
   };
 
+  const handlePaymentSuccess = async (paymentData: any) => {
+    setShowPaymentDialog(false);
+    
+    // Update order payment status
+    const { error } = await supabase
+      .from('orders')
+      .update({ payment_status: 'completed' })
+      .eq('id', order?.id);
+
+    if (error) {
+      console.error('Error updating payment status:', error);
+    }
+
+    toast({
+      title: "Payment Successful",
+      description: "Your payment has been processed successfully.",
+    });
+
+    await fetchOrder();
+  };
+
+  const handlePaymentFailure = (error: any) => {
+    setShowPaymentDialog(false);
+    toast({
+      title: "Payment Failed",
+      description: "There was an error processing your payment. Please try again.",
+      variant: "destructive"
+    });
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-background">
@@ -251,6 +286,7 @@ const OrderDetails = () => {
                       <p className="font-semibold text-green-900">Payment Completed</p>
                       <p className="text-sm text-green-700">Your payment of ₹{Math.round(order.total_amount)} has been received</p>
                     </div>
+                    <Badge variant="default" className="bg-green-600">Done</Badge>
                   </div>
                 ) : (
                   <div className="flex items-center justify-between gap-4">
@@ -260,16 +296,7 @@ const OrderDetails = () => {
                     </div>
                     <Button 
                       className="bg-blue-600 hover:bg-blue-700 text-white"
-                      onClick={() => {
-                        // Navigate to payment page with order details
-                        navigate('/checkout', { 
-                          state: { 
-                            orderId: order.id,
-                            amount: order.total_amount,
-                            fromOrderDetails: true 
-                          } 
-                        });
-                      }}
+                      onClick={() => setShowPaymentDialog(true)}
                     >
                       Pay ₹{Math.round(order.total_amount)}
                     </Button>
@@ -277,6 +304,30 @@ const OrderDetails = () => {
                 )}
               </CardContent>
             </Card>
+
+            {/* Payment Dialog */}
+            <Dialog open={showPaymentDialog} onOpenChange={setShowPaymentDialog}>
+              <DialogContent className="sm:max-w-md">
+                <DialogHeader>
+                  <DialogTitle>Complete Payment</DialogTitle>
+                  <DialogDescription>
+                    You will be redirected to PayU's secure payment gateway
+                  </DialogDescription>
+                </DialogHeader>
+                <PayUPayment
+                  orderId={order.id}
+                  amount={order.total_amount}
+                  productInfo={firstItem?.name || "Order Payment"}
+                  customerDetails={{
+                    firstName: order.customer_details?.name || user?.email?.split('@')[0] || "Customer",
+                    email: order.customer_details?.email || user?.email || "",
+                    phone: order.customer_details?.phone || "9999999999"
+                  }}
+                  onSuccess={handlePaymentSuccess}
+                  onFailure={handlePaymentFailure}
+                />
+              </DialogContent>
+            </Dialog>
 
             {/* Manage Access */}
             <Card className="cursor-pointer hover:bg-accent/50">
@@ -504,13 +555,11 @@ const OrderDetails = () => {
                 <Separator />
 
                 <div className="flex items-start gap-2 text-sm">
-                  <CreditCard className="w-4 h-4 mt-0.5" />
                   <div className="flex-1">
                     <span className="text-muted-foreground">Paid by</span>
                   </div>
                   <div className="flex items-center gap-1">
-                    <CreditCard className="w-4 h-4" />
-                    <span>{order.payment_method || 'Cash On Delivery'}</span>
+                    {order.payment_method || 'Cash On Delivery'}
                   </div>
                 </div>
               </CardContent>
