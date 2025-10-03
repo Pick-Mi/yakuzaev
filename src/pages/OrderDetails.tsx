@@ -241,15 +241,40 @@ const OrderDetails = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
-            {/* Tracking Info */}
-            <Card>
-              <CardContent className="p-6">
-                <p className="text-sm mb-2">
-                  Order can be tracked by <strong>8553352688</strong>.
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  Tracking link is shared via SMS.
-                </p>
+            {/* Payment Status Card */}
+            <Card className={order.payment_status === 'completed' || order.payment_status === 'paid' ? 'border-green-200 bg-green-50' : 'border-blue-200 bg-blue-50'}>
+              <CardContent className="p-4">
+                {order.payment_status === 'completed' || order.payment_status === 'paid' ? (
+                  <div className="flex items-center gap-3">
+                    <CheckCircle className="w-6 h-6 text-green-600" />
+                    <div className="flex-1">
+                      <p className="font-semibold text-green-900">Payment Completed</p>
+                      <p className="text-sm text-green-700">Your payment of ₹{Math.round(order.total_amount)} has been received</p>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-between gap-4">
+                    <div className="flex-1">
+                      <p className="font-semibold text-blue-900 mb-1">Complete Your Payment</p>
+                      <p className="text-sm text-blue-700">Pay online for a smooth doorstep experience</p>
+                    </div>
+                    <Button 
+                      className="bg-blue-600 hover:bg-blue-700 text-white"
+                      onClick={() => {
+                        // Navigate to payment page with order details
+                        navigate('/checkout', { 
+                          state: { 
+                            orderId: order.id,
+                            amount: order.total_amount,
+                            fromOrderDetails: true 
+                          } 
+                        });
+                      }}
+                    >
+                      Pay ₹{Math.round(order.total_amount)}
+                    </Button>
+                  </div>
+                )}
               </CardContent>
             </Card>
 
@@ -261,17 +286,17 @@ const OrderDetails = () => {
               </CardContent>
             </Card>
 
-            {/* Pay Online Banner */}
-            {order.payment_status !== 'completed' && order.payment_status !== 'paid' && (
-              <Card className="bg-blue-50 border-blue-200">
-                <CardContent className="p-4 flex items-center justify-between">
-                  <span className="text-sm">Pay online for a smooth doorstep experience</span>
-                  <Button size="sm" variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-100">
-                    Pay ₹{Math.round(order.total_amount)}
-                  </Button>
-                </CardContent>
-              </Card>
-            )}
+            {/* Tracking Info */}
+            <Card>
+              <CardContent className="p-6">
+                <p className="text-sm mb-2">
+                  Order can be tracked by <strong>8553352688</strong>.
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  Tracking link is shared via SMS.
+                </p>
+              </CardContent>
+            </Card>
 
             {/* Product Details */}
             <Card>
