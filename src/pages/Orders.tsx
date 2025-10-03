@@ -40,6 +40,7 @@ const Orders = () => {
   
   const [timeFilters, setTimeFilters] = useState({
     last30Days: false,
+    year2025: false,
     year2024: false,
     year2023: false,
     year2022: false,
@@ -121,6 +122,7 @@ const Orders = () => {
         return activeTimeFilters.some(filter => {
           switch(filter) {
             case 'last30Days': return daysDiff <= 30;
+            case 'year2025': return orderYear === 2025;
             case 'year2024': return orderYear === 2024;
             case 'year2023': return orderYear === 2023;
             case 'year2022': return orderYear === 2022;
@@ -282,6 +284,14 @@ const Orders = () => {
                         onCheckedChange={() => handleTimeFilterChange('last30Days')}
                       />
                       <label htmlFor="last30Days" className="text-sm cursor-pointer">Last 30 days</label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Checkbox 
+                        id="year2025" 
+                        checked={timeFilters.year2025}
+                        onCheckedChange={() => handleTimeFilterChange('year2025')}
+                      />
+                      <label htmlFor="year2025" className="text-sm cursor-pointer">2025</label>
                     </div>
                     <div className="flex items-center space-x-2">
                       <Checkbox 
