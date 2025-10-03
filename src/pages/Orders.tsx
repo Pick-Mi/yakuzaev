@@ -374,7 +374,11 @@ const Orders = () => {
                   const firstItem = orderItems[0];
                   
                   return (
-                    <Card key={order.id} className="hover:shadow-md transition-shadow">
+                    <Card 
+                      key={order.id} 
+                      className="hover:shadow-md transition-shadow cursor-pointer"
+                      onClick={() => handleViewOrder(order.id)}
+                    >
                       <CardContent className="p-6">
                         <div className="flex gap-4">
                           {/* Product Image */}
@@ -425,14 +429,16 @@ const Orders = () => {
                                 <p className="text-sm text-muted-foreground mt-1">
                                   Your item has been {order.status.toLowerCase() === 'delivered' ? 'delivered' : 'ordered'}
                                 </p>
-                                <Button 
-                                  variant="link" 
-                                  className="p-0 h-auto text-primary flex items-center gap-1 mt-1"
-                                  onClick={() => handleViewOrder(order.id)}
+                                <button 
+                                  className="text-primary flex items-center gap-1 mt-1 text-sm hover:underline"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleViewOrder(order.id);
+                                  }}
                                 >
                                   <Star className="w-4 h-4" />
                                   Rate & Review Product
-                                </Button>
+                                </button>
                               </div>
                               
                               <div className="text-right">
