@@ -40,6 +40,18 @@ import {
 import Header from "@/components/Header";
 import PayUPayment from "@/components/PayUPayment";
 
+interface Transaction {
+  id: string;
+  payment_id: string;
+  transaction_id: string;
+  amount: number;
+  status: string;
+  payu_response?: any;
+  created_at: string;
+  customer_name: string;
+  customer_email: string;
+}
+
 interface Order {
   id: string;
   created_at: string;
@@ -64,11 +76,13 @@ const OrderDetails = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [order, setOrder] = useState<Order | null>(null);
+  const [transaction, setTransaction] = useState<Transaction | null>(null);
   const [loading, setLoading] = useState(true);
   const [cancelling, setCancelling] = useState(false);
   const [showAllUpdates, setShowAllUpdates] = useState(false);
   const [showPriceBreakdown, setShowPriceBreakdown] = useState(false);
   const [showPaymentDialog, setShowPaymentDialog] = useState(false);
+  const [showPaymentDetails, setShowPaymentDetails] = useState(false);
 
   useEffect(() => {
     if (user && id) {
@@ -87,6 +101,37 @@ const OrderDetails = () => {
 
       if (error) throw error;
       setOrder(data);
+
+      // Fetch transaction details for this order
+      try {
+        const { data: transactionData } = await supabase
+          .from('transactions' as any)
+          .select('*')
+          .eq('user_id', user?.id)
+          .order('created_at', { ascending: false }) as any;
+
+        if (transactionData && transactionData.length > 0) {
+          // Find transaction with order ID in payu_response
+          const orderTransaction = transactionData.find(
+            (t: any) => t.payu_response?.order_id === id
+          );
+          if (orderTransaction) {
+            setTransaction({
+              id: orderTransaction.id,
+              payment_id: orderTransaction.payment_id,
+              transaction_id: orderTransaction.transaction_id,
+              amount: orderTransaction.amount,
+              status: orderTransaction.status,
+              payu_response: orderTransaction.payu_response,
+              created_at: orderTransaction.created_at,
+              customer_name: orderTransaction.customer_name,
+              customer_email: orderTransaction.customer_email,
+            });
+          }
+        }
+      } catch (err) {
+        console.error('Error fetching transaction:', err);
+      }
     } catch (error) {
       console.error('Error fetching order:', error);
       navigate('/orders');
@@ -280,13 +325,56 @@ const OrderDetails = () => {
             <Card className={order.payment_status === 'completed' || order.payment_status === 'paid' ? 'border-green-200 bg-green-50' : 'border-blue-200 bg-blue-50'}>
               <CardContent className="p-4">
                 {order.payment_status === 'completed' || order.payment_status === 'paid' ? (
-                  <div className="flex items-center gap-3">
-                    <CheckCircle className="w-6 h-6 text-green-600" />
-                    <div className="flex-1">
-                      <p className="font-semibold text-green-900">Payment Completed</p>
-                      <p className="text-sm text-green-700">Your payment of ₹{Math.round(order.total_amount)} has been received</p>
+                  <div>
+                    <div className="flex items-center gap-3 mb-3">
+                      <CheckCircle className="w-6 h-6 text-green-600" />
+                      <div className="flex-1">
+                        <p className="font-semibold text-green-900">Payment Completed</p>
+                        <p className="text-sm text-green-700">Your payment of ₹{Math.round(order.total_amount)} has been received</p>
+                      </div>
+                      <Badge variant="default" className="bg-green-600">Done</Badge>
                     </div>
-                    <Badge variant="default" className="bg-green-600">Done</Badge>
+                    {transaction && (
+                      <div className="mt-3 pt-3 border-t border-green-200">
+                        <Button
+                          variant="link"
+                          className="text-green-700 p-0 h-auto flex items-center gap-1"
+                          onClick={() => setShowPaymentDetails(!showPaymentDetails)}
+                        >
+                          <Info className="w-4 h-4" />
+                          {showPaymentDetails ? 'Hide' : 'View'} Payment Details
+                          <ChevronDown className={`w-4 h-4 transition-transform ${showPaymentDetails ? 'rotate-180' : ''}`} />
+                        </Button>
+                        {showPaymentDetails && (
+                          <div className="mt-3 space-y-2 text-sm text-green-800">
+                            <div className="flex justify-between">
+                              <span className="text-muted-foreground">Transaction ID:</span>
+                              <span className="font-medium">{transaction.transaction_id}</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-muted-foreground">Payment ID:</span>
+                              <span className="font-medium">{transaction.payment_id}</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-muted-foreground">Amount Paid:</span>
+                              <span className="font-medium">₹{transaction.amount}</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-muted-foreground">Payment Date:</span>
+                              <span className="font-medium">{format(new Date(transaction.created_at), 'dd MMM yyyy, hh:mm a')}</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-muted-foreground">Payment Method:</span>
+                              <span className="font-medium">{transaction.payu_response?.mode || 'PayU'}</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-muted-foreground">Status:</span>
+                              <Badge className="bg-green-600">{transaction.status}</Badge>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
                 ) : (
                   <div className="flex items-center justify-between gap-4">
