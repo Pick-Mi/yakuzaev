@@ -241,9 +241,11 @@ serve(async (req) => {
         
         // Extract order ID from udf2 (we stored it there during initiation)
         const orderId = responseData.udf2
+        const userId = responseData.udf1 // user_id stored in udf1
         
         console.log('Updating order:', orderId, 'with payment status:', paymentStatus)
 
+        // Update order with payment details
         const { error: updateError } = await supabaseClient
           .from('orders')
           .update({
@@ -264,6 +266,45 @@ serve(async (req) => {
         if (updateError) {
           console.error('Error updating order:', updateError)
           throw updateError
+        }
+
+        // Store transaction record with comprehensive PayU payment details
+        const { error: transactionError } = await supabaseClient
+          .from('transactions')
+          .insert({
+            user_id: userId,
+            amount: parseFloat(responseData.amount),
+            currency: 'INR',
+            status: paymentStatus,
+            payment_id: responseData.mihpayid,
+            transaction_id: responseData.txnid,
+            product_info: responseData.productinfo,
+            customer_name: responseData.firstname,
+            customer_email: responseData.email,
+            customer_phone: responseData.phone,
+            payu_response: {
+              mihpayid: responseData.mihpayid,
+              mode: responseData.mode,
+              status: responseData.status,
+              unmappedstatus: responseData.unmappedstatus,
+              key: responseData.key,
+              txnid: responseData.txnid,
+              amount: responseData.amount,
+              productinfo: responseData.productinfo,
+              firstname: responseData.firstname,
+              email: responseData.email,
+              phone: responseData.phone,
+              net_amount_debit: responseData.net_amount_debit,
+              addedon: responseData.addedon,
+              order_id: orderId,
+              error: responseData.error,
+              error_Message: responseData.error_Message
+            }
+          })
+
+        if (transactionError) {
+          console.error('Error creating transaction record:', transactionError)
+          // Don't throw error - order update succeeded, just log the transaction error
         }
 
         console.log('Payment verification completed:', {
