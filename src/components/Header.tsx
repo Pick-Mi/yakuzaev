@@ -2,15 +2,8 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { useProfile } from "@/hooks/useProfile";
 import { useCart } from "@/hooks/useCart";
-import { ShoppingCart, User, LogOut, Settings, CreditCard, MapPin, Package } from "lucide-react";
+import { ShoppingCart, User } from "lucide-react";
 import { Link } from "react-router-dom";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 
 const Header = () => {
@@ -45,51 +38,12 @@ const Header = () => {
           
           {/* User Menu */}
           {user ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="flex items-center gap-2 h-auto px-3 py-2">
-                  <User className="w-5 h-5" />
-                  <span className="text-sm font-medium">{displayName}</span>
-                </Button>
-              </DropdownMenuTrigger>
-               <DropdownMenuContent align="end" className="w-56">
-                 <div className="flex items-center justify-start gap-2 p-2">
-                   <div className="flex flex-col space-y-1 leading-none">
-                     <p className="text-sm font-medium">{user.email}</p>
-                   </div>
-                 </div>
-                 <DropdownMenuSeparator />
-                 <Link to="/profile">
-                   <DropdownMenuItem>
-                     <User className="w-4 h-4 mr-2" />
-                     Profile Details
-                   </DropdownMenuItem>
-                 </Link>
-                 <Link to="/profile?tab=address">
-                   <DropdownMenuItem>
-                     <MapPin className="w-4 h-4 mr-2" />
-                     Address Details
-                   </DropdownMenuItem>
-                 </Link>
-                  <Link to="/profile?tab=payment">
-                    <DropdownMenuItem>
-                      <CreditCard className="w-4 h-4 mr-2" />
-                      Payment Details
-                    </DropdownMenuItem>
-                  </Link>
-                  <Link to="/orders">
-                    <DropdownMenuItem>
-                      <Package className="w-4 h-4 mr-2" />
-                      My Orders
-                    </DropdownMenuItem>
-                  </Link>
-                  <DropdownMenuSeparator />
-                 <DropdownMenuItem onClick={handleSignOut}>
-                   <LogOut className="w-4 h-4 mr-2" />
-                   Sign Out
-                 </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <Link to="/profile">
+              <Button variant="ghost" className="flex items-center gap-2 h-auto px-3 py-2">
+                <User className="w-5 h-5" />
+                <span className="text-sm font-medium">{displayName}</span>
+              </Button>
+            </Link>
           ) : (
             <Link to="/auth">
               <Button variant="ai" size="sm">

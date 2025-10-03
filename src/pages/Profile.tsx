@@ -8,21 +8,20 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import Header from "@/components/Header";
-import { ArrowLeft, Save, User, MapPin, CreditCard, Bell, Shield } from "lucide-react";
+import { Save, User, MapPin, CreditCard, Bell, Shield, Package, ChevronRight, LogOut } from "lucide-react";
 
 const Profile = () => {
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
   const { refreshProfile } = useProfile();
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { toast } = useToast();
-  const [activeTab, setActiveTab] = useState(searchParams.get("tab") || "profile");
+  const [activeSection, setActiveSection] = useState(searchParams.get("section") || "profile");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   
@@ -149,47 +148,126 @@ const Profile = () => {
     );
   }
 
+  const handleSectionChange = (section: string) => {
+    setActiveSection(section);
+    setSearchParams({ section });
+  };
+
+  const handleLogout = async () => {
+    await signOut();
+    navigate("/");
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
       
       <div className="container mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="flex items-center gap-4 mb-8">
-          <Button 
-            variant="ghost" 
-            onClick={() => navigate("/")}
-            className="flex items-center gap-2"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Back to Home
-          </Button>
-          <h1 className="text-3xl font-bold text-foreground">My Profile</h1>
-        </div>
+        <div className="flex gap-6">
+          {/* Sidebar */}
+          <aside className="w-64 flex-shrink-0">
+            <nav className="space-y-1">
+              {/* My Orders */}
+              <button
+                onClick={() => navigate("/orders")}
+                className="w-full flex items-center justify-between px-4 py-3 text-left hover:bg-accent rounded-lg transition-colors group"
+              >
+                <div className="flex items-center gap-3">
+                  <Package className="w-5 h-5 text-primary" />
+                  <span className="font-medium">MY ORDERS</span>
+                </div>
+                <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-foreground" />
+              </button>
 
-        {/* Profile Tabs */}
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="profile" className="flex items-center gap-2">
-              <User className="w-4 h-4" />
-              Profile
-            </TabsTrigger>
-            <TabsTrigger value="address" className="flex items-center gap-2">
-              <MapPin className="w-4 h-4" />
-              Address
-            </TabsTrigger>
-            <TabsTrigger value="payment" className="flex items-center gap-2">
-              <CreditCard className="w-4 h-4" />
-              Payment
-            </TabsTrigger>
-            <TabsTrigger value="preferences" className="flex items-center gap-2">
-              <Bell className="w-4 h-4" />
-              Preferences
-            </TabsTrigger>
-          </TabsList>
+              {/* Account Settings */}
+              <div className="pt-4">
+                <div className="flex items-center gap-3 px-4 py-2 text-muted-foreground">
+                  <User className="w-5 h-5" />
+                  <span className="font-medium text-sm">ACCOUNT SETTINGS</span>
+                </div>
+                <div className="ml-4 space-y-1">
+                  <button
+                    onClick={() => handleSectionChange("profile")}
+                    className={`w-full text-left px-4 py-2 rounded-lg transition-colors ${
+                      activeSection === "profile" ? "bg-primary/10 text-primary font-medium" : "hover:bg-accent"
+                    }`}
+                  >
+                    Profile Information
+                  </button>
+                  <button
+                    onClick={() => handleSectionChange("address")}
+                    className={`w-full text-left px-4 py-2 rounded-lg transition-colors ${
+                      activeSection === "address" ? "bg-primary/10 text-primary font-medium" : "hover:bg-accent"
+                    }`}
+                  >
+                    Manage Addresses
+                  </button>
+                  <button
+                    onClick={() => handleSectionChange("pan")}
+                    className={`w-full text-left px-4 py-2 rounded-lg transition-colors ${
+                      activeSection === "pan" ? "bg-primary/10 text-primary font-medium" : "hover:bg-accent"
+                    }`}
+                  >
+                    PAN Card Information
+                  </button>
+                </div>
+              </div>
 
-          {/* Profile Details Tab */}
-          <TabsContent value="profile" className="space-y-6">
+              {/* Payments */}
+              <div className="pt-4">
+                <div className="flex items-center gap-3 px-4 py-2 text-muted-foreground">
+                  <CreditCard className="w-5 h-5" />
+                  <span className="font-medium text-sm">PAYMENTS</span>
+                </div>
+                <div className="ml-4 space-y-1">
+                  <button
+                    onClick={() => handleSectionChange("payment")}
+                    className={`w-full text-left px-4 py-2 rounded-lg transition-colors ${
+                      activeSection === "payment" ? "bg-primary/10 text-primary font-medium" : "hover:bg-accent"
+                    }`}
+                  >
+                    Payment Methods
+                  </button>
+                </div>
+              </div>
+
+              {/* Preferences */}
+              <div className="pt-4">
+                <div className="flex items-center gap-3 px-4 py-2 text-muted-foreground">
+                  <Bell className="w-5 h-5" />
+                  <span className="font-medium text-sm">MY STUFF</span>
+                </div>
+                <div className="ml-4 space-y-1">
+                  <button
+                    onClick={() => handleSectionChange("preferences")}
+                    className={`w-full text-left px-4 py-2 rounded-lg transition-colors ${
+                      activeSection === "preferences" ? "bg-primary/10 text-primary font-medium" : "hover:bg-accent"
+                    }`}
+                  >
+                    Preferences
+                  </button>
+                </div>
+              </div>
+
+              {/* Logout */}
+              <div className="pt-4">
+                <button
+                  onClick={handleLogout}
+                  className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-accent rounded-lg transition-colors text-destructive"
+                >
+                  <LogOut className="w-5 h-5" />
+                  <span className="font-medium">Logout</span>
+                </button>
+              </div>
+            </nav>
+          </aside>
+
+          {/* Main Content */}
+          <main className="flex-1 space-y-6">
+
+          {/* Profile Details Section */}
+          {activeSection === "profile" && (
+            <div className="space-y-6">
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -330,10 +408,12 @@ const Profile = () => {
                 </div>
               </CardContent>
             </Card>
-          </TabsContent>
+            </div>
+          )}
 
-          {/* Address Details Tab */}
-          <TabsContent value="address" className="space-y-6">
+          {/* Address Details Section */}
+          {activeSection === "address" && (
+            <div className="space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Primary Address */}
               <Card>
@@ -490,10 +570,24 @@ const Profile = () => {
                 </CardContent>
               </Card>
             </div>
-          </TabsContent>
+            </div>
+          )}
 
-          {/* Payment Details Tab */}
-          <TabsContent value="payment" className="space-y-6">
+          {/* PAN Card Section */}
+          {activeSection === "pan" && (
+            <Card>
+              <CardHeader>
+                <CardTitle>PAN Card Information</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">PAN card information management coming soon.</p>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Payment Details Section */}
+          {activeSection === "payment" && (
+            <div className="space-y-6">
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -530,10 +624,12 @@ const Profile = () => {
                 </div>
               </CardContent>
             </Card>
-          </TabsContent>
+            </div>
+          )}
 
-          {/* Preferences Tab */}
-          <TabsContent value="preferences" className="space-y-6">
+          {/* Preferences Section */}
+          {activeSection === "preferences" && (
+            <div className="space-y-6">
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -591,8 +687,10 @@ const Profile = () => {
                 </div>
               </CardContent>
             </Card>
-          </TabsContent>
-        </Tabs>
+            </div>
+          )}
+          </main>
+        </div>
 
         {/* Save Button */}
         <div className="flex justify-end mt-8">
