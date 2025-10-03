@@ -192,7 +192,11 @@ export default function PaymentSuccess() {
                   </div>
                   
                   <div className="flex flex-col gap-2">
-                    <Button onClick={() => navigate(`/orders/${paymentDetails.orderId}`)} className="w-full">
+                    <Button 
+                      onClick={() => navigate(`/orders/${paymentDetails.orderId}`)} 
+                      className="w-full bg-green-600 hover:bg-green-700"
+                      size="lg"
+                    >
                       View Order Details
                     </Button>
                     <div className="flex gap-2">
