@@ -5,7 +5,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
 import {
@@ -21,7 +20,6 @@ import {
 } from "@/components/ui/alert-dialog";
 import { format } from "date-fns";
 import { 
-  ArrowLeft, 
   Package, 
   Truck, 
   CheckCircle, 
@@ -29,15 +27,21 @@ import {
   MapPin,
   CreditCard,
   User,
-  Calendar,
-  XCircle
+  ChevronRight,
+  Home,
+  MessageCircle,
+  XCircle,
+  ChevronDown,
+  Info
 } from "lucide-react";
+import Header from "@/components/Header";
 
 interface Order {
   id: string;
   created_at: string;
   total_amount: number;
   status: string;
+  payment_status?: string;
   order_items_data?: any;
   customer_details?: any;
   delivery_address?: any;
@@ -58,6 +62,8 @@ const OrderDetails = () => {
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
   const [cancelling, setCancelling] = useState(false);
+  const [showAllUpdates, setShowAllUpdates] = useState(false);
+  const [showPriceBreakdown, setShowPriceBreakdown] = useState(false);
 
   useEffect(() => {
     if (user && id) {
@@ -84,60 +90,61 @@ const OrderDetails = () => {
     }
   };
 
-  const getStatusProgress = (status: string) => {
-    const statusMap: { [key: string]: number } = {
-      'pending': 20,
-      'confirmed': 40,
-      'processing': 60,
-      'shipped': 80,
-      'delivered': 100,
-      'cancelled': 0
-    };
-    return statusMap[status.toLowerCase()] || 0;
-  };
-
-  const getStatusSteps = () => [
-    { 
-      status: 'pending', 
-      label: 'Order Placed', 
-      icon: Clock,
-      description: 'Your order has been received'
-    },
-    { 
-      status: 'confirmed', 
-      label: 'Confirmed', 
-      icon: CheckCircle,
-      description: 'Order confirmed and being prepared'
-    },
-    { 
-      status: 'processing', 
-      label: 'Processing', 
-      icon: Package,
-      description: 'Your items are being packed'
-    },
-    { 
-      status: 'shipped', 
-      label: 'Shipped', 
-      icon: Truck,
-      description: 'Your order is on the way'
-    },
-    { 
-      status: 'delivered', 
-      label: 'Delivered', 
-      icon: CheckCircle,
-      description: 'Order delivered successfully'
+  const getOrderTimeline = () => {
+    if (!order) return [];
+    
+    const timeline = [];
+    const orderDate = new Date(order.created_at);
+    
+    if (order.status === 'confirmed' || order.status === 'processing' || order.status === 'shipped' || order.status === 'delivered') {
+      timeline.push({
+        label: 'Order Confirmed',
+        date: format(orderDate, 'EEE d MMM'),
+        time: 'Today',
+        completed: true,
+        message: 'Your Order has been placed.',
+      });
     }
-  ];
 
-  const isStepCompleted = (stepStatus: string, currentStatus: string) => {
-    const steps = ['pending', 'confirmed', 'processing', 'shipped', 'delivered'];
-    const stepIndex = steps.indexOf(stepStatus);
-    const currentIndex = steps.indexOf(currentStatus.toLowerCase());
-    return stepIndex <= currentIndex;
-  };
+    if (order.status === 'shipped' || order.status === 'delivered') {
+      const shippedDate = new Date(orderDate);
+      shippedDate.setDate(shippedDate.getDate() + 1);
+      timeline.push({
+        label: 'Shipped',
+        date: `Expected By ${format(shippedDate, 'MMM d')}`,
+        time: '',
+        completed: order.status === 'delivered',
+        message: '',
+      });
+    } else if (order.status === 'confirmed' || order.status === 'processing') {
+      timeline.push({
+        label: 'Shipped',
+        date: order.estimated_delivery_date ? `Expected By ${format(new Date(order.estimated_delivery_date), 'MMM d')}` : 'Expected soon',
+        time: '',
+        completed: false,
+        message: '',
+      });
+    }
 
-  const isStepCurrent = (stepStatus: string, currentStatus: string) => {
-    return stepStatus === currentStatus.toLowerCase();
+    timeline.push({
+      label: 'Out For Delivery',
+      date: '',
+      time: '',
+      completed: false,
+      message: '',
+    });
+
+    if (order.estimated_delivery_date) {
+      timeline.push({
+        label: 'Delivery',
+        date: format(new Date(order.estimated_delivery_date), 'MMM dd'),
+        time: 'By 11 PM',
+        completed: order.status === 'delivered',
+        message: '',
+      });
+    }
+
+    return timeline;
   };
 
   const handleCancelOrder = async () => {
@@ -145,7 +152,6 @@ const OrderDetails = () => {
     
     setCancelling(true);
     try {
-      // Update order status to cancelled
       const { error: updateError } = await supabase
         .from('orders')
         .update({ 
@@ -162,7 +168,6 @@ const OrderDetails = () => {
         description: "Your order has been cancelled and refund will be processed within 5-7 business days.",
       });
 
-      // Refresh order data
       await fetchOrder();
     } catch (error) {
       console.error('Error cancelling order:', error);
@@ -182,54 +187,173 @@ const OrderDetails = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-lg">Loading order details...</div>
+      <div className="min-h-screen bg-background">
+        <Header />
+        <div className="flex items-center justify-center h-64">
+          <div className="text-lg">Loading order details...</div>
+        </div>
       </div>
     );
   }
 
   if (!order) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-xl font-semibold mb-2">Order not found</h2>
-          <Button onClick={() => navigate('/orders')}>
-            Back to Orders
-          </Button>
+      <div className="min-h-screen bg-background">
+        <Header />
+        <div className="flex items-center justify-center h-64">
+          <div className="text-center">
+            <h2 className="text-xl font-semibold mb-2">Order not found</h2>
+            <Button onClick={() => navigate('/orders')}>
+              Back to Orders
+            </Button>
+          </div>
         </div>
       </div>
     );
   }
 
-  const statusSteps = getStatusSteps();
-  const progress = getStatusProgress(order.status);
+  const orderItems = order.order_items_data || [];
+  const firstItem = orderItems[0] || {};
+  const timeline = getOrderTimeline();
+  const deliveryAddress = order.delivery_address || order.customer_details?.address || {};
+  
+  // Calculate price details
+  const subtotal = orderItems.reduce((sum: number, item: any) => sum + (item.total_price || 0), 0);
+  const listingPrice = subtotal * 1.3; // Assuming a markup
+  const discount = listingPrice - subtotal;
+  const totalFees = (order.shipping_charge || 0) + (order.tax_amount || 0);
 
   return (
     <div className="min-h-screen bg-background">
+      <Header />
       <div className="container mx-auto px-4 py-8">
-        <div className="max-w-4xl mx-auto">
-          {/* Header */}
-          <div className="flex items-center justify-between mb-8 flex-wrap gap-4">
-            <div className="flex items-center gap-4">
-              <Button 
-                variant="ghost" 
-                size="icon"
-                onClick={() => navigate('/orders')}
-              >
-                <ArrowLeft className="w-5 h-5" />
-              </Button>
-              <div>
-                <h1 className="text-3xl font-bold">Order Details</h1>
-                <p className="text-muted-foreground">Order #{order.id.slice(-8)}</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
+        {/* Breadcrumb */}
+        <nav className="text-sm text-muted-foreground mb-6">
+          <span className="hover:text-foreground cursor-pointer" onClick={() => navigate('/')}>Home</span>
+          <span className="mx-2">›</span>
+          <span className="hover:text-foreground cursor-pointer" onClick={() => navigate('/profile')}>My Account</span>
+          <span className="mx-2">›</span>
+          <span className="hover:text-foreground cursor-pointer" onClick={() => navigate('/orders')}>My Orders</span>
+          <span className="mx-2">›</span>
+          <span className="text-foreground">{order.id.slice(0, 16)}</span>
+        </nav>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Main Content */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* Tracking Info */}
+            <Card>
+              <CardContent className="p-6">
+                <p className="text-sm mb-2">
+                  Order can be tracked by <strong>8553352688</strong>.
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  Tracking link is shared via SMS.
+                </p>
+              </CardContent>
+            </Card>
+
+            {/* Manage Access */}
+            <Card className="cursor-pointer hover:bg-accent/50">
+              <CardContent className="p-4 flex items-center justify-between">
+                <span className="font-medium">Manage who can access</span>
+                <ChevronRight className="w-5 h-5 text-muted-foreground" />
+              </CardContent>
+            </Card>
+
+            {/* Pay Online Banner */}
+            {order.payment_status !== 'completed' && order.payment_status !== 'paid' && (
+              <Card className="bg-blue-50 border-blue-200">
+                <CardContent className="p-4 flex items-center justify-between">
+                  <span className="text-sm">Pay online for a smooth doorstep experience</span>
+                  <Button size="sm" variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-100">
+                    Pay ₹{Math.round(order.total_amount)}
+                  </Button>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Product Details */}
+            <Card>
+              <CardContent className="p-6">
+                <div className="flex gap-4 mb-6">
+                  <div className="w-24 h-24 bg-muted rounded-lg flex items-center justify-center overflow-hidden flex-shrink-0">
+                    {firstItem.image_url ? (
+                      <img src={firstItem.image_url} alt={firstItem.name} className="w-full h-full object-cover" />
+                    ) : (
+                      <Package className="w-12 h-12 text-muted-foreground" />
+                    )}
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-lg mb-1">
+                      {firstItem.name || 'Product Name'}
+                    </h3>
+                    <p className="text-sm text-muted-foreground mb-1">
+                      {firstItem.quantity || 1}, {firstItem.variant || 'Black'}
+                    </p>
+                    {firstItem.seller && (
+                      <p className="text-sm text-muted-foreground">
+                        Seller: {firstItem.seller}
+                      </p>
+                    )}
+                    <p className="font-semibold text-lg mt-2">
+                      ₹{firstItem.total_price || order.total_amount}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Order Timeline */}
+                <div className="space-y-3">
+                  {timeline.slice(0, showAllUpdates ? timeline.length : 1).map((step, index) => (
+                    <div key={index} className={`flex items-start gap-3 ${step.completed ? 'bg-green-50 p-3 rounded-lg' : ''}`}>
+                      <div className="flex-shrink-0">
+                        {step.completed ? (
+                          <CheckCircle className="w-5 h-5 text-green-600" />
+                        ) : (
+                          <div className="w-5 h-5 rounded-full border-2 border-muted-foreground" />
+                        )}
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-baseline gap-2">
+                          <span className={`font-medium ${step.completed ? 'text-green-800' : ''}`}>
+                            {step.label}
+                          </span>
+                          {step.date && <span className="text-sm text-muted-foreground">{step.date}</span>}
+                        </div>
+                        {step.message && (
+                          <p className="text-sm text-muted-foreground mt-1">{step.message}</p>
+                        )}
+                        {step.time && (
+                          <p className="text-sm text-muted-foreground">{step.time}</p>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <Button 
+                  variant="link" 
+                  className="mt-4 text-primary p-0"
+                  onClick={() => setShowAllUpdates(!showAllUpdates)}
+                >
+                  {showAllUpdates ? 'Hide Updates' : 'See All Updates'} ›
+                </Button>
+
+                <Separator className="my-4" />
+
+                <p className="text-sm text-muted-foreground">
+                  Delivery Executive details will be available once the order is out for delivery
+                </p>
+              </CardContent>
+            </Card>
+
+            {/* Action Buttons */}
+            <div className="flex gap-4">
               {canCancelOrder(order.status) && (
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
-                    <Button variant="destructive" size="sm" disabled={cancelling}>
-                      <XCircle className="w-4 h-4 mr-2" />
-                      Cancel Order
+                    <Button variant="outline" className="flex-1" disabled={cancelling}>
+                      Cancel
                     </Button>
                   </AlertDialogTrigger>
                   <AlertDialogContent>
@@ -237,7 +361,6 @@ const OrderDetails = () => {
                       <AlertDialogTitle>Cancel Order & Request Refund?</AlertDialogTitle>
                       <AlertDialogDescription>
                         This will cancel your order and initiate a refund. The amount will be credited back to your original payment method within 5-7 business days.
-                        This action cannot be undone.
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
@@ -249,220 +372,124 @@ const OrderDetails = () => {
                   </AlertDialogContent>
                 </AlertDialog>
               )}
-              {order.status.toLowerCase() === 'cancelled' && (
-                <Badge variant="destructive" className="text-sm">
-                  <XCircle className="w-4 h-4 mr-1" />
-                  Order Cancelled
-                </Badge>
-              )}
+              <Button variant="outline" className="flex-1 gap-2">
+                <MessageCircle className="w-4 h-4" />
+                Chat with us
+              </Button>
             </div>
           </div>
 
-          {/* Order Status Progress */}
-          <Card className="mb-8">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Package className="w-5 h-5" />
-                Order Status
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-6">
-                {/* Progress Bar */}
-                <div>
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-sm font-medium">Progress</span>
-                    <span className="text-sm text-muted-foreground">{progress}%</span>
-                  </div>
-                  <Progress value={progress} className="h-2" />
-                </div>
-
-                {/* Status Steps */}
-                <div className="space-y-4">
-                  {statusSteps.map((step, index) => {
-                    const Icon = step.icon;
-                    const completed = isStepCompleted(step.status, order.status);
-                    const current = isStepCurrent(step.status, order.status);
-                    
-                    return (
-                      <div key={step.status} className="flex items-start gap-4">
-                        <div className={`
-                          w-10 h-10 rounded-full flex items-center justify-center border-2
-                          ${completed 
-                            ? 'bg-primary border-primary text-primary-foreground' 
-                            : current
-                            ? 'bg-primary/20 border-primary text-primary'
-                            : 'bg-muted border-muted-foreground/20 text-muted-foreground'
-                          }
-                        `}>
-                          <Icon className="w-5 h-5" />
-                        </div>
-                        <div className="flex-1">
-                          <h3 className={`font-medium ${completed || current ? 'text-foreground' : 'text-muted-foreground'}`}>
-                            {step.label}
-                          </h3>
-                          <p className="text-sm text-muted-foreground">
-                            {step.description}
-                          </p>
-                          {current && (
-                            <Badge className="mt-1" variant="default">
-                              Current Status
-                            </Badge>
-                          )}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <div className="grid lg:grid-cols-2 gap-8">
-            {/* Order Items */}
+          {/* Right Sidebar */}
+          <div className="space-y-6">
+            {/* Delivery Details */}
             <Card>
               <CardHeader>
-                <CardTitle>Order Items</CardTitle>
+                <CardTitle className="text-lg">Delivery details</CardTitle>
               </CardHeader>
-              <CardContent>
-                {order.order_items_data && Array.isArray(order.order_items_data) && order.order_items_data.length > 0 ? (
-                  <div className="space-y-4">
-                    {order.order_items_data.map((item: any, index: number) => (
-                      <div key={index} className="flex justify-between items-start">
-                        <div className="flex-1">
-                          <h4 className="font-medium">{item.name}</h4>
-                          <p className="text-sm text-muted-foreground">
-                            Quantity: {item.quantity} × ₹{item.price}
-                          </p>
-                        </div>
-                        <div className="font-medium">
-                          ₹{(item.quantity * item.price).toFixed(2)}
-                        </div>
-                      </div>
-                    ))}
-                    <Separator />
-                    <div className="space-y-2">
-                      <div className="flex justify-between">
-                        <span>Subtotal</span>
-                        <span>₹{order.order_summary?.subtotal || '0.00'}</span>
-                      </div>
-                      {order.shipping_charge && (
-                        <div className="flex justify-between">
-                          <span>Shipping</span>
-                          <span>₹{parseFloat(order.shipping_charge.toString()).toFixed(2)}</span>
-                        </div>
-                      )}
-                      {order.tax_amount && (
-                        <div className="flex justify-between">
-                          <span>Tax</span>
-                          <span>₹{parseFloat(order.tax_amount.toString()).toFixed(2)}</span>
-                        </div>
-                      )}
-                      {order.discount_amount && (
-                        <div className="flex justify-between text-green-600">
-                          <span>Discount</span>
-                          <span>-₹{parseFloat(order.discount_amount.toString()).toFixed(2)}</span>
-                        </div>
-                      )}
-                      <Separator />
-                      <div className="flex justify-between font-bold text-lg">
-                        <span>Total</span>
-                        <span>₹{parseFloat(order.total_amount.toString()).toFixed(2)}</span>
-                      </div>
-                    </div>
+              <CardContent className="space-y-4">
+                <div className="flex items-start gap-3 cursor-pointer hover:bg-accent/50 p-2 rounded-lg -m-2">
+                  <Home className="w-5 h-5 text-muted-foreground mt-0.5" />
+                  <div className="flex-1">
+                    <p className="font-medium">Home</p>
+                    <p className="text-sm text-muted-foreground line-clamp-2">
+                      {deliveryAddress.street_address || deliveryAddress.address || 'Address not available'}
+                    </p>
                   </div>
-                ) : (
-                  <p className="text-muted-foreground">No items found</p>
-                )}
+                  <ChevronRight className="w-5 h-5 text-muted-foreground" />
+                </div>
+
+                <Separator />
+
+                <div className="flex items-start gap-3 cursor-pointer hover:bg-accent/50 p-2 rounded-lg -m-2">
+                  <User className="w-5 h-5 text-muted-foreground mt-0.5" />
+                  <div className="flex-1">
+                    <p className="font-medium">
+                      {order.customer_details?.name || user?.email?.split('@')[0] || 'Customer'}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      {order.customer_details?.phone || '8553352688'}
+                    </p>
+                  </div>
+                  <ChevronRight className="w-5 h-5 text-muted-foreground" />
+                </div>
               </CardContent>
             </Card>
 
-            {/* Order Information */}
-            <div className="space-y-6">
-              {/* Customer Details */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <User className="w-5 h-5" />
-                    Customer Details
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {order.customer_details ? (
-                    <div className="space-y-2">
-                      <p><strong>Name:</strong> {order.customer_details.firstName} {order.customer_details.lastName}</p>
-                      <p><strong>Email:</strong> {order.customer_details.email}</p>
-                      <p><strong>Phone:</strong> {order.customer_details.phone}</p>
-                    </div>
-                  ) : (
-                    <p className="text-muted-foreground">No customer details available</p>
-                  )}
-                </CardContent>
-              </Card>
-
-              {/* Delivery Address */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <MapPin className="w-5 h-5" />
-                    Delivery Address
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {order.delivery_address ? (
-                    <div className="space-y-1">
-                      <p>{order.delivery_address.streetAddress}</p>
-                      {order.delivery_address.apartmentUnit && (
-                        <p>{order.delivery_address.apartmentUnit}</p>
-                      )}
-                      <p>{order.delivery_address.city}, {order.delivery_address.stateProvince}</p>
-                      <p>{order.delivery_address.postalCode}</p>
-                      <p>{order.delivery_address.country}</p>
-                    </div>
-                  ) : (
-                    <p className="text-muted-foreground">No delivery address available</p>
-                  )}
-                </CardContent>
-              </Card>
-
-              {/* Payment Details */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <CreditCard className="w-5 h-5" />
-                    Payment Information
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-2">
-                    <p><strong>Method:</strong> {order.payment_method || 'Not specified'}</p>
-                    <p><strong>Status:</strong> 
-                      <Badge className="ml-2" variant={order.payment_details?.status === 'paid' ? 'default' : 'secondary'}>
-                        {order.payment_details?.status || 'Pending'}
-                      </Badge>
-                    </p>
+            {/* Price Details */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Price details</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">Listing price</span>
+                  <span>₹{Math.round(listingPrice)}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">Selling price</span>
+                  <span>₹{Math.round(subtotal)}</span>
+                </div>
+                <div className="flex justify-between text-sm text-green-600">
+                  <span>Extra discount</span>
+                  <span>-₹{Math.round(discount)}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <div className="flex items-center gap-1">
+                    <span className="text-muted-foreground">Special price</span>
+                    <Info className="w-3 h-3 text-muted-foreground" />
                   </div>
-                </CardContent>
-              </Card>
+                  <span>₹{Math.round(subtotal - (order.discount_amount || 0))}</span>
+                </div>
+                
+                <button 
+                  className="flex items-center justify-between w-full text-sm py-2"
+                  onClick={() => setShowPriceBreakdown(!showPriceBreakdown)}
+                >
+                  <span className="text-muted-foreground">Total fees</span>
+                  <div className="flex items-center gap-1">
+                    <span>₹{Math.round(totalFees)}</span>
+                    <ChevronDown className={`w-4 h-4 transition-transform ${showPriceBreakdown ? 'rotate-180' : ''}`} />
+                  </div>
+                </button>
 
-              {/* Order Timeline */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Calendar className="w-5 h-5" />
-                    Order Timeline
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-2">
-                    <p><strong>Order Date:</strong> {format(new Date(order.created_at), 'PPP')}</p>
-                    {order.estimated_delivery_date && (
-                      <p><strong>Estimated Delivery:</strong> {format(new Date(order.estimated_delivery_date), 'PPP')}</p>
+                {showPriceBreakdown && (
+                  <div className="pl-4 space-y-2 text-sm">
+                    {order.shipping_charge > 0 && (
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">Shipping</span>
+                        <span>₹{Math.round(order.shipping_charge)}</span>
+                      </div>
+                    )}
+                    {order.tax_amount > 0 && (
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">Tax</span>
+                        <span>₹{Math.round(order.tax_amount)}</span>
+                      </div>
                     )}
                   </div>
-                </CardContent>
-              </Card>
-            </div>
+                )}
+
+                <Separator />
+
+                <div className="flex justify-between font-semibold">
+                  <span>Total amount</span>
+                  <span>₹{Math.round(order.total_amount)}</span>
+                </div>
+
+                <Separator />
+
+                <div className="flex items-start gap-2 text-sm">
+                  <CreditCard className="w-4 h-4 mt-0.5" />
+                  <div className="flex-1">
+                    <span className="text-muted-foreground">Paid by</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <CreditCard className="w-4 h-4" />
+                    <span>{order.payment_method || 'Cash On Delivery'}</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </div>
