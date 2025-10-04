@@ -5,6 +5,7 @@ import { useCart } from "@/hooks/useCart";
 import { ShoppingCart, User } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
+import NotificationBar from "./NotificationBar";
 
 const Header = () => {
   const { user, signOut } = useAuth();
@@ -17,7 +18,9 @@ const Header = () => {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <div className="sticky top-0 z-50 w-full">
+      <NotificationBar />
+      <header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         <Link to="/" className="text-xl font-bold text-primary">
           Yakuza EV
@@ -54,6 +57,7 @@ const Header = () => {
         </div>
       </div>
     </header>
+    </div>
   );
 };
 
