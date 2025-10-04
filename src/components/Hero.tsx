@@ -37,14 +37,6 @@ const Hero = () => {
             </div>
           </div>
           
-          {/* Right side - Product image */}
-          <div className="relative flex items-center justify-center">
-            <img 
-              src={heroImage} 
-              alt="Modern electric scooter" 
-              className="w-full max-w-[600px] object-contain drop-shadow-2xl"
-            />
-          </div>
         </div>
       </div>
     </section>
