@@ -1,15 +1,15 @@
 import { Button } from "@/components/ui/button";
 import heroImage from "@/assets/hero-scooter.png";
+import heroBackground from "@/assets/hero-background.png";
 
 const Hero = () => {
   return (
     <section className="relative overflow-hidden bg-[#0a1525] min-h-[600px] lg:min-h-[700px]">
-      {/* Geometric background shapes */}
-      <div className="absolute inset-0">
-        <div className="absolute top-0 left-0 w-[300px] h-[300px] bg-[#1a2844] rounded-3xl -rotate-12 opacity-50"></div>
-        <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-[#152238] rounded-3xl rotate-12 opacity-50"></div>
-        <div className="absolute top-1/4 right-1/3 w-[500px] h-[500px] bg-[#1d3a5c] rounded-3xl -rotate-6 opacity-30"></div>
-      </div>
+      {/* Background image */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-50"
+        style={{ backgroundImage: `url(${heroBackground})` }}
+      ></div>
       
       <div className="container mx-auto px-4 relative z-10 h-full">
         <div className="grid lg:grid-cols-2 gap-8 items-center min-h-[600px] lg:min-h-[700px] py-12 lg:py-0">
