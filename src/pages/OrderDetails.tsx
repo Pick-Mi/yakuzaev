@@ -321,51 +321,6 @@ const OrderDetails = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
-            {/* Payment Status Card - Only show if payment is NOT completed */}
-            {order.payment_status !== 'completed' && order.payment_status !== 'paid' && (
-              <>
-                <Card className="border-blue-200 bg-blue-50">
-                  <CardContent className="p-4">
-                    <div className="flex items-center justify-between gap-4">
-                      <div className="flex-1">
-                        <p className="font-semibold text-blue-900 mb-1">Complete Your Payment</p>
-                        <p className="text-sm text-blue-700">Pay online for a smooth doorstep experience</p>
-                      </div>
-                      <Button 
-                        className="bg-blue-600 hover:bg-blue-700 text-white"
-                        onClick={() => setShowPaymentDialog(true)}
-                      >
-                        Pay ₹{Math.round(order.total_amount)}
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* Payment Dialog */}
-                <Dialog open={showPaymentDialog} onOpenChange={setShowPaymentDialog}>
-                  <DialogContent className="sm:max-w-md">
-                    <DialogHeader>
-                      <DialogTitle>Complete Payment</DialogTitle>
-                      <DialogDescription>
-                        You will be redirected to PayU's secure payment gateway
-                      </DialogDescription>
-                    </DialogHeader>
-                    <PayUPayment
-                      orderId={order.id}
-                      amount={order.total_amount}
-                      productInfo={firstItem?.name || "Order Payment"}
-                      customerDetails={{
-                        firstName: order.customer_details?.name || user?.email?.split('@')[0] || "Customer",
-                        email: order.customer_details?.email || user?.email || "",
-                        phone: order.customer_details?.phone || "9999999999"
-                      }}
-                      onSuccess={handlePaymentSuccess}
-                      onFailure={handlePaymentFailure}
-                    />
-                  </DialogContent>
-                </Dialog>
-              </>
-            )}
 
             {/* Manage Access */}
             <Card className="cursor-pointer hover:bg-accent/50">
