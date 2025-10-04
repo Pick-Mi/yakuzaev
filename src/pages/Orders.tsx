@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useNavigate } from "react-router-dom";
 import { format } from "date-fns";
-import { Package, Search, Star } from "lucide-react";
+import { Package, Search, Star, CheckCircle, Clock } from "lucide-react";
 import Header from "@/components/Header";
 
 interface Order {
@@ -191,9 +191,23 @@ const Orders = () => {
     const isPaid = status === 'completed' || status === 'paid';
     
     return (
-      <Badge variant={isPaid ? "default" : "secondary"} className="text-xs">
-        {isPaid ? "Payment Done" : "Payment Pending"}
-      </Badge>
+      <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium ${
+        isPaid 
+          ? 'bg-green-100 text-green-700 border border-green-200' 
+          : 'bg-orange-100 text-orange-700 border border-orange-200'
+      }`}>
+        {isPaid ? (
+          <>
+            <CheckCircle className="w-3.5 h-3.5" />
+            Payment Done
+          </>
+        ) : (
+          <>
+            <Clock className="w-3.5 h-3.5" />
+            Payment Pending
+          </>
+        )}
+      </div>
     );
   };
 
@@ -431,9 +445,9 @@ const Orders = () => {
                               </div>
                             </div>
 
-                            {/* Status and Date */}
+                            {/* Status and Payment */}
                             <div className="flex items-center justify-between mt-4">
-                              <div>
+                              <div className="flex-1">
                                 <div className={`flex items-center gap-1 font-medium ${getStatusColor(order.status)}`}>
                                   <div className="w-2 h-2 rounded-full bg-current"></div>
                                   <span>
@@ -446,21 +460,30 @@ const Orders = () => {
                                 <p className="text-sm text-muted-foreground mt-1">
                                   Your item has been {order.status.toLowerCase() === 'delivered' ? 'delivered' : 'ordered'}
                                 </p>
-                                <button 
-                                  className="text-primary flex items-center gap-1 mt-1 text-sm hover:underline"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleViewOrder(order.id);
-                                  }}
-                                >
-                                  <Star className="w-4 h-4" />
-                                  Rate & Review Product
-                                </button>
                               </div>
                               
-                              <div className="text-right">
+                              {/* Payment Status Badge */}
+                              <div className="ml-4">
                                 {getPaymentStatusBadge(order.payment_status)}
                               </div>
+                            </div>
+                            
+                            {/* Order Date and View Details */}
+                            <div className="flex items-center justify-between mt-3 pt-3 border-t">
+                              <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                                <span>Order Date: {format(new Date(order.created_at), 'MMM dd, yyyy')}</span>
+                              </div>
+                              
+                              <button 
+                                className="text-primary flex items-center gap-1 text-sm hover:underline font-medium"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleViewOrder(order.id);
+                                }}
+                              >
+                                View Details
+                                <Star className="w-3.5 h-3.5" />
+                              </button>
                             </div>
                           </div>
                         </div>
