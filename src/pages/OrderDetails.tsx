@@ -68,6 +68,7 @@ interface Order {
   tax_amount?: number;
   discount_amount?: number;
   order_summary?: any;
+  order_number?: number;
 }
 
 const OrderDetails = () => {
@@ -315,7 +316,7 @@ const OrderDetails = () => {
           <span className="mx-2">›</span>
           <span className="hover:text-foreground cursor-pointer" onClick={() => navigate('/orders')}>My Orders</span>
           <span className="mx-2">›</span>
-          <span className="text-foreground">{order.id.slice(0, 16)}</span>
+          <span className="text-foreground">Order #{order.order_number || order.id.slice(0, 8)}</span>
         </nav>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
