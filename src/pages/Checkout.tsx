@@ -137,6 +137,8 @@ const Checkout = () => {
                     email: userProfile?.email || user?.email || 'customer@example.com',
                     phone: userProfile?.phone || '9999999999'
                   }}
+                  cartItems={items}
+                  userProfile={userProfile}
                   onSuccess={(paymentData) => {
                     console.log('Payment successful:', paymentData);
                     clearCart();
