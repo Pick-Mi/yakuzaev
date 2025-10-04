@@ -322,13 +322,6 @@ const OrderDetails = () => {
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
 
-            {/* Manage Access */}
-            <Card className="cursor-pointer hover:bg-accent/50">
-              <CardContent className="p-4 flex items-center justify-between">
-                <span className="font-medium">Manage who can access</span>
-                <ChevronRight className="w-5 h-5 text-muted-foreground" />
-              </CardContent>
-            </Card>
 
             {/* Tracking Info */}
             <Card>
