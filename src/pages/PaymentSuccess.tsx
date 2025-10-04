@@ -78,7 +78,8 @@ export default function PaymentSuccess() {
         if (verificationResponse?.success && verificationResponse?.paymentStatus === 'success') {
           setVerificationStatus('success');
           setPaymentDetails({
-            orderId: payuResponse.txnid,
+            orderId: verificationResponse.orderId || payuResponse.udf2, // Use actual order ID from verification response
+            txnid: payuResponse.txnid,
             mihpayid: payuResponse.mihpayid,
             amount: payuResponse.amount,
             mode: payuResponse.mode,
@@ -164,11 +165,11 @@ export default function PaymentSuccess() {
               {verificationStatus === 'success' && paymentDetails && (
                 <div className="space-y-4">
                   <div className="bg-green-50 p-4 rounded-lg">
-                    <p className="text-green-800 font-medium">
-                      Your payment has been processed successfully!
+                    <p className="text-green-800 font-medium text-lg">
+                      ✓ Payment Done!
                     </p>
                     <p className="text-green-600 text-sm">
-                      You will receive a confirmation email shortly.
+                      Your order has been placed successfully. You will receive a confirmation shortly.
                     </p>
                   </div>
                   
@@ -179,6 +180,10 @@ export default function PaymentSuccess() {
                     </div>
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Transaction ID:</span>
+                      <span className="font-medium">{paymentDetails.txnid}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Payment ID:</span>
                       <span className="font-medium">{paymentDetails.mihpayid}</span>
                     </div>
                     <div className="flex justify-between">
