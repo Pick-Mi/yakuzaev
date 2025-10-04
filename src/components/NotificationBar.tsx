@@ -7,7 +7,7 @@ const NotificationBar = () => {
         <span className="text-xs font-normal">Introducing our new 3-bike combo all for just ₹99,999!</span>
         <Link 
           to="/products" 
-          className="underline underline-offset-4 hover:text-primary transition-colors font-medium"
+          className="text-xs font-medium underline underline-offset-4 hover:text-primary transition-colors"
         >
           Book Now
         </Link>
