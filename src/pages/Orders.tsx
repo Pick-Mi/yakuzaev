@@ -13,6 +13,7 @@ import Header from "@/components/Header";
 
 interface Order {
   id: string;
+  order_number?: number;
   created_at: string;
   total_amount: number;
   status: string;
@@ -83,6 +84,7 @@ const Orders = () => {
     if (searchQuery) {
       filtered = filtered.filter(order => 
         order.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (order.order_number && order.order_number.toString().includes(searchQuery)) ||
         (order.order_items_data && JSON.stringify(order.order_items_data).toLowerCase().includes(searchQuery.toLowerCase()))
       );
     }
@@ -409,8 +411,13 @@ const Orders = () => {
                             <div className="flex justify-between items-start mb-2">
                               <div className="flex-1">
                                 <h3 className="font-semibold text-lg mb-1">
-                                  {firstItem?.name || `Order #${order.id.slice(-8)}`}
+                                  {firstItem?.name || 'Product'}
                                 </h3>
+                                {order.order_number && (
+                                  <p className="text-sm text-muted-foreground">
+                                    Order #{order.order_number.toString().padStart(4, '0')}
+                                  </p>
+                                )}
                                 {firstItem?.variant && (
                                   <p className="text-sm text-muted-foreground">
                                     Color: {firstItem.variant}
