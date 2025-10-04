@@ -323,17 +323,6 @@ const OrderDetails = () => {
           <div className="lg:col-span-2 space-y-6">
 
 
-            {/* Tracking Info */}
-            <Card>
-              <CardContent className="p-6">
-                <p className="text-sm mb-2">
-                  Order can be tracked by <strong>8553352688</strong>.
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  Tracking link is shared via SMS.
-                </p>
-              </CardContent>
-            </Card>
 
             {/* Product Details */}
             <Card>
