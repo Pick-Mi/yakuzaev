@@ -133,21 +133,6 @@ export type Database = {
         }
         Relationships: []
       }
-      kv_store_eecafcd0: {
-        Row: {
-          key: string
-          value: Json
-        }
-        Insert: {
-          key: string
-          value: Json
-        }
-        Update: {
-          key?: string
-          value?: Json
-        }
-        Relationships: []
-      }
       order_items: {
         Row: {
           created_at: string
@@ -206,6 +191,7 @@ export type Database = {
           id: string
           notes: string | null
           order_items_data: Json | null
+          order_number: number
           order_source: string | null
           order_summary: Json | null
           order_type: string | null
@@ -231,6 +217,7 @@ export type Database = {
           id?: string
           notes?: string | null
           order_items_data?: Json | null
+          order_number?: number
           order_source?: string | null
           order_summary?: Json | null
           order_type?: string | null
@@ -256,6 +243,7 @@ export type Database = {
           id?: string
           notes?: string | null
           order_items_data?: Json | null
+          order_number?: number
           order_source?: string | null
           order_summary?: Json | null
           order_type?: string | null
@@ -462,6 +450,57 @@ export type Database = {
           user_id?: string
           username?: string | null
           verification_date?: string | null
+        }
+        Relationships: []
+      }
+      transactions: {
+        Row: {
+          amount: number
+          created_at: string | null
+          currency: string
+          customer_email: string
+          customer_name: string
+          customer_phone: string | null
+          id: string
+          payment_id: string | null
+          payu_response: Json | null
+          product_info: string
+          status: string
+          transaction_id: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          amount: number
+          created_at?: string | null
+          currency?: string
+          customer_email: string
+          customer_name: string
+          customer_phone?: string | null
+          id?: string
+          payment_id?: string | null
+          payu_response?: Json | null
+          product_info: string
+          status?: string
+          transaction_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          amount?: number
+          created_at?: string | null
+          currency?: string
+          customer_email?: string
+          customer_name?: string
+          customer_phone?: string | null
+          id?: string
+          payment_id?: string | null
+          payu_response?: Json | null
+          product_info?: string
+          status?: string
+          transaction_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
         }
         Relationships: []
       }
