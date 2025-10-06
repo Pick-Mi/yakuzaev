@@ -4,41 +4,55 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
 const Hero = () => {
-  const [heroData, setHeroData] = useState({
-    bannerUrl: "",
-    title: "Turn every ride into an adventure.",
-  });
+  const [heroSections, setHeroSections] = useState<any[]>([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
-    const fetchHeroData = async () => {
+    const fetchHeroSections = async () => {
       const { data } = await (supabase as any)
-        .from("site_settings")
-        .select("hero_banner_url, hero_title")
-        .maybeSingle();
+        .from("hero_sections")
+        .select("*")
+        .eq("is_active", true)
+        .order("display_order", { ascending: true });
       
-      if (data) {
-        setHeroData({
-          bannerUrl: data.hero_banner_url || "",
-          title: data.hero_title || "Turn every ride into an adventure.",
-        });
+      if (data && data.length > 0) {
+        setHeroSections(data);
       }
     };
     
-    fetchHeroData();
+    fetchHeroSections();
   }, []);
+
+  // Auto-scroll effect
+  useEffect(() => {
+    if (heroSections.length <= 1) return;
+
+    const interval = setInterval(() => {
+      setCurrentIndex((prevIndex) => 
+        prevIndex === heroSections.length - 1 ? 0 : prevIndex + 1
+      );
+    }, 5000); // Change every 5 seconds
+
+    return () => clearInterval(interval);
+  }, [heroSections.length]);
+
+  const currentHero = heroSections[currentIndex] || {
+    image_url: "",
+    title: "Turn every ride into an adventure."
+  };
 
   return (
     <section 
-      className="relative w-full min-h-screen h-[829px] bg-black overflow-hidden"
+      className="relative w-full min-h-screen h-[829px] bg-black overflow-hidden transition-all duration-1000 ease-in-out"
       style={{
-        backgroundImage: heroData.bannerUrl ? `url(${heroData.bannerUrl})` : 'none',
+        backgroundImage: currentHero.image_url ? `url(${currentHero.image_url})` : 'none',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       }}
     >
       <div className="absolute left-10 top-[520px] w-[601px] max-w-[90%] flex flex-col gap-6 items-start">
-        <h1 className="font-sans font-normal text-[52px] leading-[73px] text-white m-0">
-          {heroData.title}
+        <h1 className="font-sans font-normal text-[52px] leading-[73px] text-white m-0 transition-opacity duration-700">
+          {currentHero.title}
         </h1>
         
         <div className="flex gap-6 items-center flex-wrap">
