@@ -31,7 +31,7 @@ const Hero = () => {
       setCurrentIndex((prevIndex) => 
         prevIndex === heroSections.length - 1 ? 0 : prevIndex + 1
       );
-    }, 5000); // Change every 5 seconds
+    }, 25000); // Change every 25 seconds
 
     return () => clearInterval(interval);
   }, [heroSections.length]);
