@@ -39,7 +39,7 @@ const Header = () => {
         </div>
         
         {/* Icons */}
-        <div className="absolute right-0 top-1 flex gap-5 items-center">
+        <div className="absolute right-0 top-1 flex gap-[15px] items-center">
           <Link to="/cart">
             <Button variant="ghost" size="icon" className="relative text-white hover:bg-white/10 h-auto p-1">
               <img src={cartIcon} alt="Cart" className="w-[22px] h-[22px]" />
@@ -50,14 +50,14 @@ const Header = () => {
               )}
             </Button>
           </Link>
-          <Button variant="ghost" size="icon" className="text-white hover:bg-white/10 h-auto p-1">
-            <img src={menuIcon} alt="Menu" className="w-[22px] h-[22px]" />
-          </Button>
           <Link to={user ? "/profile" : "/auth"}>
             <Button variant="ghost" size="icon" className="text-white hover:bg-white/10 h-auto p-1">
               <img src={profileIcon} alt="Profile" className="w-[22px] h-[22px]" />
             </Button>
           </Link>
+          <Button variant="ghost" size="icon" className="text-white hover:bg-white/10 h-auto p-1">
+            <img src={menuIcon} alt="Menu" className="w-[22px] h-[22px]" />
+          </Button>
         </div>
       </div>
       </nav>
