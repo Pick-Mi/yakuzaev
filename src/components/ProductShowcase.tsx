@@ -26,14 +26,32 @@ const ProductShowcase = () => {
 
         if (response.error) throw response.error;
 
-        const formattedProducts = response.data?.map((product: any) => ({
-          id: product.id,
-          name: product.name,
-          price: product.price,
-          image: product.images && product.images.length > 0 ? product.images[0] : product.image_url,
-          description: product.description,
-          variants: product.variants
-        })) || [];
+        const formattedProducts = response.data?.map((product: any) => {
+          let imageUrl = product.image_url;
+          
+          // Parse images JSON string and get first image
+          if (product.images) {
+            try {
+              const parsedImages = typeof product.images === 'string' 
+                ? JSON.parse(product.images) 
+                : product.images;
+              if (parsedImages && parsedImages.length > 0) {
+                imageUrl = parsedImages[0];
+              }
+            } catch (e) {
+              console.error('Error parsing images:', e);
+            }
+          }
+
+          return {
+            id: product.id,
+            name: product.name,
+            price: product.price,
+            image: imageUrl,
+            description: product.description,
+            variants: product.variants
+          };
+        }) || [];
 
         setProducts(formattedProducts);
       } catch (error) {
