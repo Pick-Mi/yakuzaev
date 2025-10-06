@@ -4,13 +4,16 @@ import { useCart } from "@/hooks/useCart";
 import { ShoppingCart, Menu, Settings } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
+import NotificationBar from "./NotificationBar";
 
 const Header = () => {
   const { user } = useAuth();
   const { itemCount } = useCart();
 
   return (
-    <nav className="absolute top-0 left-0 w-full py-4 px-10 z-10">
+    <>
+      <NotificationBar />
+      <nav className="absolute top-0 left-0 w-full py-4 px-10 z-10 mt-10">
       <div className="relative h-8 w-full max-w-[1360px] mx-auto">
         {/* Logo */}
         <Link to="/" className="absolute left-0 top-0 bg-white text-[#040d16] px-4 py-2 font-medium text-sm h-8 flex items-center justify-center w-[82px]">
@@ -52,7 +55,8 @@ const Header = () => {
           </Link>
         </div>
       </div>
-    </nav>
+      </nav>
+    </>
   );
 };
 
