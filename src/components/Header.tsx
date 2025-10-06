@@ -98,7 +98,7 @@ const Header = () => {
             </div>
             
             {/* Icons */}
-            <div className="absolute right-0 top-1 flex gap-[15px] items-center mr-[70px]">
+            <div className="absolute right-0 top-1 flex gap-[15px] items-center">
               <Link to="/cart">
                 <Button variant="ghost" size="icon" className={`relative hover:bg-black/10 h-auto p-1 ${isScrolled ? 'text-black' : 'text-white'}`}>
                   <img src={cartIcon} alt="Cart" className={`w-[22px] h-[22px] ${isScrolled ? 'invert' : ''}`} />
