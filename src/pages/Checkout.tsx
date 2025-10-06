@@ -141,12 +141,8 @@ const Checkout = () => {
                   userProfile={userProfile}
                   onSuccess={(paymentData) => {
                     console.log('Payment successful:', paymentData);
-                    clearCart();
-                    toast({
-                      title: "Payment successful!",
-                      description: "Your order has been placed successfully.",
-                    });
-                    navigate("/payment/success");
+                    // Cart will be cleared after payment verification on success page
+                    // Don't navigate yet - PayU will handle the redirect
                   }}
                   onFailure={(error) => {
                     console.error('Payment failed:', error);

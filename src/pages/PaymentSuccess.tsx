@@ -13,6 +13,7 @@ export default function PaymentSuccess() {
   const { toast } = useToast();
   const [verificationStatus, setVerificationStatus] = useState<'verifying' | 'success' | 'failed'>('verifying');
   const [paymentDetails, setPaymentDetails] = useState<any>(null);
+  const [orderDetails, setOrderDetails] = useState<any>(null);
 
   useEffect(() => {
     const verifyPayment = async () => {
@@ -76,9 +77,22 @@ export default function PaymentSuccess() {
         }
 
         if (verificationResponse?.success && verificationResponse?.paymentStatus === 'success') {
+          const orderId = verificationResponse.orderId || payuResponse.udf2;
+          
+          // Fetch full order details from database
+          const { data: order, error: orderError } = await supabase
+            .from('orders')
+            .select('*')
+            .eq('id', orderId)
+            .single();
+
+          if (!orderError && order) {
+            setOrderDetails(order);
+          }
+
           setVerificationStatus('success');
           setPaymentDetails({
-            orderId: verificationResponse.orderId || payuResponse.udf2, // Use actual order ID from verification response
+            orderId: orderId,
             txnid: payuResponse.txnid,
             mihpayid: payuResponse.mihpayid,
             amount: payuResponse.amount,
@@ -169,8 +183,12 @@ export default function PaymentSuccess() {
                   {/* Order Details */}
                   <div className="bg-accent/50 p-6 rounded-lg space-y-3 text-left">
                     <div className="flex justify-between items-center pb-2 border-b">
+                      <span className="text-sm text-muted-foreground">Order Number</span>
+                      <span className="font-semibold">#{orderDetails?.order_number || 'N/A'}</span>
+                    </div>
+                    <div className="flex justify-between items-center pb-2 border-b">
                       <span className="text-sm text-muted-foreground">Order ID</span>
-                      <span className="font-semibold">{paymentDetails.orderId}</span>
+                      <span className="font-mono text-xs">{paymentDetails.orderId}</span>
                     </div>
                     <div className="flex justify-between items-center pb-2 border-b">
                       <span className="text-sm text-muted-foreground">Transaction ID</span>
@@ -184,10 +202,27 @@ export default function PaymentSuccess() {
                       <span className="text-sm text-muted-foreground">Amount Paid</span>
                       <span className="font-bold text-lg text-green-600">₹{paymentDetails.amount}</span>
                     </div>
-                    <div className="flex justify-between items-center">
+                    <div className="flex justify-between items-center pb-2 border-b">
                       <span className="text-sm text-muted-foreground">Payment Mode</span>
                       <span className="font-medium capitalize">{paymentDetails.mode}</span>
                     </div>
+                    <div className="flex justify-between items-center pb-2 border-b">
+                      <span className="text-sm text-muted-foreground">Order Status</span>
+                      <span className="font-medium capitalize">{orderDetails?.status || 'Processing'}</span>
+                    </div>
+                    {orderDetails?.order_items_data && orderDetails.order_items_data.length > 0 && (
+                      <div className="pt-3">
+                        <span className="text-sm text-muted-foreground block mb-2">Items Ordered:</span>
+                        <div className="space-y-2">
+                          {orderDetails.order_items_data.map((item: any, index: number) => (
+                            <div key={index} className="flex justify-between items-center text-sm">
+                              <span>{item.name} x {item.quantity}</span>
+                              <span className="font-medium">{item.price}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
                   
                   {/* Action Buttons */}
