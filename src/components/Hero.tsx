@@ -12,7 +12,7 @@ const Hero = () => {
         <div className="flex gap-6 items-center flex-wrap">
           <Link to="/products">
             <Button 
-              className="bg-white text-black hover:bg-gray-100 px-9 py-3 text-base font-medium font-['Poppins']"
+              className="flex justify-center items-center gap-[10px] bg-white text-black hover:bg-gray-100 px-[35px] py-[13px] text-base font-medium font-['Poppins']"
             >
               Book Now
             </Button>
