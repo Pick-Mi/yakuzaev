@@ -11,8 +11,8 @@ const Index = () => {
       <Header />
       <Hero />
       <ProductShowcase />
-      <ScooterPromo />
       <FearlessDesign />
+      <ScooterPromo />
       <AIRecommendations />
     </div>
   );
