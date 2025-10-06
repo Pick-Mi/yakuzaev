@@ -20,6 +20,10 @@ export default function PaymentSuccess() {
   useEffect(() => {
     const verifyPayment = async () => {
       try {
+        // Log all URL parameters for debugging
+        console.log('=== PaymentSuccess Page Loaded ===');
+        console.log('All URL params:', Object.fromEntries(searchParams.entries()));
+        
         // Extract PayU response parameters
         const payuResponse = {
           mihpayid: searchParams.get('mihpayid') || '',
@@ -54,8 +58,15 @@ export default function PaymentSuccess() {
           addedon: searchParams.get('addedon') || ''
         };
 
-        console.log('PayU Response received:', payuResponse);
+        console.log('PayU Response extracted:', payuResponse);
+        console.log('Payment Status from PayU:', payuResponse.status);
+        console.log('Transaction ID:', payuResponse.txnid);
+        console.log('Order ID (udf2):', payuResponse.udf2);
 
+
+        console.log('=== Starting Payment Verification ===');
+        console.log('Calling supabase.functions.invoke for payu-payment');
+        
         // Verify payment with backend
         const { data: verificationResponse, error } = await supabase.functions.invoke(
           'payu-payment',
@@ -67,8 +78,9 @@ export default function PaymentSuccess() {
           }
         );
 
-        console.log('Verification response:', verificationResponse);
-        console.log('Verification error:', error);
+        console.log('=== Verification Complete ===');
+        console.log('Verification response:', JSON.stringify(verificationResponse, null, 2));
+        console.log('Verification error:', JSON.stringify(error, null, 2));
 
         if (error) {
           console.error('Payment verification error:', error);

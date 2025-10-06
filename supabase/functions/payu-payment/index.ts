@@ -97,12 +97,14 @@ async function verifyResponseHash(
   key: string,
   hash: string
 ): Promise<boolean> {
-  // PayU Response Hash Format: salt|status|||||||udf5|udf4|udf3|udf2|udf1|email|firstname|productinfo|amount|txnid|key
-  // Note: 7 empty pipes after status (for udf10, udf9, udf8, udf7, udf6 and two additional fields)
-  const hashString = `${salt}|${status}|||||||${udf5}|${udf4}|${udf3}|${udf2}|${udf1}|${email}|${firstname}|${productinfo}|${amount}|${txnid}|${key}`
+  // PayU Response Hash Format (Regular Integration):
+  // sha512(SALT|status||||||udf5|udf4|udf3|udf2|udf1|email|firstname|productinfo|amount|txnid|key)
+  // Note: 6 empty pipes after status (for additional fields that are not used)
+  const hashString = `${salt}|${status}||||||${udf5}|${udf4}|${udf3}|${udf2}|${udf1}|${email}|${firstname}|${productinfo}|${amount}|${txnid}|${key}`
   
-  console.log('Hash verification string:', hashString)
-  console.log('Received hash:', hash)
+  console.log('=== Hash Verification Debug ===')
+  console.log('Hash string for verification:', hashString)
+  console.log('Received hash from PayU:', hash)
   
   const encoder = new TextEncoder()
   const data = encoder.encode(hashString)
@@ -112,7 +114,8 @@ async function verifyResponseHash(
   const calculatedHash = hashArray.map(b => b.toString(16).padStart(2, '0')).join('')
   
   console.log('Calculated hash:', calculatedHash)
-  console.log('Hash match:', calculatedHash === hash)
+  console.log('Hash match result:', calculatedHash === hash)
+  console.log('===========================')
   
   return calculatedHash === hash
 }
