@@ -4,7 +4,7 @@ const ScooterPromo = () => {
   return (
     <section className="w-full py-16 bg-background">
       <div className="container mx-auto max-w-[1300px] px-4">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center bg-card p-[15px] rounded-lg">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center bg-popover p-[15px] rounded-lg">
           {/* Left Content */}
           <div className="space-y-8">
             <div>
