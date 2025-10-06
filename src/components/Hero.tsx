@@ -12,7 +12,7 @@ const Hero = () => {
         <div className="flex gap-6 items-center flex-wrap">
           <Link to="/products">
             <Button 
-              className="flex justify-center items-center gap-[10px] bg-white text-black hover:bg-gray-100 px-[35px] h-[50px] text-base font-medium font-['Poppins'] rounded-none"
+              className="flex justify-center items-center gap-[10px] bg-white text-black hover:bg-gray-100 px-[35px] h-[50px] text-[14px] font-medium font-sans rounded-none"
             >
               Book Now
             </Button>
