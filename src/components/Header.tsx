@@ -1,11 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { useCart } from "@/hooks/useCart";
-import { ShoppingCart, Settings } from "lucide-react";
+import { Settings } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import NotificationBar from "./NotificationBar";
 import menuIcon from "@/assets/menu-icon.svg";
+import cartIcon from "@/assets/cart-icon.svg";
 
 const Header = () => {
   const { user } = useAuth();
@@ -41,7 +42,7 @@ const Header = () => {
         <div className="absolute right-0 top-1 flex gap-6 items-center">
           <Link to="/cart">
             <Button variant="ghost" size="icon" className="relative text-white hover:bg-white/10 h-auto p-1">
-              <ShoppingCart className="w-5 h-5" />
+              <img src={cartIcon} alt="Cart" className="w-5 h-5" />
               {itemCount > 0 && (
                 <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs">
                   {itemCount}
