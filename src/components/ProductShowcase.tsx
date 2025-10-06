@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useCart } from "@/hooks/useCart";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
@@ -9,6 +9,7 @@ const ProductShowcase = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("Registration Model");
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const { addToCart } = useCart();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -59,6 +60,18 @@ const ProductShowcase = () => {
     navigate(`/product/${product.id}`);
   };
 
+  const scrollLeft = () => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollBy({ left: -440, behavior: 'smooth' });
+    }
+  };
+
+  const scrollRight = () => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollBy({ left: 440, behavior: 'smooth' });
+    }
+  };
+
   return (
     <section className="relative bg-[#F8F9F9] py-20">
       <div className="mx-auto px-[70px]">
@@ -86,14 +99,25 @@ const ProductShowcase = () => {
           </div>
 
           <div className="flex gap-[25px] items-center">
-            <button className="bg-[rgba(0,0,0,0.03)] p-[12.086px] flex items-center gap-[12.086px]">
+            <button 
+              onClick={scrollLeft}
+              className="bg-[rgba(0,0,0,0.03)] p-[12.086px] flex items-center gap-[12.086px] hover:bg-[rgba(0,0,0,0.08)] transition-colors"
+              aria-label="Scroll left"
+            >
+              <ChevronDown className="w-[29px] h-[29px] text-[#4D4D4D] rotate-90" />
+            </button>
+            <button 
+              onClick={scrollRight}
+              className="bg-[rgba(0,0,0,0.03)] p-[12.086px] flex items-center gap-[12.086px] hover:bg-[rgba(0,0,0,0.08)] transition-colors"
+              aria-label="Scroll right"
+            >
               <ChevronDown className="w-[29px] h-[29px] text-[#4D4D4D] -rotate-90" />
             </button>
           </div>
         </div>
 
         {/* Product Cards Horizontal Scroll */}
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto" ref={scrollContainerRef}>
           <div className="flex gap-[35px] pb-4">
             {loading ? (
               <div className="w-full text-center py-8">
