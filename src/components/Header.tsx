@@ -73,11 +73,11 @@ const Header = () => {
         <nav className={`w-full p-[13px] transition-all duration-300 ${isScrolled ? 'bg-white' : 'bg-transparent'}`}>
           <div className="relative h-8 w-full max-w-[1360px] mx-auto">
             {/* Logo */}
-            <Link to="/" className={`absolute left-0 top-0 px-4 py-2 font-medium text-sm h-8 flex items-center justify-center transition-colors ${isScrolled ? 'bg-black' : 'bg-white'}`}>
+            <Link to="/" className="absolute left-0 top-0 px-4 py-2 h-8 flex items-center justify-center">
               {logoUrl ? (
                 <img src={logoUrl} alt="Logo" className="h-6 w-auto object-contain" />
               ) : (
-                <span className={isScrolled ? 'text-white' : 'text-[#040d16]'}>LOGO</span>
+                <span className={`font-medium text-sm ${isScrolled ? 'text-black' : 'text-white'}`}>LOGO</span>
               )}
             </Link>
             
