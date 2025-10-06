@@ -87,7 +87,7 @@ const ProductShowcase = () => {
 
           <div className="flex gap-[25px] items-center">
             <button className="bg-[rgba(0,0,0,0.03)] p-[12.086px] flex items-center gap-[12.086px]">
-              <ChevronDown className="w-[29px] h-[29px] text-[#4D4D4D] rotate-90" />
+              <ChevronDown className="w-[29px] h-[29px] text-[#4D4D4D] -rotate-90" />
             </button>
           </div>
         </div>
