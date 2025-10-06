@@ -42,7 +42,7 @@ const Header = () => {
         <div className="absolute right-0 top-1 flex gap-6 items-center">
           <Link to="/cart">
             <Button variant="ghost" size="icon" className="relative text-white hover:bg-white/10 h-auto p-1">
-              <img src={cartIcon} alt="Cart" className="w-5 h-5" />
+              <img src={cartIcon} alt="Cart" className="w-[22px] h-[22px]" />
               {itemCount > 0 && (
                 <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs">
                   {itemCount}
@@ -51,11 +51,11 @@ const Header = () => {
             </Button>
           </Link>
           <Button variant="ghost" size="icon" className="text-white hover:bg-white/10 h-auto p-1">
-            <img src={menuIcon} alt="Menu" className="w-5 h-5" />
+            <img src={menuIcon} alt="Menu" className="w-[22px] h-[22px]" />
           </Button>
           <Link to={user ? "/profile" : "/auth"}>
             <Button variant="ghost" size="icon" className="text-white hover:bg-white/10 h-auto p-1">
-              <Settings className="w-5 h-5" />
+              <Settings className="w-[22px] h-[22px]" />
             </Button>
           </Link>
         </div>
