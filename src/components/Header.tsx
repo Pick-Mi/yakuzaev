@@ -39,7 +39,7 @@ const Header = () => {
         </div>
         
         {/* Icons */}
-        <div className="absolute right-0 top-1 flex gap-6 items-center">
+        <div className="absolute right-0 top-1 flex gap-5 items-center">
           <Link to="/cart">
             <Button variant="ghost" size="icon" className="relative text-white hover:bg-white/10 h-auto p-1">
               <img src={cartIcon} alt="Cart" className="w-[22px] h-[22px]" />
