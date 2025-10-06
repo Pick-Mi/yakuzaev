@@ -8,11 +8,13 @@ import menuIcon from "@/assets/menu-icon.svg";
 import cartIcon from "@/assets/cart-icon.svg";
 import profileIcon from "@/assets/profile-icon.svg";
 import { useState, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 const Header = () => {
   const { user } = useAuth();
   const { itemCount } = useCart();
   const [isScrolled, setIsScrolled] = useState(false);
+  const [logoUrl, setLogoUrl] = useState<string | null>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -23,6 +25,25 @@ const Header = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  useEffect(() => {
+    const fetchLogo = async () => {
+      try {
+        const { data, error } = await (supabase as any)
+          .from('site_settings')
+          .select('logo_url')
+          .single();
+        
+        if (!error && data?.logo_url) {
+          setLogoUrl(data.logo_url);
+        }
+      } catch (error) {
+        console.error('Error fetching logo:', error);
+      }
+    };
+
+    fetchLogo();
+  }, []);
+
 
   return (
     <>
@@ -31,8 +52,12 @@ const Header = () => {
         <nav className={`w-full p-[13px] transition-all duration-300 ${isScrolled ? 'bg-white' : 'bg-transparent'}`}>
           <div className="relative h-8 w-full max-w-[1360px] mx-auto">
             {/* Logo */}
-            <Link to="/" className={`absolute left-0 top-0 px-4 py-2 font-medium text-sm h-8 flex items-center justify-center w-[82px] transition-colors ${isScrolled ? 'bg-black text-white' : 'bg-white text-[#040d16]'}`}>
-              LOGO
+            <Link to="/" className={`absolute left-0 top-0 px-4 py-2 font-medium text-sm h-8 flex items-center justify-center transition-colors ${isScrolled ? 'bg-black' : 'bg-white'}`}>
+              {logoUrl ? (
+                <img src={logoUrl} alt="Logo" className="h-6 w-auto object-contain" />
+              ) : (
+                <span className={isScrolled ? 'text-white' : 'text-[#040d16]'}>LOGO</span>
+              )}
             </Link>
             
             {/* Navigation Menu - Desktop */}
