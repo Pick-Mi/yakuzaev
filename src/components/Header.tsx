@@ -75,7 +75,7 @@ const Header = () => {
             {/* Logo */}
             <Link to="/" className="absolute left-0 top-0 px-4 py-2 h-8 flex items-center justify-center">
               {logoUrl ? (
-                <img src={logoUrl} alt="Logo" className="h-6 w-auto object-contain" />
+                <img src={logoUrl} alt="Logo" className="h-8 w-auto object-contain" />
               ) : (
                 <span className={`font-medium text-sm ${isScrolled ? 'text-black' : 'text-white'}`}>LOGO</span>
               )}
