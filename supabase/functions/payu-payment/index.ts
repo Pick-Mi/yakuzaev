@@ -97,15 +97,24 @@ async function verifyResponseHash(
   key: string,
   hash: string
 ): Promise<boolean> {
-  const hashString = `${salt}|${status}|||||${udf5}|${udf4}|${udf3}|${udf2}|${udf1}|${email}|${firstname}|${productinfo}|${amount}|${txnid}|${key}`
+  // PayU Response Hash Format: salt|status|||||||udf5|udf4|udf3|udf2|udf1|email|firstname|productinfo|amount|txnid|key
+  // Note: 7 empty pipes after status (for udf10, udf9, udf8, udf7, udf6 and two additional fields)
+  const hashString = `${salt}|${status}|||||||${udf5}|${udf4}|${udf3}|${udf2}|${udf1}|${email}|${firstname}|${productinfo}|${amount}|${txnid}|${key}`
+  
+  console.log('Hash verification string:', hashString)
+  console.log('Received hash:', hash)
   
   const encoder = new TextEncoder()
   const data = encoder.encode(hashString)
   
   const hashBuffer = await crypto.subtle.digest('SHA-512', data)
   const hashArray = Array.from(new Uint8Array(hashBuffer))
-  const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('')
-  return hashHex === hash
+  const calculatedHash = hashArray.map(b => b.toString(16).padStart(2, '0')).join('')
+  
+  console.log('Calculated hash:', calculatedHash)
+  console.log('Hash match:', calculatedHash === hash)
+  
+  return calculatedHash === hash
 }
 
 serve(async (req) => {
@@ -229,8 +238,17 @@ serve(async (req) => {
 
         if (!isValidHash) {
           console.error('Invalid hash in PayU response')
+          console.error('Expected hash verification failed for txnid:', responseData.txnid)
+          console.error('Response status:', responseData.status)
+          console.error('PayU Response data:', JSON.stringify(responseData, null, 2))
           return new Response(
-            JSON.stringify({ success: false, error: 'Invalid payment response hash' }),
+            JSON.stringify({ 
+              success: false, 
+              error: 'Invalid payment response hash',
+              details: 'Hash verification failed - possible tampering detected',
+              txnid: responseData.txnid,
+              status: responseData.status
+            }),
             { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
           )
         }

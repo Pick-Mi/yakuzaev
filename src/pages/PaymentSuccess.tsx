@@ -67,12 +67,15 @@ export default function PaymentSuccess() {
           }
         );
 
+        console.log('Verification response:', verificationResponse);
+        console.log('Verification error:', error);
+
         if (error) {
           console.error('Payment verification error:', error);
           setVerificationStatus('failed');
           toast({
             title: "Verification Failed",
-            description: "Unable to verify payment status. Please contact support.",
+            description: error.message || "Unable to verify payment status. Please contact support.",
             variant: "destructive"
           });
           return;
@@ -150,138 +153,191 @@ export default function PaymentSuccess() {
   };
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center">
+    <div className="min-h-screen bg-gradient-to-br from-background via-accent/20 to-background">
       <Header />
       
-      <div className="container mx-auto px-4 py-20">
-        <div className="max-w-md mx-auto">
-          <Card className="border-none shadow-lg">
-            <CardContent className="p-8">
-              {verificationStatus === 'verifying' && (
-                <div className="text-center space-y-4">
-                  <div className="relative mx-auto w-32 h-32">
-                    <div className="absolute inset-0 bg-yellow-100 rounded-full animate-pulse"></div>
-                    <div className="absolute inset-4 bg-yellow-200 rounded-full animate-pulse delay-75"></div>
-                    <div className="absolute inset-8 bg-yellow-500 rounded-full flex items-center justify-center">
-                      <Clock className="w-12 h-12 text-white animate-spin" />
-                    </div>
-                  </div>
-                  <h2 className="text-2xl font-bold text-foreground">Verifying Payment</h2>
-                  <p className="text-muted-foreground">
-                    Please wait while we verify your payment...
-                  </p>
+      <div className="container mx-auto px-4 py-24">
+        <div className="max-w-3xl mx-auto">
+          {verificationStatus === 'verifying' && (
+            <div className="text-center space-y-8">
+              <div className="relative mx-auto w-40 h-40">
+                <div className="absolute inset-0 bg-yellow-100 rounded-full animate-pulse"></div>
+                <div className="absolute inset-6 bg-yellow-200 rounded-full animate-pulse delay-75"></div>
+                <div className="absolute inset-12 bg-yellow-500 rounded-full flex items-center justify-center">
+                  <Clock className="w-16 h-16 text-white animate-spin" />
                 </div>
-              )}
+              </div>
+              <h1 className="text-4xl font-bold text-foreground">Verifying Payment</h1>
+              <p className="text-xl text-muted-foreground">
+                Please wait while we verify your payment...
+              </p>
+            </div>
+          )}
 
-              {verificationStatus === 'success' && paymentDetails && (
-                <div className="text-center space-y-6">
-                  {/* Success Icon with Concentric Circles */}
-                  <div className="relative mx-auto w-32 h-32">
-                    <div className="absolute inset-0 bg-green-100 rounded-full opacity-40"></div>
-                    <div className="absolute inset-4 bg-green-200 rounded-full opacity-60"></div>
-                    <div className="absolute inset-8 bg-green-500 rounded-full flex items-center justify-center">
-                      <CheckCircle className="w-12 h-12 text-white" strokeWidth={3} />
+          {verificationStatus === 'success' && paymentDetails && (
+            <div className="space-y-8">
+              {/* Success Icon with Concentric Circles */}
+              <div className="relative mx-auto w-40 h-40">
+                <div className="absolute inset-0 bg-green-100 rounded-full opacity-40"></div>
+                <div className="absolute inset-6 bg-green-200 rounded-full opacity-60"></div>
+                <div className="absolute inset-12 bg-green-500 rounded-full flex items-center justify-center">
+                  <CheckCircle className="w-16 h-16 text-white" strokeWidth={3} />
+                </div>
+              </div>
+              
+              <div className="text-center space-y-4">
+                <h1 className="text-4xl font-bold text-foreground">Payment Successful!</h1>
+                <p className="text-xl text-muted-foreground">
+                  Your order has been placed successfully
+                </p>
+              </div>
+              
+              {/* Order Details Card */}
+              <Card className="border-2 border-green-500/20 shadow-2xl">
+                <CardHeader className="bg-green-50 dark:bg-green-900/20">
+                  <CardTitle className="text-2xl text-center">Order Details</CardTitle>
+                </CardHeader>
+                <CardContent className="p-8 space-y-6">
+                  {/* Order Number - Highlighted */}
+                  <div className="bg-gradient-to-r from-green-50 to-green-100 dark:from-green-900/30 dark:to-green-800/30 p-6 rounded-lg border-2 border-green-200 dark:border-green-700">
+                    <div className="text-center">
+                      <p className="text-sm text-muted-foreground mb-2">Order Number</p>
+                      <p className="text-3xl font-bold text-green-600 dark:text-green-400">
+                        #{orderDetails?.order_number || 'N/A'}
+                      </p>
                     </div>
                   </div>
-                  
-                  <div>
-                    <h2 className="text-3xl font-bold text-foreground mb-2">Payment Successful</h2>
-                    <p className="text-muted-foreground">
-                      Your order has been placed successfully!
-                    </p>
-                  </div>
-                  
-                  {/* Order Details */}
-                  <div className="bg-accent/50 p-6 rounded-lg space-y-3 text-left">
-                    <div className="flex justify-between items-center pb-2 border-b">
-                      <span className="text-sm text-muted-foreground">Order Number</span>
-                      <span className="font-semibold">#{orderDetails?.order_number || 'N/A'}</span>
-                    </div>
-                    <div className="flex justify-between items-center pb-2 border-b">
-                      <span className="text-sm text-muted-foreground">Order ID</span>
-                      <span className="font-mono text-xs">{paymentDetails.orderId}</span>
-                    </div>
-                    <div className="flex justify-between items-center pb-2 border-b">
-                      <span className="text-sm text-muted-foreground">Transaction ID</span>
-                      <span className="font-mono text-xs">{paymentDetails.txnid}</span>
-                    </div>
-                    <div className="flex justify-between items-center pb-2 border-b">
-                      <span className="text-sm text-muted-foreground">Payment ID</span>
-                      <span className="font-mono text-xs">{paymentDetails.mihpayid}</span>
-                    </div>
-                    <div className="flex justify-between items-center pb-2 border-b">
-                      <span className="text-sm text-muted-foreground">Amount Paid</span>
-                      <span className="font-bold text-lg text-green-600">₹{paymentDetails.amount}</span>
-                    </div>
-                    <div className="flex justify-between items-center pb-2 border-b">
-                      <span className="text-sm text-muted-foreground">Payment Mode</span>
-                      <span className="font-medium capitalize">{paymentDetails.mode}</span>
-                    </div>
-                    <div className="flex justify-between items-center pb-2 border-b">
-                      <span className="text-sm text-muted-foreground">Order Status</span>
-                      <span className="font-medium capitalize">{orderDetails?.status || 'Processing'}</span>
-                    </div>
-                    {orderDetails?.order_items_data && orderDetails.order_items_data.length > 0 && (
-                      <div className="pt-3">
-                        <span className="text-sm text-muted-foreground block mb-2">Items Ordered:</span>
-                        <div className="space-y-2">
-                          {orderDetails.order_items_data.map((item: any, index: number) => (
-                            <div key={index} className="flex justify-between items-center text-sm">
-                              <span>{item.name} x {item.quantity}</span>
-                              <span className="font-medium">{item.price}</span>
-                            </div>
-                          ))}
-                        </div>
+
+                  {/* Payment Details Grid */}
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div className="space-y-4">
+                      <div className="p-4 bg-accent/50 rounded-lg">
+                        <p className="text-sm text-muted-foreground mb-1">Order ID</p>
+                        <p className="font-mono text-sm break-all">{paymentDetails.orderId}</p>
                       </div>
-                    )}
+                      <div className="p-4 bg-accent/50 rounded-lg">
+                        <p className="text-sm text-muted-foreground mb-1">Transaction ID</p>
+                        <p className="font-mono text-sm break-all">{paymentDetails.txnid}</p>
+                      </div>
+                      <div className="p-4 bg-accent/50 rounded-lg">
+                        <p className="text-sm text-muted-foreground mb-1">Payment ID</p>
+                        <p className="font-mono text-sm break-all">{paymentDetails.mihpayid}</p>
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-4">
+                      <div className="p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-700">
+                        <p className="text-sm text-muted-foreground mb-1">Amount Paid</p>
+                        <p className="text-3xl font-bold text-green-600 dark:text-green-400">₹{paymentDetails.amount}</p>
+                      </div>
+                      <div className="p-4 bg-accent/50 rounded-lg">
+                        <p className="text-sm text-muted-foreground mb-1">Payment Mode</p>
+                        <p className="font-medium capitalize">{paymentDetails.mode}</p>
+                      </div>
+                      <div className="p-4 bg-accent/50 rounded-lg">
+                        <p className="text-sm text-muted-foreground mb-1">Order Status</p>
+                        <p className="font-medium capitalize text-green-600 dark:text-green-400">
+                          {orderDetails?.status || 'Processing'}
+                        </p>
+                      </div>
+                    </div>
                   </div>
+
+                  {/* Order Items */}
+                  {orderDetails?.order_items_data && orderDetails.order_items_data.length > 0 && (
+                    <div className="pt-4 border-t">
+                      <h3 className="text-lg font-semibold mb-4">Items Ordered</h3>
+                      <div className="space-y-3">
+                        {orderDetails.order_items_data.map((item: any, index: number) => (
+                          <div key={index} className="flex justify-between items-center p-3 bg-accent/30 rounded-lg">
+                            <div className="flex items-center gap-3">
+                              {item.image && (
+                                <img src={item.image} alt={item.name} className="w-12 h-12 object-cover rounded" />
+                              )}
+                              <div>
+                                <p className="font-medium">{item.name}</p>
+                                <p className="text-sm text-muted-foreground">Quantity: {item.quantity}</p>
+                              </div>
+                            </div>
+                            <p className="font-semibold">{item.price}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                   
                   {/* Action Buttons */}
-                  <div className="space-y-2 pt-4">
+                  <div className="space-y-3 pt-6">
                     <Button 
                       onClick={() => navigate(`/orders/${paymentDetails.orderId}`)} 
-                      className="w-full bg-green-600 hover:bg-green-700"
+                      className="w-full bg-green-600 hover:bg-green-700 text-white"
                       size="lg"
                     >
-                      View Order Details
+                      View Full Order Details
                     </Button>
-                    <div className="grid grid-cols-2 gap-2">
-                      <Button variant="outline" onClick={handleViewOrders}>
+                    <div className="grid grid-cols-2 gap-3">
+                      <Button variant="outline" onClick={handleViewOrders} size="lg">
                         All Orders
                       </Button>
-                      <Button variant="outline" onClick={handleContinueShopping}>
+                      <Button variant="outline" onClick={handleContinueShopping} size="lg">
                         Continue Shopping
                       </Button>
                     </div>
                   </div>
-                </div>
-              )}
+                </CardContent>
+              </Card>
+            </div>
+          )}
 
-              {verificationStatus === 'failed' && (
-                <div className="text-center space-y-6">
-                  {/* Error Icon */}
-                  <div className="relative mx-auto w-32 h-32">
-                    <div className="absolute inset-0 bg-red-100 rounded-full opacity-40"></div>
-                    <div className="absolute inset-4 bg-red-200 rounded-full opacity-60"></div>
-                    <div className="absolute inset-8 bg-red-500 rounded-full flex items-center justify-center">
-                      <AlertCircle className="w-12 h-12 text-white" strokeWidth={3} />
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <h2 className="text-2xl font-bold text-foreground mb-2">Payment Verification Failed</h2>
-                    <p className="text-muted-foreground mb-4">
-                      Payment could not be verified. Please contact support if amount was debited.
+          {verificationStatus === 'failed' && (
+            <div className="space-y-8">
+              {/* Error Icon */}
+              <div className="relative mx-auto w-40 h-40">
+                <div className="absolute inset-0 bg-red-100 rounded-full opacity-40"></div>
+                <div className="absolute inset-6 bg-red-200 rounded-full opacity-60"></div>
+                <div className="absolute inset-12 bg-red-500 rounded-full flex items-center justify-center">
+                  <AlertCircle className="w-16 h-16 text-white" strokeWidth={3} />
+                </div>
+              </div>
+              
+              <div className="text-center space-y-4">
+                <h1 className="text-4xl font-bold text-foreground">Payment Verification Failed</h1>
+                <p className="text-xl text-muted-foreground">
+                  Payment could not be verified. Please contact support if amount was debited.
+                </p>
+              </div>
+              
+              <Card className="border-2 border-red-500/20">
+                <CardContent className="p-8">
+                  <div className="space-y-4">
+                    <p className="text-center text-muted-foreground">
+                      If you've been charged, please save this information and contact our support team:
                     </p>
+                    {searchParams.get('txnid') && (
+                      <div className="p-4 bg-accent/50 rounded-lg">
+                        <p className="text-sm text-muted-foreground mb-1">Transaction ID</p>
+                        <p className="font-mono text-sm break-all">{searchParams.get('txnid')}</p>
+                      </div>
+                    )}
+                    {searchParams.get('mihpayid') && (
+                      <div className="p-4 bg-accent/50 rounded-lg">
+                        <p className="text-sm text-muted-foreground mb-1">Payment ID</p>
+                        <p className="font-mono text-sm break-all">{searchParams.get('mihpayid')}</p>
+                      </div>
+                    )}
                   </div>
                   
-                  <Button onClick={handleContinueShopping} className="w-full" size="lg">
+                  <Button 
+                    onClick={handleContinueShopping} 
+                    className="w-full mt-6" 
+                    size="lg"
+                  >
                     Continue Shopping
                   </Button>
-                </div>
-              )}
-            </CardContent>
-          </Card>
+                </CardContent>
+              </Card>
+            </div>
+          )}
         </div>
       </div>
     </div>
