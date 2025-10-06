@@ -19,7 +19,7 @@ const Hero = () => {
           </Link>
           <Link to="/products">
             <Button 
-              className="bg-white/15 text-white hover:bg-white/25 px-12 py-3 text-sm font-medium rounded-none"
+              className="bg-white/15 text-white hover:bg-white/25 px-12 h-[50px] text-sm font-medium rounded-none"
             >
               Explore
             </Button>
