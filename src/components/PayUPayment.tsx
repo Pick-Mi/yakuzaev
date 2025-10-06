@@ -115,10 +115,11 @@ export default function PayUPayment({
       // Now proceed with PayU payment using the database order ID
       const actualOrderId = createdOrder.id;
 
-      // Create success and failure URLs
+      // Create success and failure URLs - pointing to webhook endpoint
       const baseUrl = window.location.origin;
-      const surl = `${baseUrl}/payment/success`;
-      const furl = `${baseUrl}/payment/failure`;
+      const webhookUrl = 'https://tqhwoizjlvjdiuemirsy.supabase.co/functions/v1/payu-webhook';
+      const surl = webhookUrl;
+      const furl = webhookUrl;
 
       const paymentData = {
         orderId: actualOrderId,

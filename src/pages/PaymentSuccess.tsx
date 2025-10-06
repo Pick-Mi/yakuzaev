@@ -157,9 +157,14 @@ export default function PaymentSuccess() {
     };
 
     if (searchParams.has('txnid')) {
+      console.log('Transaction ID found in URL, starting verification...');
       verifyPayment();
     } else {
-      // If no payment parameters, show error but don't redirect immediately
+      // If no payment parameters in URL, show error
+      console.error('No payment parameters found in URL');
+      console.log('Current URL:', window.location.href);
+      console.log('All search params:', Array.from(searchParams.entries()));
+      
       setVerificationStatus('failed');
       toast({
         title: "Invalid Payment Response",
