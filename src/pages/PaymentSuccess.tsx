@@ -6,11 +6,13 @@ import { CheckCircle, Clock, AlertCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import Header from '@/components/Header';
+import { useCart } from '@/hooks/useCart';
 
 export default function PaymentSuccess() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { clearCart } = useCart();
   const [verificationStatus, setVerificationStatus] = useState<'verifying' | 'success' | 'failed'>('verifying');
   const [paymentDetails, setPaymentDetails] = useState<any>(null);
   const [orderDetails, setOrderDetails] = useState<any>(null);
@@ -100,6 +102,9 @@ export default function PaymentSuccess() {
             status: payuResponse.status
           });
           
+          // Clear cart after successful payment
+          clearCart();
+          
           toast({
             title: "Payment Successful!",
             description: `Your payment of ₹${payuResponse.amount} has been processed successfully.`,
@@ -126,7 +131,13 @@ export default function PaymentSuccess() {
     if (searchParams.has('txnid')) {
       verifyPayment();
     } else {
-      navigate('/');
+      // If no payment parameters, show error but don't redirect immediately
+      setVerificationStatus('failed');
+      toast({
+        title: "Invalid Payment Response",
+        description: "No payment information received. Please contact support.",
+        variant: "destructive"
+      });
     }
   }, [searchParams, navigate, toast]);
 
