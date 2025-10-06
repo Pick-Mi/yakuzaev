@@ -37,16 +37,16 @@ const Header = () => {
             
             {/* Navigation Menu - Desktop */}
             <div className="absolute left-1/2 top-2 -translate-x-1/2 hidden md:flex gap-9 items-center">
-              <Link to="/products" className={`text-sm font-medium hover:opacity-80 transition-opacity whitespace-nowrap ${isScrolled ? 'text-[#0C121C] opacity-100' : 'text-white'}`}>
+              <Link to="/products" className={`text-[14px] font-sans leading-normal hover:opacity-80 transition-opacity whitespace-nowrap ${isScrolled ? 'text-[#0C121C] font-medium' : 'text-white font-medium'}`}>
                 Products
               </Link>
-              <Link to="/" className={`text-sm font-normal hover:opacity-80 transition-opacity whitespace-nowrap ${isScrolled ? 'text-[#50555C] opacity-70' : 'text-white'}`}>
+              <Link to="/" className={`text-[14px] font-sans leading-normal hover:opacity-80 transition-opacity whitespace-nowrap ${isScrolled ? 'text-[#50555C] font-normal' : 'text-white font-normal'}`}>
                 Yakuza Store
               </Link>
-              <Link to="/" className={`text-sm font-normal hover:opacity-80 transition-opacity whitespace-nowrap ${isScrolled ? 'text-[#50555C] opacity-70' : 'text-white'}`}>
+              <Link to="/" className={`text-[14px] font-sans leading-normal hover:opacity-80 transition-opacity whitespace-nowrap ${isScrolled ? 'text-[#50555C] font-normal' : 'text-white font-normal'}`}>
                 Become a Dealer
               </Link>
-              <Link to="/" className={`text-sm font-normal hover:opacity-80 transition-opacity whitespace-nowrap ${isScrolled ? 'text-[#50555C] opacity-70' : 'text-white'}`}>
+              <Link to="/" className={`text-[14px] font-sans leading-normal hover:opacity-80 transition-opacity whitespace-nowrap ${isScrolled ? 'text-[#50555C] font-normal' : 'text-white font-normal'}`}>
                 About Us
               </Link>
             </div>
