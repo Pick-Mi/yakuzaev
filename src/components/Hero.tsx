@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const Hero = () => {
   const [heroSections, setHeroSections] = useState<any[]>([]);
@@ -31,7 +32,7 @@ const Hero = () => {
       setCurrentIndex((prevIndex) => 
         prevIndex === heroSections.length - 1 ? 0 : prevIndex + 1
       );
-    }, 25000); // Change every 25 seconds
+    }, 10000); // Change every 10 seconds
 
     return () => clearInterval(interval);
   }, [heroSections.length]);
@@ -39,6 +40,18 @@ const Hero = () => {
   const currentHero = heroSections[currentIndex] || {
     image_url: "",
     title: "Turn every ride into an adventure."
+  };
+
+  const handlePrevious = () => {
+    setCurrentIndex((prevIndex) => 
+      prevIndex === 0 ? heroSections.length - 1 : prevIndex - 1
+    );
+  };
+
+  const handleNext = () => {
+    setCurrentIndex((prevIndex) => 
+      prevIndex === heroSections.length - 1 ? 0 : prevIndex + 1
+    );
   };
 
   return (
@@ -72,6 +85,26 @@ const Hero = () => {
           </Link>
         </div>
       </div>
+
+      {/* Navigation Buttons */}
+      {heroSections.length > 1 && (
+        <>
+          <button
+            onClick={handlePrevious}
+            className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 text-white p-3 rounded-full backdrop-blur-sm transition-all"
+            aria-label="Previous slide"
+          >
+            <ChevronLeft size={24} />
+          </button>
+          <button
+            onClick={handleNext}
+            className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 text-white p-3 rounded-full backdrop-blur-sm transition-all"
+            aria-label="Next slide"
+          >
+            <ChevronRight size={24} />
+          </button>
+        </>
+      )}
     </section>
   );
 };
