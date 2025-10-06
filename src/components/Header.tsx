@@ -31,6 +31,9 @@ const Header = () => {
           <Link to="/" className="text-white text-sm font-normal hover:opacity-80 transition-opacity whitespace-nowrap">
             Become a Dealer
           </Link>
+          <Link to="/" className="text-white text-sm font-normal hover:opacity-80 transition-opacity whitespace-nowrap">
+            About Us
+          </Link>
         </div>
         
         {/* Icons */}
