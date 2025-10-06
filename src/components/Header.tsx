@@ -28,7 +28,7 @@ const Header = () => {
     <>
       <div className="fixed top-0 left-0 w-full z-50">
         <NotificationBar />
-        <nav className={`w-full p-5 transition-all duration-300 ${isScrolled ? 'bg-white shadow-md' : 'bg-transparent'}`}>
+        <nav className={`w-full p-[15px] transition-all duration-300 ${isScrolled ? 'bg-white shadow-md' : 'bg-transparent'}`}>
           <div className="relative h-8 w-full max-w-[1360px] mx-auto">
             {/* Logo */}
             <Link to="/" className={`absolute left-0 top-0 px-4 py-2 font-medium text-sm h-8 flex items-center justify-center w-[82px] transition-colors ${isScrolled ? 'bg-black text-white' : 'bg-white text-[#040d16]'}`}>
