@@ -62,7 +62,7 @@ const ProductCard = ({ name, description, price, image, slug }: ProductCardProps
           isHovered ? "opacity-100" : "opacity-0"
         }`}
       >
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[329px] overflow-hidden">
+        <div className="absolute top-0 left-0 w-full h-[329px] overflow-hidden transition-all duration-500">
           <img
             src={image}
             alt={name}
