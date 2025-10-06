@@ -1,10 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { useCart } from "@/hooks/useCart";
-import { ShoppingCart, Menu, Settings } from "lucide-react";
+import { ShoppingCart, Settings } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import NotificationBar from "./NotificationBar";
+import menuIcon from "@/assets/menu-icon.svg";
 
 const Header = () => {
   const { user } = useAuth();
@@ -49,7 +50,7 @@ const Header = () => {
             </Button>
           </Link>
           <Button variant="ghost" size="icon" className="text-white hover:bg-white/10 h-auto p-1">
-            <Menu className="w-5 h-5" />
+            <img src={menuIcon} alt="Menu" className="w-5 h-5" />
           </Button>
           <Link to={user ? "/profile" : "/auth"}>
             <Button variant="ghost" size="icon" className="text-white hover:bg-white/10 h-auto p-1">
