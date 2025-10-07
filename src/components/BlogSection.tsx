@@ -27,7 +27,7 @@ const BlogSection = () => {
             Compelling reasons
           </h2>
           
-          <div className="flex gap-[40px] overflow-x-auto">
+          <div className="flex gap-[40px]">
             {blogs.map((blog, index) => (
               <div key={index} className="bg-white w-[407px] h-[388px] shrink-0 overflow-hidden">
                 <div className="relative w-full h-[244px] bg-[#d9d9d9]">
