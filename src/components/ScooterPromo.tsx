@@ -52,7 +52,7 @@ const ScooterPromo = () => {
               <img
                 src="/placeholder.svg"
                 alt="Scooter side view"
-                className="w-full h-full object-cover"
+                className="w-[572px] h-full object-cover"
               />
             </div>
             <div className="aspect-[4/3] bg-muted rounded-lg overflow-hidden">
