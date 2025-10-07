@@ -78,7 +78,7 @@ const ScooterPromo = () => {
           </div>
 
           {/* Top Center Image - 215x288 */}
-          <div className="absolute left-1/2 -translate-x-1/2 top-0 w-[215px] h-[288px] bg-[#d9d9d9]" style={{ left: 'calc(50% - 49.5px)' }}>
+          <div className="absolute left-1/2 -translate-x-1/2 top-0 w-[215px] h-[288px] bg-[#d9d9d9] mr-[20px]" style={{ left: 'calc(50% - 49.5px)' }}>
             <img
               src="/placeholder.svg"
               alt="Scooter front view"
