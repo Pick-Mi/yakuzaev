@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 const ScooterPromo = () => {
   return (
-    <section className="w-full py-16" style={{ backgroundColor: '#F8F9F9' }}>
+    <section className="w-full py-16 px-[70px]" style={{ backgroundColor: '#F8F9F9' }}>
       <div className="container mx-auto max-w-[1300px] px-4">
         <div className="relative bg-white h-[522px] overflow-hidden">
           {/* Left Content */}
