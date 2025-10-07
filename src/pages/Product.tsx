@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { useCart } from "@/hooks/useCart";
 import { useToast } from "@/hooks/use-toast";
 import Header from "@/components/Header";
+import ProductHero from "@/components/ProductHero";
 import { ArrowLeft, Star, Heart, Shield, Truck, RotateCcw, Minus, Plus } from "lucide-react";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -151,10 +152,21 @@ const Product = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-[#080f18]">
       <Header />
       
-      <div className="container mx-auto px-4 py-8">
+      {/* Hero Section */}
+      <ProductHero
+        productName={product.name}
+        price={getCurrentPrice()}
+        topSpeed="90 km/h"
+        range="161 km"
+        chargeTime="30 km"
+        onBookNow={handleBuyNow}
+        onAddToCart={handleAddToCart}
+      />
+      
+      <div className="container mx-auto px-4 py-8 bg-background">
         {/* Back button */}
         <Button 
           variant="ghost" 
