@@ -129,7 +129,7 @@ const FearlessDesign = () => {
 
   return (
     <section className="relative w-full min-h-[700px] bg-background py-[80px]">
-      <div className="max-w-[1300px] mx-auto px-4 ml-[70px]">
+      <div className="max-w-[1300px] mx-auto px-[70px]">
         <h2 className="font-medium text-[48px] text-foreground mb-[80px]">
           Fearless by Design
         </h2>
