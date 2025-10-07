@@ -4,6 +4,7 @@ import ProductShowcase from "@/components/ProductShowcase";
 import ScooterPromo from "@/components/ScooterPromo";
 import FearlessDesign from "@/components/FearlessDesign";
 import BlogSection from "@/components/BlogSection";
+import Footer from "@/components/Footer";
 
 const Index = () => {
   return (
@@ -14,6 +15,7 @@ const Index = () => {
       <FearlessDesign />
       <ScooterPromo />
       <BlogSection />
+      <Footer />
     </div>
   );
 };
