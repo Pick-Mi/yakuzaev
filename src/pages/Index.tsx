@@ -2,6 +2,7 @@ import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import ProductShowcase from "@/components/ProductShowcase";
 import FearlessDesign from "@/components/FearlessDesign";
+import PromoSection from "@/components/PromoSection";
 import BlogSection from "@/components/BlogSection";
 import Footer from "@/components/Footer";
 
@@ -12,6 +13,7 @@ const Index = () => {
       <Hero />
       <ProductShowcase />
       <FearlessDesign />
+      <PromoSection />
       <BlogSection />
       <Footer />
     </div>
