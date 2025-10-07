@@ -69,7 +69,7 @@ const ScooterPromo = () => {
           </div>
 
           {/* Bottom Center Image - 393x214 */}
-          <div className="absolute left-1/2 -translate-x-1/2 bottom-0 w-[393px] h-[214px] bg-[#d9d9d9]" style={{ left: 'calc(50% + 39.5px)' }}>
+          <div className="absolute left-1/2 -translate-x-1/2 bottom-0 w-[393px] h-[214px] bg-[#d9d9d9] mt-[10px]" style={{ left: 'calc(50% + 39.5px)' }}>
             <img
               src="/placeholder.svg"
               alt="Scooter detail view"
