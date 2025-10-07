@@ -13,7 +13,7 @@ const ScooterPromo = () => {
           </div>
 
           {/* Price */}
-          <p className="absolute left-1/2 -translate-x-1/2 top-[217px] font-['Inter',sans-serif] font-extrabold text-[48px] leading-[54px] text-[#212121] text-center whitespace-pre">
+          <p className="absolute left-[167.5px] -translate-x-1/2 top-[217px] font-['Inter',sans-serif] font-extrabold text-[48px] leading-[54px] text-[#212121] text-center whitespace-pre">
             ₹ 99,999/-
           </p>
 
@@ -29,7 +29,7 @@ const ScooterPromo = () => {
           </div>
 
           {/* Buttons */}
-          <div className="absolute left-1/2 -translate-x-1/2 top-[415px] flex items-center gap-[15px] w-[351px]">
+          <div className="absolute -translate-x-1/2 top-[415px] flex items-center gap-[15px] w-[351px]" style={{ left: 'calc(50% - 434.5px)' }}>
             <Link
               to="/products"
               className="flex-1 bg-black h-[55px] flex items-center justify-center px-[23px] py-[13px] rounded-lg"
