@@ -38,7 +38,7 @@ const ProductFeatures = () => {
             <div className="opacity-80 flex-shrink-0">
               <feature.icon className="w-6 h-6 text-muted-foreground" />
             </div>
-            <span className={`font-medium text-base ${feature.color} whitespace-nowrap`}>
+            <span className="font-poppins font-medium text-base leading-normal whitespace-nowrap" style={{ color: '#2D2D2D' }}>
               {feature.text}
             </span>
           </div>
