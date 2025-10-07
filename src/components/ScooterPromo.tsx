@@ -51,7 +51,7 @@ const ScooterPromo = () => {
 
           {/* Image Grid */}
           {/* Top Right Image - 572x288 */}
-          <div className="absolute right-0 top-0 w-[572px] h-[288px] bg-[#d9d9d9]">
+          <div className="absolute right-0 top-0 w-[572px] h-[288px] bg-[#d9d9d9] ml-[20px]">
             <img
               src="/placeholder.svg"
               alt="Scooter side view"
