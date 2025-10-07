@@ -41,7 +41,7 @@ const ScooterPromo = () => {
 
           {/* Right - Image Grid */}
           <div className="grid grid-cols-2 gap-4">
-            <div className="w-[215px] aspect-[4/3] bg-muted rounded-lg overflow-hidden">
+            <div className="w-[215px] bg-muted rounded-lg overflow-hidden">
               <img
                 src="/placeholder.svg"
                 alt="Scooter front view"
