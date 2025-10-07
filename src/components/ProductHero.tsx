@@ -22,7 +22,7 @@ const ProductHero = ({
   return (
     <section className="relative w-full h-[800px] bg-[#080f18]">
       {/* Pricing and Buttons Section */}
-      <div className="absolute flex flex-col gap-5 items-start left-[1081px] top-[690px] w-[289px] max-lg:left-auto max-lg:right-5 max-lg:top-auto max-lg:bottom-10">
+      <div className="absolute flex flex-col gap-5 items-start left-[1081px] top-[610px] w-[289px] max-lg:left-auto max-lg:right-5 max-lg:top-auto max-lg:bottom-10">
         <p className="font-['Inter'] font-semibold leading-normal text-white text-sm w-full">
           Starting at just ₹{price} -/
         </p>
