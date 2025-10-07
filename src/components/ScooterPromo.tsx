@@ -4,7 +4,7 @@ const ScooterPromo = () => {
   return (
     <section className="w-full py-16 px-[70px]" style={{ backgroundColor: '#F8F9F9' }}>
       <div className="container mx-auto max-w-[1300px] px-4">
-        <div className="relative bg-white h-[522px] overflow-hidden">
+        <div className="relative bg-white h-[522px] overflow-hidden m-0">
           {/* Left Content */}
           <div className="absolute left-[40px] top-[51px]">
             <p className="font-['Inter',sans-serif] font-medium text-[28px] leading-[54px] text-[#212121] w-[267px]">
