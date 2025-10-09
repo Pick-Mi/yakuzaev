@@ -7,6 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 import Header from "@/components/Header";
 import ProductHero from "@/components/ProductHero";
 import ProductFeatures from "@/components/ProductFeatures";
+import ComponentCards from "@/components/ComponentCards";
 import { ArrowLeft, Star, Heart, Shield, Truck, RotateCcw, Minus, Plus } from "lucide-react";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -171,6 +172,9 @@ const Product = () => {
       <div className="bg-[#f5f5f5]">
         <ProductFeatures />
       </div>
+      
+      {/* Component Cards Section */}
+      <ComponentCards />
       
     </div>
   );
