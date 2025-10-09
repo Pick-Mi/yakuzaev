@@ -8,6 +8,9 @@ import Header from "@/components/Header";
 import ProductHero from "@/components/ProductHero";
 import ProductFeatures from "@/components/ProductFeatures";
 import ComponentCards from "@/components/ComponentCards";
+import DesignSection from "@/components/DesignSection";
+import FeaturesAndBenefitsSection from "@/components/FeaturesAndBenefitsSection";
+import ProductPromoSection from "@/components/ProductPromoSection";
 import { ArrowLeft, Star, Heart, Shield, Truck, RotateCcw, Minus, Plus } from "lucide-react";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -175,6 +178,15 @@ const Product = () => {
       
       {/* Component Cards Section */}
       <ComponentCards />
+      
+      {/* Design Section */}
+      <DesignSection />
+      
+      {/* Features and Benefits Section */}
+      <FeaturesAndBenefitsSection />
+      
+      {/* Product Promo Section */}
+      <ProductPromoSection />
       
     </div>
   );
