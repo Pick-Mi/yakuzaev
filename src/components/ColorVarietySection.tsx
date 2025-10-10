@@ -10,7 +10,7 @@ const ColorVarietySection = () => {
   ];
 
   return (
-    <section className="bg-[#F8F9F9] w-full py-0 overflow-hidden">
+    <section className="bg-[#F8F9F9] w-full py-0 overflow-hidden mt-[80px]">
       <div className="max-w-[1400px] mx-auto flex flex-col lg:flex-row items-center">
         {/* Left side - Blue background with Scooter Image */}
         <div className="relative flex-1 w-full lg:w-1/2 bg-[#2B4C7E] h-[600px] flex items-center justify-center">
