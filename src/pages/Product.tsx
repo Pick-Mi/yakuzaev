@@ -9,6 +9,7 @@ import ProductHero from "@/components/ProductHero";
 import ProductFeatures from "@/components/ProductFeatures";
 import ComponentCards from "@/components/ComponentCards";
 import DesignSection from "@/components/DesignSection";
+import FeaturesAndBenefitsSection from "@/components/FeaturesAndBenefitsSection";
 
 
 
@@ -185,8 +186,8 @@ const Product = () => {
       {/* Design Section */}
       <DesignSection />
       
-      
-      
+      {/* Features and Benefits Section */}
+      <FeaturesAndBenefitsSection />
 
     </div>
   );
