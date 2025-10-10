@@ -84,9 +84,11 @@ const ProductConfig = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      <Header />
+      <div className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
+        <Header />
+      </div>
 
-      <div className="container mx-auto px-4 py-8 max-w-7xl">
+      <div className="container mx-auto px-4 py-8 max-w-7xl pt-24">{/* Added pt-24 for header spacing */}
         {/* Back button */}
         <Button 
           variant="ghost" 
