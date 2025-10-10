@@ -10,45 +10,42 @@ const ColorVarietySection = () => {
   ];
 
   return (
-    <section className="bg-[#F8F9F9] w-full py-16 px-4 md:px-[70px]">
+    <section className="bg-[#F8F9F9] w-full py-0 overflow-hidden">
       <div className="max-w-[1400px] mx-auto flex flex-col lg:flex-row items-center">
-        {/* Left side - Image with geometric background */}
-        <div className="relative flex-1 w-full">
-          <div className="relative flex items-center justify-center">
-            {/* Blue geometric background - positioned on the left */}
-            <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[330px] h-[530px] bg-[#2B4C7E] -z-10" />
-            
-            {/* Scooter Image Placeholder */}
-            <div className="w-full max-w-[650px] h-[500px] flex items-center justify-center">
-              <div className={`w-full h-full ${colors[selectedColor].bgColor} bg-opacity-20 flex items-center justify-center transition-colors duration-300`}>
-                <span className="text-gray-600 text-lg">Scooter Image ({colors[selectedColor].name})</span>
-              </div>
+        {/* Left side - Blue background with Scooter Image */}
+        <div className="relative flex-1 w-full lg:w-1/2 bg-[#2B4C7E] h-[600px] flex items-center justify-center">
+          {/* Scooter Image Placeholder */}
+          <div className="w-full h-full flex items-center justify-center px-8">
+            <div className={`w-full max-w-[500px] h-[450px] ${colors[selectedColor].bgColor} bg-opacity-20 flex items-center justify-center transition-colors duration-300`}>
+              <span className="text-white text-lg">Scooter Image ({colors[selectedColor].name})</span>
             </div>
           </div>
         </div>
 
-        {/* Right side - Text and Color Swatches */}
-        <div className="flex-1 flex flex-col gap-8 items-center lg:items-start text-center lg:text-left">
-          <h2 className="font-inter font-medium text-[48px] leading-tight text-[#000000]">
-            Express Yourself<br />
-            with Color<br />
-            Variety
-          </h2>
+        {/* Right side - White background with Text and Color Swatches */}
+        <div className="flex-1 w-full lg:w-1/2 bg-white h-[600px] flex items-center justify-center px-8 lg:px-16">
+          <div className="flex flex-col gap-8 items-center lg:items-start text-center lg:text-left">
+            <h2 className="font-inter font-medium text-[48px] leading-tight text-[#000000]">
+              Express Yourself<br />
+              with Color<br />
+              Variety
+            </h2>
 
-          {/* Color Swatches */}
-          <div className="flex gap-4">
-            {colors.map((color) => (
-              <button
-                key={color.id}
-                onClick={() => setSelectedColor(color.id)}
-                className={`w-16 h-16 rounded ${color.bgColor} border-4 transition-all ${
-                  selectedColor === color.id
-                    ? `${color.borderColor} scale-110`
-                    : 'border-transparent'
-                }`}
-                aria-label={`Select ${color.name} color`}
-              />
-            ))}
+            {/* Color Swatches */}
+            <div className="flex gap-4">
+              {colors.map((color) => (
+                <button
+                  key={color.id}
+                  onClick={() => setSelectedColor(color.id)}
+                  className={`w-16 h-16 rounded ${color.bgColor} border-4 transition-all ${
+                    selectedColor === color.id
+                      ? `${color.borderColor} scale-110`
+                      : 'border-transparent'
+                  }`}
+                  aria-label={`Select ${color.name} color`}
+                />
+              ))}
+            </div>
           </div>
         </div>
       </div>
