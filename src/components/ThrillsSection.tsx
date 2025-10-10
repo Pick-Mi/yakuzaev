@@ -10,13 +10,13 @@ const ThrillsSection = () => {
   return (
     <section className="bg-[#f8f9f9] w-full py-16 px-4 md:px-[70px]">
       <div className="max-w-[1400px] mx-auto">
-        <div className="bg-[#1a1a1a] flex overflow-hidden md:flex-col">
+        <div className="bg-[#1a1a1a] flex overflow-hidden">
           {/* Left Image Section */}
-          <div className="w-1/2 bg-[#888888] min-h-[420px] md:w-full md:min-h-[300px]" />
+          <div className="w-1/2 bg-[#888888] min-h-[420px]" />
           
           {/* Right Content Section */}
-          <div className="w-1/2 px-16 py-12 flex flex-col justify-center md:w-full md:px-8 md:py-8">
-            <h2 className="font-inter font-medium text-[48px] text-white mb-4 md:text-[36px]">
+          <div className="w-1/2 px-16 py-12 flex flex-col justify-center">
+            <h2 className="font-inter font-medium text-[48px] text-white mb-4">
               Say Yakuza to Thrills
             </h2>
             
@@ -25,9 +25,9 @@ const ThrillsSection = () => {
             </p>
             
             {/* Features List */}
-            <div className="flex gap-12 mb-10 md:flex-col md:gap-4">
+            <div className="flex gap-12 mb-10">
               {features.map((feature, index) => (
-                <div key={index} className="text-center md:text-left">
+                <div key={index} className="text-center">
                   <p className="font-inter font-normal text-sm text-[#b0b0b0]">
                     {feature}
                   </p>
@@ -36,7 +36,7 @@ const ThrillsSection = () => {
             </div>
             
             {/* Buttons */}
-            <div className="flex gap-4 md:flex-col">
+            <div className="flex gap-4">
               <Button 
                 className="bg-white text-black hover:bg-gray-100 px-8 py-6 text-base font-medium"
               >
