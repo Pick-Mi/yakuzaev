@@ -52,11 +52,7 @@ const App = () => (
                   <Checkout />
                 </ProtectedRoute>
               } />
-              <Route path="/product-config" element={
-                <ProtectedRoute>
-                  <ProductConfig />
-                </ProtectedRoute>
-              } />
+              <Route path="/product-config" element={<ProductConfig />} />
               <Route path="/booking-confirmation" element={<BookingConfirmation />} />
               <Route path="/orders" element={
                 <ProtectedRoute>
