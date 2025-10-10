@@ -164,7 +164,7 @@ const Product = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#080f18]">
+    <div className="min-h-screen bg-[#F8F9F9]">
       <Header />
       
       {/* Hero Section */}
