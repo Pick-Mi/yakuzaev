@@ -1,14 +1,48 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Check, Home, Package, ChevronRight } from "lucide-react";
-import { useEffect } from "react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Check, Home, Package, ChevronRight, Search, Gift } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from "@/components/ui/form";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+
+
+const deliveryFormSchema = z.object({
+  phoneNumber: z.string().trim().min(10, "Phone number must be at least 10 digits").max(15, "Phone number must be less than 15 digits"),
+  firstName: z.string().trim().min(1, "First name is required").max(100, "First name must be less than 100 characters"),
+  lastName: z.string().trim().min(1, "Last name is required").max(100, "Last name must be less than 100 characters"),
+  address: z.string().trim().min(5, "Address is required").max(500, "Address must be less than 500 characters"),
+  email: z.string().trim().email("Invalid email address").max(255, "Email must be less than 255 characters"),
+});
+
+type DeliveryFormData = z.infer<typeof deliveryFormSchema>;
 
 const BookingConfirmation = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { product, selectedVariant, selectedColor, bookingAmount = 999, breadcrumbs = [] } = location.state || {};
+  const [manualAddress, setManualAddress] = useState(false);
+
+  const form = useForm<DeliveryFormData>({
+    resolver: zodResolver(deliveryFormSchema),
+    defaultValues: {
+      phoneNumber: "",
+      firstName: "",
+      lastName: "",
+      address: "",
+      email: "",
+    },
+  });
+
+  const onSubmit = (data: DeliveryFormData) => {
+    console.log("Form submitted:", data);
+    // Handle form submission
+  };
 
   useEffect(() => {
     if (!product) {
@@ -47,6 +81,7 @@ const BookingConfirmation = () => {
           </span>
         </div>
 
+
         {/* Success Icon */}
         <div className="flex justify-center mb-8">
           <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center">
@@ -64,120 +99,221 @@ const BookingConfirmation = () => {
           </p>
         </div>
 
-        {/* Booking Details Card */}
-        <div className="bg-card border rounded-lg p-8 mb-8 shadow-sm">
-          <h2 className="font-['Poppins'] font-semibold text-[24px] mb-6 border-b pb-4">
-            Booking Details
+        {/* Membership Form Section */}
+        <div className="mb-12">
+          <h2 className="font-['Poppins'] font-semibold text-[40px] mb-12">
+            Now let&apos;s make you a Yakuza Member.
           </h2>
 
-          <div className="space-y-4">
-            {/* Product Info */}
-            <div className="flex items-start gap-4">
-              <div className="w-24 h-24 bg-muted rounded-lg overflow-hidden flex-shrink-0">
+          <div className="grid lg:grid-cols-2 gap-12">
+            {/* Left Side - Product Summary */}
+            <div className="space-y-6">
+              {/* Product Image and Details */}
+              <div className="bg-[#F8F9F9] rounded-lg p-8 flex items-center justify-center">
                 <img 
                   src={product.image || product.images?.[0]} 
                   alt={product.name}
-                  className="w-full h-full object-cover"
+                  className="w-full max-w-[300px] h-auto object-contain"
                 />
               </div>
-              <div className="flex-1">
-                <h3 className="font-['Poppins'] font-semibold text-[20px] mb-1">
-                  {product.name}
-                </h3>
+
+              {/* Variant and Color */}
+              <div className="space-y-2">
                 {selectedVariant && (
-                  <p className="font-['Inter'] text-[14px] text-muted-foreground">
-                    Variant: {selectedVariant.name}
+                  <p className="font-['Inter'] text-[16px]">
+                    <span className="font-medium">Variant :</span> {selectedVariant.name}
                   </p>
                 )}
                 {selectedColor && (
-                  <p className="font-['Inter'] text-[14px] text-muted-foreground">
-                    Color: {selectedColor}
+                  <p className="font-['Inter'] text-[16px] flex items-center gap-2">
+                    <span className="font-medium">Colour :</span> 
+                    <span>{selectedColor}</span>
+                    <span className="w-5 h-5 rounded-full bg-black border border-gray-300"></span>
                   </p>
                 )}
               </div>
-              <div className="text-right">
-                <p className="font-['Inter'] text-[12px] text-muted-foreground mb-1">
-                  Price
-                </p>
-                <p className="font-['Poppins'] font-semibold text-[20px]">
-                  ₹{currentPrice?.toLocaleString('en-IN')}
-                </p>
-              </div>
-            </div>
 
-            {/* Booking Amount */}
-            <div className="border-t pt-4 mt-4">
-              <div className="flex justify-between items-center">
-                <div>
-                  <p className="font-['Inter'] font-medium text-[16px]">
-                    Booking Amount Paid
-                  </p>
-                  <p className="font-['Inter'] text-[14px] text-muted-foreground">
-                    Fully refundable
-                  </p>
+              {/* Order Summary */}
+              <div className="border-t pt-6">
+                <h3 className="font-['Poppins'] font-semibold text-[24px] mb-6">
+                  Order Summary
+                </h3>
+
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center">
+                    <span className="font-['Inter'] text-[16px]">Subtotal</span>
+                    <span className="font-['Inter'] text-[16px]">₹{currentPrice?.toLocaleString('en-IN')}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="font-['Inter'] text-[16px]">Subtotal</span>
+                    <span className="font-['Inter'] text-[16px]">₹{currentPrice?.toLocaleString('en-IN')}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="font-['Inter'] text-[16px]">Subtotal</span>
+                    <span className="font-['Inter'] text-[16px]">₹{currentPrice?.toLocaleString('en-IN')}</span>
+                  </div>
+
+                  <div className="border-t pt-3 mt-3">
+                    <div className="flex justify-between items-center font-semibold">
+                      <span className="font-['Poppins'] text-[18px]">Total</span>
+                      <span className="font-['Poppins'] text-[18px]">₹{currentPrice?.toLocaleString('en-IN')}</span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2 text-orange-600 mt-4">
+                    <Gift className="w-5 h-5" />
+                    <span className="font-['Inter'] text-[14px]">You are saving ₹207.00</span>
+                  </div>
                 </div>
-                <p className="font-['Poppins'] font-semibold text-[24px]">
-                  ₹{bookingAmount.toLocaleString('en-IN')}
-                </p>
               </div>
             </div>
 
-            {/* Remaining Amount */}
-            <div className="bg-muted/50 p-4 rounded-lg">
-              <div className="flex justify-between items-center">
-                <p className="font-['Inter'] font-medium text-[16px]">
-                  Remaining Amount
-                </p>
-                <p className="font-['Poppins'] font-semibold text-[20px]">
-                  ₹{(currentPrice - bookingAmount).toLocaleString('en-IN')}
-                </p>
-              </div>
-              <p className="font-['Inter'] text-[14px] text-muted-foreground mt-2">
-                To be paid at the time of delivery
-              </p>
+            {/* Right Side - Delivery Form */}
+            <div>
+              <h3 className="font-['Poppins'] font-semibold text-[28px] mb-6">
+                Delivery Details
+              </h3>
+
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                  {/* Phone Number */}
+                  <FormField
+                    control={form.control}
+                    name="phoneNumber"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="font-['Inter'] text-[14px]">Phone No*</FormLabel>
+                        <FormControl>
+                          <Input 
+                            placeholder="345698765" 
+                            {...field}
+                            className="font-['Inter']"
+                          />
+                        </FormControl>
+                        <FormDescription className="font-['Inter'] text-[12px] text-muted-foreground">
+                          A carrier might contact you to confirm delivery
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  {/* Name Section */}
+                  <div>
+                    <h4 className="font-['Inter'] font-medium text-[16px] mb-4">
+                      Enter your name and address:
+                    </h4>
+
+                    <div className="space-y-4">
+                      {/* First Name */}
+                      <FormField
+                        control={form.control}
+                        name="firstName"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="font-['Inter'] text-[14px]">First Name*</FormLabel>
+                            <FormControl>
+                              <Input 
+                                placeholder="" 
+                                {...field}
+                                className="font-['Inter']"
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      {/* Last Name */}
+                      <FormField
+                        control={form.control}
+                        name="lastName"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="font-['Inter'] text-[14px]">Last Name*</FormLabel>
+                            <FormControl>
+                              <Input 
+                                placeholder="" 
+                                {...field}
+                                className="font-['Inter']"
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      {/* Address */}
+                      <FormField
+                        control={form.control}
+                        name="address"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="font-['Inter'] text-[14px]">Address*</FormLabel>
+                            <FormControl>
+                              <div className="relative">
+                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                                <Input 
+                                  placeholder="Start typing a street address or postcode" 
+                                  {...field}
+                                  className="pl-10 font-['Inter']"
+                                />
+                              </div>
+                            </FormControl>
+                            <FormDescription className="font-['Inter'] text-[12px] text-muted-foreground">
+                              We do not ship to P.O. boxes
+                            </FormDescription>
+                            <button
+                              type="button"
+                              onClick={() => setManualAddress(true)}
+                              className="font-['Inter'] text-[14px] underline hover:no-underline mt-2"
+                            >
+                              Enter address manually.
+                            </button>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      {/* Email */}
+                      <FormField
+                        control={form.control}
+                        name="email"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="font-['Inter'] text-[14px]">Email*</FormLabel>
+                            <FormControl>
+                              <Input 
+                                type="email"
+                                placeholder="alex@gmail.com" 
+                                {...field}
+                                className="font-['Inter']"
+                              />
+                            </FormControl>
+                            <FormDescription className="font-['Inter'] text-[12px] text-muted-foreground">
+                              A confirmation email will be sent after checkout.
+                            </FormDescription>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Submit Button */}
+                  <Button
+                    type="submit"
+                    className="w-full bg-black text-white h-[60px] font-['Poppins'] font-medium text-[16px] hover:bg-black/90"
+                  >
+                    Complete Booking
+                  </Button>
+                </form>
+              </Form>
             </div>
           </div>
         </div>
 
-        {/* Next Steps */}
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-8">
-          <h3 className="font-['Poppins'] font-semibold text-[18px] mb-3">
-            What's Next?
-          </h3>
-          <ul className="space-y-2 font-['Inter'] text-[14px] text-gray-700">
-            <li className="flex items-start gap-2">
-              <Check className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
-              <span>We'll send you a confirmation email with your booking details</span>
-            </li>
-            <li className="flex items-start gap-2">
-              <Check className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
-              <span>Our team will contact you within 24 hours to confirm delivery details</span>
-            </li>
-            <li className="flex items-start gap-2">
-              <Check className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
-              <span>You can track your order status in the Orders section</span>
-            </li>
-          </ul>
-        </div>
-
-        {/* Action Buttons */}
-        <div className="flex gap-4 justify-center">
-          <Button
-            onClick={() => navigate('/orders')}
-            variant="outline"
-            className="h-[50px] px-8 font-['Poppins'] font-medium text-[16px]"
-          >
-            <Package className="w-5 h-5 mr-2" />
-            View Orders
-          </Button>
-          <Button
-            onClick={() => navigate('/')}
-            className="h-[50px] px-8 font-['Poppins'] font-medium text-[16px] bg-black text-white hover:bg-black/90"
-          >
-            <Home className="w-5 h-5 mr-2" />
-            Back to Home
-          </Button>
-        </div>
+        {/* Next Steps - Removed, replaced with form */}
       </main>
 
       <Footer />
