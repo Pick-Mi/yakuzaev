@@ -133,6 +133,60 @@ export type Database = {
         }
         Relationships: []
       }
+      hero_sections: {
+        Row: {
+          created_at: string
+          cta_buttons: Json | null
+          cta_text: string | null
+          cta_url: string | null
+          display_order: number
+          id: string
+          image_url: string | null
+          is_active: boolean
+          title: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          cta_buttons?: Json | null
+          cta_text?: string | null
+          cta_url?: string | null
+          display_order?: number
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          title?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          cta_buttons?: Json | null
+          cta_text?: string | null
+          cta_url?: string | null
+          display_order?: number
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          title?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      kv_store_eecafcd0: {
+        Row: {
+          key: string
+          value: Json
+        }
+        Insert: {
+          key: string
+          value: Json
+        }
+        Update: {
+          key?: string
+          value?: Json
+        }
+        Relationships: []
+      }
       order_items: {
         Row: {
           created_at: string
@@ -256,6 +310,33 @@ export type Database = {
           tax_amount?: number | null
           total_amount?: number
           updated_at?: string
+        }
+        Relationships: []
+      }
+      otp_verifications: {
+        Row: {
+          created_at: string | null
+          expires_at: string
+          id: string
+          otp_code: string
+          phone_number: string
+          verified: boolean | null
+        }
+        Insert: {
+          created_at?: string | null
+          expires_at: string
+          id?: string
+          otp_code: string
+          phone_number: string
+          verified?: boolean | null
+        }
+        Update: {
+          created_at?: string | null
+          expires_at?: string
+          id?: string
+          otp_code?: string
+          phone_number?: string
+          verified?: boolean | null
         }
         Relationships: []
       }
@@ -450,6 +531,51 @@ export type Database = {
           user_id?: string
           username?: string | null
           verification_date?: string | null
+        }
+        Relationships: []
+      }
+      site_settings: {
+        Row: {
+          created_at: string | null
+          favicon_url: string | null
+          header_notification: string | null
+          hero_banner_url: string | null
+          hero_cta_text: string | null
+          hero_cta_url: string | null
+          hero_title: string | null
+          id: string
+          logo_url: string | null
+          notification_enabled: boolean | null
+          notification_type: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          favicon_url?: string | null
+          header_notification?: string | null
+          hero_banner_url?: string | null
+          hero_cta_text?: string | null
+          hero_cta_url?: string | null
+          hero_title?: string | null
+          id?: string
+          logo_url?: string | null
+          notification_enabled?: boolean | null
+          notification_type?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          favicon_url?: string | null
+          header_notification?: string | null
+          hero_banner_url?: string | null
+          hero_cta_text?: string | null
+          hero_cta_url?: string | null
+          hero_title?: string | null
+          id?: string
+          logo_url?: string | null
+          notification_enabled?: boolean | null
+          notification_type?: string | null
+          updated_at?: string | null
         }
         Relationships: []
       }
