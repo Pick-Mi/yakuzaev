@@ -8,7 +8,7 @@ import Header from "@/components/Header";
 import ProductHero from "@/components/ProductHero";
 import ProductFeatures from "@/components/ProductFeatures";
 import ComponentCards from "@/components/ComponentCards";
-import DesignSection from "@/components/DesignSection";
+
 
 
 
@@ -181,9 +181,8 @@ const Product = () => {
       {/* Component Cards Section */}
       <ComponentCards />
       
-      {/* Design Section */}
-      <DesignSection />
       
+
     </div>
   );
 };
