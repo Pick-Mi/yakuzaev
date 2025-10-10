@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Check, Home, Package } from "lucide-react";
+import { Check, Home, Package, ChevronRight } from "lucide-react";
 import { useEffect } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -29,6 +29,20 @@ const BookingConfirmation = () => {
       </div>
 
       <main className="flex-1 container mx-auto px-4 py-8 max-w-4xl pt-32">
+        {/* Breadcrumb */}
+        <div className="mb-6 flex items-center gap-2 text-[14px]">
+          <button 
+            onClick={() => navigate('/product-config', { state: location.state })}
+            className="text-gray-400 hover:text-gray-600 transition-colors font-['Inter']"
+          >
+            Product Config
+          </button>
+          <ChevronRight className="w-4 h-4 text-gray-400" />
+          <span className="text-black font-semibold font-['Inter']">
+            Booking Confirmation
+          </span>
+        </div>
+
         {/* Success Icon */}
         <div className="flex justify-center mb-8">
           <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center">
