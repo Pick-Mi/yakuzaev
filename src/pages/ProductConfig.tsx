@@ -125,7 +125,14 @@ const ProductConfig = () => {
   const emiPerMonth = 999;
 
   const handleNext = () => {
-    navigate('/checkout');
+    navigate('/booking-confirmation', {
+      state: {
+        product,
+        selectedVariant,
+        selectedColor,
+        bookingAmount
+      }
+    });
   };
 
   const nextImage = () => {
