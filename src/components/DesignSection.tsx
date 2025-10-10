@@ -30,7 +30,7 @@ const DesignSection = () => {
           {/* Second Row - Three Feature Cards */}
           <div className="flex gap-8">
             {/* Fast-Charge Battery Card */}
-            <div className="bg-[#e8ebf0] h-[242px] flex-1 relative overflow-hidden rounded p-8">
+            <div className="bg-[#e8ebf0] h-[242px] flex-1 relative overflow-hidden p-8">
               <div className="flex flex-col gap-6">
                 <Box className="w-8 h-8 text-[#5d637d]" strokeWidth={1.5} />
                 <div className="flex flex-col gap-3">
