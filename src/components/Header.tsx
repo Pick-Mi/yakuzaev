@@ -83,16 +83,16 @@ const Header = () => {
             
             {/* Navigation Menu - Desktop */}
             <div className="absolute left-1/2 top-2 -translate-x-1/2 hidden md:flex gap-9 items-center">
-              <Link to="/products" className="text-[14px] font-sans leading-normal hover:opacity-80 transition-opacity whitespace-nowrap text-black font-medium">
+              <Link to="/products" className="text-[14px] font-sans leading-normal hover:opacity-80 transition-opacity whitespace-nowrap text-white font-medium">
                 Products
               </Link>
-              <Link to="/" className="text-[14px] font-sans leading-normal hover:opacity-80 transition-opacity whitespace-nowrap text-black font-normal">
+              <Link to="/" className="text-[14px] font-sans leading-normal hover:opacity-80 transition-opacity whitespace-nowrap text-white font-normal">
                 Yakuza Store
               </Link>
-              <Link to="/" className="text-[14px] font-sans leading-normal hover:opacity-80 transition-opacity whitespace-nowrap text-black font-normal">
+              <Link to="/" className="text-[14px] font-sans leading-normal hover:opacity-80 transition-opacity whitespace-nowrap text-white font-normal">
                 Become a Dealer
               </Link>
-              <Link to="/" className="text-[14px] font-sans leading-normal hover:opacity-80 transition-opacity whitespace-nowrap text-black font-normal">
+              <Link to="/" className="text-[14px] font-sans leading-normal hover:opacity-80 transition-opacity whitespace-nowrap text-white font-normal">
                 About Us
               </Link>
             </div>
