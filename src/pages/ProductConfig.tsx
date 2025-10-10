@@ -1,12 +1,15 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowRight, ChevronLeft, ChevronRight, Info } from "lucide-react";
 import { useState, useEffect } from "react";
-import Header from "@/components/Header";
+import { useAuth } from "@/hooks/useAuth";
+import { useCart } from "@/hooks/useCart";
 
 const ProductConfig = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const { itemCount } = useCart();
   const { product: rawProduct, selectedVariant: initialVariant, quantity = 1 } = location.state || {};
   const [selectedVariant, setSelectedVariant] = useState<any>(initialVariant);
   const [selectedColor, setSelectedColor] = useState<string>("");
@@ -116,10 +119,40 @@ const ProductConfig = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      <div className={`fixed top-0 left-0 right-0 z-50 bg-white shadow-sm transition-transform duration-300 ${
+      <div className={`fixed top-0 left-0 right-0 z-50 transition-transform duration-300 ${
         showHeader ? 'translate-y-0' : '-translate-y-full'
       }`}>
-        <Header />
+        <div className="bg-black">
+          <div className="h-16 flex items-center justify-between px-6 max-w-7xl mx-auto">
+            {/* Logo */}
+            <Link to="/" className="text-white font-semibold text-xl">
+              LOGO
+            </Link>
+
+            {/* Menu items */}
+            <div className="flex items-center gap-8">
+              <Link to="/" className="text-white hover:text-gray-300 transition-colors font-['Inter'] text-[14px]">
+                Home
+              </Link>
+              <Link to="/products" className="text-white hover:text-gray-300 transition-colors font-['Inter'] text-[14px]">
+                Products
+              </Link>
+              {user && (
+                <Link to="/profile" className="text-white hover:text-gray-300 transition-colors font-['Inter'] text-[14px]">
+                  Profile
+                </Link>
+              )}
+              <Link to="/cart" className="text-white hover:text-gray-300 transition-colors font-['Inter'] text-[14px] relative">
+                Cart
+                {itemCount > 0 && (
+                  <span className="absolute -top-2 -right-4 bg-white text-black text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                    {itemCount}
+                  </span>
+                )}
+              </Link>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div className="container mx-auto px-4 py-8 max-w-7xl">{/* No extra padding needed since header is hidden by default */}
