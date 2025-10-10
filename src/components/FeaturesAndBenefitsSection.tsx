@@ -18,22 +18,24 @@ const FeaturesAndBenefitsSection = () => {
   ];
 
   return (
-    <section className="bg-[#f8f9f9] w-full py-20 px-4">
-      <div className="max-w-[1300px] mx-auto flex flex-col gap-12">
-        <h2 className="font-inter font-medium text-5xl text-[#12141d]">Features and Benefits</h2>
+    <section className="bg-[#f8f9f9] w-full py-16 px-4 md:px-[70px]">
+      <div className="max-w-[1400px] mx-auto flex flex-col gap-12">
+        <h2 className="font-inter font-medium text-[48px] text-[#000000]">Features and Benefits</h2>
         
-        <div className="flex gap-10 lg:flex-col">
+        <div className="flex gap-8 lg:flex-col">
           {benefits.map((benefit) => (
-            <div key={benefit.id} className="bg-white h-[543px] flex-1 relative overflow-hidden">
-              <div className="absolute bg-[#8a8a8a] h-[376px] w-[385px] left-2.5 top-2.5" />
+            <div key={benefit.id} className="bg-white flex-1 flex flex-col">
+              <div className="bg-[#888888] h-[340px] w-full" />
               
-              <p className="absolute font-inter font-medium text-[26px] text-black left-5 top-[442px]">
-                {benefit.title}
-              </p>
-              
-              <p className="absolute font-inter font-normal text-lg text-[#191919] opacity-70 left-5 top-[496px] max-w-[375px]">
-                {benefit.subtitle}
-              </p>
+              <div className="p-8 flex flex-col gap-3">
+                <p className="font-inter font-medium text-[24px] text-[#000000]">
+                  {benefit.title}
+                </p>
+                
+                <p className="font-inter font-normal text-base text-[#666666]">
+                  {benefit.subtitle}
+                </p>
+              </div>
             </div>
           ))}
         </div>
