@@ -39,6 +39,20 @@ const BookingConfirmation = () => {
           </button>
           <ChevronRight className="w-4 h-4 text-gray-400" />
           <button 
+            onClick={() => navigate('/products')}
+            className="text-gray-400 hover:text-gray-600 transition-colors font-['Inter']"
+          >
+            Products
+          </button>
+          <ChevronRight className="w-4 h-4 text-gray-400" />
+          <button 
+            onClick={() => navigate(`/product/${product.id}`)}
+            className="text-gray-400 hover:text-gray-600 transition-colors font-['Inter']"
+          >
+            {product.name}
+          </button>
+          <ChevronRight className="w-4 h-4 text-gray-400" />
+          <button 
             onClick={() => navigate('/product-config', { state: location.state })}
             className="text-gray-400 hover:text-gray-600 transition-colors font-['Inter']"
           >
