@@ -1,4 +1,4 @@
-
+import { Box } from "lucide-react";
 
 const DesignSection = () => {
   return (
@@ -31,9 +31,12 @@ const DesignSection = () => {
           <div className="flex gap-8">
             {/* Fast-Charge Battery Card */}
             <div className="bg-[#e8ebf0] h-[242px] flex-1 relative overflow-hidden rounded p-8">
-              <div className="flex flex-col gap-3">
-                <p className="font-inter font-medium text-[24px] text-[#5d637d]">Fast-Charge Battery</p>
-                <p className="font-inter font-normal text-[20px] text-[#5d637d] opacity-60">Get charged in minutes</p>
+              <div className="flex flex-col gap-6">
+                <Box className="w-8 h-8 text-[#5d637d]" strokeWidth={1.5} />
+                <div className="flex flex-col gap-3">
+                  <p className="font-inter font-medium text-[24px] text-[#5d637d]">Fast-Charge Battery</p>
+                  <p className="font-inter font-normal text-[20px] text-[#5d637d] opacity-60">Get charged in minutes</p>
+                </div>
               </div>
             </div>
 
@@ -47,9 +50,12 @@ const DesignSection = () => {
 
             {/* Smart Boot Space Card */}
             <div className="bg-[#e8ebf0] h-[242px] flex-1 relative overflow-hidden rounded p-8">
-              <div className="flex flex-col gap-3">
-                <p className="font-inter font-medium text-[24px] text-[#5d637d]">Smart Boot Space</p>
-                <p className="font-inter font-normal text-[20px] text-[#5d637d] opacity-60">Compact design, ample room</p>
+              <div className="flex flex-col gap-6">
+                <Box className="w-8 h-8 text-[#5d637d]" strokeWidth={1.5} />
+                <div className="flex flex-col gap-3">
+                  <p className="font-inter font-medium text-[24px] text-[#5d637d]">Smart Boot Space</p>
+                  <p className="font-inter font-normal text-[20px] text-[#5d637d] opacity-60">Compact design, ample room</p>
+                </div>
               </div>
             </div>
           </div>
