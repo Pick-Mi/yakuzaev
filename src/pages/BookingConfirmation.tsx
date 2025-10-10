@@ -234,14 +234,22 @@ const BookingConfirmation = () => {
               </div>
             </div>
 
-            {/* Right Side - Delivery Form */}
+            {/* Right Side - Login/Delivery Form */}
             <div>
-              <h3 className="font-['Poppins'] font-semibold text-[28px] mb-6">
-                Delivery Details
-              </h3>
+              {!isVerified ? (
+                // Login Section - Show only if not verified
+                <div className="space-y-6">
+                  <div>
+                    <h3 className="font-['Poppins'] font-semibold text-[28px] mb-2">
+                      Login with Mobile
+                    </h3>
+                    <p className="font-['Inter'] text-[14px] text-muted-foreground mb-6">
+                      Verify your phone number to continue
+                    </p>
+                  </div>
 
-              <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                  <Form {...form}>
+                    <form className="space-y-6">{/* Phone Number with Country Code */}
                   {/* Phone Number with Country Code */}
                   <FormField
                     control={form.control}
@@ -335,14 +343,25 @@ const BookingConfirmation = () => {
                       </FormItem>
                     )}
                   />
+                  </form>
+                </Form>
+              </div>
+            ) : (
+              // Delivery Form - Show after verification
+              <div>
+                <h3 className="font-['Poppins'] font-semibold text-[28px] mb-6">
+                  Delivery Details
+                </h3>
 
-                  {/* Name Section */}
-                  <div>
-                    <h4 className="font-['Inter'] font-medium text-[16px] mb-4">
-                      Enter your name and address:
-                    </h4>
+                <Form {...form}>
+                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                    {/* Name Section */}
+                    <div>
+                      <h4 className="font-['Inter'] font-medium text-[16px] mb-4">
+                        Enter your name and address:
+                      </h4>
 
-                    <div className="space-y-4">
+                      <div className="space-y-4">
                       {/* First Name */}
                       <FormField
                         control={form.control}
@@ -448,8 +467,10 @@ const BookingConfirmation = () => {
                 </form>
               </Form>
             </div>
-          </div>
+          )}
         </div>
+      </div>
+    </div>
 
         {/* Next Steps - Removed, replaced with form */}
       </main>
