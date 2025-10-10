@@ -19,7 +19,7 @@ const DesignSection = () => {
             </div>
             
             {/* Premium Seat Card */}
-            <div className="bg-[#8a8a8a] h-[460px] flex-[37] relative overflow-hidden rounded">
+            <div className="bg-[#8a8a8a] h-[460px] flex-[37] relative overflow-hidden">
               <div className="absolute left-8 top-8 flex flex-col gap-3 text-white">
                 <p className="font-inter font-medium text-[28px]">Premium Seat</p>
                 <p className="font-inter font-normal text-[22px] opacity-70">Comfort engineered for long rides</p>
