@@ -10,7 +10,7 @@ import ProductFeatures from "@/components/ProductFeatures";
 
 
 
-import ProductPromoSection from "@/components/ProductPromoSection";
+
 import { ArrowLeft, Star, Heart, Shield, Truck, RotateCcw, Minus, Plus } from "lucide-react";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -178,8 +178,6 @@ const Product = () => {
       
       
       
-      {/* Product Promo Section */}
-      <ProductPromoSection />
       
     </div>
   );
