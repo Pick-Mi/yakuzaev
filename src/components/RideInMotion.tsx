@@ -26,9 +26,9 @@ const RideInMotion = () => {
           </div>
 
           {/* Small Video Cards Container */}
-          <div className="flex flex-col gap-6 w-[40%] min-w-[300px]">
+          <div className="flex gap-6 w-[40%] min-w-[300px]">
             {/* Small Video Card 1 */}
-            <div className="relative h-[212px] bg-[#888888] overflow-hidden cursor-pointer group">
+            <div className="relative flex-1 h-[440px] bg-[#888888] overflow-hidden cursor-pointer group">
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
                   <Play className="w-6 h-6 text-black ml-0.5" fill="black" />
@@ -37,7 +37,7 @@ const RideInMotion = () => {
             </div>
 
             {/* Small Video Card 2 */}
-            <div className="relative h-[212px] bg-[#888888] overflow-hidden cursor-pointer group">
+            <div className="relative flex-1 h-[440px] bg-[#888888] overflow-hidden cursor-pointer group">
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
                   <Play className="w-6 h-6 text-black ml-0.5" fill="black" />
