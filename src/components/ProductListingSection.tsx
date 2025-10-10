@@ -183,21 +183,19 @@ const ProductListingSection = () => {
                         <span className="font-normal text-[14px] text-[#666666]">/ showroom price</span>
                       </p>
 
-                      {/* Buttons */}
-                      <div className="flex flex-col gap-3">
-                        <Button 
+                      <div className="flex flex-col gap-[15px]">
+                        <button
                           onClick={() => handleBookNow(product)}
-                          className="w-full h-12 bg-[#000000] text-white font-inter font-medium text-[16px] hover:bg-[#333333]"
+                          className="bg-black text-white h-[55px] px-[23px] py-[13px] font-['Poppins'] font-medium text-[16px] w-full hover:bg-black/90 transition-colors"
                         >
                           Book Now
-                        </Button>
-                        <Link to={`/product/${product.id}`}>
-                          <Button 
-                            variant="outline"
-                            className="w-full h-12 border-2 border-[#000000] text-[#000000] font-inter font-medium text-[16px] hover:bg-gray-100"
+                        </button>
+                        <Link to={`/product/${product.id}`} className="w-full">
+                          <button
+                            className="bg-[#f8f9f9] text-black h-[55px] px-[50px] py-[13px] font-['Inter'] font-medium text-[14px] w-full hover:bg-[#e8e9e9] transition-colors"
                           >
                             Explore {product.name}
-                          </Button>
+                          </button>
                         </Link>
                       </div>
                     </div>
