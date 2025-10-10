@@ -16,6 +16,7 @@ import ColorVarietySection from "@/components/ColorVarietySection";
 import VariantsPricingSection from "@/components/VariantsPricingSection";
 import AccessoriesSection from "@/components/AccessoriesSection";
 import ProductListingSection from "@/components/ProductListingSection";
+import { FAQSection } from "@/components/FAQSection";
 
 
 
@@ -212,6 +213,9 @@ const Product = () => {
       
       {/* Product Listing Section */}
       <ProductListingSection />
+      
+      {/* FAQ Section */}
+      <FAQSection />
 
     </div>
   );
