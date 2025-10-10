@@ -77,22 +77,22 @@ const Header = () => {
               {logoUrl ? (
                 <img src={logoUrl} alt="Logo" className="h-8 w-auto object-contain" />
               ) : (
-                <span className={`font-medium text-sm ${isScrolled ? 'text-black' : 'text-white'}`}>LOGO</span>
+                <span className={`font-medium text-sm ${isScrolled ? 'text-foreground' : 'text-white'}`}>LOGO</span>
               )}
             </Link>
             
             {/* Navigation Menu - Desktop */}
             <div className="absolute left-1/2 top-2 -translate-x-1/2 hidden md:flex gap-9 items-center">
-              <Link to="/products" className={`text-[14px] font-sans leading-normal hover:opacity-80 transition-opacity whitespace-nowrap ${isScrolled ? 'text-[#0C121C] font-medium' : 'text-white font-medium opacity-100'}`}>
+              <Link to="/products" className={`text-[14px] font-sans leading-normal hover:opacity-80 transition-opacity whitespace-nowrap ${isScrolled ? 'text-foreground font-medium' : 'text-white font-medium opacity-100'}`}>
                 Products
               </Link>
-              <Link to="/" className={`text-[14px] font-sans leading-normal hover:opacity-80 transition-opacity whitespace-nowrap ${isScrolled ? 'text-[#50555C] font-normal' : 'text-white font-normal opacity-70'}`}>
+              <Link to="/" className={`text-[14px] font-sans leading-normal hover:opacity-80 transition-opacity whitespace-nowrap ${isScrolled ? 'text-muted-foreground font-normal' : 'text-white font-normal opacity-70'}`}>
                 Yakuza Store
               </Link>
-              <Link to="/" className={`text-[14px] font-sans leading-normal hover:opacity-80 transition-opacity whitespace-nowrap ${isScrolled ? 'text-[#50555C] font-normal' : 'text-white font-normal opacity-70'}`}>
+              <Link to="/" className={`text-[14px] font-sans leading-normal hover:opacity-80 transition-opacity whitespace-nowrap ${isScrolled ? 'text-muted-foreground font-normal' : 'text-white font-normal opacity-70'}`}>
                 Become a Dealer
               </Link>
-              <Link to="/" className={`text-[14px] font-sans leading-normal hover:opacity-80 transition-opacity whitespace-nowrap ${isScrolled ? 'text-[#50555C] font-normal' : 'text-white font-normal opacity-70'}`}>
+              <Link to="/" className={`text-[14px] font-sans leading-normal hover:opacity-80 transition-opacity whitespace-nowrap ${isScrolled ? 'text-muted-foreground font-normal' : 'text-white font-normal opacity-70'}`}>
                 About Us
               </Link>
             </div>
@@ -100,7 +100,7 @@ const Header = () => {
             {/* Icons */}
             <div className="absolute right-0 top-1 flex gap-[15px] items-center">
               <Link to="/cart">
-                <Button variant="ghost" size="icon" className={`relative hover:bg-black/10 h-auto p-1 ${isScrolled ? 'text-black' : 'text-white'}`}>
+                <Button variant="ghost" size="icon" className={`relative hover:bg-black/10 h-auto p-1 ${isScrolled ? 'text-foreground' : 'text-white'}`}>
                   <img src={cartIcon} alt="Cart" className={`w-[22px] h-[22px] ${isScrolled ? 'invert' : ''}`} />
                   {itemCount > 0 && (
                     <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs">
@@ -110,11 +110,11 @@ const Header = () => {
                 </Button>
               </Link>
               <Link to={user ? "/profile" : "/auth"}>
-                <Button variant="ghost" size="icon" className={`hover:bg-black/10 h-auto p-1 ${isScrolled ? 'text-black' : 'text-white'}`}>
+                <Button variant="ghost" size="icon" className={`hover:bg-black/10 h-auto p-1 ${isScrolled ? 'text-foreground' : 'text-white'}`}>
                   <img src={profileIcon} alt="Profile" className={`w-[22px] h-[22px] ${isScrolled ? 'invert' : ''}`} />
                 </Button>
               </Link>
-              <Button variant="ghost" size="icon" className={`hover:bg-black/10 h-auto p-1 ${isScrolled ? 'text-black' : 'text-white'}`}>
+              <Button variant="ghost" size="icon" className={`hover:bg-black/10 h-auto p-1 ${isScrolled ? 'text-foreground' : 'text-white'}`}>
                 <img src={menuIcon} alt="Menu" className={`w-[22px] h-[22px] ${isScrolled ? 'invert' : ''}`} />
               </Button>
             </div>
