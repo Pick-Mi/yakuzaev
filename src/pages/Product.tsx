@@ -9,7 +9,7 @@ import ProductHero from "@/components/ProductHero";
 import ProductFeatures from "@/components/ProductFeatures";
 
 
-import FeaturesAndBenefitsSection from "@/components/FeaturesAndBenefitsSection";
+
 import ProductPromoSection from "@/components/ProductPromoSection";
 import { ArrowLeft, Star, Heart, Shield, Truck, RotateCcw, Minus, Plus } from "lucide-react";
 import { useState, useEffect } from "react";
@@ -177,8 +177,6 @@ const Product = () => {
       </div>
       
       
-      {/* Features and Benefits Section */}
-      <FeaturesAndBenefitsSection />
       
       {/* Product Promo Section */}
       <ProductPromoSection />
