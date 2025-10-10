@@ -12,6 +12,7 @@ import DesignSection from "@/components/DesignSection";
 import FeaturesAndBenefitsSection from "@/components/FeaturesAndBenefitsSection";
 import ThrillsSection from "@/components/ThrillsSection";
 import RideInMotion from "@/components/RideInMotion";
+import ColorVarietySection from "@/components/ColorVarietySection";
 
 
 
@@ -196,6 +197,9 @@ const Product = () => {
       
       {/* Ride in Motion Section */}
       <RideInMotion />
+      
+      {/* Color Variety Section */}
+      <ColorVarietySection />
 
     </div>
   );
