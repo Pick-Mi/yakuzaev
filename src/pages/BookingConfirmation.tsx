@@ -89,15 +89,6 @@ const BookingConfirmation = () => {
           </div>
         </div>
 
-        {/* Heading */}
-        <div className="text-center mb-12">
-          <h1 className="font-['Poppins'] font-semibold text-[40px] mb-4">
-            Booking Confirmed!
-          </h1>
-          <p className="font-['Inter'] text-[18px] text-muted-foreground max-w-2xl mx-auto">
-            Thank you for booking your {product.name}. Your booking has been successfully confirmed.
-          </p>
-        </div>
 
         {/* Membership Form Section */}
         <div className="mb-12">
