@@ -2,7 +2,7 @@ import { Box } from "lucide-react";
 
 const DesignSection = () => {
   return (
-    <section className="bg-white w-full py-12 px-4">
+    <section className="bg-[#F8F9F9] w-full py-12 px-4">
       <div className="max-w-[1300px] mx-auto">
         {/* Heading */}
         <h2 className="font-inter font-semibold text-[48px] text-[#000000] mb-8">Design</h2>
