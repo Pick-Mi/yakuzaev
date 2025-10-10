@@ -116,13 +116,12 @@ const ProductConfig = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      <div className={`fixed top-0 left-0 right-0 z-50 bg-white shadow-sm transition-transform duration-300 ${
-        showHeader ? 'translate-y-0' : '-translate-y-full'
-      }`}>
+      {/* Default Header - Always visible */}
+      <div className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
         <Header />
       </div>
 
-      <div className="container mx-auto px-4 py-8 max-w-7xl">{/* No extra padding needed since header is hidden by default */}
+      <div className="container mx-auto px-4 py-8 max-w-7xl pt-32">{/* Added pt-32 for header spacing */}
         {/* Back button */}
         <Button 
           variant="ghost" 
