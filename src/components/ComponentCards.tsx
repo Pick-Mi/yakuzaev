@@ -1,6 +1,6 @@
 const ComponentCards = () => {
   return (
-    <section className="bg-[#f5f5f5] w-full py-16 px-6">
+    <section className="bg-[#f5f5f5] w-full py-16 px-[70px]">
       <div className="max-w-[1400px] mx-auto flex gap-5
                       md:gap-4
                       sm:gap-3">
