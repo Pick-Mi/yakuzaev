@@ -82,12 +82,6 @@ const BookingConfirmation = () => {
         </div>
 
 
-        {/* Success Icon */}
-        <div className="flex justify-center mb-8">
-          <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center">
-            <Check className="w-12 h-12 text-green-600" />
-          </div>
-        </div>
 
 
         {/* Membership Form Section */}
