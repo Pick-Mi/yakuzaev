@@ -7,13 +7,22 @@ import Header from "@/components/Header";
 const ProductConfig = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { product: rawProduct, selectedVariant: initialVariant, quantity = 1 } = location.state || {};
+  const { product: rawProduct, selectedVariant: initialVariant, quantity = 1, from } = location.state || {};
   const [selectedVariant, setSelectedVariant] = useState<any>(initialVariant);
   const [selectedColor, setSelectedColor] = useState<string>("");
   const [activeTab, setActiveTab] = useState<"book" | "buy">("book");
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [product, setProduct] = useState<any>(null);
   const [showHeader, setShowHeader] = useState(false);
+
+  // Determine breadcrumb text based on where user came from
+  const getBreadcrumbText = () => {
+    if (from) return from;
+    const referrer = document.referrer;
+    if (referrer.includes('/product/')) return 'Product Details';
+    if (referrer.includes('/products')) return 'Products';
+    return 'Home';
+  };
 
   // Sample colors
   const colors = [
@@ -128,7 +137,7 @@ const ProductConfig = () => {
             onClick={() => navigate(-1)}
             className="text-gray-400 hover:text-gray-600 transition-colors font-['Inter']"
           >
-            Product Details
+            {getBreadcrumbText()}
           </button>
           <ChevronRightIcon className="w-4 h-4 text-gray-400" />
           <span className="text-black font-semibold font-['Inter']">
