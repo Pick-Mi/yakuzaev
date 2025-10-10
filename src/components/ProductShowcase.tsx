@@ -74,7 +74,8 @@ const ProductShowcase = () => {
       state: {
         product,
         selectedVariant: product.variants?.[0] || null,
-        quantity: 1
+        quantity: 1,
+        from: 'Home'
       }
     });
   };

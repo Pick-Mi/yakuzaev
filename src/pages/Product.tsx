@@ -129,7 +129,8 @@ const Product = () => {
         state: {
           product,
           selectedVariant,
-          quantity
+          quantity,
+          from: 'Product Details'
         }
       });
     }
