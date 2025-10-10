@@ -41,7 +41,7 @@ const DesignSection = () => {
             </div>
 
             {/* LED Matrix Headlight Card */}
-            <div className="bg-[#8a8a8a] h-[242px] flex-1 relative overflow-hidden rounded p-8">
+            <div className="bg-[#8a8a8a] h-[242px] flex-1 relative overflow-hidden p-8">
               <div className="flex flex-col gap-3 text-white">
                 <p className="font-inter font-medium text-[24px]">LED Matrix Headlight</p>
                 <p className="font-inter font-normal text-[20px] opacity-70">Brightness that leads the way</p>
