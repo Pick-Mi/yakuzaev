@@ -24,6 +24,18 @@ const ProductConfig = () => {
     return 'Home';
   };
 
+  // Navigate to appropriate route based on breadcrumb
+  const handleBreadcrumbClick = () => {
+    const text = getBreadcrumbText();
+    if (text === 'Products') {
+      navigate('/products');
+    } else if (text === 'Product Details') {
+      navigate(-1); // Go back to product details
+    } else {
+      navigate('/'); // Default to home
+    }
+  };
+
   // Sample colors
   const colors = [
     { name: "White", value: "#FFFFFF", border: "#E5E5E5" },
@@ -134,7 +146,7 @@ const ProductConfig = () => {
         {/* Breadcrumb */}
         <div className="mb-6 flex items-center gap-2 text-[14px]">
           <button 
-            onClick={() => navigate(-1)}
+            onClick={handleBreadcrumbClick}
             className="text-gray-400 hover:text-gray-600 transition-colors font-['Inter']"
           >
             {getBreadcrumbText()}
