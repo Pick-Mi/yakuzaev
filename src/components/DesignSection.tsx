@@ -2,14 +2,14 @@ import { Box } from "lucide-react";
 
 const DesignSection = () => {
   return (
-    <section className="bg-[#F8F9F9] w-full py-12 px-4">
+    <section className="bg-[#F8F9F9] w-full py-12 px-4 md:px-[70px]">
       <div className="max-w-[1300px] mx-auto">
         {/* Heading */}
         <h2 className="font-inter font-semibold text-[48px] text-[#000000] mb-8">Design</h2>
         
         <div className="flex flex-col gap-8">
           {/* First Row - Two Main Cards */}
-          <div className="flex gap-8">
+          <div className="flex gap-8 lg:flex-col md:gap-4">
             {/* New Stylish Bike Card */}
             <div className="bg-[#8a8a8a] h-[460px] flex-[63] relative overflow-hidden">
               <div className="absolute left-8 top-8 flex flex-col gap-3 text-white">
@@ -28,7 +28,7 @@ const DesignSection = () => {
           </div>
 
           {/* Second Row - Three Feature Cards */}
-          <div className="flex gap-8">
+          <div className="flex gap-8 lg:flex-col md:gap-4">
             {/* Fast-Charge Battery Card */}
             <div className="bg-[#e8ebf0] h-[242px] flex-1 relative overflow-hidden p-8">
               <div className="flex flex-col gap-6">
