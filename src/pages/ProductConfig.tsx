@@ -7,11 +7,12 @@ import Header from "@/components/Header";
 const ProductConfig = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { product, selectedVariant: initialVariant, quantity = 1 } = location.state || {};
+  const { product: rawProduct, selectedVariant: initialVariant, quantity = 1 } = location.state || {};
   const [selectedVariant, setSelectedVariant] = useState<any>(initialVariant);
   const [selectedColor, setSelectedColor] = useState<string>("");
   const [activeTab, setActiveTab] = useState<"book" | "buy">("book");
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [product, setProduct] = useState<any>(null);
 
   // Sample colors
   const colors = [
@@ -22,10 +23,40 @@ const ProductConfig = () => {
   ];
 
   useEffect(() => {
-    if (!product) {
+    if (!rawProduct) {
       navigate('/');
+      return;
     }
-  }, [product, navigate]);
+
+    // Parse variants and images if they're JSON strings
+    let parsedVariants = [];
+    try {
+      parsedVariants = typeof rawProduct.variants === 'string' 
+        ? JSON.parse(rawProduct.variants) 
+        : Array.isArray(rawProduct.variants) ? rawProduct.variants : [];
+    } catch (e) {
+      console.error('Error parsing variants:', e);
+      parsedVariants = [];
+    }
+
+    let parsedImages = [];
+    try {
+      parsedImages = typeof rawProduct.images === 'string' 
+        ? JSON.parse(rawProduct.images) 
+        : Array.isArray(rawProduct.images) ? rawProduct.images : [];
+    } catch (e) {
+      console.error('Error parsing images:', e);
+      parsedImages = [];
+    }
+
+    const processedProduct = {
+      ...rawProduct,
+      variants: parsedVariants,
+      images: parsedImages
+    };
+
+    setProduct(processedProduct);
+  }, [rawProduct, navigate]);
 
   if (!product) {
     return null;
