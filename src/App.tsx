@@ -57,11 +57,7 @@ const App = () => (
                   <ProductConfig />
                 </ProtectedRoute>
               } />
-              <Route path="/booking-confirmation" element={
-                <ProtectedRoute>
-                  <BookingConfirmation />
-                </ProtectedRoute>
-              } />
+              <Route path="/booking-confirmation" element={<BookingConfirmation />} />
               <Route path="/orders" element={
                 <ProtectedRoute>
                   <Orders />
