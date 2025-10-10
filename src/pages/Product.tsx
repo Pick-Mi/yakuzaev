@@ -17,6 +17,7 @@ import VariantsPricingSection from "@/components/VariantsPricingSection";
 import AccessoriesSection from "@/components/AccessoriesSection";
 import ProductListingSection from "@/components/ProductListingSection";
 import { FAQSection } from "@/components/FAQSection";
+import { ProductBottomNav } from "@/components/ProductBottomNav";
 
 
 
@@ -216,6 +217,18 @@ const Product = () => {
       
       {/* FAQ Section */}
       <FAQSection />
+
+      {/* Bottom Fixed Navigation */}
+      {product && product.variants && product.variants.length > 0 && (
+        <ProductBottomNav
+          productName={product.name}
+          variants={product.variants}
+          selectedVariant={selectedVariant}
+          onVariantChange={setSelectedVariant}
+          price={getCurrentPrice()}
+          onBookNow={handleBuyNow}
+        />
+      )}
 
     </div>
   );
