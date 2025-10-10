@@ -22,7 +22,7 @@ const FeaturesAndBenefitsSection = () => {
       <div className="max-w-[1400px] mx-auto flex flex-col gap-12">
         <h2 className="font-inter font-medium text-[48px] text-[#000000]">Features and Benefits</h2>
         
-        <div className="flex gap-8 lg:flex-col">
+        <div className="flex gap-8 overflow-x-auto">
           {benefits.map((benefit) => (
             <div key={benefit.id} className="bg-white flex-1 flex flex-col">
               <div className="bg-[#888888] h-[340px] w-full" />
