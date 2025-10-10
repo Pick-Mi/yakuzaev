@@ -100,8 +100,8 @@ const Header = () => {
             {/* Icons */}
             <div className="absolute right-0 top-1 flex gap-[15px] items-center">
               <Link to="/cart">
-                <Button variant="ghost" size="icon" className={`relative hover:bg-black/10 h-auto p-1 ${isScrolled ? 'text-foreground' : 'text-white'}`}>
-                  <img src={cartIcon} alt="Cart" className={`w-[22px] h-[22px] ${isScrolled ? 'invert' : ''}`} />
+                <Button variant="ghost" size="icon" className="relative hover:bg-black/10 h-auto p-1 text-black">
+                  <img src={cartIcon} alt="Cart" className="w-[22px] h-[22px] invert" />
                   {itemCount > 0 && (
                     <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs">
                       {itemCount}
@@ -110,12 +110,12 @@ const Header = () => {
                 </Button>
               </Link>
               <Link to={user ? "/profile" : "/auth"}>
-                <Button variant="ghost" size="icon" className={`hover:bg-black/10 h-auto p-1 ${isScrolled ? 'text-foreground' : 'text-white'}`}>
-                  <img src={profileIcon} alt="Profile" className={`w-[22px] h-[22px] ${isScrolled ? 'invert' : ''}`} />
+                <Button variant="ghost" size="icon" className="hover:bg-black/10 h-auto p-1 text-black">
+                  <img src={profileIcon} alt="Profile" className="w-[22px] h-[22px] invert" />
                 </Button>
               </Link>
-              <Button variant="ghost" size="icon" className={`hover:bg-black/10 h-auto p-1 ${isScrolled ? 'text-foreground' : 'text-white'}`}>
-                <img src={menuIcon} alt="Menu" className={`w-[22px] h-[22px] ${isScrolled ? 'invert' : ''}`} />
+              <Button variant="ghost" size="icon" className="hover:bg-black/10 h-auto p-1 text-black">
+                <img src={menuIcon} alt="Menu" className="w-[22px] h-[22px] invert" />
               </Button>
             </div>
           </div>
