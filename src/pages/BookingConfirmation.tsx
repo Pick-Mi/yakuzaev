@@ -32,6 +32,13 @@ const BookingConfirmation = () => {
         {/* Breadcrumb */}
         <div className="mb-6 flex items-center gap-2 text-[14px]">
           <button 
+            onClick={() => navigate('/')}
+            className="text-gray-400 hover:text-gray-600 transition-colors font-['Inter']"
+          >
+            Home
+          </button>
+          <ChevronRight className="w-4 h-4 text-gray-400" />
+          <button 
             onClick={() => navigate('/product-config', { state: location.state })}
             className="text-gray-400 hover:text-gray-600 transition-colors font-['Inter']"
           >
