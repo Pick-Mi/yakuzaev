@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ArrowRight, ChevronLeft, ChevronRight, Info } from "lucide-react";
+import { ArrowLeft, ArrowRight, ChevronLeft, ChevronRight, ChevronRightIcon, Info } from "lucide-react";
 import { useState, useEffect } from "react";
 import Header from "@/components/Header";
 
@@ -122,15 +122,19 @@ const ProductConfig = () => {
       </div>
 
       <div className="container mx-auto px-4 py-8 max-w-7xl pt-32">{/* Added pt-32 for header spacing */}
-        {/* Back button */}
-        <Button 
-          variant="ghost" 
-          className="mb-6"
-          onClick={() => navigate(-1)}
-        >
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Back
-        </Button>
+        {/* Breadcrumb */}
+        <div className="mb-6 flex items-center gap-2 text-[14px]">
+          <button 
+            onClick={() => navigate(-1)}
+            className="text-gray-400 hover:text-gray-600 transition-colors font-['Inter']"
+          >
+            Product Details
+          </button>
+          <ChevronRightIcon className="w-4 h-4 text-gray-400" />
+          <span className="text-black font-semibold font-['Inter']">
+            Product Config
+          </span>
+        </div>
 
         {/* Title Section */}
         <div className="mb-8">
