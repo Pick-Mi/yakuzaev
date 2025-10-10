@@ -14,6 +14,7 @@ import ThrillsSection from "@/components/ThrillsSection";
 import RideInMotion from "@/components/RideInMotion";
 import ColorVarietySection from "@/components/ColorVarietySection";
 import VariantsPricingSection from "@/components/VariantsPricingSection";
+import AccessoriesSection from "@/components/AccessoriesSection";
 
 
 
@@ -204,6 +205,9 @@ const Product = () => {
       
       {/* Variants Pricing Section */}
       <VariantsPricingSection />
+      
+      {/* Accessories Section */}
+      <AccessoriesSection />
 
     </div>
   );
