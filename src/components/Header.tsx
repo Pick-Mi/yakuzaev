@@ -83,16 +83,16 @@ const Header = () => {
             
             {/* Navigation Menu - Desktop */}
             <div className="absolute left-1/2 top-2 -translate-x-1/2 hidden md:flex gap-9 items-center">
-              <Link to="/products" className={`text-[14px] font-sans leading-normal hover:opacity-80 transition-opacity whitespace-nowrap ${isScrolled ? 'text-foreground font-medium' : 'text-white font-medium opacity-100'}`}>
+              <Link to="/products" className={`text-[14px] font-sans leading-normal hover:opacity-80 transition-opacity whitespace-nowrap ${isScrolled ? 'text-black font-medium' : 'text-white font-medium opacity-100'}`}>
                 Products
               </Link>
-              <Link to="/" className={`text-[14px] font-sans leading-normal hover:opacity-80 transition-opacity whitespace-nowrap ${isScrolled ? 'text-muted-foreground font-normal' : 'text-white font-normal opacity-70'}`}>
+              <Link to="/" className={`text-[14px] font-sans leading-normal hover:opacity-80 transition-opacity whitespace-nowrap ${isScrolled ? 'text-black font-normal' : 'text-white font-normal opacity-70'}`}>
                 Yakuza Store
               </Link>
-              <Link to="/" className={`text-[14px] font-sans leading-normal hover:opacity-80 transition-opacity whitespace-nowrap ${isScrolled ? 'text-muted-foreground font-normal' : 'text-white font-normal opacity-70'}`}>
+              <Link to="/" className={`text-[14px] font-sans leading-normal hover:opacity-80 transition-opacity whitespace-nowrap ${isScrolled ? 'text-black font-normal' : 'text-white font-normal opacity-70'}`}>
                 Become a Dealer
               </Link>
-              <Link to="/" className={`text-[14px] font-sans leading-normal hover:opacity-80 transition-opacity whitespace-nowrap ${isScrolled ? 'text-muted-foreground font-normal' : 'text-white font-normal opacity-70'}`}>
+              <Link to="/" className={`text-[14px] font-sans leading-normal hover:opacity-80 transition-opacity whitespace-nowrap ${isScrolled ? 'text-black font-normal' : 'text-white font-normal opacity-70'}`}>
                 About Us
               </Link>
             </div>
