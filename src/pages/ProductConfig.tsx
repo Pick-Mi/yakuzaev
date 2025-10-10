@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowRight, ChevronLeft, ChevronRight, ChevronRightIcon, Info } from "lucide-react";
 import { useState, useEffect } from "react";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 const ProductConfig = () => {
   const location = useLocation();
@@ -346,6 +347,8 @@ const ProductConfig = () => {
           </div>
         </div>
       </div>
+
+      <Footer />
     </div>
   );
 };
