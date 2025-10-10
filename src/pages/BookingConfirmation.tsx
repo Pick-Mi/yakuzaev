@@ -10,6 +10,8 @@ import { z } from "zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from "@/components/ui/form";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 
 const deliveryFormSchema = z.object({
@@ -27,6 +29,11 @@ const BookingConfirmation = () => {
   const navigate = useNavigate();
   const { product, selectedVariant, selectedColor, bookingAmount = 999, breadcrumbs = [] } = location.state || {};
   const [manualAddress, setManualAddress] = useState(false);
+  const [showOtpInput, setShowOtpInput] = useState(false);
+  const [otpValue, setOtpValue] = useState("");
+  const [isVerified, setIsVerified] = useState(false);
+  const [isSendingOtp, setIsSendingOtp] = useState(false);
+  const [isVerifyingOtp, setIsVerifyingOtp] = useState(false);
 
   const form = useForm<DeliveryFormData>({
     resolver: zodResolver(deliveryFormSchema),
@@ -39,7 +46,67 @@ const BookingConfirmation = () => {
     },
   });
 
+  const handleSendOtp = async () => {
+    const phoneNumber = form.getValues("phoneNumber");
+    
+    if (!phoneNumber || phoneNumber.length < 10) {
+      toast.error("Please enter a valid phone number");
+      return;
+    }
+
+    setIsSendingOtp(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('send-otp', {
+        body: { phoneNumber }
+      });
+
+      if (error) throw error;
+
+      toast.success("OTP sent successfully!");
+      setShowOtpInput(true);
+    } catch (error: any) {
+      console.error('Error sending OTP:', error);
+      toast.error(error.message || "Failed to send OTP");
+    } finally {
+      setIsSendingOtp(false);
+    }
+  };
+
+  const handleVerifyOtp = async () => {
+    const phoneNumber = form.getValues("phoneNumber");
+    
+    if (!otpValue || otpValue.length !== 6) {
+      toast.error("Please enter a valid 6-digit OTP");
+      return;
+    }
+
+    setIsVerifyingOtp(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('verify-otp', {
+        body: { phoneNumber, otp: otpValue }
+      });
+
+      if (error) throw error;
+
+      if (data?.verified) {
+        toast.success("Phone number verified successfully!");
+        setIsVerified(true);
+      } else {
+        toast.error("Invalid OTP. Please try again.");
+      }
+    } catch (error: any) {
+      console.error('Error verifying OTP:', error);
+      toast.error(error.message || "Failed to verify OTP");
+    } finally {
+      setIsVerifyingOtp(false);
+    }
+  };
+
   const onSubmit = (data: DeliveryFormData) => {
+    if (!isVerified) {
+      toast.error("Please verify your phone number first");
+      return;
+    }
     console.log("Form submitted:", data);
     // Handle form submission
   };
@@ -169,11 +236,52 @@ const BookingConfirmation = () => {
                       <FormItem>
                         <FormLabel className="font-['Inter'] text-[14px]">Phone No*</FormLabel>
                         <FormControl>
-                          <Input 
-                            placeholder="345698765" 
-                            {...field}
-                            className="font-['Inter']"
-                          />
+                          <div className="space-y-3">
+                            <div className="flex gap-2">
+                              <Input 
+                                placeholder="345698765" 
+                                {...field}
+                                className="font-['Inter'] flex-1"
+                                disabled={isVerified}
+                              />
+                              {!isVerified && !showOtpInput && (
+                                <Button
+                                  type="button"
+                                  onClick={handleSendOtp}
+                                  disabled={isSendingOtp}
+                                  className="bg-black text-white hover:bg-black/90 font-['Inter']"
+                                >
+                                  {isSendingOtp ? "Sending..." : "Verify"}
+                                </Button>
+                              )}
+                              {isVerified && (
+                                <div className="flex items-center gap-2 text-green-600 px-4">
+                                  <Check className="w-5 h-5" />
+                                  <span className="font-['Inter'] text-sm">Verified</span>
+                                </div>
+                              )}
+                            </div>
+
+                            {showOtpInput && !isVerified && (
+                              <div className="flex gap-2">
+                                <Input
+                                  placeholder="Enter 6-digit OTP"
+                                  value={otpValue}
+                                  onChange={(e) => setOtpValue(e.target.value)}
+                                  maxLength={6}
+                                  className="font-['Inter'] flex-1"
+                                />
+                                <Button
+                                  type="button"
+                                  onClick={handleVerifyOtp}
+                                  disabled={isVerifyingOtp}
+                                  className="bg-black text-white hover:bg-black/90 font-['Inter']"
+                                >
+                                  {isVerifyingOtp ? "Verifying..." : "Submit"}
+                                </Button>
+                              </div>
+                            )}
+                          </div>
                         </FormControl>
                         <FormDescription className="font-['Inter'] text-[12px] text-muted-foreground">
                           A carrier might contact you to confirm delivery
