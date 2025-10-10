@@ -19,7 +19,7 @@ const ColorVarietySection = () => {
   };
 
   return (
-    <section className="bg-white w-full py-16 px-4 md:px-[70px]">
+    <section className="bg-[#F8F9F9] w-full py-16 px-4 md:px-[70px]">
       <div className="max-w-[1400px] mx-auto flex flex-col lg:flex-row items-center gap-12 lg:gap-24">
         {/* Left side - Image with geometric background */}
         <div className="relative flex-1 w-full">
