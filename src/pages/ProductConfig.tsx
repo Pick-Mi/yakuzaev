@@ -125,12 +125,19 @@ const ProductConfig = () => {
   const emiPerMonth = 999;
 
   const handleNext = () => {
+    // Build breadcrumb history
+    const breadcrumbs = [
+      { label: getBreadcrumbText(), path: -1 },
+      { label: 'Product Config', path: '/product-config' }
+    ];
+
     navigate('/booking-confirmation', {
       state: {
         product,
         selectedVariant,
         selectedColor,
-        bookingAmount
+        bookingAmount,
+        breadcrumbs
       }
     });
   };

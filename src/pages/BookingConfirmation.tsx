@@ -8,7 +8,7 @@ import Footer from "@/components/Footer";
 const BookingConfirmation = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { product, selectedVariant, selectedColor, bookingAmount = 999 } = location.state || {};
+  const { product, selectedVariant, selectedColor, bookingAmount = 999, breadcrumbs = [] } = location.state || {};
 
   useEffect(() => {
     if (!product) {
@@ -30,35 +30,18 @@ const BookingConfirmation = () => {
 
       <main className="flex-1 container mx-auto px-4 py-8 max-w-4xl pt-32">
         {/* Breadcrumb */}
-        <div className="mb-6 flex items-center gap-2 text-[14px]">
-          <button 
-            onClick={() => navigate('/')}
-            className="text-gray-400 hover:text-gray-600 transition-colors font-['Inter']"
-          >
-            Home
-          </button>
-          <ChevronRight className="w-4 h-4 text-gray-400" />
-          <button 
-            onClick={() => navigate('/products')}
-            className="text-gray-400 hover:text-gray-600 transition-colors font-['Inter']"
-          >
-            Products
-          </button>
-          <ChevronRight className="w-4 h-4 text-gray-400" />
-          <button 
-            onClick={() => navigate(`/product/${product.id}`)}
-            className="text-gray-400 hover:text-gray-600 transition-colors font-['Inter']"
-          >
-            {product.name}
-          </button>
-          <ChevronRight className="w-4 h-4 text-gray-400" />
-          <button 
-            onClick={() => navigate('/product-config', { state: location.state })}
-            className="text-gray-400 hover:text-gray-600 transition-colors font-['Inter']"
-          >
-            Product Config
-          </button>
-          <ChevronRight className="w-4 h-4 text-gray-400" />
+        <div className="mb-6 flex items-center gap-2 text-[14px] flex-wrap">
+          {breadcrumbs.map((crumb: any, index: number) => (
+            <div key={index} className="flex items-center gap-2">
+              <button 
+                onClick={() => typeof crumb.path === 'number' ? navigate(crumb.path) : navigate(crumb.path)}
+                className="text-gray-400 hover:text-gray-600 transition-colors font-['Inter']"
+              >
+                {crumb.label}
+              </button>
+              <ChevronRight className="w-4 h-4 text-gray-400" />
+            </div>
+          ))}
           <span className="text-black font-semibold font-['Inter']">
             Booking Confirmation
           </span>
