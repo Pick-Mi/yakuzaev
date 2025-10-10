@@ -70,8 +70,13 @@ const ProductShowcase = () => {
   }, [toast]);
 
   const handleBookNow = (product: any) => {
-    addToCart(product);
-    navigate('/cart');
+    navigate('/product-config', {
+      state: {
+        product,
+        selectedVariant: product.variants?.[0] || null,
+        quantity: 1
+      }
+    });
   };
 
   const handleExplore = (product: any) => {

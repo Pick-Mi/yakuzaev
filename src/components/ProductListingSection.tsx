@@ -73,8 +73,13 @@ const ProductListingSection = () => {
   }, [toast]);
 
   const handleBookNow = (product: any) => {
-    addToCart(product);
-    navigate('/checkout');
+    navigate('/product-config', {
+      state: {
+        product,
+        selectedVariant: product.variants?.[0] || null,
+        quantity: 1
+      }
+    });
   };
 
   const scrollLeft = () => {

@@ -13,6 +13,7 @@ import Product from "./pages/Product";
 import Products from "./pages/Products";
 import Profile from "./pages/Profile";
 import Checkout from "./pages/Checkout";
+import ProductConfig from "./pages/ProductConfig";
 import Orders from "./pages/Orders";
 import OrderDetails from "./pages/OrderDetails";
 import PaymentSuccess from "./pages/PaymentSuccess";
@@ -48,6 +49,11 @@ const App = () => (
               <Route path="/checkout" element={
                 <ProtectedRoute>
                   <Checkout />
+                </ProtectedRoute>
+              } />
+              <Route path="/product-config" element={
+                <ProtectedRoute>
+                  <ProductConfig />
                 </ProtectedRoute>
               } />
               <Route path="/orders" element={

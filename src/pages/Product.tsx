@@ -125,14 +125,13 @@ const Product = () => {
 
   const handleBuyNow = () => {
     if (product) {
-      const productToAdd = {
-        ...product,
-        quantity,
-        selectedVariant: selectedVariant,
-        price: selectedVariant ? selectedVariant.price : product.price
-      };
-      addToCart(productToAdd);
-      navigate('/checkout');
+      navigate('/product-config', {
+        state: {
+          product,
+          selectedVariant,
+          quantity
+        }
+      });
     }
   };
 
