@@ -57,7 +57,7 @@ const BookingConfirmation = () => {
   const currentPrice = selectedVariant ? selectedVariant.price : product.price;
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen bg-gray-50 flex flex-col">
       <div className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
         <Header />
       </div>
