@@ -11,7 +11,7 @@ const DesignSection = () => {
           {/* First Row - Two Main Cards */}
           <div className="flex gap-8">
             {/* New Stylish Bike Card */}
-            <div className="bg-[#8a8a8a] h-[460px] flex-[63] relative overflow-hidden rounded">
+            <div className="bg-[#8a8a8a] h-[460px] flex-[63] relative overflow-hidden">
               <div className="absolute left-8 top-8 flex flex-col gap-3 text-white">
                 <p className="font-inter font-medium text-[28px]">New Stylish Bike</p>
                 <p className="font-inter font-normal text-[22px] opacity-70">Elegance engineered for speed</p>
