@@ -13,6 +13,7 @@ const ProductConfig = () => {
   const [activeTab, setActiveTab] = useState<"book" | "buy">("book");
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [product, setProduct] = useState<any>(null);
+  const [showHeader, setShowHeader] = useState(false);
 
   // Sample colors
   const colors = [
@@ -21,6 +22,37 @@ const ProductConfig = () => {
     { name: "Gray", value: "#4A4A4A" },
     { name: "Black", value: "#000000" },
   ];
+
+  // Scroll detection for header
+  useEffect(() => {
+    let lastScrollY = window.scrollY;
+    let ticking = false;
+
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const currentScrollY = window.scrollY;
+          
+          // Show header when user scrolls down past 100px
+          if (currentScrollY > 100) {
+            setShowHeader(true);
+          } else {
+            setShowHeader(false);
+          }
+          
+          lastScrollY = currentScrollY;
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   useEffect(() => {
     if (!rawProduct) {
@@ -84,11 +116,13 @@ const ProductConfig = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      <div className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
+      <div className={`fixed top-0 left-0 right-0 z-50 bg-white shadow-sm transition-transform duration-300 ${
+        showHeader ? 'translate-y-0' : '-translate-y-full'
+      }`}>
         <Header />
       </div>
 
-      <div className="container mx-auto px-4 py-8 max-w-7xl pt-24">{/* Added pt-24 for header spacing */}
+      <div className="container mx-auto px-4 py-8 max-w-7xl">{/* No extra padding needed since header is hidden by default */}
         {/* Back button */}
         <Button 
           variant="ghost" 
