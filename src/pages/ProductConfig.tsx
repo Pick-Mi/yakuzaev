@@ -1,22 +1,23 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { ArrowLeft, Check } from "lucide-react";
+import { ArrowLeft, ArrowRight, ChevronLeft, ChevronRight, Info } from "lucide-react";
 import { useState, useEffect } from "react";
 import Header from "@/components/Header";
 
 const ProductConfig = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { product, selectedVariant, quantity = 1 } = location.state || {};
+  const { product, selectedVariant: initialVariant, quantity = 1 } = location.state || {};
+  const [selectedVariant, setSelectedVariant] = useState<any>(initialVariant);
   const [selectedColor, setSelectedColor] = useState<string>("");
+  const [activeTab, setActiveTab] = useState<"book" | "buy">("book");
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  // Sample colors - you can customize these
+  // Sample colors
   const colors = [
-    { name: "White", value: "#FFFFFF" },
-    { name: "Beige", value: "#F5DEB3" },
-    { name: "Blue", value: "#A7C7E7" },
-    { name: "Red", value: "#FF6B6B" },
+    { name: "White", value: "#FFFFFF", border: "#E5E5E5" },
+    { name: "Blue", value: "#2B4C7E" },
+    { name: "Gray", value: "#4A4A4A" },
     { name: "Black", value: "#000000" },
   ];
 
@@ -30,18 +31,31 @@ const ProductConfig = () => {
     return null;
   }
 
-  const currentPrice = selectedVariant ? selectedVariant.price : product.price;
-  const productImage = product.images?.[0] || product.image;
+  const productImages = product.images && product.images.length > 0 
+    ? product.images 
+    : [product.image];
 
-  const handleProceedToCheckout = () => {
+  const currentPrice = selectedVariant ? selectedVariant.price : product.price;
+  const bookingAmount = 999;
+  const emiPerMonth = 999;
+
+  const handleNext = () => {
     navigate('/checkout');
   };
 
+  const nextImage = () => {
+    setCurrentImageIndex((prev) => (prev + 1) % productImages.length);
+  };
+
+  const prevImage = () => {
+    setCurrentImageIndex((prev) => (prev - 1 + productImages.length) % productImages.length);
+  };
+
   return (
-    <div className="min-h-screen bg-[#F8F9F9]">
+    <div className="min-h-screen bg-white">
       <Header />
 
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-8 max-w-7xl">
         {/* Back button */}
         <Button 
           variant="ghost" 
@@ -52,136 +66,191 @@ const ProductConfig = () => {
           Back
         </Button>
 
-        <div className="max-w-6xl mx-auto">
-          <h1 className="font-['Poppins'] font-bold text-[32px] mb-8">
-            Configure Your Product
+        {/* Title Section */}
+        <div className="mb-8">
+          <h1 className="font-['Poppins'] font-semibold text-[40px] mb-2">
+            Buy {product.name}
           </h1>
+          <p className="font-['Inter'] text-[16px] text-gray-600">
+            From ₹{currentPrice?.toLocaleString('en-IN')} or ₹{emiPerMonth}/per month for 24 months 
+            <span className="ml-1">Footnote *</span>
+          </p>
+        </div>
 
-          <div className="grid md:grid-cols-2 gap-8">
-            {/* Product Image */}
-            <div className="bg-white rounded-lg p-8">
+        <div className="grid lg:grid-cols-2 gap-12">
+          {/* Left Side - Product Image */}
+          <div className="relative bg-[#F8F9F9] rounded-lg p-8">
+            <div className="relative aspect-square flex items-center justify-center">
               <img 
-                src={productImage} 
+                src={productImages[currentImageIndex]} 
                 alt={product.name}
-                className="w-full h-auto object-contain rounded-lg"
+                className="w-full h-full object-contain"
               />
+              
+              {/* Navigation Arrows */}
+              {productImages.length > 1 && (
+                <>
+                  <button
+                    onClick={prevImage}
+                    className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-100 transition-colors"
+                  >
+                    <ChevronLeft className="w-6 h-6" />
+                  </button>
+                  <button
+                    onClick={nextImage}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-100 transition-colors"
+                  >
+                    <ChevronRight className="w-6 h-6" />
+                  </button>
+                </>
+              )}
             </div>
 
-            {/* Configuration Panel */}
-            <div className="space-y-6">
-              <Card>
-                <CardContent className="p-6 space-y-6">
-                  {/* Product Name */}
-                  <div>
-                    <h2 className="font-['Poppins'] font-semibold text-[28px]">
-                      {product.name}
-                    </h2>
-                    <p className="text-gray-600 mt-2">{product.description}</p>
-                  </div>
+            {/* Image Dots */}
+            {productImages.length > 1 && (
+              <div className="flex justify-center gap-2 mt-6">
+                {productImages.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setCurrentImageIndex(index)}
+                    className={`w-2.5 h-2.5 rounded-full transition-colors ${
+                      currentImageIndex === index ? 'bg-black' : 'bg-gray-300'
+                    }`}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
 
-                  {/* Variant Selection */}
-                  {product.variants && product.variants.length > 0 && (
-                    <div>
-                      <h3 className="font-['Inter'] font-medium text-[18px] mb-3">
-                        Select Variant
-                      </h3>
-                      <div className="flex gap-3 flex-wrap">
-                        {product.variants.map((variant: any, index: number) => (
-                          <div
-                            key={index}
-                            className={`border-2 rounded-lg p-4 cursor-pointer transition-all ${
-                              selectedVariant?.name === variant.name
-                                ? "border-black bg-black/5"
-                                : "border-gray-300 hover:border-gray-400"
-                            }`}
-                          >
-                            <p className="font-medium">{variant.name}</p>
-                            <p className="text-sm text-gray-600">
-                              ₹{variant.price?.toLocaleString('en-IN')}
-                            </p>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
+          {/* Right Side - Configuration */}
+          <div className="space-y-8">
+            {/* Heading */}
+            <h2 className="font-['Poppins'] font-semibold text-[28px]">
+              Book your {product.name}
+            </h2>
 
-                  {/* Color Selection */}
-                  <div>
-                    <h3 className="font-['Inter'] font-medium text-[18px] mb-3">
-                      Choose Color
-                    </h3>
-                    <div className="flex gap-3 flex-wrap">
-                      {colors.map((color) => (
-                        <button
-                          key={color.name}
-                          onClick={() => setSelectedColor(color.name)}
-                          className={`relative w-14 h-14 rounded-lg border-2 transition-all ${
-                            selectedColor === color.name
-                              ? "border-black scale-110"
-                              : "border-gray-300 hover:border-gray-400"
-                          }`}
-                          style={{ backgroundColor: color.value }}
-                          title={color.name}
-                        >
-                          {selectedColor === color.name && (
-                            <div className="absolute inset-0 flex items-center justify-center">
-                              <Check className="w-6 h-6 text-white drop-shadow-lg" />
-                            </div>
-                          )}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
+            {/* Tabs */}
+            <div className="flex gap-0 border-b border-gray-200">
+              <button
+                onClick={() => setActiveTab("book")}
+                className={`flex-1 py-3 font-['Inter'] font-medium text-[16px] transition-colors ${
+                  activeTab === "book"
+                    ? "bg-black text-white"
+                    : "bg-white text-black hover:bg-gray-50"
+                }`}
+              >
+                Book a Bike
+              </button>
+              <button
+                onClick={() => setActiveTab("buy")}
+                className={`flex-1 py-3 font-['Inter'] font-medium text-[16px] transition-colors ${
+                  activeTab === "buy"
+                    ? "bg-black text-white"
+                    : "bg-white text-black hover:bg-gray-50"
+                }`}
+              >
+                Buy a Bike
+              </button>
+            </div>
 
-                  {/* Quantity */}
-                  <div>
-                    <h3 className="font-['Inter'] font-medium text-[18px] mb-3">
-                      Quantity
-                    </h3>
-                    <div className="flex items-center gap-4">
-                      <div className="border border-gray-300 rounded-lg px-4 py-2 font-medium">
-                        {quantity}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Price Summary */}
-                  <div className="border-t pt-6">
-                    <div className="flex justify-between items-center mb-2">
-                      <span className="text-gray-600">Base Price</span>
-                      <span className="font-medium">
-                        ₹{currentPrice?.toLocaleString('en-IN')}
-                      </span>
-                    </div>
-                    <div className="flex justify-between items-center mb-4">
-                      <span className="text-gray-600">Quantity</span>
-                      <span className="font-medium">× {quantity}</span>
-                    </div>
-                    <div className="flex justify-between items-center text-xl font-bold">
-                      <span>Total Amount</span>
-                      <span className="text-black">
-                        ₹{(currentPrice * quantity)?.toLocaleString('en-IN')}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Action Buttons */}
-                  <div className="space-y-3">
+            {/* Pick your variant */}
+            <div>
+              <h3 className="font-['Inter'] font-medium text-[16px] mb-4">
+                Pick your variant
+              </h3>
+              <div className="space-y-3">
+                {product.variants && product.variants.length > 0 ? (
+                  product.variants.map((variant: any, index: number) => (
                     <button
-                      onClick={handleProceedToCheckout}
-                      className="bg-black text-white h-[55px] px-[40px] font-['Poppins'] font-medium text-[16px] w-full hover:bg-black/90 transition-colors"
+                      key={index}
+                      onClick={() => setSelectedVariant(variant)}
+                      className={`w-full border-2 rounded-lg p-4 flex items-center justify-between transition-all ${
+                        selectedVariant?.name === variant.name
+                          ? "border-black bg-gray-50"
+                          : "border-gray-300 hover:border-gray-400"
+                      }`}
                     >
-                      Proceed to Checkout
+                      <div className="text-left">
+                        <p className="font-['Poppins'] font-semibold text-[20px]">
+                          {variant.name}
+                        </p>
+                        <p className="font-['Inter'] text-[14px] text-gray-600">
+                          IDC Range
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-['Inter'] text-[12px] text-gray-500">
+                          Starts at
+                        </p>
+                        <p className="font-['Poppins'] font-semibold text-[18px]">
+                          ₹{variant.price?.toLocaleString('en-IN')}
+                        </p>
+                      </div>
                     </button>
-                    <button
-                      onClick={() => navigate(-1)}
-                      className="bg-[#f8f9f9] text-black h-[55px] px-[40px] font-['Inter'] font-medium text-[16px] w-full hover:bg-[#e8e9e9] transition-colors border border-gray-300"
-                    >
-                      Continue Shopping
-                    </button>
+                  ))
+                ) : (
+                  <div className="border-2 border-gray-300 rounded-lg p-4">
+                    <p className="font-['Poppins'] font-semibold text-[20px]">
+                      Standard
+                    </p>
+                    <p className="font-['Inter'] text-[14px] text-gray-600">
+                      ₹{currentPrice?.toLocaleString('en-IN')}
+                    </p>
                   </div>
-                </CardContent>
-              </Card>
+                )}
+              </div>
+            </div>
+
+            {/* Colour Selection */}
+            <div>
+              <h3 className="font-['Inter'] font-medium text-[16px] mb-4">
+                Colour
+              </h3>
+              <div className="flex gap-3">
+                {colors.map((color) => (
+                  <button
+                    key={color.name}
+                    onClick={() => setSelectedColor(color.name)}
+                    className={`w-12 h-12 rounded-full border-2 transition-all ${
+                      selectedColor === color.name
+                        ? "border-black scale-110"
+                        : color.border ? `border-[${color.border}]` : "border-gray-300"
+                    }`}
+                    style={{ 
+                      backgroundColor: color.value,
+                      borderColor: selectedColor === color.name ? '#000' : (color.border || '#D1D5DB')
+                    }}
+                    title={color.name}
+                  />
+                ))}
+              </div>
+            </div>
+
+            {/* Booking Amount */}
+            <div className="border-t pt-6">
+              <div className="flex items-center justify-between mb-4">
+                <span className="font-['Inter'] font-medium text-[16px]">
+                  Booking amount
+                </span>
+                <div className="flex items-center gap-2">
+                  <span className="font-['Inter'] text-[14px] text-gray-600">
+                    Fully refundable
+                  </span>
+                  <Info className="w-4 h-4 text-gray-400" />
+                  <span className="font-['Poppins'] font-semibold text-[18px]">
+                    ₹{bookingAmount}
+                  </span>
+                </div>
+              </div>
+
+              {/* Next Button */}
+              <button
+                onClick={handleNext}
+                className="w-full bg-black text-white h-[60px] font-['Poppins'] font-medium text-[16px] hover:bg-black/90 transition-colors flex items-center justify-between px-8 group"
+              >
+                <span>Next</span>
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </button>
             </div>
           </div>
         </div>
