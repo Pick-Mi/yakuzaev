@@ -12,7 +12,6 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 
 const deliveryFormSchema = z.object({
@@ -35,15 +34,6 @@ const BookingConfirmation = () => {
   const [isVerified, setIsVerified] = useState(false);
   const [isSendingOtp, setIsSendingOtp] = useState(false);
   const [isVerifyingOtp, setIsVerifyingOtp] = useState(false);
-  const [countryCode, setCountryCode] = useState("+91"); // Default to India
-
-  const countryCodes = [
-    { code: "+91", country: "IN", flag: "🇮🇳", name: "India" },
-    { code: "+1", country: "US", flag: "🇺🇸", name: "USA" },
-    { code: "+44", country: "GB", flag: "🇬🇧", name: "UK" },
-    { code: "+61", country: "AU", flag: "🇦🇺", name: "Australia" },
-    { code: "+971", country: "AE", flag: "🇦🇪", name: "UAE" },
-  ];
 
   const form = useForm<DeliveryFormData>({
     resolver: zodResolver(deliveryFormSchema),
@@ -64,22 +54,19 @@ const BookingConfirmation = () => {
       return;
     }
 
-    // Format phone number with country code
-    const fullPhoneNumber = `${countryCode}${phoneNumber}`;
-
     setIsSendingOtp(true);
     try {
       const { data, error } = await supabase.functions.invoke('send-otp', {
-        body: { phoneNumber: fullPhoneNumber }
+        body: { phoneNumber }
       });
 
       if (error) throw error;
 
-      toast.success("OTP sent successfully to " + fullPhoneNumber);
+      toast.success("OTP sent successfully!");
       setShowOtpInput(true);
     } catch (error: any) {
       console.error('Error sending OTP:', error);
-      toast.error(error.message || "Failed to send OTP. Please configure Twilio credentials.");
+      toast.error(error.message || "Failed to send OTP");
     } finally {
       setIsSendingOtp(false);
     }
@@ -87,7 +74,6 @@ const BookingConfirmation = () => {
 
   const handleVerifyOtp = async () => {
     const phoneNumber = form.getValues("phoneNumber");
-    const fullPhoneNumber = `${countryCode}${phoneNumber}`;
     
     if (!otpValue || otpValue.length !== 6) {
       toast.error("Please enter a valid 6-digit OTP");
@@ -97,7 +83,7 @@ const BookingConfirmation = () => {
     setIsVerifyingOtp(true);
     try {
       const { data, error } = await supabase.functions.invoke('verify-otp', {
-        body: { phoneNumber: fullPhoneNumber, otp: otpValue }
+        body: { phoneNumber, otp: otpValue }
       });
 
       if (error) throw error;
@@ -234,23 +220,15 @@ const BookingConfirmation = () => {
               </div>
             </div>
 
-            {/* Right Side - Login/Delivery Form */}
+            {/* Right Side - Delivery Form */}
             <div>
-              {!isVerified ? (
-                // Login Section - Show only if not verified
-                <div className="space-y-6">
-                  <div>
-                    <h3 className="font-['Poppins'] font-semibold text-[28px] mb-2">
-                      Login with Mobile
-                    </h3>
-                    <p className="font-['Inter'] text-[14px] text-muted-foreground mb-6">
-                      Verify your phone number to continue
-                    </p>
-                  </div>
+              <h3 className="font-['Poppins'] font-semibold text-[28px] mb-6">
+                Delivery Details
+              </h3>
 
-                  <Form {...form}>
-                    <form className="space-y-6">{/* Phone Number with Country Code */}
-                  {/* Phone Number with Country Code */}
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                  {/* Phone Number */}
                   <FormField
                     control={form.control}
                     name="phoneNumber"
@@ -260,108 +238,66 @@ const BookingConfirmation = () => {
                         <FormControl>
                           <div className="space-y-3">
                             <div className="flex gap-2">
-                              {/* Country Code Selector */}
-                              <Select value={countryCode} onValueChange={setCountryCode} disabled={isVerified}>
-                                <SelectTrigger className="w-[140px] font-['Inter'] bg-background">
-                                  <SelectValue />
-                                </SelectTrigger>
-                                <SelectContent className="bg-background border border-input z-50">
-                                  {countryCodes.map((item) => (
-                                    <SelectItem 
-                                      key={item.code} 
-                                      value={item.code}
-                                      className="font-['Inter'] cursor-pointer hover:bg-accent"
-                                    >
-                                      <span className="flex items-center gap-2">
-                                        <span>{item.flag}</span>
-                                        <span>{item.code}</span>
-                                        <span className="text-muted-foreground text-xs">({item.country})</span>
-                                      </span>
-                                    </SelectItem>
-                                  ))}
-                                </SelectContent>
-                              </Select>
-
-                              {/* Phone Number Input */}
                               <Input 
-                                placeholder="9876543210" 
+                                placeholder="345698765" 
                                 {...field}
                                 className="font-['Inter'] flex-1"
                                 disabled={isVerified}
-                                type="tel"
                               />
-
-                              {/* Verify Button */}
                               {!isVerified && !showOtpInput && (
                                 <Button
                                   type="button"
                                   onClick={handleSendOtp}
                                   disabled={isSendingOtp}
-                                  className="bg-black text-white hover:bg-black/90 font-['Inter'] whitespace-nowrap"
+                                  className="bg-black text-white hover:bg-black/90 font-['Inter']"
                                 >
                                   {isSendingOtp ? "Sending..." : "Verify"}
                                 </Button>
                               )}
-
-                              {/* Verified Badge */}
                               {isVerified && (
                                 <div className="flex items-center gap-2 text-green-600 px-4">
                                   <Check className="w-5 h-5" />
-                                  <span className="font-['Inter'] text-sm whitespace-nowrap">Verified</span>
+                                  <span className="font-['Inter'] text-sm">Verified</span>
                                 </div>
                               )}
                             </div>
 
-                            {/* OTP Input */}
                             {showOtpInput && !isVerified && (
-                              <div className="flex gap-2 animate-in slide-in-from-top-2">
+                              <div className="flex gap-2">
                                 <Input
                                   placeholder="Enter 6-digit OTP"
                                   value={otpValue}
-                                  onChange={(e) => setOtpValue(e.target.value.replace(/\D/g, ''))}
+                                  onChange={(e) => setOtpValue(e.target.value)}
                                   maxLength={6}
                                   className="font-['Inter'] flex-1"
-                                  type="tel"
                                 />
                                 <Button
                                   type="button"
                                   onClick={handleVerifyOtp}
                                   disabled={isVerifyingOtp}
-                                  className="bg-black text-white hover:bg-black/90 font-['Inter'] whitespace-nowrap"
+                                  className="bg-black text-white hover:bg-black/90 font-['Inter']"
                                 >
-                                  {isVerifyingOtp ? "Verifying..." : "Submit OTP"}
+                                  {isVerifyingOtp ? "Verifying..." : "Submit"}
                                 </Button>
                               </div>
                             )}
                           </div>
                         </FormControl>
                         <FormDescription className="font-['Inter'] text-[12px] text-muted-foreground">
-                          {!isVerified && "We'll send a verification code to your phone"}
-                          {isVerified && "Your phone number has been verified"}
+                          A carrier might contact you to confirm delivery
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
-                  </form>
-                </Form>
-              </div>
-            ) : (
-              // Delivery Form - Show after verification
-              <div>
-                <h3 className="font-['Poppins'] font-semibold text-[28px] mb-6">
-                  Delivery Details
-                </h3>
 
-                <Form {...form}>
-                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                    {/* Name Section */}
-                    <div>
-                      <h4 className="font-['Inter'] font-medium text-[16px] mb-4">
-                        Enter your name and address:
-                      </h4>
+                  {/* Name Section */}
+                  <div>
+                    <h4 className="font-['Inter'] font-medium text-[16px] mb-4">
+                      Enter your name and address:
+                    </h4>
 
-                      <div className="space-y-4">
+                    <div className="space-y-4">
                       {/* First Name */}
                       <FormField
                         control={form.control}
@@ -467,10 +403,8 @@ const BookingConfirmation = () => {
                 </form>
               </Form>
             </div>
-          )}
+          </div>
         </div>
-      </div>
-    </div>
 
         {/* Next Steps - Removed, replaced with form */}
       </main>
