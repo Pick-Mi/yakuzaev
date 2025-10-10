@@ -83,16 +83,16 @@ const Header = () => {
             
             {/* Navigation Menu - Desktop */}
             <div className="absolute left-1/2 top-2 -translate-x-1/2 hidden md:flex gap-9 items-center">
-              <Link to="/products" className="text-[14px] font-sans leading-normal hover:opacity-80 transition-opacity whitespace-nowrap text-white font-medium">
+              <Link to="/products" className={`text-[14px] font-sans leading-normal hover:opacity-80 transition-opacity whitespace-nowrap font-medium ${isScrolled ? 'text-black' : 'text-white'}`}>
                 Products
               </Link>
-              <Link to="/" className="text-[14px] font-sans leading-normal hover:opacity-80 transition-opacity whitespace-nowrap text-white font-normal">
+              <Link to="/" className={`text-[14px] font-sans leading-normal hover:opacity-80 transition-opacity whitespace-nowrap font-normal ${isScrolled ? 'text-black' : 'text-white'}`}>
                 Yakuza Store
               </Link>
-              <Link to="/" className="text-[14px] font-sans leading-normal hover:opacity-80 transition-opacity whitespace-nowrap text-white font-normal">
+              <Link to="/" className={`text-[14px] font-sans leading-normal hover:opacity-80 transition-opacity whitespace-nowrap font-normal ${isScrolled ? 'text-black' : 'text-white'}`}>
                 Become a Dealer
               </Link>
-              <Link to="/" className="text-[14px] font-sans leading-normal hover:opacity-80 transition-opacity whitespace-nowrap text-white font-normal">
+              <Link to="/" className={`text-[14px] font-sans leading-normal hover:opacity-80 transition-opacity whitespace-nowrap font-normal ${isScrolled ? 'text-black' : 'text-white'}`}>
                 About Us
               </Link>
             </div>
