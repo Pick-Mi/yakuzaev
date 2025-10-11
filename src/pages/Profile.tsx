@@ -277,37 +277,6 @@ const Profile = () => {
               </CardHeader>
               <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <Label htmlFor="display_name">Display Name</Label>
-                  <Input
-                    id="display_name"
-                    value={profile.display_name}
-                    onChange={(e) => handleInputChange("display_name", e.target.value)}
-                    placeholder="Enter display name"
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="username">Username</Label>
-                  <Input
-                    id="username"
-                    value={profile.username}
-                    onChange={(e) => handleInputChange("username", e.target.value)}
-                    placeholder="Enter username"
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    value={profile.email}
-                    onChange={(e) => handleInputChange("email", e.target.value)}
-                    placeholder="Enter email"
-                  />
-                </div>
-
-                <div className="space-y-2">
                   <Label htmlFor="first_name">First Name</Label>
                   <Input
                     id="first_name"
@@ -324,6 +293,17 @@ const Profile = () => {
                     value={profile.last_name}
                     onChange={(e) => handleInputChange("last_name", e.target.value)}
                     placeholder="Enter last name"
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="email">Email</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    value={profile.email}
+                    onChange={(e) => handleInputChange("email", e.target.value)}
+                    placeholder="Enter email"
                   />
                 </div>
 
