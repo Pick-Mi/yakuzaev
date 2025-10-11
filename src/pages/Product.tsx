@@ -192,7 +192,6 @@ const Product = () => {
         chargeTime="30 km"
         backgroundImage={product.preview_section?.backgroundImage}
         previewTitle={product.preview_section?.title}
-        specs={product.preview_section?.specs}
         onBookNow={handleBuyNow}
         onAddToCart={handleAddToCart}
       />
