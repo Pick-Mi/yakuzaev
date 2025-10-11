@@ -844,12 +844,6 @@ const BookingConfirmation = () => {
                     </p>
                   </div>
 
-                  {/* Upload ID as Indian Resident */}
-                  <div className="border border-border rounded p-4">
-                    <h4 className="text-base font-medium">
-                      Upload ID as Indian Resident
-                    </h4>
-                  </div>
 
                   {/* Document Type Dropdown */}
                   <div className="space-y-2">
