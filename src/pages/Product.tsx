@@ -43,7 +43,7 @@ const Product = () => {
         // Using any type to bypass the current type limitations
         const response = await (supabase as any)
           .from('products')
-          .select('id, name, price, image_url, images, description, variants, is_active')
+          .select('id, name, price, image_url, images, description, variants, is_active, preview_section')
           .eq('id', id)
           .eq('is_active', true)
           .single();
@@ -71,6 +71,16 @@ const Product = () => {
             parsedVariants = [];
           }
 
+          // Parse preview_section if it's a JSON string
+          let parsedPreviewSection = {};
+          try {
+            parsedPreviewSection = typeof response.data.preview_section === 'string' 
+              ? JSON.parse(response.data.preview_section) 
+              : response.data.preview_section || {};
+          } catch (e) {
+            parsedPreviewSection = {};
+          }
+
           const fetchedProduct = {
             id: response.data.id,
             name: response.data.name,
@@ -81,7 +91,8 @@ const Product = () => {
             reviewCount: Math.floor(Math.random() * 200) + 10,
             recommended: true,
             description: response.data.description || "High-quality product for your needs.",
-            variants: parsedVariants
+            variants: parsedVariants,
+            preview_section: parsedPreviewSection
           };
           setProduct(fetchedProduct);
           
@@ -179,6 +190,7 @@ const Product = () => {
         topSpeed="90 km/h"
         range="161 km"
         chargeTime="30 km"
+        backgroundImage={product.preview_section?.backgroundImage}
         onBookNow={handleBuyNow}
         onAddToCart={handleAddToCart}
       />
