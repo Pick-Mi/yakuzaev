@@ -366,72 +366,75 @@ const BookingConfirmation = () => {
         return;
       }
 
-      // Create order
-      const orderData = {
-        customer_id: user.id,
-        total_amount: totalAmount,
-        status: 'pending',
-        payment_status: 'pending',
-        order_items_data: [{
-          product_id: product.id,
-          product_name: product.name,
-          variant: selectedVariant?.name || '',
-          color: selectedColor || '',
-          quantity: 1,
-          unit_price: productPrice,
-          total_price: productPrice,
-        }],
-        customer_details: {
-          first_name: firstName,
-          last_name: lastName,
-          name: `${firstName} ${lastName}`,
-          email: email,
-          phone: countryCode + phoneNumber,
-          mobile: countryCode + phoneNumber,
-        },
-        delivery_address: {
-          street_address: address,
-          city: city,
-          state_province: state,
-          postal_code: pincode,
-          country: 'India',
-        },
-        shipping_charge: deliveryFee,
-        tax_amount: 0,
-        discount_amount: discountAmount,
-        order_summary: {
-          product_price: productPrice,
-          delivery_fee: deliveryFee,
-          discount: discountAmount,
-          promo_code: promoApplied ? promoCode : null,
-          total: totalAmount,
-        }
-      };
-
-      const { data: order, error: orderError } = await supabase
-        .from('orders')
-        .insert(orderData)
-        .select()
-        .single();
-
-      if (orderError) {
-        toast.error('Failed to create order: ' + orderError.message);
-        setSaving(false);
-        return;
-      }
-
-      // Navigate to checkout/payment with order details
+      // Navigate to checkout/payment with all required details
       navigate('/checkout', {
         state: {
-          order: order,
-          product: product,
+          orderId: `BOOK_${Date.now()}`,
           amount: totalAmount,
-          promo_code: promoApplied ? promoCode : null,
-          discount: discountAmount,
+          productInfo: `${product.name} - ${selectedVariant?.name || 'Standard'} - ${selectedColor || 'Black'}`,
+          customerDetails: {
+            firstName: `${firstName} ${lastName}`,
+            email: email,
+            phone: countryCode + phoneNumber
+          },
+          orderData: {
+            customer_id: user.id,
+            total_amount: totalAmount,
+            status: 'pending',
+            payment_status: 'pending',
+            order_items_data: [{
+              product_id: product.id,
+              product_name: product.name,
+              variant: selectedVariant?.name || '',
+              color: selectedColor || '',
+              quantity: 1,
+              unit_price: productPrice,
+              total_price: productPrice,
+            }],
+            customer_details: {
+              first_name: firstName,
+              last_name: lastName,
+              name: `${firstName} ${lastName}`,
+              email: email,
+              phone: countryCode + phoneNumber,
+              mobile: countryCode + phoneNumber,
+            },
+            delivery_address: {
+              street_address: address,
+              city: city,
+              state_province: state,
+              postal_code: pincode,
+              country: 'India',
+            },
+            shipping_charge: deliveryFee,
+            tax_amount: 0,
+            discount_amount: discountAmount,
+            order_summary: {
+              product_price: productPrice,
+              delivery_fee: deliveryFee,
+              discount: discountAmount,
+              promo_code: promoApplied ? promoCode : null,
+              total: totalAmount,
+            },
+            payment_method: 'payu',
+            order_source: 'web',
+            order_type: purchaseType === 'book' ? 'booking' : 'purchase'
+          },
+          userProfile: {
+            first_name: firstName,
+            last_name: lastName,
+            email: email,
+            phone: countryCode + phoneNumber,
+            street_address: address,
+            city: city,
+            state_province: state,
+            postal_code: pincode,
+            country: 'India',
+          }
         }
       });
 
-      toast.success('Order created successfully! Proceeding to payment...');
+      toast.success('Profile saved! Proceeding to payment...');
     } catch (error: any) {
       toast.error('An error occurred while processing');
       console.error('Save error:', error);

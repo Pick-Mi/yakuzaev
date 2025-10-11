@@ -14,6 +14,7 @@ interface PayUPaymentProps {
     phone: string;
   };
   cartItems?: any[];
+  orderData?: any;
   userProfile?: any;
   onSuccess: (paymentData: any) => void;
   onFailure: (error: any) => void;
@@ -26,6 +27,7 @@ export default function PayUPayment({
   productInfo,
   customerDetails,
   cartItems = [],
+  orderData,
   userProfile,
   onSuccess,
   onFailure,
@@ -48,66 +50,83 @@ export default function PayUPayment({
     setIsProcessing(true);
 
     try {
-      // First, create the order in the database
-      const orderData = {
-        customer_id: user.id,
-        status: 'pending',
-        payment_status: 'pending',
-        total_amount: amount,
-        order_items_data: cartItems.map(item => ({
-          id: item.id,
-          name: item.name,
-          image: item.image,
-          price: item.price,
-          quantity: item.quantity,
-          totalPrice: item.totalPrice,
-          selectedVariant: item.selectedVariant
-        })),
-        customer_details: {
-          name: customerDetails.firstName,
-          email: customerDetails.email,
-          phone: customerDetails.phone,
-          userId: user.id,
-          isVerified: userProfile?.is_verified || false,
-          customerType: userProfile?.customer_type || 'individual',
-          loyaltyPoints: userProfile?.loyalty_points || 0
-        },
-        delivery_address: {
-          fullName: customerDetails.firstName,
-          email: customerDetails.email,
-          phone: customerDetails.phone,
-          streetAddress: userProfile?.street_address || '',
-          city: userProfile?.city || '',
-          state: userProfile?.state_province || '',
-          zipCode: userProfile?.postal_code || '',
-          country: userProfile?.country || 'India',
-          addressType: 'delivery'
-        },
-        order_summary: {
-          subtotal: amount,
-          itemCount: cartItems.length,
-          totalItems: cartItems.reduce((sum, item) => sum + item.quantity, 0),
-          discountAmount: 0,
-          taxAmount: 0,
-          shippingCharge: 0,
-          finalTotal: amount
-        },
-        payment_method: 'payu',
-        order_source: 'web',
-        estimated_delivery_date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString()
-      };
+      // If orderData is provided (from booking flow), use it directly
+      let createdOrder;
+      if (orderData) {
+        const { data: order, error: orderError } = await supabase
+          .from('orders')
+          .insert(orderData)
+          .select()
+          .single();
 
-      console.log('Creating order in database:', orderData);
+        if (orderError) {
+          console.error('Order creation error:', orderError);
+          throw new Error('Failed to create order: ' + orderError.message);
+        }
+        createdOrder = order;
+      } else {
+        // Original cart flow - create order from cart items
+        const orderDataFromCart = {
+          customer_id: user.id,
+          status: 'pending',
+          payment_status: 'pending',
+          total_amount: amount,
+          order_items_data: cartItems.map(item => ({
+            id: item.id,
+            name: item.name,
+            image: item.image,
+            price: item.price,
+            quantity: item.quantity,
+            totalPrice: item.totalPrice,
+            selectedVariant: item.selectedVariant
+          })),
+          customer_details: {
+            name: customerDetails.firstName,
+            email: customerDetails.email,
+            phone: customerDetails.phone,
+            userId: user.id,
+            isVerified: userProfile?.is_verified || false,
+            customerType: userProfile?.customer_type || 'individual',
+            loyaltyPoints: userProfile?.loyalty_points || 0
+          },
+          delivery_address: {
+            fullName: customerDetails.firstName,
+            email: customerDetails.email,
+            phone: customerDetails.phone,
+            streetAddress: userProfile?.street_address || '',
+            city: userProfile?.city || '',
+            state: userProfile?.state_province || '',
+            zipCode: userProfile?.postal_code || '',
+            country: userProfile?.country || 'India',
+            addressType: 'delivery'
+          },
+          order_summary: {
+            subtotal: amount,
+            itemCount: cartItems.length,
+            totalItems: cartItems.reduce((sum, item) => sum + item.quantity, 0),
+            discountAmount: 0,
+            taxAmount: 0,
+            shippingCharge: 0,
+            finalTotal: amount
+          },
+          payment_method: 'payu',
+          order_source: 'web',
+          estimated_delivery_date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString()
+        };
 
-      const { data: createdOrder, error: orderError } = await supabase
-        .from('orders')
-        .insert(orderData)
-        .select()
-        .single();
+        console.log('Creating order in database:', orderDataFromCart);
 
-      if (orderError) {
-        console.error('Order creation error:', orderError);
-        throw new Error('Failed to create order: ' + orderError.message);
+        const { data: order, error: orderError } = await supabase
+          .from('orders')
+          .insert(orderDataFromCart)
+          .select()
+          .single();
+
+        if (orderError) {
+          console.error('Order creation error:', orderError);
+          throw new Error('Failed to create order: ' + orderError.message);
+        }
+        createdOrder = order;
       }
 
       console.log('Order created successfully:', createdOrder);

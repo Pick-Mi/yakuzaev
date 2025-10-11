@@ -6,7 +6,7 @@ import { useAuth } from "@/hooks/useAuth";
 import Header from "@/components/Header";
 import PayUPayment from "@/components/PayUPayment";
 import { ArrowLeft } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -15,30 +15,43 @@ const Checkout = () => {
   const { items, itemCount, total, clearCart } = useCart();
   const { user } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const { toast } = useToast();
   const [userProfile, setUserProfile] = useState<any>(null);
+  
+  // Get data from booking confirmation or cart
+  const bookingData = location.state;
 
   // Fetch user profile data for customer details
   useEffect(() => {
     const fetchUserProfile = async () => {
       if (!user?.id) return;
       
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('user_id', user.id)
-        .single();
-      
-      if (profile) {
-        setUserProfile(profile);
+      // Use booking profile if available, otherwise fetch from database
+      if (bookingData?.userProfile) {
+        setUserProfile(bookingData.userProfile);
+      } else {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('user_id', user.id)
+          .single();
+        
+        if (profile) {
+          setUserProfile(profile);
+        }
       }
     };
 
     fetchUserProfile();
-  }, [user]);
+  }, [user, bookingData]);
+  // Determine if this is from booking or cart
+  const isBookingFlow = bookingData && bookingData.orderId && bookingData.orderData;
+  const displayItems = isBookingFlow ? bookingData.orderData.order_items_data : items;
+  const displayTotal = isBookingFlow ? bookingData.amount : total;
+  const displayItemCount = isBookingFlow ? 1 : itemCount;
 
-
-  if (items.length === 0) {
+  if (!isBookingFlow && items.length === 0) {
     return (
       <div className="min-h-screen bg-background">
         <Header />
@@ -58,12 +71,23 @@ const Checkout = () => {
       
       <div className="container mx-auto px-4 py-8">
         {/* Back button */}
-        <Link to="/cart">
-          <Button variant="ghost" className="mb-6">
+        {isBookingFlow ? (
+          <Button 
+            variant="ghost" 
+            className="mb-6"
+            onClick={() => navigate(-1)}
+          >
             <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Cart
+            Back to Booking
           </Button>
-        </Link>
+        ) : (
+          <Link to="/cart">
+            <Button variant="ghost" className="mb-6">
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Cart
+            </Button>
+          </Link>
+        )}
 
         <div className="max-w-2xl mx-auto">
           {/* Order Summary Card */}
@@ -75,23 +99,32 @@ const Checkout = () => {
             <CardContent className="space-y-6">
               {/* Order Items */}
               <div className="space-y-4">
-                {items.map((item) => (
-                  <div key={item.id} className="flex gap-4 p-4 bg-accent/50 rounded-lg">
-                    <img 
-                      src={item.image} 
-                      alt={item.name}
-                      className="w-20 h-20 object-cover rounded-lg"
-                    />
+                {displayItems.map((item: any, index: number) => (
+                  <div key={item.id || index} className="flex gap-4 p-4 bg-accent/50 rounded-lg">
+                    {!isBookingFlow && item.image && (
+                      <img 
+                        src={item.image} 
+                        alt={item.name || item.product_name}
+                        className="w-20 h-20 object-cover rounded-lg"
+                      />
+                    )}
                     <div className="flex-1">
-                      <h4 className="font-semibold">{item.name}</h4>
-                      {item.selectedVariant && (
+                      <h4 className="font-semibold">{item.name || item.product_name}</h4>
+                      {(item.selectedVariant || item.variant) && (
                         <p className="text-sm text-muted-foreground">
-                          Variant: {typeof item.selectedVariant === 'string' ? item.selectedVariant : item.selectedVariant.name}
+                          Variant: {typeof item.selectedVariant === 'string' ? item.selectedVariant : item.selectedVariant?.name || item.variant}
+                        </p>
+                      )}
+                      {(item.color) && (
+                        <p className="text-sm text-muted-foreground">
+                          Color: {item.color}
                         </p>
                       )}
                       <div className="flex justify-between items-center mt-2">
                         <p className="text-sm text-muted-foreground">Quantity: {item.quantity}</p>
-                        <p className="font-semibold text-primary">{item.price}</p>
+                        <p className="font-semibold text-primary">
+                          ₹{(item.unit_price || parseFloat(item.price?.replace(/[^0-9.]/g, '') || '0')).toLocaleString('en-IN')}
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -103,8 +136,10 @@ const Checkout = () => {
               {/* Totals */}
               <div className="space-y-3">
                 <div className="flex justify-between text-base">
-                  <span>Subtotal ({itemCount} items)</span>
-                  <span className="font-medium">{total}</span>
+                  <span>Subtotal ({displayItemCount} {displayItemCount === 1 ? 'item' : 'items'})</span>
+                  <span className="font-medium">
+                    {isBookingFlow ? `₹${displayTotal.toLocaleString('en-IN')}` : displayTotal}
+                  </span>
                 </div>
                 <div className="flex justify-between text-base">
                   <span>Shipping</span>
@@ -112,12 +147,14 @@ const Checkout = () => {
                 </div>
                 <div className="flex justify-between text-base">
                   <span>Tax</span>
-                  <span className="font-medium">$0.00</span>
+                  <span className="font-medium">₹0.00</span>
                 </div>
                 <Separator />
                 <div className="flex justify-between text-xl font-bold">
                   <span>Total Amount</span>
-                  <span className="text-primary">{total}</span>
+                  <span className="text-primary">
+                    {isBookingFlow ? `₹${displayTotal.toLocaleString('en-IN')}` : displayTotal}
+                  </span>
                 </div>
               </div>
               
@@ -126,18 +163,23 @@ const Checkout = () => {
               {/* PayU Payment Component */}
               <div className="space-y-3">
                 <PayUPayment
-                  orderId={`ORDER_${Date.now()}`}
-                  amount={(() => {
-                    const numericTotal = parseFloat(total.replace(/[^0-9.]/g, ''));
+                  orderId={isBookingFlow ? bookingData.orderId : `ORDER_${Date.now()}`}
+                  amount={isBookingFlow ? displayTotal : (() => {
+                    const numericTotal = parseFloat(displayTotal.replace(/[^0-9.]/g, ''));
                     return isNaN(numericTotal) || numericTotal <= 0 ? 0 : numericTotal;
                   })()}
-                  productInfo={`Order with ${itemCount} items`}
-                  customerDetails={{
-                    firstName: userProfile?.first_name || userProfile?.display_name || 'Customer',
-                    email: userProfile?.email || user?.email || 'customer@example.com',
-                    phone: userProfile?.phone || '9999999999'
-                  }}
-                  cartItems={items}
+                  productInfo={isBookingFlow ? bookingData.productInfo : `Order with ${displayItemCount} items`}
+                  customerDetails={
+                    isBookingFlow && bookingData.customerDetails 
+                      ? bookingData.customerDetails 
+                      : {
+                          firstName: userProfile?.first_name || userProfile?.display_name || 'Customer',
+                          email: userProfile?.email || user?.email || 'customer@example.com',
+                          phone: userProfile?.phone || '9999999999'
+                        }
+                  }
+                  cartItems={isBookingFlow ? [] : items}
+                  orderData={isBookingFlow ? bookingData.orderData : undefined}
                   userProfile={userProfile}
                   onSuccess={(paymentData) => {
                     console.log('Payment successful:', paymentData);
