@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { useCart } from "@/hooks/useCart";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import NotificationBar from "./NotificationBar";
 import menuIcon from "@/assets/menu-icon.svg";
@@ -15,6 +15,7 @@ const Header = () => {
   const { user } = useAuth();
   const { itemCount } = useCart();
   const location = useLocation();
+  const navigate = useNavigate();
   const [isScrolled, setIsScrolled] = useState(false);
   const [logoUrl, setLogoUrl] = useState<string | null>(null);
   
@@ -71,6 +72,20 @@ const Header = () => {
     fetchLogo();
   }, []);
 
+  const handleCartClick = (e: React.MouseEvent) => {
+    if (!user) {
+      e.preventDefault();
+      navigate('/auth');
+    }
+  };
+
+  const handleMenuClick = (e: React.MouseEvent) => {
+    if (!user) {
+      e.preventDefault();
+      navigate('/auth');
+    }
+  };
+
 
   return (
     <>
@@ -105,7 +120,7 @@ const Header = () => {
             
             {/* Icons */}
             <div className="absolute right-0 top-1 flex gap-[15px] items-center">
-              <Link to="/cart">
+              <Link to={user ? "/cart" : "/auth"} onClick={handleCartClick}>
                 <Button variant="ghost" size="icon" className="relative hover:bg-black/10 h-auto p-1 text-black">
                   <img src={cartIcon} alt="Cart" className={`w-[22px] h-[22px] ${shouldShowFixedHeader ? 'invert' : ''}`} />
                   {itemCount > 0 && (
@@ -120,7 +135,12 @@ const Header = () => {
                   <img src={profileIcon} alt="Profile" className={`w-[22px] h-[22px] ${shouldShowFixedHeader ? 'invert' : ''}`} />
                 </Button>
               </Link>
-              <Button variant="ghost" size="icon" className="hover:bg-black/10 h-auto p-1 text-black">
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="hover:bg-black/10 h-auto p-1 text-black"
+                onClick={handleMenuClick}
+              >
                 <img src={menuIcon} alt="Menu" className={`w-[22px] h-[22px] ${shouldShowFixedHeader ? 'invert' : ''}`} />
               </Button>
             </div>
