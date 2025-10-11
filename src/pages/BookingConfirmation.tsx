@@ -424,26 +424,37 @@ const BookingConfirmation = () => {
       }
 
       // Initiate PayU payment
-      const orderId = `ORD_${order.id.substring(0, 8)}_${Date.now()}`;
+      const orderId = order.id;
       const productInfo = `${product.name} - ${selectedVariant?.name || 'Standard'} - ${selectedColor || 'Black'}`;
-      const customerName = `${firstName} ${lastName}`;
 
       const { data: payuData, error: payuError } = await supabase.functions.invoke('payu-payment', {
         body: {
-          orderId,
-          amount: totalAmount,
-          productInfo,
-          customerName,
-          customerEmail: email,
-          customerPhone: countryCode + phoneNumber,
-          successUrl: `${window.location.origin}/payment-success`,
-          failureUrl: `${window.location.origin}/payment-failure`,
+          action: 'initiate_payment',
+          paymentData: {
+            orderId: orderId,
+            amount: totalAmount,
+            productInfo: productInfo,
+            firstName: `${firstName} ${lastName}`,
+            email: email,
+            phone: countryCode + phoneNumber,
+            surl: `${window.location.origin}/payment-success`,
+            furl: `${window.location.origin}/payment-failure`,
+            udf1: user.id, // Store user ID for verification
+            udf2: orderId, // Store order ID for verification
+          }
         },
       });
 
-      if (payuError) {
+      if (payuError || !payuData) {
         console.error('PayU initialization error:', payuError);
-        toast.error('Failed to initialize payment');
+        toast.error('Failed to initialize payment: ' + (payuError?.message || 'Unknown error'));
+        setSaving(false);
+        return;
+      }
+
+      if (!payuData.success || !payuData.paymentParams || !payuData.payuUrl) {
+        console.error('Invalid PayU response:', payuData);
+        toast.error('Invalid payment response from server');
         setSaving(false);
         return;
       }
@@ -453,7 +464,7 @@ const BookingConfirmation = () => {
       form.method = 'POST';
       form.action = payuData.payuUrl;
 
-      Object.entries(payuData.params).forEach(([key, value]) => {
+      Object.entries(payuData.paymentParams).forEach(([key, value]) => {
         const input = document.createElement('input');
         input.type = 'hidden';
         input.name = key;
