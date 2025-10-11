@@ -35,13 +35,11 @@ const ProfileSetup = () => {
     try {
       const { error } = await supabase
         .from('profiles')
-        .upsert({
-          user_id: user?.id,
+        .update({
           first_name: firstName.trim(),
           last_name: lastName.trim(),
-          phone: user?.phone,
-          email: user?.email,
-        });
+        })
+        .eq('user_id', user?.id);
 
       if (error) throw error;
 
