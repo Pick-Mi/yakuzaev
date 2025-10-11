@@ -929,24 +929,6 @@ const BookingConfirmation = () => {
                     Only .jpg and .jpeg files are allowed.
                   </p>
 
-                  {/* Address Match */}
-                  <div className="border border-border rounded p-4">
-                    <h4 className="text-base font-medium mb-4">
-                      Address on ID matches delivery address
-                    </h4>
-                    <div className="flex items-start gap-3">
-                      <Checkbox
-                        id="addressMatch"
-                        checked={addressMatchChecked}
-                        onCheckedChange={(checked) => setAddressMatchChecked(checked as boolean)}
-                        disabled={!isVerified}
-                        className="mt-1"
-                      />
-                      <label htmlFor="addressMatch" className="text-sm text-muted-foreground cursor-pointer">
-                        Select this if your ID address matches your delivery address.
-                      </label>
-                    </div>
-                  </div>
                 </div>
                     </div>
                   </div>
