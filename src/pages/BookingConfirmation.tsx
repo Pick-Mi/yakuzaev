@@ -514,7 +514,7 @@ const BookingConfirmation = () => {
                       <div className="flex items-center justify-between">
                         <Badge 
                           variant="secondary" 
-                          className="bg-green-50 text-green-700 hover:bg-green-50 px-6 py-2 text-sm font-medium rounded-full"
+                          className="bg-green-50 text-green-700 hover:bg-green-50 px-6 py-2 text-sm font-medium rounded"
                         >
                           Booking
                         </Badge>
