@@ -119,7 +119,7 @@ const Header = () => {
     <>
       <div className="fixed top-0 left-0 w-full z-50">
         <NotificationBar />
-        <nav className={`w-full p-[13px] transition-all duration-300 ${shouldShowFixedHeader ? 'bg-white' : 'bg-transparent'}`}>
+        <nav className={`w-full p-[13px] transition-all duration-300 ${shouldShowFixedHeader ? 'bg-white' : 'bg-transparent'} ${isMenuOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
           <div className="relative h-8 w-full max-w-[1360px] mx-auto">
             {/* Logo */}
             <Link to="/" className="absolute left-0 top-0 px-4 py-2 h-8 flex items-center justify-center">
@@ -183,14 +183,14 @@ const Header = () => {
           <div 
             className="fixed inset-0 bg-black/50 z-[60] animate-fade-in"
             onClick={() => setIsMenuOpen(false)}
-            style={{ top: 'calc(var(--notification-bar-height, 0px) + 64px)' }}
+            style={{ top: 'var(--notification-bar-height, 40px)' }}
           />
           
           {/* Dropdown Menu */}
           <div 
             className="fixed left-0 right-0 bg-white z-[70] shadow-2xl animate-slide-in-from-top"
             style={{ 
-              top: 'calc(var(--notification-bar-height, 40px) + 64px)',
+              top: 'var(--notification-bar-height, 40px)',
               maxHeight: '60vh',
               overflowY: 'auto'
             }}
