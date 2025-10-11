@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 // Country codes data
@@ -51,8 +52,9 @@ const BookingConfirmation = () => {
   const [uploadedDocument, setUploadedDocument] = useState<File | null>(null);
   const [consentChecked, setConsentChecked] = useState(false);
   const [addressMatchChecked, setAddressMatchChecked] = useState(false);
+  const [saving, setSaving] = useState(false);
   
-  const { signInWithPhone, verifyOTP } = useAuth();
+  const { signInWithPhone, verifyOTP, user } = useAuth();
 
   const validatePhoneNumber = (fullPhone: string): string | null => {
     // Remove all non-digit characters except +
@@ -117,6 +119,9 @@ const BookingConfirmation = () => {
         setIsVerified(true);
         setStep('phone');
         setOtp('');
+        
+        // Load existing profile data if available
+        await loadProfileData();
       }
     } catch (error: any) {
       toast.error("An unexpected error occurred. Please try again.");
@@ -125,11 +130,122 @@ const BookingConfirmation = () => {
     }
   };
 
+  const loadProfileData = async () => {
+    if (!user) return;
+
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('user_id', user.id)
+        .single();
+
+      if (error && error.code !== 'PGRST116') {
+        console.error('Error loading profile:', error);
+        return;
+      }
+
+      if (data) {
+        setFirstName(data.first_name || '');
+        setLastName(data.last_name || '');
+        setEmail(data.email || '');
+        setAddress(data.street_address || '');
+        setDocumentType(data.document_type || 'aadhaar');
+        setAadhaarNumber(data.document_number || '');
+        setConsentChecked(data.consent_given || false);
+        setAddressMatchChecked(data.address_matches_id || false);
+      }
+    } catch (error) {
+      console.error('Error loading profile:', error);
+    }
+  };
+
+  const handleSaveDetails = async () => {
+    if (!user) {
+      toast.error('Please verify your phone number first');
+      return;
+    }
+
+    if (!firstName || !lastName || !address || !email) {
+      toast.error('Please fill in all required fields');
+      return;
+    }
+
+    if (!consentChecked) {
+      toast.error('Please consent to data processing');
+      return;
+    }
+
+    setSaving(true);
+
+    try {
+      let documentUrl = null;
+
+      // Upload document if provided
+      if (uploadedDocument) {
+        const fileExt = uploadedDocument.name.split('.').pop();
+        const fileName = `${user.id}_${Date.now()}.${fileExt}`;
+        const filePath = `id-documents/${fileName}`;
+
+        const { error: uploadError } = await supabase.storage
+          .from('site-assets')
+          .upload(filePath, uploadedDocument);
+
+        if (uploadError) {
+          toast.error('Failed to upload document');
+          setSaving(false);
+          return;
+        }
+
+        const { data: urlData } = supabase.storage
+          .from('site-assets')
+          .getPublicUrl(filePath);
+
+        documentUrl = urlData.publicUrl;
+      }
+
+      // Save/update profile
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .upsert({
+          user_id: user.id,
+          first_name: firstName,
+          last_name: lastName,
+          email: email,
+          phone: countryCode + phoneNumber,
+          street_address: address,
+          document_type: documentType,
+          document_number: aadhaarNumber,
+          document_file_url: documentUrl,
+          consent_given: consentChecked,
+          address_matches_id: addressMatchChecked,
+          updated_at: new Date().toISOString(),
+        });
+
+      if (profileError) {
+        toast.error('Failed to save details: ' + profileError.message);
+      } else {
+        toast.success('Details saved successfully!');
+      }
+    } catch (error: any) {
+      toast.error('An error occurred while saving');
+      console.error('Save error:', error);
+    } finally {
+      setSaving(false);
+    }
+  };
+
   useEffect(() => {
     if (!product) {
       navigate('/');
     }
   }, [product, navigate]);
+
+  useEffect(() => {
+    if (isVerified && user) {
+      loadProfileData();
+    }
+  }, [isVerified, user]);
 
   if (!product) {
     return null;
@@ -598,10 +714,21 @@ const BookingConfirmation = () => {
                     </div>
                   </div>
                 </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Save Button */}
+                <div className="pt-6">
+                  <Button
+                    onClick={handleSaveDetails}
+                    disabled={!isVerified || saving || !consentChecked}
+                    className="w-full h-12 bg-black text-white hover:bg-black/90 rounded font-medium"
+                  >
+                    {saving ? 'Saving...' : 'Save Details'}
+                  </Button>
+                </div>
               </div>
-            </div>
-          </div>
-        </div>
 
         {/* Next Steps - Removed, replaced with form */}
       </main>

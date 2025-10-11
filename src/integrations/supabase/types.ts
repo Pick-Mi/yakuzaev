@@ -404,6 +404,7 @@ export type Database = {
       }
       profiles: {
         Row: {
+          address_matches_id: boolean | null
           address_type: string | null
           apartment_unit: string | null
           avatar_url: string | null
@@ -414,6 +415,7 @@ export type Database = {
           billing_state_province: string | null
           billing_street_address: string | null
           city: string | null
+          consent_given: boolean | null
           country: string | null
           created_at: string
           customer_notes: string | null
@@ -421,6 +423,9 @@ export type Database = {
           customer_type: string | null
           date_of_birth: string | null
           display_name: string | null
+          document_file_url: string | null
+          document_number: string | null
+          document_type: string | null
           email: string | null
           email_notifications: boolean | null
           first_name: string | null
@@ -447,6 +452,7 @@ export type Database = {
           verification_date: string | null
         }
         Insert: {
+          address_matches_id?: boolean | null
           address_type?: string | null
           apartment_unit?: string | null
           avatar_url?: string | null
@@ -457,6 +463,7 @@ export type Database = {
           billing_state_province?: string | null
           billing_street_address?: string | null
           city?: string | null
+          consent_given?: boolean | null
           country?: string | null
           created_at?: string
           customer_notes?: string | null
@@ -464,6 +471,9 @@ export type Database = {
           customer_type?: string | null
           date_of_birth?: string | null
           display_name?: string | null
+          document_file_url?: string | null
+          document_number?: string | null
+          document_type?: string | null
           email?: string | null
           email_notifications?: boolean | null
           first_name?: string | null
@@ -490,6 +500,7 @@ export type Database = {
           verification_date?: string | null
         }
         Update: {
+          address_matches_id?: boolean | null
           address_type?: string | null
           apartment_unit?: string | null
           avatar_url?: string | null
@@ -500,6 +511,7 @@ export type Database = {
           billing_state_province?: string | null
           billing_street_address?: string | null
           city?: string | null
+          consent_given?: boolean | null
           country?: string | null
           created_at?: string
           customer_notes?: string | null
@@ -507,6 +519,9 @@ export type Database = {
           customer_type?: string | null
           date_of_birth?: string | null
           display_name?: string | null
+          document_file_url?: string | null
+          document_number?: string | null
+          document_type?: string | null
           email?: string | null
           email_notifications?: boolean | null
           first_name?: string | null
