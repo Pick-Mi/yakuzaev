@@ -390,7 +390,8 @@ const ProductConfig = () => {
               {/* Next Button */}
               <button
                 onClick={handleNext}
-                className="w-full bg-black text-white h-[60px] font-['Poppins'] font-medium text-[16px] hover:bg-black/90 transition-colors flex items-center justify-between px-8 group"
+                disabled={!selectedVariant || !selectedColor}
+                className="w-full bg-black text-white h-[60px] font-['Poppins'] font-medium text-[16px] hover:bg-black/90 transition-colors flex items-center justify-between px-8 group disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-black"
               >
                 <span>
                   {activeTab === "book" ? `Continue with ₹${bookingAmount}` : `Continue with ₹${currentPrice?.toLocaleString('en-IN')}`}
