@@ -19,7 +19,7 @@ const ProductShowcase = () => {
       try {
         const response = await (supabase as any)
           .from('products')
-          .select('id, name, price, image_url, images, description, variants, is_active, thumbnail, features')
+          .select('id, name, price, image_url, images, description, variants, is_active, thumbnail, features, feature1, feature2')
           .eq('is_active', true)
           .order('created_at', { ascending: false })
           .limit(4);
@@ -50,7 +50,9 @@ const ProductShowcase = () => {
             image: imageUrl,
             description: product.description,
             variants: product.variants,
-            features: product.features || []
+            features: product.features || [],
+            feature1: product.feature1,
+            feature2: product.feature2
           };
         }) || [];
 
@@ -178,20 +180,18 @@ const ProductShowcase = () => {
                           {product.name}
                         </h3>
                         <div className="flex gap-[13.688px] items-center">
-                          {product.features && product.features.length > 0 && (
-                            <>
-                              <p className="font-['Poppins'] text-[15.758px] text-[#212121] opacity-80">
-                                {product.features[0]}
-                              </p>
-                              {product.features.length > 1 && (
-                                <>
-                                  <div className="w-[1.24px] h-[19.288px] bg-[#212121] opacity-80" />
-                                  <p className="font-['Poppins'] text-[15.758px] text-[#212121] opacity-80">
-                                    {product.features[1]}
-                                  </p>
-                                </>
-                              )}
-                            </>
+                          {product.feature1 && (
+                            <p className="font-['Poppins'] text-[15.758px] text-[#212121] opacity-80">
+                              {product.feature1}
+                            </p>
+                          )}
+                          {product.feature1 && product.feature2 && (
+                            <div className="w-[1.24px] h-[19.288px] bg-[#212121] opacity-80" />
+                          )}
+                          {product.feature2 && (
+                            <p className="font-['Poppins'] text-[15.758px] text-[#212121] opacity-80">
+                              {product.feature2}
+                            </p>
                           )}
                         </div>
                       </div>
