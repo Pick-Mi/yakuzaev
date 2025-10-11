@@ -506,51 +506,54 @@ const BookingConfirmation = () => {
                 />
               </div>
 
-              {/* Selection Summary Card - Only for Booking */}
+              {/* Selection Summary - Only for Booking */}
               {bookingAmount === 999 && (
-                <Card className="border-2 border-primary/20 bg-accent/30">
-                  <CardContent className="p-4 space-y-3">
-                    <div className="flex items-center justify-between">
-                      <h4 className="font-semibold text-[16px]">Your Selection</h4>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => navigate('/product-config', { 
-                          state: { 
-                            product, 
-                            selectedVariant, 
-                            selectedColor,
-                            breadcrumbs 
-                          } 
-                        })}
-                        className="text-primary hover:text-primary/80 h-auto p-0 font-medium"
-                      >
-                        Change
-                      </Button>
-                    </div>
+                <div className="space-y-3">
+                  <Card className="border-2 border-primary/20 bg-accent/30">
+                    <CardContent className="p-4">
+                      <div className="flex items-center justify-between mb-3">
+                        <h4 className="font-semibold text-[16px]">Your Selection</h4>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => navigate('/product-config', { 
+                            state: { 
+                              product, 
+                              selectedVariant, 
+                              selectedColor,
+                              breadcrumbs 
+                            } 
+                          })}
+                          className="text-primary hover:text-primary/80 h-auto p-0 font-medium"
+                        >
+                          Change
+                        </Button>
+                      </div>
 
-                    {/* Purchase Type */}
-                    <div className="flex items-center gap-2 p-2 bg-background rounded">
-                      <span className="text-sm text-muted-foreground">Type:</span>
-                      <Badge variant="default" className="font-medium">
-                        Booking
-                      </Badge>
-                      <span className="text-sm font-semibold ml-auto">
-                        ₹{productPrice.toLocaleString('en-IN')}
-                      </span>
-                    </div>
-
-                    {/* Variant */}
-                    {selectedVariant && (
+                      {/* Purchase Type */}
                       <div className="flex items-center gap-2 p-2 bg-background rounded">
+                        <span className="text-sm text-muted-foreground">Type:</span>
+                        <Badge variant="default" className="font-medium">
+                          Booking
+                        </Badge>
+                        <span className="text-sm font-semibold ml-auto">
+                          ₹{productPrice.toLocaleString('en-IN')}
+                        </span>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  {/* Variant and Color - Outside Card */}
+                  <div className="space-y-2">
+                    {selectedVariant && (
+                      <div className="flex items-center gap-2">
                         <span className="text-sm text-muted-foreground">Variant:</span>
                         <span className="text-sm font-medium">{selectedVariant.name}</span>
                       </div>
                     )}
 
-                    {/* Color */}
                     {selectedColor && (
-                      <div className="flex items-center gap-2 p-2 bg-background rounded">
+                      <div className="flex items-center gap-2">
                         <span className="text-sm text-muted-foreground">Color:</span>
                         <div className="flex items-center gap-2">
                           <span className="text-sm font-medium">{selectedColor}</span>
@@ -558,8 +561,8 @@ const BookingConfirmation = () => {
                         </div>
                       </div>
                     )}
-                  </CardContent>
-                </Card>
+                  </div>
+                </div>
               )}
 
               {/* Order Summary */}
