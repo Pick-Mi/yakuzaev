@@ -43,6 +43,18 @@ const ProductShowcase = () => {
             }
           }
 
+          // Parse features JSON string
+          let parsedFeatures = [];
+          if (product.features) {
+            try {
+              parsedFeatures = typeof product.features === 'string' 
+                ? JSON.parse(product.features) 
+                : product.features;
+            } catch (e) {
+              console.error('Error parsing features:', e);
+            }
+          }
+
           return {
             id: product.id,
             name: product.name,
@@ -50,7 +62,7 @@ const ProductShowcase = () => {
             image: imageUrl,
             description: product.description,
             variants: product.variants,
-            features: product.features || []
+            features: parsedFeatures
           };
         }) || [];
 
