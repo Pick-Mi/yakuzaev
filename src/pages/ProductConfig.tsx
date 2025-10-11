@@ -131,12 +131,16 @@ const ProductConfig = () => {
       { label: 'Product Config', path: '/product-config' }
     ];
 
+    // Determine the amount based on purchase type
+    const amount = activeTab === "book" ? bookingAmount : currentPrice;
+
     navigate('/booking-confirmation', {
       state: {
         product,
         selectedVariant,
         selectedColor,
-        bookingAmount,
+        bookingAmount: amount,
+        purchaseType: activeTab, // Pass the purchase type
         breadcrumbs
       }
     });

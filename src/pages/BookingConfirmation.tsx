@@ -60,7 +60,7 @@ const citiesByState: { [key: string]: string[] } = {
 const BookingConfirmation = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { product, selectedVariant, selectedColor, bookingAmount = 999, breadcrumbs = [] } = location.state || {};
+  const { product, selectedVariant, selectedColor, bookingAmount = 999, purchaseType = 'book', breadcrumbs = [] } = location.state || {};
   const [step, setStep] = useState<'phone' | 'otp'>('phone');
   const [countryCode, setCountryCode] = useState('+91');
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -506,17 +506,21 @@ const BookingConfirmation = () => {
                 />
               </div>
 
-              {/* Selection Summary - Only for Booking */}
-              {bookingAmount === 999 && (
+              {/* Selection Summary - Show for both booking and buy */}
+              {(purchaseType === 'book' || purchaseType === 'buy') && (
                 <div className="space-y-3">
                   <Card className="border-0 bg-[#F8F9F9]">
                     <CardContent className="p-4">
                       <div className="flex items-center justify-between">
                         <Badge 
                           variant="secondary" 
-                          className="bg-green-50 text-green-700 hover:bg-green-50 px-6 py-2 text-sm font-medium rounded"
+                          className={`${
+                            purchaseType === 'book' 
+                              ? 'bg-green-50 text-green-700' 
+                              : 'bg-blue-50 text-blue-700'
+                          } hover:bg-green-50 px-6 py-2 text-sm font-medium rounded`}
                         >
-                          Booking
+                          {purchaseType === 'book' ? 'Booking' : 'Buy a Bike'}
                         </Badge>
                         <Button
                           variant="ghost"
@@ -568,7 +572,9 @@ const BookingConfirmation = () => {
                 <div className="space-y-3">
                   {/* Product Price */}
                   <div className="flex justify-between items-center">
-                    <span className="font-['Inter'] text-[16px] text-muted-foreground">Product Price</span>
+                    <span className="font-['Inter'] text-[16px] text-muted-foreground">
+                      {purchaseType === 'book' ? 'Booking Amount' : 'Product Price'}
+                    </span>
                     <span className="font-['Inter'] text-[16px]">₹{productPrice.toLocaleString('en-IN')}</span>
                   </div>
 
@@ -632,10 +638,16 @@ const BookingConfirmation = () => {
                   {/* Total */}
                   <div className="border-t pt-3 mt-3">
                     <div className="flex justify-between items-center font-semibold">
-                      <span className="font-['Poppins'] text-[20px]">Total Amount</span>
+                      <span className="font-['Poppins'] text-[20px]">
+                        {purchaseType === 'book' ? 'Booking Total' : 'Total Amount'}
+                      </span>
                       <span className="font-['Poppins'] text-[20px] text-primary">₹{totalAmount.toLocaleString('en-IN')}</span>
                     </div>
-                    <p className="text-xs text-muted-foreground mt-1">Amount to be paid via PayU</p>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      {purchaseType === 'book' 
+                        ? 'Booking amount to be paid via PayU • Remaining at delivery' 
+                        : 'Full amount to be paid via PayU'}
+                    </p>
                   </div>
 
                   {discountAmount > 0 && (
