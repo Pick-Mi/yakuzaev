@@ -256,7 +256,7 @@ const BookingConfirmation = () => {
       return;
     }
 
-    if (!firstName || !lastName || !address || !email) {
+    if (!firstName || !lastName || !address || !email || !city || !state || !pincode) {
       toast.error('Please fill in all required fields');
       return;
     }
@@ -294,7 +294,7 @@ const BookingConfirmation = () => {
         documentUrl = urlData.publicUrl;
       }
 
-      // Save/update profile
+      // Save/update profile with all address details
       const { error: profileError } = await supabase
         .from('profiles')
         .upsert({
@@ -304,25 +304,101 @@ const BookingConfirmation = () => {
           email: email,
           phone: countryCode + phoneNumber,
           street_address: address,
+          city: city,
+          state_province: state,
+          postal_code: pincode,
+          country: 'India',
           document_type: documentType,
           document_number: aadhaarNumber,
           document_file_url: documentUrl,
           consent_given: consentChecked,
-          address_matches_id: addressMatchChecked,
           updated_at: new Date().toISOString(),
         });
 
       if (profileError) {
         toast.error('Failed to save details: ' + profileError.message);
-      } else {
-        toast.success('Details saved successfully!');
+        setSaving(false);
+        return;
       }
+
+      // Create order
+      const orderData = {
+        customer_id: user.id,
+        total_amount: bookingAmount,
+        status: 'pending',
+        payment_status: 'pending',
+        order_items_data: [{
+          product_id: product.id,
+          product_name: product.name,
+          variant: selectedVariant?.name || '',
+          color: selectedColor || '',
+          quantity: 1,
+          unit_price: bookingAmount,
+          total_price: bookingAmount,
+        }],
+        customer_details: {
+          first_name: firstName,
+          last_name: lastName,
+          name: `${firstName} ${lastName}`,
+          email: email,
+          phone: countryCode + phoneNumber,
+          mobile: countryCode + phoneNumber,
+        },
+        delivery_address: {
+          street_address: address,
+          city: city,
+          state_province: state,
+          postal_code: pincode,
+          country: 'India',
+        },
+        shipping_charge: 1250,
+        tax_amount: 0,
+        discount_amount: 0,
+      };
+
+      const { data: order, error: orderError } = await supabase
+        .from('orders')
+        .insert(orderData)
+        .select()
+        .single();
+
+      if (orderError) {
+        toast.error('Failed to create order: ' + orderError.message);
+        setSaving(false);
+        return;
+      }
+
+      // Navigate to checkout/payment with order details
+      navigate('/checkout', {
+        state: {
+          order: order,
+          product: product,
+          amount: bookingAmount + 1250, // Including delivery fee
+        }
+      });
+
+      toast.success('Order created successfully! Proceeding to payment...');
     } catch (error: any) {
-      toast.error('An error occurred while saving');
+      toast.error('An error occurred while processing');
       console.error('Save error:', error);
     } finally {
       setSaving(false);
     }
+  };
+
+  // Check if all required fields are filled
+  const isFormValid = () => {
+    return (
+      isVerified &&
+      firstName.trim() !== '' &&
+      lastName.trim() !== '' &&
+      email.trim() !== '' &&
+      address.trim() !== '' &&
+      city.trim() !== '' &&
+      state.trim() !== '' &&
+      pincode.trim() !== '' &&
+      consentChecked
+    );
   };
 
   useEffect(() => {
@@ -989,10 +1065,10 @@ const BookingConfirmation = () => {
                 <div className="pt-6">
                   <Button
                     onClick={handleSaveDetails}
-                    disabled={!isVerified || saving || !consentChecked}
-                    className="w-full h-14 bg-black text-white hover:bg-black/90 rounded font-medium text-[18px]"
+                    disabled={!isFormValid() || saving}
+                    className="w-full h-14 bg-black text-white hover:bg-black/90 rounded font-medium text-[18px] disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    {saving ? 'Processing...' : 'Place Order'}
+                    {saving ? 'Processing...' : 'Pay'}
                   </Button>
                 </div>
               </div>
