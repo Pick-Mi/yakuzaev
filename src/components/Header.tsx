@@ -19,8 +19,14 @@ const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [logoUrl, setLogoUrl] = useState<string | null>(null);
   
-  // Always show fixed header
-  const shouldShowFixedHeader = true;
+  // Show fixed header on scroll or specific pages
+  const shouldShowFixedHeader = isScrolled || 
+    location.pathname === '/product-config' || 
+    location.pathname === '/booking-confirmation' ||
+    location.pathname === '/products' ||
+    location.pathname === '/profile' ||
+    location.pathname === '/orders' ||
+    location.pathname.startsWith('/orders/');
 
   useEffect(() => {
     const handleScroll = () => {
