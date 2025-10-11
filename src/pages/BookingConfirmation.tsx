@@ -247,9 +247,14 @@ const BookingConfirmation = () => {
                           type="button"
                           className="text-sm text-primary hover:underline"
                           onClick={() => {
-                            setIsVerified(false);
-                            setPhoneNumber('');
-                            setOtp('');
+                            const confirmed = window.confirm(
+                              "Are you sure you want to change your verified phone number? You will need to verify the new number again."
+                            );
+                            if (confirmed) {
+                              setIsVerified(false);
+                              setPhoneNumber('');
+                              setOtp('');
+                            }
                           }}
                         >
                           Change number
