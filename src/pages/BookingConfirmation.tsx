@@ -321,7 +321,6 @@ const BookingConfirmation = () => {
           if (uploadError) {
             console.error('Document upload error:', uploadError);
             toast.error('Document upload failed, but continuing with order...');
-            // Continue anyway - document is optional
           } else {
             const { data: urlData } = supabase.storage
               .from('site-assets')
@@ -332,7 +331,6 @@ const BookingConfirmation = () => {
         } catch (uploadError) {
           console.error('Document upload exception:', uploadError);
           toast.error('Document upload failed, but continuing with order...');
-          // Continue anyway - document is optional
         }
       }
 
@@ -356,7 +354,7 @@ const BookingConfirmation = () => {
           consent_given: consentChecked,
           updated_at: new Date().toISOString(),
         }, {
-          onConflict: 'user_id'  // Specify the conflict column
+          onConflict: 'user_id'
         });
 
       if (profileError) {
@@ -366,79 +364,108 @@ const BookingConfirmation = () => {
         return;
       }
 
-      // Navigate to checkout/payment with all required details
-      navigate('/checkout', {
-        state: {
-          orderId: `BOOK_${Date.now()}`,
+      // Create order data
+      const orderData = {
+        customer_id: user.id,
+        total_amount: totalAmount,
+        status: 'pending',
+        payment_status: 'pending',
+        order_items_data: [{
+          product_id: product.id,
+          product_name: product.name,
+          variant: selectedVariant?.name || '',
+          color: selectedColor || '',
+          quantity: 1,
+          unit_price: productPrice,
+          total_price: productPrice,
+        }],
+        customer_details: {
+          first_name: firstName,
+          last_name: lastName,
+          name: `${firstName} ${lastName}`,
+          email: email,
+          phone: countryCode + phoneNumber,
+          mobile: countryCode + phoneNumber,
+        },
+        delivery_address: {
+          street_address: address,
+          city: city,
+          state_province: state,
+          postal_code: pincode,
+          country: 'India',
+        },
+        shipping_charge: deliveryFee,
+        tax_amount: 0,
+        discount_amount: discountAmount,
+        order_summary: {
+          product_price: productPrice,
+          delivery_fee: deliveryFee,
+          discount: discountAmount,
+          promo_code: promoApplied ? promoCode : null,
+          total: totalAmount,
+        },
+        payment_method: 'payu',
+        order_source: 'web',
+        order_type: purchaseType === 'book' ? 'booking' : 'purchase'
+      };
+
+      // Create order in database
+      const { data: order, error: orderError } = await supabase
+        .from('orders')
+        .insert([orderData])
+        .select()
+        .single();
+
+      if (orderError) {
+        console.error('Order creation error:', orderError);
+        toast.error('Failed to create order: ' + orderError.message);
+        setSaving(false);
+        return;
+      }
+
+      // Initiate PayU payment
+      const orderId = `ORD_${order.id.substring(0, 8)}_${Date.now()}`;
+      const productInfo = `${product.name} - ${selectedVariant?.name || 'Standard'} - ${selectedColor || 'Black'}`;
+      const customerName = `${firstName} ${lastName}`;
+
+      const { data: payuData, error: payuError } = await supabase.functions.invoke('payu-payment', {
+        body: {
+          orderId,
           amount: totalAmount,
-          productInfo: `${product.name} - ${selectedVariant?.name || 'Standard'} - ${selectedColor || 'Black'}`,
-          customerDetails: {
-            firstName: `${firstName} ${lastName}`,
-            email: email,
-            phone: countryCode + phoneNumber
-          },
-          orderData: {
-            customer_id: user.id,
-            total_amount: totalAmount,
-            status: 'pending',
-            payment_status: 'pending',
-            order_items_data: [{
-              product_id: product.id,
-              product_name: product.name,
-              variant: selectedVariant?.name || '',
-              color: selectedColor || '',
-              quantity: 1,
-              unit_price: productPrice,
-              total_price: productPrice,
-            }],
-            customer_details: {
-              first_name: firstName,
-              last_name: lastName,
-              name: `${firstName} ${lastName}`,
-              email: email,
-              phone: countryCode + phoneNumber,
-              mobile: countryCode + phoneNumber,
-            },
-            delivery_address: {
-              street_address: address,
-              city: city,
-              state_province: state,
-              postal_code: pincode,
-              country: 'India',
-            },
-            shipping_charge: deliveryFee,
-            tax_amount: 0,
-            discount_amount: discountAmount,
-            order_summary: {
-              product_price: productPrice,
-              delivery_fee: deliveryFee,
-              discount: discountAmount,
-              promo_code: promoApplied ? promoCode : null,
-              total: totalAmount,
-            },
-            payment_method: 'payu',
-            order_source: 'web',
-            order_type: purchaseType === 'book' ? 'booking' : 'purchase'
-          },
-          userProfile: {
-            first_name: firstName,
-            last_name: lastName,
-            email: email,
-            phone: countryCode + phoneNumber,
-            street_address: address,
-            city: city,
-            state_province: state,
-            postal_code: pincode,
-            country: 'India',
-          }
-        }
+          productInfo,
+          customerName,
+          customerEmail: email,
+          customerPhone: countryCode + phoneNumber,
+          successUrl: `${window.location.origin}/payment-success`,
+          failureUrl: `${window.location.origin}/payment-failure`,
+        },
       });
 
-      toast.success('Profile saved! Proceeding to payment...');
+      if (payuError) {
+        console.error('PayU initialization error:', payuError);
+        toast.error('Failed to initialize payment');
+        setSaving(false);
+        return;
+      }
+
+      // Create and submit the PayU form
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = payuData.payuUrl;
+
+      Object.entries(payuData.params).forEach(([key, value]) => {
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = key;
+        input.value = value as string;
+        form.appendChild(input);
+      });
+
+      document.body.appendChild(form);
+      form.submit();
     } catch (error: any) {
       toast.error('An error occurred while processing');
       console.error('Save error:', error);
-    } finally {
       setSaving(false);
     }
   };
@@ -1234,7 +1261,7 @@ const BookingConfirmation = () => {
                     disabled={!isFormValid() || saving}
                     className="w-full h-14 bg-black text-white hover:bg-black/90 rounded font-medium text-[18px] disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    {saving ? 'Processing...' : 'Pay'}
+                    {saving ? 'Processing...' : 'Pay with PayU'}
                   </Button>
                 </div>
               </div>
