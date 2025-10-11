@@ -141,7 +141,7 @@ const Profile = () => {
     return (
       <div className="min-h-screen bg-background">
         <Header />
-        <div className="container mx-auto px-4 py-8">
+        <div className="container mx-auto px-4 pt-28 pb-8">
           <p className="text-center text-muted-foreground">Loading profile...</p>
         </div>
       </div>
@@ -162,7 +162,7 @@ const Profile = () => {
     <div className="min-h-screen bg-background">
       <Header />
       
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 pt-28 pb-8">
         <div className="flex gap-6">
           {/* Sidebar */}
           <aside className="w-64 flex-shrink-0">
