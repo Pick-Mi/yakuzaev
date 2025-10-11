@@ -2,7 +2,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ChevronRight, Gift, Phone, MessageSquare } from "lucide-react";
+import { ChevronRight, Gift, Phone, MessageSquare, Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -40,6 +40,11 @@ const BookingConfirmation = () => {
   const [otp, setOtp] = useState('');
   const [loading, setLoading] = useState(false);
   const [isVerified, setIsVerified] = useState(false);
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [address, setAddress] = useState('');
+  const [email, setEmail] = useState('');
+  const [showManualAddress, setShowManualAddress] = useState(false);
   
   const { signInWithPhone, verifyOTP } = useAuth();
 
@@ -377,6 +382,95 @@ const BookingConfirmation = () => {
               )}
             </div>
           </div>
+
+          {/* Delivery Form - Show after phone verification */}
+          {isVerified && (
+            <div className="mt-12 space-y-8">
+              {/* Enter your name and address */}
+              <div>
+                <h3 className="text-[20px] font-semibold mb-6">
+                  Enter your name and address:
+                </h3>
+
+                <div className="space-y-6 max-w-md">
+                  {/* First Name */}
+                  <div className="space-y-2">
+                    <Label htmlFor="firstName" className="text-sm">First Name*</Label>
+                    <Input
+                      id="firstName"
+                      type="text"
+                      value={firstName}
+                      onChange={(e) => setFirstName(e.target.value)}
+                      className="h-12 border border-border rounded"
+                      required
+                    />
+                  </div>
+
+                  {/* Last Name */}
+                  <div className="space-y-2">
+                    <Label htmlFor="lastName" className="text-sm">Last Name*</Label>
+                    <Input
+                      id="lastName"
+                      type="text"
+                      value={lastName}
+                      onChange={(e) => setLastName(e.target.value)}
+                      className="h-12 border border-border rounded"
+                      required
+                    />
+                  </div>
+
+                  {/* Address */}
+                  <div className="space-y-2">
+                    <Label htmlFor="address" className="text-sm">Address*</Label>
+                    <div className="relative">
+                      <Search className="absolute left-3 top-3.5 h-4 w-4 text-muted-foreground" />
+                      <Input
+                        id="address"
+                        type="text"
+                        placeholder="Start typing a street address or postcode"
+                        value={address}
+                        onChange={(e) => setAddress(e.target.value)}
+                        className="h-12 pl-10 border border-border rounded"
+                        required
+                      />
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      We do not ship to P.O. boxes
+                    </p>
+                    <button
+                      type="button"
+                      className="text-sm underline hover:no-underline"
+                      onClick={() => setShowManualAddress(!showManualAddress)}
+                    >
+                      Enter address manually.
+                    </button>
+                  </div>
+
+                  {/* Email */}
+                  <div className="space-y-2">
+                    <Label htmlFor="email" className="text-sm">Email*</Label>
+                    <div className="relative">
+                      <Input
+                        id="email"
+                        type="email"
+                        placeholder="alex@gmail.com"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="h-12 border border-border rounded"
+                        required
+                      />
+                      {email && email.includes('@') && (
+                        <span className="absolute right-3 top-3.5 w-2 h-2 bg-green-500 rounded-full"></span>
+                      )}
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      A confirmation email will be sent after checkout.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Next Steps - Removed, replaced with form */}
