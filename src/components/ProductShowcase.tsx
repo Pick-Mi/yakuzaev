@@ -43,18 +43,6 @@ const ProductShowcase = () => {
             }
           }
 
-          // Parse features JSON string
-          let parsedFeatures = [];
-          if (product.features) {
-            try {
-              parsedFeatures = typeof product.features === 'string' 
-                ? JSON.parse(product.features) 
-                : product.features;
-            } catch (e) {
-              console.error('Error parsing features:', e);
-            }
-          }
-
           return {
             id: product.id,
             name: product.name,
@@ -62,7 +50,7 @@ const ProductShowcase = () => {
             image: imageUrl,
             description: product.description,
             variants: product.variants,
-            features: parsedFeatures
+            features: product.features || []
           };
         }) || [];
 
@@ -190,16 +178,16 @@ const ProductShowcase = () => {
                           {product.name}
                         </h3>
                         <div className="flex gap-[13.688px] items-center">
-                          {product.features && product.features.length > 0 && product.features[0]?.text && (
+                          {product.features && product.features.length > 0 && (
                             <>
                               <p className="font-['Poppins'] text-[15.758px] text-[#212121] opacity-80">
-                                {product.features[0].text}
+                                {product.features[0]}
                               </p>
-                              {product.features.length > 1 && product.features[1]?.text && (
+                              {product.features.length > 1 && (
                                 <>
                                   <div className="w-[1.24px] h-[19.288px] bg-[#212121] opacity-80" />
                                   <p className="font-['Poppins'] text-[15.758px] text-[#212121] opacity-80">
-                                    {product.features[1].text}
+                                    {product.features[1]}
                                   </p>
                                 </>
                               )}
