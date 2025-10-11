@@ -22,7 +22,8 @@ const Header = () => {
   // Always show fixed header on specific pages
   const shouldShowFixedHeader = isScrolled || 
     location.pathname === '/product-config' || 
-    location.pathname === '/booking-confirmation';
+    location.pathname === '/booking-confirmation' ||
+    location.pathname === '/products';
 
   useEffect(() => {
     const handleScroll = () => {
