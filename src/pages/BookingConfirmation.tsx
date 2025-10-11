@@ -342,27 +342,35 @@ const BookingConfirmation = () => {
                           {loading ? 'Verifying...' : 'Verify'}
                         </Button>
                       </div>
-                      <p className="text-sm text-muted-foreground">
-                        Enter the code we sent to {countryCode}{phoneNumber}
-                      </p>
+                      <div className="flex items-center justify-between">
+                        <p className="text-sm text-muted-foreground">
+                          Enter the code we sent to {countryCode}{phoneNumber}
+                        </p>
+                        <button
+                          type="button"
+                          className="text-sm text-primary hover:underline font-medium"
+                          onClick={() => {
+                            setStep('phone');
+                            setOtp('');
+                          }}
+                        >
+                          Change number
+                        </button>
+                      </div>
                     </div>
                   </form>
                   
-                  {/* Back to phone */}
-                  <div className="text-sm">
+                  {/* Resend code option */}
+                  <div className="text-sm text-center">
                     <span className="text-muted-foreground">
                       Didn't receive the code?
                     </span>{' '}
                     <button
                       type="button"
                       className="text-primary hover:underline font-medium"
-                      onClick={() => {
-                        setStep('phone');
-                        setOtp('');
-                        setPhoneNumber('');
-                      }}
+                      onClick={() => handlePhoneSubmit({ preventDefault: () => {} } as React.FormEvent)}
                     >
-                      Try different number
+                      Resend code
                     </button>
                   </div>
                 </>
