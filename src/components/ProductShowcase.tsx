@@ -178,16 +178,16 @@ const ProductShowcase = () => {
                           {product.name}
                         </h3>
                         <div className="flex gap-[13.688px] items-center">
-                          {product.features && product.features.length > 0 && (
+                          {product.features && product.features.length > 0 && product.features[0]?.text && (
                             <>
                               <p className="font-['Poppins'] text-[15.758px] text-[#212121] opacity-80">
-                                {product.features[0]}
+                                {product.features[0].text}
                               </p>
-                              {product.features.length > 1 && (
+                              {product.features.length > 1 && product.features[1]?.text && (
                                 <>
                                   <div className="w-[1.24px] h-[19.288px] bg-[#212121] opacity-80" />
                                   <p className="font-['Poppins'] text-[15.758px] text-[#212121] opacity-80">
-                                    {product.features[1]}
+                                    {product.features[1].text}
                                   </p>
                                 </>
                               )}
