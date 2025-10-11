@@ -1,48 +1,60 @@
 import { Gauge, Settings, Key, Lightbulb } from "lucide-react";
+import * as Icons from "lucide-react";
 
-const ProductFeatures = () => {
-  const features = [
+interface Feature {
+  icon: string;
+  text: string;
+}
+
+interface ProductFeaturesProps {
+  features?: Feature[];
+}
+
+const ProductFeatures = ({ features }: ProductFeaturesProps) => {
+  const defaultFeatures = [
     {
-      icon: Gauge,
+      icon: "Gauge",
       text: "Smart Digital ODO",
-      color: "text-muted-foreground"
     },
     {
-      icon: Settings,
+      icon: "Settings",
       text: "Multiple Ride Modes",
-      color: "text-muted-foreground"
     },
     {
-      icon: Key,
+      icon: "Key",
       text: "Keyless Start System",
-      color: "text-foreground"
     },
     {
-      icon: Lightbulb,
+      icon: "Lightbulb",
       text: "LED Matrix Headlamp",
-      color: "text-foreground"
     }
   ];
+
+  const displayFeatures = features || defaultFeatures;
 
   return (
     <div className="w-full px-4 md:px-[70px] py-8 animate-fade-in bg-white">
       <div className="flex flex-col md:flex-row items-center justify-between gap-6 md:gap-8 max-w-[1200px] mx-auto">
-        {features.map((feature, index) => (
-          <div
-            key={index}
-            className="flex items-center gap-4 w-full md:w-auto hover:scale-105 transition-transform duration-200 cursor-pointer"
-            style={{
-              animation: `fadeInUp 0.4s ease ${0.2 + index * 0.1}s backwards`
-            }}
-          >
-            <div className="opacity-80 flex-shrink-0">
-              <feature.icon className="w-6 h-6 text-muted-foreground" />
+        {displayFeatures.map((feature, index) => {
+          const IconComponent = (Icons as any)[feature.icon] || Icons.Circle;
+          
+          return (
+            <div
+              key={index}
+              className="flex items-center gap-4 w-full md:w-auto hover:scale-105 transition-transform duration-200 cursor-pointer"
+              style={{
+                animation: `fadeInUp 0.4s ease ${0.2 + index * 0.1}s backwards`
+              }}
+            >
+              <div className="opacity-80 flex-shrink-0">
+                <IconComponent className="w-6 h-6 text-muted-foreground" />
+              </div>
+              <span className="font-poppins font-medium text-base leading-normal whitespace-nowrap" style={{ color: '#2D2D2D' }}>
+                {feature.text}
+              </span>
             </div>
-            <span className="font-poppins font-medium text-base leading-normal whitespace-nowrap" style={{ color: '#2D2D2D' }}>
-              {feature.text}
-            </span>
-          </div>
-        ))}
+          );
+        })}
       </div>
       
       
