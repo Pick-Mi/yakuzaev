@@ -19,7 +19,7 @@ const ProductShowcase = () => {
       try {
         const response = await (supabase as any)
           .from('products')
-          .select('id, name, price, image_url, images, description, variants, is_active')
+          .select('id, name, price, image_url, images, description, variants, is_active, thumbnail')
           .eq('is_active', true)
           .order('created_at', { ascending: false })
           .limit(4);
@@ -27,10 +27,10 @@ const ProductShowcase = () => {
         if (response.error) throw response.error;
 
         const formattedProducts = response.data?.map((product: any) => {
-          let imageUrl = product.image_url;
+          let imageUrl = product.thumbnail || product.image_url;
           
-          // Parse images JSON string and get first image
-          if (product.images) {
+          // Parse images JSON string and get first image if no thumbnail
+          if (!imageUrl && product.images) {
             try {
               const parsedImages = typeof product.images === 'string' 
                 ? JSON.parse(product.images) 
