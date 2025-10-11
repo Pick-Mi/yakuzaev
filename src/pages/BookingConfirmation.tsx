@@ -2,9 +2,10 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ChevronRight, Gift, Phone, MessageSquare, Search } from "lucide-react";
+import { ChevronRight, Gift, Phone, MessageSquare, Search, Upload } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -45,6 +46,11 @@ const BookingConfirmation = () => {
   const [address, setAddress] = useState('');
   const [email, setEmail] = useState('');
   const [showManualAddress, setShowManualAddress] = useState(false);
+  const [documentType, setDocumentType] = useState('aadhaar');
+  const [aadhaarNumber, setAadhaarNumber] = useState('');
+  const [uploadedDocument, setUploadedDocument] = useState<File | null>(null);
+  const [consentChecked, setConsentChecked] = useState(false);
+  const [addressMatchChecked, setAddressMatchChecked] = useState(false);
   
   const { signInWithPhone, verifyOTP } = useAuth();
 
@@ -469,6 +475,128 @@ const BookingConfirmation = () => {
                   <p className="text-xs text-muted-foreground">
                     A confirmation email will be sent after checkout.
                   </p>
+                </div>
+
+                {/* ID Verification Section */}
+                <div className="space-y-6 pt-8 border-t">
+                  <div>
+                    <h3 className="text-[18px] font-semibold mb-2">
+                      ID Verification for Registration
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                      Provide your valid ID information to verify your booking and enable vehicle registration. Your details help us ensure a secure and compliant delivery experience.
+                    </p>
+                  </div>
+
+                  {/* Upload ID as Indian Resident */}
+                  <div className="border border-border rounded p-4">
+                    <h4 className="text-base font-medium">
+                      Upload ID as Indian Resident
+                    </h4>
+                  </div>
+
+                  {/* Document Type Dropdown */}
+                  <div className="space-y-2">
+                    <Label htmlFor="documentType" className="text-sm text-muted-foreground">Document Type</Label>
+                    <Select value={documentType} onValueChange={setDocumentType} disabled={!isVerified}>
+                      <SelectTrigger className="h-12 border border-border rounded">
+                        <SelectValue placeholder="Select document type" />
+                      </SelectTrigger>
+                      <SelectContent className="z-50 bg-white">
+                        <SelectItem value="aadhaar">Aadhaar Card</SelectItem>
+                        <SelectItem value="pan">PAN Card</SelectItem>
+                        <SelectItem value="passport">Passport</SelectItem>
+                        <SelectItem value="driving_license">Driving License</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {/* Aadhaar Number */}
+                  <div className="space-y-2">
+                    <Label htmlFor="aadhaarNumber" className="text-sm text-muted-foreground">Aadhaar Number</Label>
+                    <Input
+                      id="aadhaarNumber"
+                      type="text"
+                      placeholder="Enter Aadhaar number"
+                      value={aadhaarNumber}
+                      onChange={(e) => setAadhaarNumber(e.target.value)}
+                      className="h-12 border border-border rounded"
+                      disabled={!isVerified}
+                      maxLength={12}
+                    />
+                  </div>
+
+                  {/* Consent Checkbox */}
+                  <div className="flex items-start gap-3">
+                    <Checkbox
+                      id="consent"
+                      checked={consentChecked}
+                      onCheckedChange={(checked) => setConsentChecked(checked as boolean)}
+                      disabled={!isVerified}
+                      className="mt-1"
+                    />
+                    <label htmlFor="consent" className="text-sm text-muted-foreground leading-relaxed cursor-pointer">
+                      I have read and consent to Yakuza EV and its authorized logistics partners processing my information in accordance with the [Privacy Policy] and [Terms of Use].
+                    </label>
+                  </div>
+                </div>
+
+                {/* Upload ID Section */}
+                <div className="space-y-6 pt-6">
+                  <div>
+                    <h3 className="text-[18px] font-semibold mb-2">
+                      Upload ID
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                      Ensure that your name, photograph, and ID number are clearly visible on the uploaded image to avoid processing delays.
+                    </p>
+                  </div>
+
+                  {/* Upload Area */}
+                  <div className="border-2 border-dashed border-border rounded-lg p-8">
+                    <label 
+                      htmlFor="document-upload" 
+                      className="flex flex-col items-center justify-center cursor-pointer"
+                    >
+                      <Upload className="w-8 h-8 text-muted-foreground mb-3" />
+                      <span className="text-sm font-medium text-foreground">
+                        {uploadedDocument ? uploadedDocument.name : 'Upload a Document'}
+                      </span>
+                      <input
+                        id="document-upload"
+                        type="file"
+                        accept=".jpg,.jpeg,.png"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) setUploadedDocument(file);
+                        }}
+                        className="hidden"
+                        disabled={!isVerified}
+                      />
+                    </label>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Only .jpg and .jpeg files are allowed.
+                  </p>
+
+                  {/* Address Match */}
+                  <div className="border border-border rounded p-4">
+                    <h4 className="text-base font-medium mb-4">
+                      Address on ID matches delivery address
+                    </h4>
+                    <div className="flex items-start gap-3">
+                      <Checkbox
+                        id="addressMatch"
+                        checked={addressMatchChecked}
+                        onCheckedChange={(checked) => setAddressMatchChecked(checked as boolean)}
+                        disabled={!isVerified}
+                        className="mt-1"
+                      />
+                      <label htmlFor="addressMatch" className="text-sm text-muted-foreground cursor-pointer">
+                        Select this if your ID address matches your delivery address.
+                      </label>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
