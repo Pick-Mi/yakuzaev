@@ -39,6 +39,7 @@ const BookingConfirmation = () => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [otp, setOtp] = useState('');
   const [loading, setLoading] = useState(false);
+  const [isVerified, setIsVerified] = useState(false);
   
   const { signInWithPhone, verifyOTP } = useAuth();
 
@@ -101,8 +102,10 @@ const BookingConfirmation = () => {
       if (error) {
         toast.error(error.message || "Verification Error");
       } else {
-        toast.success("Phone verified successfully! Proceeding with booking...");
-        // Continue with booking flow after verification
+        toast.success("Phone verified successfully!");
+        setIsVerified(true);
+        setStep('phone');
+        setOtp('');
       }
     } catch (error: any) {
       toast.error("An unexpected error occurred. Please try again.");
@@ -224,56 +227,79 @@ const BookingConfirmation = () => {
             <div className="space-y-6">
               {step === 'phone' ? (
                 <>
-                  {/* Phone Number Form */}
-                  <form onSubmit={handlePhoneSubmit} className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="phone" className="text-sm text-muted-foreground">Phone No*</Label>
-                      <div className="flex gap-3">
-                        {/* Country Code Selector */}
-                        <Select value={countryCode} onValueChange={setCountryCode}>
-                          <SelectTrigger className="w-44 h-14 border-2 border-border rounded-lg">
-                            <SelectValue placeholder="Country" />
-                          </SelectTrigger>
-                          <SelectContent className="z-50">
-                            {countryCodes.map((country) => (
-                              <SelectItem key={country.code} value={country.code}>
-                                <div className="flex items-center gap-2">
-                                  <span>{country.flag}</span>
-                                  <span>{country.code}</span>
-                                  <span className="text-sm text-muted-foreground">{country.country}</span>
-                                </div>
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        
-                        {/* Phone Number Input */}
-                        <div className="relative flex-1">
-                          <Input
-                            id="phone"
-                            type="tel"
-                            placeholder="1234567890"
-                            value={phoneNumber}
-                            onChange={(e) => setPhoneNumber(e.target.value)}
-                            className="h-14 border-2 border-border rounded-lg text-lg"
-                            required
-                          />
+                  {isVerified ? (
+                    /* Verified Phone Display */
+                    <div className="space-y-4">
+                      <div className="space-y-2">
+                        <Label className="text-sm text-muted-foreground">Phone No*</Label>
+                        <div className="flex gap-3 items-center">
+                          <div className="flex-1 h-14 border-2 border-green-500 bg-green-50 rounded-lg px-4 flex items-center gap-3">
+                            <span className="text-lg font-medium">{countryCode} {phoneNumber}</span>
+                            <span className="ml-auto flex items-center gap-2 text-green-600 text-sm font-medium">
+                              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                              </svg>
+                              Verified
+                            </span>
+                          </div>
                         </div>
-
-                        {/* Verify Button */}
-                        <Button 
-                          type="submit" 
-                          className="h-14 px-8 bg-black text-white hover:bg-black/90 rounded-lg font-medium"
-                          disabled={loading}
-                        >
-                          {loading ? 'Sending...' : 'Verify'}
-                        </Button>
+                        <p className="text-sm text-green-600">
+                          Your phone number has been verified successfully
+                        </p>
                       </div>
-                      <p className="text-sm text-muted-foreground">
-                        We'll send you a verification code via SMS
-                      </p>
                     </div>
-                  </form>
+                  ) : (
+                    /* Phone Number Form */
+                    <form onSubmit={handlePhoneSubmit} className="space-y-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="phone" className="text-sm text-muted-foreground">Phone No*</Label>
+                        <div className="flex gap-3">
+                          {/* Country Code Selector */}
+                          <Select value={countryCode} onValueChange={setCountryCode}>
+                            <SelectTrigger className="w-44 h-14 border-2 border-border rounded-lg">
+                              <SelectValue placeholder="Country" />
+                            </SelectTrigger>
+                            <SelectContent className="z-50">
+                              {countryCodes.map((country) => (
+                                <SelectItem key={country.code} value={country.code}>
+                                  <div className="flex items-center gap-2">
+                                    <span>{country.flag}</span>
+                                    <span>{country.code}</span>
+                                    <span className="text-sm text-muted-foreground">{country.country}</span>
+                                  </div>
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          
+                          {/* Phone Number Input */}
+                          <div className="relative flex-1">
+                            <Input
+                              id="phone"
+                              type="tel"
+                              placeholder="1234567890"
+                              value={phoneNumber}
+                              onChange={(e) => setPhoneNumber(e.target.value)}
+                              className="h-14 border-2 border-border rounded-lg text-lg"
+                              required
+                            />
+                          </div>
+
+                          {/* Verify Button */}
+                          <Button 
+                            type="submit" 
+                            className="h-14 px-8 bg-black text-white hover:bg-black/90 rounded-lg font-medium"
+                            disabled={loading}
+                          >
+                            {loading ? 'Sending...' : 'Verify'}
+                          </Button>
+                        </div>
+                        <p className="text-sm text-muted-foreground">
+                          We'll send you a verification code via SMS
+                        </p>
+                      </div>
+                    </form>
+                  )}
                 </>
               ) : (
                 <>
