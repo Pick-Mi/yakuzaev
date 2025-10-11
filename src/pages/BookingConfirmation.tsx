@@ -57,8 +57,61 @@ const BookingConfirmation = () => {
   const [consentChecked, setConsentChecked] = useState(false);
   const [addressMatchChecked, setAddressMatchChecked] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [detectingLocation, setDetectingLocation] = useState(false);
   
   const { signInWithPhone, verifyOTP, user } = useAuth();
+
+  // Detect current location
+  const detectCurrentLocation = async () => {
+    setDetectingLocation(true);
+    try {
+      if (!navigator.geolocation) {
+        toast.error('Geolocation is not supported by your browser');
+        return;
+      }
+
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const { latitude, longitude } = position.coords;
+          
+          // Use a reverse geocoding API - here using Nominatim (free)
+          try {
+            const response = await fetch(
+              `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
+            );
+            const data = await response.json();
+            
+            if (data && data.address) {
+              const addressData = data.address;
+              
+              // Extract and set location details
+              setPincode(addressData.postcode || '');
+              setCity(addressData.city || addressData.town || addressData.village || '');
+              setState(addressData.state || '');
+              
+              toast.success('Location detected successfully!');
+            } else {
+              toast.error('Unable to fetch location details');
+            }
+          } catch (error) {
+            console.error('Geocoding error:', error);
+            toast.error('Failed to fetch location details');
+          }
+          
+          setDetectingLocation(false);
+        },
+        (error) => {
+          console.error('Geolocation error:', error);
+          toast.error('Unable to detect location. Please enable location access.');
+          setDetectingLocation(false);
+        }
+      );
+    } catch (error) {
+      console.error('Location detection error:', error);
+      toast.error('Failed to detect location');
+      setDetectingLocation(false);
+    }
+  };
 
   const validatePhoneNumber = (fullPhone: string): string | null => {
     // Remove all non-digit characters except +
@@ -554,12 +607,15 @@ const BookingConfirmation = () => {
                     <Button
                       type="button"
                       variant={useLocationDetection ? "default" : "outline"}
-                      onClick={() => setUseLocationDetection(true)}
-                      disabled={!isVerified}
+                      onClick={() => {
+                        setUseLocationDetection(true);
+                        detectCurrentLocation();
+                      }}
+                      disabled={!isVerified || detectingLocation}
                       className="flex-1"
                     >
                       <MapPin className="w-4 h-4 mr-2" />
-                      Detect Location
+                      {detectingLocation ? 'Detecting...' : 'Detect Location'}
                     </Button>
                     <Button
                       type="button"
@@ -573,18 +629,62 @@ const BookingConfirmation = () => {
                   </div>
 
                   {useLocationDetection ? (
-                    <div className="relative">
-                      <Search className="absolute left-3 top-3.5 h-4 w-4 text-muted-foreground" />
-                      <Input
-                        id="address"
-                        type="text"
-                        placeholder="Start typing a street address or postcode"
-                        value={address}
-                        onChange={(e) => setAddress(e.target.value)}
-                        className="h-12 pl-10 border border-border rounded"
-                        required
-                        disabled={!isVerified}
-                      />
+                    <div className="space-y-4">
+                      {/* Pincode (Auto-filled, Read-only) */}
+                      <div className="relative">
+                        <Input
+                          id="pincode-auto"
+                          type="text"
+                          placeholder="Pincode"
+                          value={pincode}
+                          className="h-12 border border-border rounded bg-muted"
+                          required
+                          disabled={!isVerified}
+                          readOnly
+                        />
+                      </div>
+
+                      {/* City (Auto-filled, Read-only) */}
+                      <div className="relative">
+                        <Input
+                          id="city-auto"
+                          type="text"
+                          placeholder="City"
+                          value={city}
+                          className="h-12 border border-border rounded bg-muted"
+                          required
+                          disabled={!isVerified}
+                          readOnly
+                        />
+                      </div>
+
+                      {/* State (Auto-filled, Read-only) */}
+                      <div className="relative">
+                        <Input
+                          id="state-auto"
+                          type="text"
+                          placeholder="State"
+                          value={state}
+                          className="h-12 border border-border rounded bg-muted"
+                          required
+                          disabled={!isVerified}
+                          readOnly
+                        />
+                      </div>
+
+                      {/* Street Address (Editable) */}
+                      <div className="relative">
+                        <Input
+                          id="address"
+                          type="text"
+                          placeholder="House No, Building Name, Street"
+                          value={address}
+                          onChange={(e) => setAddress(e.target.value)}
+                          className="h-12 border border-border rounded"
+                          required
+                          disabled={!isVerified}
+                        />
+                      </div>
                     </div>
                   ) : (
                     <div className="space-y-4">
