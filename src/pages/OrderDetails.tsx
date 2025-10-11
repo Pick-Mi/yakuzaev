@@ -307,7 +307,7 @@ const OrderDetails = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 pt-40 pb-8">
         {/* Breadcrumb */}
         <nav className="text-sm text-muted-foreground mb-6">
           <span className="hover:text-foreground cursor-pointer" onClick={() => navigate('/')}>Home</span>
