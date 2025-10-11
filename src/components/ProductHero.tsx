@@ -27,6 +27,7 @@ const ProductHero = ({
 }: ProductHeroProps) => {
   const firstSpec = specs?.[0];
   const secondSpec = specs?.[1];
+  const thirdSpec = specs?.[2];
   return (
     <section 
       className="relative w-full h-[800px] bg-[#080f18]"
@@ -99,10 +100,10 @@ const ProductHero = ({
           
           <div className="flex flex-col gap-[13px] items-start font-['Inter'] font-medium leading-[0] text-white whitespace-nowrap">
             <div className="flex flex-col justify-center opacity-80 text-2xl">
-              <p className="leading-normal whitespace-nowrap">{chargeTime}</p>
+              <p className="leading-normal whitespace-nowrap">{thirdSpec?.value || chargeTime}</p>
             </div>
             <div className="flex flex-col justify-center opacity-70 text-sm">
-              <p className="leading-normal whitespace-nowrap">Charge in 10 min*</p>
+              <p className="leading-normal whitespace-nowrap">{thirdSpec?.label || "Charge in 10 min*"}</p>
             </div>
           </div>
         </div>
