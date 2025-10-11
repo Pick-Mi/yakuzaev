@@ -1127,22 +1127,28 @@ const BookingConfirmation = () => {
                   </div>
 
                   {/* Upload Area */}
-                  <div className="border-2 border-dashed border-border rounded-lg p-8">
+                  <div className={`border-2 border-dashed border-border rounded-lg p-8 ${!isVerified ? 'opacity-50 cursor-not-allowed' : ''}`}>
                     <label 
                       htmlFor="document-upload" 
-                      className="flex flex-col items-center justify-center cursor-pointer"
+                      className={`flex flex-col items-center justify-center ${isVerified ? 'cursor-pointer' : 'cursor-not-allowed'}`}
                     >
                       <Upload className="w-8 h-8 text-muted-foreground mb-3" />
                       <span className="text-sm font-medium text-foreground">
-                        {uploadedDocument ? uploadedDocument.name : 'Upload a Document'}
+                        {uploadedDocument ? uploadedDocument.name : 'Click to Upload Document'}
+                      </span>
+                      <span className="text-xs text-muted-foreground mt-1">
+                        JPG or PNG format
                       </span>
                       <input
                         id="document-upload"
                         type="file"
-                        accept=".jpg,.jpeg,.png"
+                        accept=".jpg,.jpeg,.png,.pdf"
                         onChange={(e) => {
                           const file = e.target.files?.[0];
-                          if (file) setUploadedDocument(file);
+                          if (file) {
+                            setUploadedDocument(file);
+                            toast.success('Document uploaded successfully');
+                          }
                         }}
                         className="hidden"
                         disabled={!isVerified}
