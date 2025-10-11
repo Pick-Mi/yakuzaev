@@ -332,29 +332,65 @@ const ProductConfig = () => {
               </div>
             </div>
 
-            {/* Booking Amount */}
-            <div className="border-t pt-6">
-              <div className="flex items-center justify-between mb-4">
-                <span className="font-['Inter'] font-medium text-[16px]">
-                  Booking amount
-                </span>
-                <div className="flex items-center gap-2">
-                  <span className="font-['Inter'] text-[14px] text-gray-600">
-                    Fully refundable
-                  </span>
-                  <Info className="w-4 h-4 text-gray-400" />
-                  <span className="font-['Poppins'] font-semibold text-[18px]">
-                    ₹{bookingAmount}
-                  </span>
-                </div>
-              </div>
+            {/* Payment Summary */}
+            <div className="border-t pt-6 space-y-4">
+              {activeTab === "book" ? (
+                <>
+                  {/* Show variant price as reference */}
+                  <div className="flex items-center justify-between">
+                    <span className="font-['Inter'] text-[14px] text-gray-600">
+                      {selectedVariant?.name || 'Standard'} variant price
+                    </span>
+                    <span className="font-['Inter'] text-[16px] font-medium">
+                      ₹{currentPrice?.toLocaleString('en-IN')}
+                    </span>
+                  </div>
+
+                  {/* Booking amount - what they pay now */}
+                  <div className="bg-[#F8F9F9] rounded-lg p-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-2">
+                        <span className="font-['Inter'] font-medium text-[16px]">
+                          Pay now for booking
+                        </span>
+                        <Info className="w-4 h-4 text-gray-400" />
+                      </div>
+                      <span className="font-['Poppins'] font-bold text-[24px] text-green-700">
+                        ₹{bookingAmount}
+                      </span>
+                    </div>
+                    <p className="text-xs text-gray-600">
+                      Fully refundable • Remaining amount to be paid at delivery
+                    </p>
+                  </div>
+                </>
+              ) : (
+                <>
+                  {/* Full payment for Buy a Bike */}
+                  <div className="bg-[#F8F9F9] rounded-lg p-4">
+                    <div className="flex items-center justify-between">
+                      <span className="font-['Inter'] font-medium text-[16px]">
+                        Total amount
+                      </span>
+                      <span className="font-['Poppins'] font-bold text-[24px]">
+                        ₹{currentPrice?.toLocaleString('en-IN')}
+                      </span>
+                    </div>
+                    <p className="text-xs text-gray-600 mt-2">
+                      Pay full amount now • Free delivery included
+                    </p>
+                  </div>
+                </>
+              )}
 
               {/* Next Button */}
               <button
                 onClick={handleNext}
                 className="w-full bg-black text-white h-[60px] font-['Poppins'] font-medium text-[16px] hover:bg-black/90 transition-colors flex items-center justify-between px-8 group"
               >
-                <span>Next</span>
+                <span>
+                  {activeTab === "book" ? `Continue with ₹${bookingAmount}` : `Continue with ₹${currentPrice?.toLocaleString('en-IN')}`}
+                </span>
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </button>
             </div>
