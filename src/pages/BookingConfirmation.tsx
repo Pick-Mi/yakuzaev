@@ -223,15 +223,6 @@ const BookingConfirmation = () => {
             {/* Right Side - Mobile Login Card */}
             <div>
               <Card className="shadow-xl border-0 bg-gradient-card">
-                <CardHeader className="space-y-2">
-                  <CardTitle className="text-2xl font-bold">
-                    {step === 'phone' ? 'Sign In with Phone' : 'Enter Verification Code'}
-                  </CardTitle>
-                  <CardDescription>
-                    {step === 'phone' ? 'Enter your mobile number to get started' : 
-                     `We sent a verification code to ${countryCode}${phoneNumber}`}
-                  </CardDescription>
-                </CardHeader>
                 
                 <CardContent className="space-y-6">
                   {step === 'phone' ? (
