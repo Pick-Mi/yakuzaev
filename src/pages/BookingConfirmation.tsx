@@ -307,27 +307,33 @@ const BookingConfirmation = () => {
     try {
       let documentUrl = null;
 
-      // Upload document if provided
+      // Upload document if provided (optional)
       if (uploadedDocument) {
-        const fileExt = uploadedDocument.name.split('.').pop();
-        const fileName = `${user.id}_${Date.now()}.${fileExt}`;
-        const filePath = `id-documents/${fileName}`;
+        try {
+          const fileExt = uploadedDocument.name.split('.').pop();
+          const fileName = `${user.id}_${Date.now()}.${fileExt}`;
+          const filePath = `id-documents/${fileName}`;
 
-        const { error: uploadError } = await supabase.storage
-          .from('site-assets')
-          .upload(filePath, uploadedDocument);
+          const { error: uploadError } = await supabase.storage
+            .from('site-assets')
+            .upload(filePath, uploadedDocument);
 
-        if (uploadError) {
-          toast.error('Failed to upload document');
-          setSaving(false);
-          return;
+          if (uploadError) {
+            console.error('Document upload error:', uploadError);
+            toast.error('Document upload failed, but continuing with order...');
+            // Continue anyway - document is optional
+          } else {
+            const { data: urlData } = supabase.storage
+              .from('site-assets')
+              .getPublicUrl(filePath);
+
+            documentUrl = urlData.publicUrl;
+          }
+        } catch (uploadError) {
+          console.error('Document upload exception:', uploadError);
+          toast.error('Document upload failed, but continuing with order...');
+          // Continue anyway - document is optional
         }
-
-        const { data: urlData } = supabase.storage
-          .from('site-assets')
-          .getPublicUrl(filePath);
-
-        documentUrl = urlData.publicUrl;
       }
 
       // Save/update profile with all address details
