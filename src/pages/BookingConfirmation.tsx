@@ -32,6 +32,30 @@ const countryCodes = [
   { code: '+31', country: 'Netherlands', flag: '🇳🇱' },
 ];
 
+// Indian states list
+const indianStates = [
+  'Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh',
+  'Delhi', 'Goa', 'Gujarat', 'Haryana', 'Himachal Pradesh', 'Jharkhand',
+  'Karnataka', 'Kerala', 'Madhya Pradesh', 'Maharashtra', 'Manipur',
+  'Meghalaya', 'Mizoram', 'Nagaland', 'Odisha', 'Punjab', 'Rajasthan',
+  'Sikkim', 'Tamil Nadu', 'Telangana', 'Tripura', 'Uttar Pradesh',
+  'Uttarakhand', 'West Bengal'
+];
+
+// Cities by state (sample data - expand as needed)
+const citiesByState: { [key: string]: string[] } = {
+  'Delhi': ['New Delhi', 'Central Delhi', 'South Delhi', 'North Delhi', 'East Delhi', 'West Delhi'],
+  'Maharashtra': ['Mumbai', 'Pune', 'Nagpur', 'Thane', 'Nashik', 'Aurangabad'],
+  'Karnataka': ['Bangalore', 'Mysore', 'Mangalore', 'Hubli', 'Belgaum'],
+  'Tamil Nadu': ['Chennai', 'Coimbatore', 'Madurai', 'Tiruchirappalli', 'Salem'],
+  'West Bengal': ['Kolkata', 'Howrah', 'Durgapur', 'Asansol', 'Siliguri'],
+  'Gujarat': ['Ahmedabad', 'Surat', 'Vadodara', 'Rajkot', 'Bhavnagar'],
+  'Rajasthan': ['Jaipur', 'Jodhpur', 'Udaipur', 'Kota', 'Ajmer'],
+  'Uttar Pradesh': ['Lucknow', 'Kanpur', 'Agra', 'Varanasi', 'Meerut'],
+  'Kerala': ['Thiruvananthapuram', 'Kochi', 'Kozhikode', 'Thrissur', 'Kollam'],
+  'Punjab': ['Chandigarh', 'Ludhiana', 'Amritsar', 'Jalandhar', 'Patiala'],
+};
+
 const BookingConfirmation = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -733,32 +757,36 @@ const BookingConfirmation = () => {
                         />
                       </div>
 
-                      {/* City (Editable in manual mode) */}
+                      {/* City (Dropdown with auto-fill) */}
                       <div className="relative">
-                        <Input
-                          id="city"
-                          type="text"
-                          placeholder="City"
-                          value={city}
-                          onChange={(e) => setCity(e.target.value)}
-                          className="h-12 border border-border rounded"
-                          required
-                          disabled={!isVerified}
-                        />
+                        <Select value={city} onValueChange={setCity} disabled={!isVerified}>
+                          <SelectTrigger className="h-12 border border-border rounded">
+                            <SelectValue placeholder="Select City" />
+                          </SelectTrigger>
+                          <SelectContent className="bg-background z-50">
+                            {(state && citiesByState[state] || Object.values(citiesByState).flat()).map((cityName) => (
+                              <SelectItem key={cityName} value={cityName}>
+                                {cityName}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                       </div>
 
-                      {/* State (Editable in manual mode) */}
+                      {/* State (Dropdown with auto-fill) */}
                       <div className="relative">
-                        <Input
-                          id="state"
-                          type="text"
-                          placeholder="State"
-                          value={state}
-                          onChange={(e) => setState(e.target.value)}
-                          className="h-12 border border-border rounded"
-                          required
-                          disabled={!isVerified}
-                        />
+                        <Select value={state} onValueChange={setState} disabled={!isVerified}>
+                          <SelectTrigger className="h-12 border border-border rounded">
+                            <SelectValue placeholder="Select State" />
+                          </SelectTrigger>
+                          <SelectContent className="bg-background z-50">
+                            {indianStates.map((stateName) => (
+                              <SelectItem key={stateName} value={stateName}>
+                                {stateName}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                       </div>
 
                       {/* Street Address */}
