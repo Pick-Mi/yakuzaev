@@ -506,59 +506,61 @@ const BookingConfirmation = () => {
                 />
               </div>
 
-              {/* Selection Summary Card */}
-              <Card className="border-2 border-primary/20 bg-accent/30">
-                <CardContent className="p-4 space-y-3">
-                  <div className="flex items-center justify-between">
-                    <h4 className="font-semibold text-[16px]">Your Selection</h4>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => navigate('/product-config', { 
-                        state: { 
-                          product, 
-                          selectedVariant, 
-                          selectedColor,
-                          breadcrumbs 
-                        } 
-                      })}
-                      className="text-primary hover:text-primary/80 h-auto p-0 font-medium"
-                    >
-                      Change
-                    </Button>
-                  </div>
-
-                  {/* Purchase Type */}
-                  <div className="flex items-center gap-2 p-2 bg-background rounded">
-                    <span className="text-sm text-muted-foreground">Type:</span>
-                    <Badge variant={bookingAmount === 999 ? "default" : "secondary"} className="font-medium">
-                      {bookingAmount === 999 ? 'Booking' : 'Full Payment'}
-                    </Badge>
-                    <span className="text-sm font-semibold ml-auto">
-                      ₹{productPrice.toLocaleString('en-IN')}
-                    </span>
-                  </div>
-
-                  {/* Variant */}
-                  {selectedVariant && (
-                    <div className="flex items-center gap-2 p-2 bg-background rounded">
-                      <span className="text-sm text-muted-foreground">Variant:</span>
-                      <span className="text-sm font-medium">{selectedVariant.name}</span>
+              {/* Selection Summary Card - Only for Booking */}
+              {bookingAmount === 999 && (
+                <Card className="border-2 border-primary/20 bg-accent/30">
+                  <CardContent className="p-4 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <h4 className="font-semibold text-[16px]">Your Selection</h4>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => navigate('/product-config', { 
+                          state: { 
+                            product, 
+                            selectedVariant, 
+                            selectedColor,
+                            breadcrumbs 
+                          } 
+                        })}
+                        className="text-primary hover:text-primary/80 h-auto p-0 font-medium"
+                      >
+                        Change
+                      </Button>
                     </div>
-                  )}
 
-                  {/* Color */}
-                  {selectedColor && (
+                    {/* Purchase Type */}
                     <div className="flex items-center gap-2 p-2 bg-background rounded">
-                      <span className="text-sm text-muted-foreground">Color:</span>
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm font-medium">{selectedColor}</span>
-                        <span className="w-4 h-4 rounded-full bg-black border border-gray-300"></span>
+                      <span className="text-sm text-muted-foreground">Type:</span>
+                      <Badge variant="default" className="font-medium">
+                        Booking
+                      </Badge>
+                      <span className="text-sm font-semibold ml-auto">
+                        ₹{productPrice.toLocaleString('en-IN')}
+                      </span>
+                    </div>
+
+                    {/* Variant */}
+                    {selectedVariant && (
+                      <div className="flex items-center gap-2 p-2 bg-background rounded">
+                        <span className="text-sm text-muted-foreground">Variant:</span>
+                        <span className="text-sm font-medium">{selectedVariant.name}</span>
                       </div>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
+                    )}
+
+                    {/* Color */}
+                    {selectedColor && (
+                      <div className="flex items-center gap-2 p-2 bg-background rounded">
+                        <span className="text-sm text-muted-foreground">Color:</span>
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm font-medium">{selectedColor}</span>
+                          <span className="w-4 h-4 rounded-full bg-black border border-gray-300"></span>
+                        </div>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              )}
 
               {/* Order Summary */}
               <div className="border-t pt-6">
