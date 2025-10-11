@@ -1,3 +1,4 @@
+import React from "react";
 import { Button } from "@/components/ui/button";
 
 interface ProductHeroProps {
@@ -8,6 +9,7 @@ interface ProductHeroProps {
   chargeTime?: string;
   backgroundImage?: string;
   previewTitle?: string;
+  specs?: Array<{ value: string; label: string }>;
   onBookNow: () => void;
   onAddToCart: () => void;
 }
@@ -20,9 +22,17 @@ const ProductHero = ({
   chargeTime = "30 km",
   backgroundImage,
   previewTitle,
+  specs,
   onBookNow,
   onAddToCart
 }: ProductHeroProps) => {
+  // Use specs from database or fallback to props
+  const displaySpecs = specs && specs.length > 0 ? specs : [
+    { value: topSpeed, label: "Top Speed" },
+    { value: range, label: "IDC Range" },
+    { value: chargeTime, label: "Charge in 10 min*" }
+  ];
+
   return (
     <section 
       className="relative w-full h-[800px] bg-[#080f18]"
@@ -67,40 +77,28 @@ const ProductHero = ({
         
         {/* Specifications */}
         <div className="flex gap-[50px] items-center max-md:gap-[30px] max-md:justify-center max-md:flex-wrap">
-          <div className="flex flex-col gap-[13px] items-start font-['Inter'] font-medium leading-[0] text-white whitespace-nowrap">
-            <div className="flex flex-col justify-center opacity-80 text-2xl">
-              <p className="leading-normal whitespace-nowrap">{topSpeed}</p>
-            </div>
-            <div className="flex flex-col justify-center opacity-70 text-sm">
-              <p className="leading-normal whitespace-nowrap">Top Speed</p>
-            </div>
-          </div>
-          
-          <div className="relative h-[45.5px] w-0 flex-shrink-0 max-md:hidden">
-            <div className="absolute bottom-0 left-[-0.5px] right-[-0.5px] top-0 w-[1px] h-full bg-white opacity-20"></div>
-          </div>
-          
-          <div className="flex flex-col gap-[13px] items-start font-['Inter'] font-medium leading-[0] text-white whitespace-nowrap">
-            <div className="flex flex-col justify-center opacity-80 text-2xl">
-              <p className="leading-normal whitespace-nowrap">{range}</p>
-            </div>
-            <div className="flex flex-col justify-center opacity-70 text-sm">
-              <p className="leading-normal whitespace-nowrap">IDC Range</p>
-            </div>
-          </div>
-          
-          <div className="relative h-[45.5px] w-0 flex-shrink-0 max-md:hidden">
-            <div className="absolute bottom-0 left-[-0.5px] right-[-0.5px] top-0 w-[1px] h-full bg-white opacity-20"></div>
-          </div>
-          
-          <div className="flex flex-col gap-[13px] items-start font-['Inter'] font-medium leading-[0] text-white whitespace-nowrap">
-            <div className="flex flex-col justify-center opacity-80 text-2xl">
-              <p className="leading-normal whitespace-nowrap">{chargeTime}</p>
-            </div>
-            <div className="flex flex-col justify-center opacity-70 text-sm">
-              <p className="leading-normal whitespace-nowrap">Charge in 10 min*</p>
-            </div>
-          </div>
+          {displaySpecs.map((spec, index) => (
+            <React.Fragment key={index}>
+              {spec.value && (
+                <>
+                  <div className="flex flex-col gap-[13px] items-start font-['Inter'] font-medium leading-[0] text-white whitespace-nowrap">
+                    <div className="flex flex-col justify-center opacity-80 text-2xl">
+                      <p className="leading-normal whitespace-nowrap">{spec.value}</p>
+                    </div>
+                    <div className="flex flex-col justify-center opacity-70 text-sm">
+                      <p className="leading-normal whitespace-nowrap">{spec.label}</p>
+                    </div>
+                  </div>
+                  
+                  {index < displaySpecs.length - 1 && spec.value && displaySpecs[index + 1]?.value && (
+                    <div className="relative h-[45.5px] w-0 flex-shrink-0 max-md:hidden">
+                      <div className="absolute bottom-0 left-[-0.5px] right-[-0.5px] top-0 w-[1px] h-full bg-white opacity-20"></div>
+                    </div>
+                  )}
+                </>
+              )}
+            </React.Fragment>
+          ))}
         </div>
       </div>
     </section>
