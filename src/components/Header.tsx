@@ -176,150 +176,161 @@ const Header = () => {
         </nav>
       </div>
 
-      {/* Full Screen Menu Overlay */}
+      {/* Half-Page Menu Dropdown */}
       {isMenuOpen && (
-        <div className="fixed inset-0 bg-white z-[100] overflow-y-auto">
-          <div className="max-w-[1360px] mx-auto px-6 py-8">
-            {/* Header */}
-            <div className="flex justify-between items-center mb-16">
-              <Link to="/" onClick={() => setIsMenuOpen(false)} className="flex items-center">
-                {logoUrl ? (
-                  <img src={logoUrl} alt="Logo" className="h-8 w-auto object-contain" />
-                ) : (
-                  <span className="font-medium text-sm text-foreground">LOGO</span>
-                )}
-              </Link>
+        <>
+          {/* Backdrop */}
+          <div 
+            className="fixed inset-0 bg-black/50 z-[60] animate-fade-in"
+            onClick={() => setIsMenuOpen(false)}
+            style={{ top: 'calc(var(--notification-bar-height, 0px) + 64px)' }}
+          />
+          
+          {/* Dropdown Menu */}
+          <div 
+            className="fixed left-0 right-0 bg-white z-[70] shadow-2xl animate-slide-in-from-top"
+            style={{ 
+              top: 'calc(var(--notification-bar-height, 40px) + 64px)',
+              maxHeight: '60vh',
+              overflowY: 'auto'
+            }}
+          >
+            <div className="max-w-[1360px] mx-auto px-6 py-8">
+              {/* Close Button */}
               <button
                 onClick={() => setIsMenuOpen(false)}
-                className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                className="absolute top-6 right-6 p-2 hover:bg-gray-100 rounded-full transition-colors z-10"
               >
                 <X className="w-6 h-6" />
               </button>
-            </div>
 
-            {/* Content Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-              {/* Featured Product Card */}
-              {featuredProduct && (
-                <div className="relative bg-gradient-to-br from-gray-900 via-orange-900 to-orange-700 rounded-3xl p-8 overflow-hidden">
-                  <div className="relative z-10">
-                    <h3 className="text-white text-4xl font-bold mb-4">{featuredProduct.name}</h3>
-                    <p className="text-white/90 text-lg mb-6">
-                      {featuredProduct.feature1} | {featuredProduct.feature2}
-                    </p>
-                    <div className="mb-8">
-                      <p className="text-white/80 text-sm mb-1">Starting Price</p>
-                      <p className="text-white text-3xl font-bold">₹ {featuredProduct.price.toLocaleString()} <span className="text-lg font-normal">/ Per Month</span></p>
+              {/* Content Grid */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                {/* Featured Product Card */}
+                {featuredProduct && (
+                  <div className="relative bg-gradient-to-br from-gray-900 via-orange-900 to-orange-700 rounded-3xl p-6 overflow-hidden h-[400px]">
+                    <div className="relative z-10">
+                      <h3 className="text-white text-3xl font-bold mb-3">{featuredProduct.name}</h3>
+                      <p className="text-white/90 text-base mb-4">
+                        {featuredProduct.feature1} | {featuredProduct.feature2}
+                      </p>
+                      <div className="mb-6">
+                        <p className="text-white/80 text-sm mb-1">Starting Price</p>
+                        <p className="text-white text-2xl font-bold">₹ {featuredProduct.price.toLocaleString()} <span className="text-base font-normal">/ Per Month</span></p>
+                      </div>
+                      <Link
+                        to={`/product/${featuredProduct.id}`}
+                        onClick={() => setIsMenuOpen(false)}
+                        className="inline-flex items-center gap-2 px-6 py-2.5 border-2 border-white text-white rounded-full hover:bg-white hover:text-gray-900 transition-colors text-sm"
+                      >
+                        Explore {featuredProduct.name}
+                      </Link>
                     </div>
-                    <Link
-                      to={`/product/${featuredProduct.id}`}
-                      onClick={() => setIsMenuOpen(false)}
-                      className="inline-flex items-center gap-2 px-8 py-3 border-2 border-white text-white rounded-full hover:bg-white hover:text-gray-900 transition-colors"
+                    <button
+                      className="absolute top-6 right-6 p-2 bg-white/10 rounded-full hover:bg-white/20 transition-colors"
+                      onClick={() => {
+                        setIsMenuOpen(false);
+                        navigate(`/product/${featuredProduct.id}`);
+                      }}
                     >
-                      Explore {featuredProduct.name}
+                      <ArrowUpRight className="w-5 h-5 text-white" />
+                    </button>
+                    {featuredProduct.image_url && (
+                      <img
+                        src={featuredProduct.image_url}
+                        alt={featuredProduct.name}
+                        className="absolute bottom-0 right-0 w-3/5 h-auto object-contain"
+                      />
+                    )}
+                  </div>
+                )}
+
+                {/* Navigation Links */}
+                <div className="grid grid-cols-3 gap-6 pt-4">
+                  {/* Column 1 */}
+                  <div>
+                    <Link
+                      to="/"
+                      onClick={() => setIsMenuOpen(false)}
+                      className="block text-gray-900 text-sm font-medium mb-4 hover:opacity-70 transition-opacity"
+                    >
+                      Yakuza Stores
+                    </Link>
+                    <Link
+                      to="/"
+                      onClick={() => setIsMenuOpen(false)}
+                      className="block text-gray-700 text-sm mb-3 hover:opacity-70 transition-opacity"
+                    >
+                      Become a Dealers
                     </Link>
                   </div>
-                  <button
-                    className="absolute top-8 right-8 p-2 bg-white/10 rounded-full hover:bg-white/20 transition-colors"
-                    onClick={() => navigate(`/product/${featuredProduct.id}`)}
-                  >
-                    <ArrowUpRight className="w-6 h-6 text-white" />
-                  </button>
-                  {featuredProduct.image_url && (
-                    <img
-                      src={featuredProduct.image_url}
-                      alt={featuredProduct.name}
-                      className="absolute bottom-0 right-0 w-2/3 h-auto object-contain"
-                    />
-                  )}
-                </div>
-              )}
 
-              {/* Navigation Links */}
-              <div className="grid grid-cols-3 gap-8">
-                {/* Column 1 */}
-                <div>
-                  <Link
-                    to="/"
-                    onClick={() => setIsMenuOpen(false)}
-                    className="block text-gray-900 text-base font-medium mb-6 hover:opacity-70 transition-opacity"
-                  >
-                    Yakuza Stores
-                  </Link>
-                  <Link
-                    to="/"
-                    onClick={() => setIsMenuOpen(false)}
-                    className="block text-gray-700 text-base mb-4 hover:opacity-70 transition-opacity"
-                  >
-                    Become a Dealers
-                  </Link>
-                </div>
+                  {/* Column 2 */}
+                  <div>
+                    <Link
+                      to="/products"
+                      onClick={() => setIsMenuOpen(false)}
+                      className="block text-gray-900 text-sm font-medium mb-4 hover:opacity-70 transition-opacity"
+                    >
+                      Product
+                    </Link>
+                    <Link
+                      to="/"
+                      onClick={() => setIsMenuOpen(false)}
+                      className="block text-gray-700 text-sm mb-3 hover:opacity-70 transition-opacity"
+                    >
+                      About Us
+                    </Link>
+                    <Link
+                      to="/"
+                      onClick={() => setIsMenuOpen(false)}
+                      className="block text-gray-700 text-sm mb-3 hover:opacity-70 transition-opacity"
+                    >
+                      Blogs
+                    </Link>
+                    <Link
+                      to="/"
+                      onClick={() => setIsMenuOpen(false)}
+                      className="block text-gray-700 text-sm mb-3 hover:opacity-70 transition-opacity"
+                    >
+                      Contact Us
+                    </Link>
+                  </div>
 
-                {/* Column 2 */}
-                <div>
-                  <Link
-                    to="/products"
-                    onClick={() => setIsMenuOpen(false)}
-                    className="block text-gray-900 text-base font-medium mb-6 hover:opacity-70 transition-opacity"
-                  >
-                    Product
-                  </Link>
-                  <Link
-                    to="/"
-                    onClick={() => setIsMenuOpen(false)}
-                    className="block text-gray-700 text-base mb-4 hover:opacity-70 transition-opacity"
-                  >
-                    About Us
-                  </Link>
-                  <Link
-                    to="/"
-                    onClick={() => setIsMenuOpen(false)}
-                    className="block text-gray-700 text-base mb-4 hover:opacity-70 transition-opacity"
-                  >
-                    Blogs
-                  </Link>
-                  <Link
-                    to="/"
-                    onClick={() => setIsMenuOpen(false)}
-                    className="block text-gray-700 text-base mb-4 hover:opacity-70 transition-opacity"
-                  >
-                    Contact Us
-                  </Link>
-                </div>
-
-                {/* Column 3 */}
-                <div>
-                  <Link
-                    to={user ? "/profile" : "/auth"}
-                    onClick={() => setIsMenuOpen(false)}
-                    className="block text-gray-900 text-base font-medium mb-6 hover:opacity-70 transition-opacity"
-                  >
-                    Account
-                  </Link>
-                  <Link
-                    to={user ? "/cart" : "/auth"}
-                    onClick={() => setIsMenuOpen(false)}
-                    className="block text-gray-700 text-base mb-4 hover:opacity-70 transition-opacity"
-                  >
-                    Cart
-                  </Link>
-                  <Link
-                    to="/"
-                    onClick={() => setIsMenuOpen(false)}
-                    className="block text-gray-700 text-base mb-4 hover:opacity-70 transition-opacity"
-                  >
-                    Contact Us
-                  </Link>
+                  {/* Column 3 */}
+                  <div>
+                    <Link
+                      to={user ? "/profile" : "/auth"}
+                      onClick={() => setIsMenuOpen(false)}
+                      className="block text-gray-900 text-sm font-medium mb-4 hover:opacity-70 transition-opacity"
+                    >
+                      Account
+                    </Link>
+                    <Link
+                      to={user ? "/cart" : "/auth"}
+                      onClick={() => setIsMenuOpen(false)}
+                      className="block text-gray-700 text-sm mb-3 hover:opacity-70 transition-opacity"
+                    >
+                      Cart
+                    </Link>
+                    <Link
+                      to="/"
+                      onClick={() => setIsMenuOpen(false)}
+                      className="block text-gray-700 text-sm mb-3 hover:opacity-70 transition-opacity"
+                    >
+                      Contact Us
+                    </Link>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            {/* Footer Text */}
-            <div className="mt-20 text-right">
-              <p className="text-gray-300 text-xl font-light">Join With YAKUZA Family</p>
+              {/* Footer Text */}
+              <div className="mt-8 text-right">
+                <p className="text-gray-300 text-base font-light">Join With YAKUZA Family</p>
+              </div>
             </div>
           </div>
-        </div>
+        </>
       )}
     </>
   );
