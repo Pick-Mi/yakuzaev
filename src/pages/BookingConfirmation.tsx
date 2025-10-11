@@ -509,10 +509,15 @@ const BookingConfirmation = () => {
               {/* Selection Summary - Only for Booking */}
               {bookingAmount === 999 && (
                 <div className="space-y-3">
-                  <Card className="border-2 border-primary/20 bg-accent/30">
+                  <Card className="border border-border bg-white">
                     <CardContent className="p-4">
-                      <div className="flex items-center justify-between mb-3">
-                        <h4 className="font-semibold text-[16px]">Your Selection</h4>
+                      <div className="flex items-center justify-between">
+                        <Badge 
+                          variant="secondary" 
+                          className="bg-green-50 text-green-700 hover:bg-green-50 px-6 py-2 text-sm font-medium rounded-full"
+                        >
+                          Booking
+                        </Badge>
                         <Button
                           variant="ghost"
                           size="sm"
@@ -524,21 +529,10 @@ const BookingConfirmation = () => {
                               breadcrumbs 
                             } 
                           })}
-                          className="text-primary hover:text-primary/80 h-auto p-0 font-medium"
+                          className="text-blue-600 hover:text-blue-700 hover:bg-transparent h-auto p-0 font-medium text-base"
                         >
                           Change
                         </Button>
-                      </div>
-
-                      {/* Purchase Type */}
-                      <div className="flex items-center gap-2 p-2 bg-background rounded">
-                        <span className="text-sm text-muted-foreground">Type:</span>
-                        <Badge variant="default" className="font-medium">
-                          Booking
-                        </Badge>
-                        <span className="text-sm font-semibold ml-auto">
-                          ₹{productPrice.toLocaleString('en-IN')}
-                        </span>
                       </div>
                     </CardContent>
                   </Card>
