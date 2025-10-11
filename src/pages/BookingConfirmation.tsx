@@ -89,6 +89,15 @@ const BookingConfirmation = () => {
               setCity(addressData.city || addressData.town || addressData.village || '');
               setState(addressData.state || '');
               
+              // Build full address string from location data
+              const addressParts = [];
+              if (addressData.house_number) addressParts.push(addressData.house_number);
+              if (addressData.road) addressParts.push(addressData.road);
+              if (addressData.suburb) addressParts.push(addressData.suburb);
+              
+              const detectedAddress = addressParts.join(', ') || data.display_name || '';
+              setAddress(detectedAddress);
+              
               toast.success('Location detected successfully!');
             } else {
               toast.error('Unable to fetch location details');
