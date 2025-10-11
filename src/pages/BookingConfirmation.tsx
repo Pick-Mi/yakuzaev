@@ -509,7 +509,7 @@ const BookingConfirmation = () => {
               {/* Selection Summary - Only for Booking */}
               {bookingAmount === 999 && (
                 <div className="space-y-3">
-                  <Card className="border border-border bg-white">
+                  <Card className="border-0 bg-[#F8F9F9]">
                     <CardContent className="p-4">
                       <div className="flex items-center justify-between">
                         <Badge 
