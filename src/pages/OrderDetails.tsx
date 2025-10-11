@@ -439,30 +439,37 @@ const OrderDetails = () => {
                 <CardTitle className="text-lg">Delivery details</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="flex items-start gap-3 cursor-pointer hover:bg-accent/50 p-2 rounded-lg -m-2">
+                <div className="flex items-start gap-3">
                   <Home className="w-5 h-5 text-muted-foreground mt-0.5" />
                   <div className="flex-1">
-                    <p className="font-medium">Home</p>
-                    <p className="text-sm text-muted-foreground line-clamp-2">
-                      {deliveryAddress.street_address || deliveryAddress.address || 'Address not available'}
+                    <p className="font-medium">Delivery Address</p>
+                    <p className="text-sm text-muted-foreground">
+                      {deliveryAddress.street_address && `${deliveryAddress.street_address}`}
+                      {deliveryAddress.apartment_unit && `, ${deliveryAddress.apartment_unit}`}
+                      {deliveryAddress.city && `, ${deliveryAddress.city}`}
+                      {deliveryAddress.state_province && `, ${deliveryAddress.state_province}`}
+                      {deliveryAddress.postal_code && ` - ${deliveryAddress.postal_code}`}
+                      {deliveryAddress.country && `, ${deliveryAddress.country}`}
+                      {!deliveryAddress.street_address && (deliveryAddress.address || 'Address not available')}
                     </p>
                   </div>
-                  <ChevronRight className="w-5 h-5 text-muted-foreground" />
                 </div>
 
                 <Separator />
 
-                <div className="flex items-start gap-3 cursor-pointer hover:bg-accent/50 p-2 rounded-lg -m-2">
+                <div className="flex items-start gap-3">
                   <User className="w-5 h-5 text-muted-foreground mt-0.5" />
                   <div className="flex-1">
-                    <p className="font-medium">
-                      {order.customer_details?.name || user?.email?.split('@')[0] || 'Customer'}
+                    <p className="font-medium">Customer Details</p>
+                    <p className="text-sm text-muted-foreground">
+                      {order.customer_details?.first_name && order.customer_details?.last_name 
+                        ? `${order.customer_details.first_name} ${order.customer_details.last_name}`
+                        : order.customer_details?.name || user?.email?.split('@')[0] || 'Customer'}
                     </p>
                     <p className="text-sm text-muted-foreground">
-                      {order.customer_details?.phone || '8553352688'}
+                      {order.customer_details?.phone || order.customer_details?.mobile || 'Phone not available'}
                     </p>
                   </div>
-                  <ChevronRight className="w-5 h-5 text-muted-foreground" />
                 </div>
               </CardContent>
             </Card>
