@@ -285,7 +285,7 @@ const BookingConfirmation = () => {
         <div className="mb-12">
           <div className="grid lg:grid-cols-2 gap-12">
             {/* Left Side - Product Summary */}
-            <div className="space-y-6">
+            <div className="space-y-6 lg:sticky lg:top-28 lg:self-start">
               {/* Product Image and Details */}
               <div className="bg-[#F8F9F9] rounded-lg p-8 flex items-center justify-center">
                 <img 
