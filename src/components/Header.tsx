@@ -75,14 +75,14 @@ const Header = () => {
   const handleCartClick = (e: React.MouseEvent) => {
     if (!user) {
       e.preventDefault();
-      navigate('/auth');
+      navigate('/auth', { state: { showSignUp: true, from: location } });
     }
   };
 
   const handleMenuClick = (e: React.MouseEvent) => {
     if (!user) {
       e.preventDefault();
-      navigate('/auth');
+      navigate('/auth', { state: { showSignUp: true, from: location } });
     }
   };
 
@@ -120,7 +120,7 @@ const Header = () => {
             
             {/* Icons */}
             <div className="absolute right-0 top-1 flex gap-[15px] items-center">
-              <Link to={user ? "/cart" : "/auth"} onClick={handleCartClick}>
+              <Link to={user ? "/cart" : "/auth"} onClick={handleCartClick} state={{ showSignUp: true, from: location }}>
                 <Button variant="ghost" size="icon" className="relative hover:bg-black/10 h-auto p-1 text-black">
                   <img src={cartIcon} alt="Cart" className={`w-[22px] h-[22px] ${shouldShowFixedHeader ? 'invert' : ''}`} />
                   {itemCount > 0 && (
@@ -130,7 +130,7 @@ const Header = () => {
                   )}
                 </Button>
               </Link>
-              <Link to={user ? "/profile" : "/auth"}>
+              <Link to={user ? "/profile" : "/auth"} state={{ showSignUp: true, from: location }}>
                 <Button variant="ghost" size="icon" className="hover:bg-black/10 h-auto p-1 text-black">
                   <img src={profileIcon} alt="Profile" className={`w-[22px] h-[22px] ${shouldShowFixedHeader ? 'invert' : ''}`} />
                 </Button>

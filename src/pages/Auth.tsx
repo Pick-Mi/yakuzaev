@@ -31,9 +31,12 @@ const countryCodes = [
 ];
 
 const Auth = () => {
+  const location = useLocation();
+  const shouldShowSignUp = location.state?.showSignUp || false;
+  
   const [authMethod, setAuthMethod] = useState<'email' | 'phone'>('phone');
   const [step, setStep] = useState<'phone' | 'otp' | 'email'>('phone');
-  const [isSignUp, setIsSignUp] = useState(false);
+  const [isSignUp, setIsSignUp] = useState(shouldShowSignUp);
   const [countryCode, setCountryCode] = useState('+91');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [otp, setOtp] = useState('');
@@ -45,7 +48,6 @@ const Auth = () => {
   const { signInWithPhone, verifyOTP, signInWithEmail, signUpWithEmail, signInWithGoogle, user } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
-  const location = useLocation();
   
   const from = location.state?.from?.pathname || '/';
 
