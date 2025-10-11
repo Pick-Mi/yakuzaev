@@ -733,7 +733,7 @@ const BookingConfirmation = () => {
                         />
                       </div>
 
-                      {/* City (Auto-filled) */}
+                      {/* City (Editable in manual mode) */}
                       <div className="relative">
                         <Input
                           id="city"
@@ -741,14 +741,13 @@ const BookingConfirmation = () => {
                           placeholder="City"
                           value={city}
                           onChange={(e) => setCity(e.target.value)}
-                          className="h-12 border border-border rounded bg-muted"
+                          className="h-12 border border-border rounded"
                           required
                           disabled={!isVerified}
-                          readOnly={pincode.length === 6}
                         />
                       </div>
 
-                      {/* State (Auto-filled) */}
+                      {/* State (Editable in manual mode) */}
                       <div className="relative">
                         <Input
                           id="state"
@@ -756,10 +755,9 @@ const BookingConfirmation = () => {
                           placeholder="State"
                           value={state}
                           onChange={(e) => setState(e.target.value)}
-                          className="h-12 border border-border rounded bg-muted"
+                          className="h-12 border border-border rounded"
                           required
                           disabled={!isVerified}
-                          readOnly={pincode.length === 6}
                         />
                       </div>
 
