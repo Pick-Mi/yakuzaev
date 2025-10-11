@@ -89,7 +89,7 @@ const BookingConfirmation = () => {
   const { signInWithPhone, verifyOTP, user } = useAuth();
 
   // Calculate pricing
-  const deliveryFee = 1250;
+  const deliveryFee = 0;
   const productPrice = bookingAmount || 999;
   const subtotal = productPrice;
   const discountAmount = promoDiscount;
