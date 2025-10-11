@@ -351,13 +351,16 @@ const BookingConfirmation = () => {
           postal_code: pincode,
           country: 'India',
           document_type: documentType,
-          document_number: aadhaarNumber,
+          document_number: aadhaarNumber || null,
           document_file_url: documentUrl,
           consent_given: consentChecked,
           updated_at: new Date().toISOString(),
+        }, {
+          onConflict: 'user_id'  // Specify the conflict column
         });
 
       if (profileError) {
+        console.error('Profile save error:', profileError);
         toast.error('Failed to save details: ' + profileError.message);
         setSaving(false);
         return;
