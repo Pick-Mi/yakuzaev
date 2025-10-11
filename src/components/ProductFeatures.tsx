@@ -36,8 +36,6 @@ const ProductFeatures = ({ features }: ProductFeaturesProps) => {
     <div className="w-full px-4 md:px-[70px] py-8 animate-fade-in bg-white">
       <div className="flex flex-col md:flex-row items-center justify-between gap-6 md:gap-8 max-w-[1200px] mx-auto">
         {displayFeatures.map((feature, index) => {
-          const IconComponent = (Icons as any)[feature.icon] || Icons.Circle;
-          
           return (
             <div
               key={index}
@@ -47,7 +45,11 @@ const ProductFeatures = ({ features }: ProductFeaturesProps) => {
               }}
             >
               <div className="opacity-80 flex-shrink-0">
-                <IconComponent className="w-6 h-6 text-muted-foreground" />
+                <img 
+                  src={feature.icon} 
+                  alt={feature.text}
+                  className="w-6 h-6 object-contain"
+                />
               </div>
               <span className="font-poppins font-medium text-base leading-normal whitespace-nowrap" style={{ color: '#2D2D2D' }}>
                 {feature.text}
