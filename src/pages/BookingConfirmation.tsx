@@ -151,10 +151,10 @@ const BookingConfirmation = () => {
 
 
 
-        {/* Membership Form Section */}
+        {/* Delivery Details Section */}
         <div className="mb-12">
           <h2 className="font-['Poppins'] font-semibold text-[40px] mb-12">
-            Now let&apos;s make you a Yakuza Member.
+            Delivery Details
           </h2>
 
           <div className="grid lg:grid-cols-2 gap-12">
@@ -220,117 +220,114 @@ const BookingConfirmation = () => {
               </div>
             </div>
 
-            {/* Right Side - Mobile Login Card */}
-            <div>
-              <Card className="shadow-xl border-0 bg-gradient-card">
-                
-                <CardContent className="space-y-6">
-                  {step === 'phone' ? (
-                    <>
-                      {/* Phone Number Form */}
-                      <form onSubmit={handlePhoneSubmit} className="space-y-4">
-                        <div className="space-y-2">
-                          <Label htmlFor="phone">Phone Number</Label>
-                          <div className="flex gap-2">
-                            {/* Country Code Selector */}
-                            <Select value={countryCode} onValueChange={setCountryCode}>
-                              <SelectTrigger className="w-32 bg-background/50 backdrop-blur-sm border-input/50">
-                                <SelectValue placeholder="Country" />
-                              </SelectTrigger>
-                              <SelectContent className="bg-background/95 backdrop-blur-sm border-border/50 z-50">
-                                {countryCodes.map((country) => (
-                                  <SelectItem key={country.code} value={country.code} className="hover:bg-accent/50">
-                                    <div className="flex items-center gap-2">
-                                      <span>{country.flag}</span>
-                                      <span>{country.code}</span>
-                                      <span className="text-xs text-muted-foreground">{country.country}</span>
-                                    </div>
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                            
-                            {/* Phone Number Input */}
-                            <div className="relative flex-1">
-                              <Phone className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                              <Input
-                                id="phone"
-                                type="tel"
-                                placeholder="1234567890"
-                                value={phoneNumber}
-                                onChange={(e) => setPhoneNumber(e.target.value)}
-                                className="pl-10"
-                                required
-                              />
-                            </div>
-                          </div>
-                          <p className="text-xs text-muted-foreground">
-                            We'll send you a verification code via SMS
-                          </p>
-                        </div>
+            {/* Right Side - Phone Verification */}
+            <div className="space-y-6">
+              {step === 'phone' ? (
+                <>
+                  {/* Phone Number Form */}
+                  <form onSubmit={handlePhoneSubmit} className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="phone" className="text-sm text-muted-foreground">Phone No*</Label>
+                      <div className="flex gap-3">
+                        {/* Country Code Selector */}
+                        <Select value={countryCode} onValueChange={setCountryCode}>
+                          <SelectTrigger className="w-44 h-14 border-2 border-border rounded-lg">
+                            <SelectValue placeholder="Country" />
+                          </SelectTrigger>
+                          <SelectContent className="z-50">
+                            {countryCodes.map((country) => (
+                              <SelectItem key={country.code} value={country.code}>
+                                <div className="flex items-center gap-2">
+                                  <span>{country.flag}</span>
+                                  <span>{country.code}</span>
+                                  <span className="text-sm text-muted-foreground">{country.country}</span>
+                                </div>
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                         
+                        {/* Phone Number Input */}
+                        <div className="relative flex-1">
+                          <Input
+                            id="phone"
+                            type="tel"
+                            placeholder="1234567890"
+                            value={phoneNumber}
+                            onChange={(e) => setPhoneNumber(e.target.value)}
+                            className="h-14 border-2 border-border rounded-lg text-lg"
+                            required
+                          />
+                        </div>
+
+                        {/* Verify Button */}
                         <Button 
                           type="submit" 
-                          variant="hero" 
-                          className="w-full" 
+                          className="h-14 px-8 bg-black text-white hover:bg-black/90 rounded-lg font-medium"
                           disabled={loading}
                         >
-                          {loading ? 'Sending...' : 'Send Verification Code'}
+                          {loading ? 'Sending...' : 'Verify'}
                         </Button>
-                      </form>
-                    </>
-                  ) : (
-                    <>
-                      {/* OTP Verification Form */}
-                      <form onSubmit={handleOTPSubmit} className="space-y-4">
-                        <div className="space-y-2">
-                          <Label htmlFor="otp">Verification Code</Label>
-                          <div className="relative">
-                            <MessageSquare className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                            <Input
-                              id="otp"
-                              type="text"
-                              placeholder="Enter 6-digit code"
-                              value={otp}
-                              onChange={(e) => setOtp(e.target.value)}
-                              className="pl-10 text-center text-lg tracking-widest"
-                              maxLength={6}
-                              required
-                            />
-                          </div>
+                      </div>
+                      <p className="text-sm text-muted-foreground">
+                        We'll send you a verification code via SMS
+                      </p>
+                    </div>
+                  </form>
+                </>
+              ) : (
+                <>
+                  {/* OTP Verification Form */}
+                  <form onSubmit={handleOTPSubmit} className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="otp" className="text-sm text-muted-foreground">Verification Code*</Label>
+                      <div className="flex gap-3">
+                        <div className="relative flex-1">
+                          <Input
+                            id="otp"
+                            type="text"
+                            placeholder="Enter 6-digit code"
+                            value={otp}
+                            onChange={(e) => setOtp(e.target.value)}
+                            className="h-14 border-2 border-border rounded-lg text-lg text-center tracking-widest"
+                            maxLength={6}
+                            required
+                          />
                         </div>
                         
                         <Button 
                           type="submit" 
-                          variant="hero" 
-                          className="w-full" 
+                          className="h-14 px-8 bg-black text-white hover:bg-black/90 rounded-lg font-medium"
                           disabled={loading || otp.length !== 6}
                         >
-                          {loading ? 'Verifying...' : 'Verify Code'}
+                          {loading ? 'Verifying...' : 'Verify'}
                         </Button>
-                      </form>
-                      
-                      {/* Back to phone */}
-                      <div className="text-center text-sm">
-                        <span className="text-muted-foreground">
-                          Didn't receive the code?
-                        </span>{' '}
-                        <button
-                          type="button"
-                          className="text-primary hover:underline font-medium"
-                          onClick={() => {
-                            setStep('phone');
-                            setOtp('');
-                            setPhoneNumber('');
-                          }}
-                        >
-                          Try different number
-                        </button>
                       </div>
-                    </>
-                  )}
-                </CardContent>
-              </Card>
+                      <p className="text-sm text-muted-foreground">
+                        Enter the code we sent to {countryCode}{phoneNumber}
+                      </p>
+                    </div>
+                  </form>
+                  
+                  {/* Back to phone */}
+                  <div className="text-sm">
+                    <span className="text-muted-foreground">
+                      Didn't receive the code?
+                    </span>{' '}
+                    <button
+                      type="button"
+                      className="text-primary hover:underline font-medium"
+                      onClick={() => {
+                        setStep('phone');
+                        setOtp('');
+                        setPhoneNumber('');
+                      }}
+                    >
+                      Try different number
+                    </button>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>
