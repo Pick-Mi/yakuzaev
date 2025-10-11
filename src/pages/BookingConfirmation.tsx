@@ -82,8 +82,43 @@ const BookingConfirmation = () => {
   const [addressMatchChecked, setAddressMatchChecked] = useState(false);
   const [saving, setSaving] = useState(false);
   const [detectingLocation, setDetectingLocation] = useState(false);
+  const [promoCode, setPromoCode] = useState('');
+  const [promoDiscount, setPromoDiscount] = useState(0);
+  const [promoApplied, setPromoApplied] = useState(false);
   
   const { signInWithPhone, verifyOTP, user } = useAuth();
+
+  // Calculate pricing
+  const deliveryFee = 1250;
+  const productPrice = bookingAmount || 999;
+  const subtotal = productPrice;
+  const discountAmount = promoDiscount;
+  const totalAmount = subtotal + deliveryFee - discountAmount;
+
+  // Apply promo code
+  const applyPromoCode = () => {
+    const validPromoCodes: { [key: string]: number } = {
+      'SAVE10': subtotal * 0.1,
+      'SAVE500': 500,
+      'FIRST1000': 1000,
+      'WELCOME': 200,
+    };
+
+    const upperPromo = promoCode.toUpperCase();
+    if (validPromoCodes[upperPromo]) {
+      setPromoDiscount(validPromoCodes[upperPromo]);
+      setPromoApplied(true);
+      toast.success(`Promo code applied! You saved ₹${validPromoCodes[upperPromo]}`);
+    } else {
+      toast.error('Invalid promo code');
+    }
+  };
+
+  const removePromoCode = () => {
+    setPromoCode('');
+    setPromoDiscount(0);
+    setPromoApplied(false);
+  };
 
   // Detect current location
   const detectCurrentLocation = async () => {
@@ -324,7 +359,7 @@ const BookingConfirmation = () => {
       // Create order
       const orderData = {
         customer_id: user.id,
-        total_amount: bookingAmount,
+        total_amount: totalAmount,
         status: 'pending',
         payment_status: 'pending',
         order_items_data: [{
@@ -333,8 +368,8 @@ const BookingConfirmation = () => {
           variant: selectedVariant?.name || '',
           color: selectedColor || '',
           quantity: 1,
-          unit_price: bookingAmount,
-          total_price: bookingAmount,
+          unit_price: productPrice,
+          total_price: productPrice,
         }],
         customer_details: {
           first_name: firstName,
@@ -351,9 +386,16 @@ const BookingConfirmation = () => {
           postal_code: pincode,
           country: 'India',
         },
-        shipping_charge: 1250,
+        shipping_charge: deliveryFee,
         tax_amount: 0,
-        discount_amount: 0,
+        discount_amount: discountAmount,
+        order_summary: {
+          product_price: productPrice,
+          delivery_fee: deliveryFee,
+          discount: discountAmount,
+          promo_code: promoApplied ? promoCode : null,
+          total: totalAmount,
+        }
       };
 
       const { data: order, error: orderError } = await supabase
@@ -373,7 +415,9 @@ const BookingConfirmation = () => {
         state: {
           order: order,
           product: product,
-          amount: bookingAmount + 1250, // Including delivery fee
+          amount: totalAmount,
+          promo_code: promoApplied ? promoCode : null,
+          discount: discountAmount,
         }
       });
 
@@ -484,30 +528,84 @@ const BookingConfirmation = () => {
                 </h3>
 
                 <div className="space-y-3">
+                  {/* Product Price */}
                   <div className="flex justify-between items-center">
-                    <span className="font-['Inter'] text-[16px]">Subtotal</span>
-                    <span className="font-['Inter'] text-[16px]">₹{currentPrice?.toLocaleString('en-IN')}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="font-['Inter'] text-[16px]">Subtotal</span>
-                    <span className="font-['Inter'] text-[16px]">₹{currentPrice?.toLocaleString('en-IN')}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="font-['Inter'] text-[16px]">Subtotal</span>
-                    <span className="font-['Inter'] text-[16px]">₹{currentPrice?.toLocaleString('en-IN')}</span>
+                    <span className="font-['Inter'] text-[16px] text-muted-foreground">Product Price</span>
+                    <span className="font-['Inter'] text-[16px]">₹{productPrice.toLocaleString('en-IN')}</span>
                   </div>
 
-                  <div className="border-t pt-3 mt-3">
-                    <div className="flex justify-between items-center font-semibold">
-                      <span className="font-['Poppins'] text-[18px]">Total</span>
-                      <span className="font-['Poppins'] text-[18px]">₹{currentPrice?.toLocaleString('en-IN')}</span>
+                  {/* Delivery Fee */}
+                  <div className="flex justify-between items-center">
+                    <span className="font-['Inter'] text-[16px] text-muted-foreground">Delivery Fee</span>
+                    <span className="font-['Inter'] text-[16px]">₹{deliveryFee.toLocaleString('en-IN')}</span>
+                  </div>
+
+                  {/* Promo Code Section */}
+                  <div className="py-3 border-t border-b">
+                    <div className="space-y-2">
+                      <Label htmlFor="promoCode" className="text-sm font-medium">Have a Promo Code?</Label>
+                      <div className="flex gap-2">
+                        <Input
+                          id="promoCode"
+                          type="text"
+                          placeholder="Enter promo code"
+                          value={promoCode}
+                          onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
+                          className="h-10 flex-1"
+                          disabled={promoApplied}
+                        />
+                        {!promoApplied ? (
+                          <Button
+                            type="button"
+                            onClick={applyPromoCode}
+                            disabled={!promoCode.trim()}
+                            variant="outline"
+                            className="h-10 px-4"
+                          >
+                            Apply
+                          </Button>
+                        ) : (
+                          <Button
+                            type="button"
+                            onClick={removePromoCode}
+                            variant="outline"
+                            className="h-10 px-4"
+                          >
+                            Remove
+                          </Button>
+                        )}
+                      </div>
+                      {promoApplied && (
+                        <p className="text-sm text-green-600 font-medium">
+                          ✓ Promo code applied: {promoCode}
+                        </p>
+                      )}
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-2 text-orange-600 mt-4">
-                    <Gift className="w-5 h-5" />
-                    <span className="font-['Inter'] text-[14px]">You are saving ₹207.00</span>
+                  {/* Discount */}
+                  {discountAmount > 0 && (
+                    <div className="flex justify-between items-center text-green-600">
+                      <span className="font-['Inter'] text-[16px]">Discount</span>
+                      <span className="font-['Inter'] text-[16px]">-₹{discountAmount.toLocaleString('en-IN')}</span>
+                    </div>
+                  )}
+
+                  {/* Total */}
+                  <div className="border-t pt-3 mt-3">
+                    <div className="flex justify-between items-center font-semibold">
+                      <span className="font-['Poppins'] text-[20px]">Total Amount</span>
+                      <span className="font-['Poppins'] text-[20px] text-primary">₹{totalAmount.toLocaleString('en-IN')}</span>
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-1">Amount to be paid via PayU</p>
                   </div>
+
+                  {discountAmount > 0 && (
+                    <div className="flex items-center gap-2 text-green-600 mt-4">
+                      <Gift className="w-5 h-5" />
+                      <span className="font-['Inter'] text-[14px]">You are saving ₹{discountAmount.toLocaleString('en-IN')}</span>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
