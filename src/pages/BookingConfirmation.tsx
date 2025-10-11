@@ -2,7 +2,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ChevronRight, Gift, Phone, MessageSquare, Search, Upload } from "lucide-react";
+import { ChevronRight, Gift, Phone, MessageSquare, Search, Upload, MapPin } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -45,8 +45,12 @@ const BookingConfirmation = () => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [address, setAddress] = useState('');
+  const [pincode, setPincode] = useState('');
+  const [city, setCity] = useState('');
+  const [state, setState] = useState('');
   const [email, setEmail] = useState('');
   const [showManualAddress, setShowManualAddress] = useState(false);
+  const [useLocationDetection, setUseLocationDetection] = useState(true);
   const [documentType, setDocumentType] = useState('aadhaar');
   const [aadhaarNumber, setAadhaarNumber] = useState('');
   const [uploadedDocument, setUploadedDocument] = useState<File | null>(null);
@@ -544,30 +548,131 @@ const BookingConfirmation = () => {
                 {/* Address */}
                 <div className="space-y-2">
                   <Label htmlFor="address" className="text-sm text-muted-foreground">Address*</Label>
-                  <div className="relative">
-                    <Search className="absolute left-3 top-3.5 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      id="address"
-                      type="text"
-                      placeholder="Start typing a street address or postcode"
-                      value={address}
-                      onChange={(e) => setAddress(e.target.value)}
-                      className="h-12 pl-10 border border-border rounded"
-                      required
+                  
+                  {/* Location Detection Toggle */}
+                  <div className="flex gap-3 mb-4">
+                    <Button
+                      type="button"
+                      variant={useLocationDetection ? "default" : "outline"}
+                      onClick={() => setUseLocationDetection(true)}
                       disabled={!isVerified}
-                    />
+                      className="flex-1"
+                    >
+                      <MapPin className="w-4 h-4 mr-2" />
+                      Detect Location
+                    </Button>
+                    <Button
+                      type="button"
+                      variant={!useLocationDetection ? "default" : "outline"}
+                      onClick={() => setUseLocationDetection(false)}
+                      disabled={!isVerified}
+                      className="flex-1"
+                    >
+                      Enter Manually
+                    </Button>
                   </div>
+
+                  {useLocationDetection ? (
+                    <div className="relative">
+                      <Search className="absolute left-3 top-3.5 h-4 w-4 text-muted-foreground" />
+                      <Input
+                        id="address"
+                        type="text"
+                        placeholder="Start typing a street address or postcode"
+                        value={address}
+                        onChange={(e) => setAddress(e.target.value)}
+                        className="h-12 pl-10 border border-border rounded"
+                        required
+                        disabled={!isVerified}
+                      />
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      {/* Pincode */}
+                      <div className="relative">
+                        <Input
+                          id="pincode"
+                          type="text"
+                          placeholder="Enter Pincode"
+                          value={pincode}
+                          onChange={(e) => {
+                            const value = e.target.value.replace(/\D/g, '').slice(0, 6);
+                            setPincode(value);
+                            
+                            // Auto-detect city and state based on pincode (simplified example)
+                            if (value.length === 6) {
+                              // This is a simplified example - in production, use a real pincode API
+                              const pincodeData: { [key: string]: { city: string; state: string } } = {
+                                '110001': { city: 'New Delhi', state: 'Delhi' },
+                                '400001': { city: 'Mumbai', state: 'Maharashtra' },
+                                '560001': { city: 'Bangalore', state: 'Karnataka' },
+                                '600001': { city: 'Chennai', state: 'Tamil Nadu' },
+                                '700001': { city: 'Kolkata', state: 'West Bengal' },
+                              };
+                              
+                              const data = pincodeData[value];
+                              if (data) {
+                                setCity(data.city);
+                                setState(data.state);
+                              }
+                            }
+                          }}
+                          className="h-12 border border-border rounded"
+                          required
+                          disabled={!isVerified}
+                          maxLength={6}
+                        />
+                      </div>
+
+                      {/* City (Auto-filled) */}
+                      <div className="relative">
+                        <Input
+                          id="city"
+                          type="text"
+                          placeholder="City"
+                          value={city}
+                          onChange={(e) => setCity(e.target.value)}
+                          className="h-12 border border-border rounded bg-muted"
+                          required
+                          disabled={!isVerified}
+                          readOnly={pincode.length === 6}
+                        />
+                      </div>
+
+                      {/* State (Auto-filled) */}
+                      <div className="relative">
+                        <Input
+                          id="state"
+                          type="text"
+                          placeholder="State"
+                          value={state}
+                          onChange={(e) => setState(e.target.value)}
+                          className="h-12 border border-border rounded bg-muted"
+                          required
+                          disabled={!isVerified}
+                          readOnly={pincode.length === 6}
+                        />
+                      </div>
+
+                      {/* Street Address */}
+                      <div className="relative">
+                        <Input
+                          id="address"
+                          type="text"
+                          placeholder="House No, Building Name, Street"
+                          value={address}
+                          onChange={(e) => setAddress(e.target.value)}
+                          className="h-12 border border-border rounded"
+                          required
+                          disabled={!isVerified}
+                        />
+                      </div>
+                    </div>
+                  )}
+                  
                   <p className="text-xs text-muted-foreground">
                     We do not ship to P.O. boxes
                   </p>
-                  <button
-                    type="button"
-                    className="text-sm underline hover:no-underline"
-                    onClick={() => setShowManualAddress(!showManualAddress)}
-                    disabled={!isVerified}
-                  >
-                    Enter address manually.
-                  </button>
                 </div>
 
                 {/* Email */}
