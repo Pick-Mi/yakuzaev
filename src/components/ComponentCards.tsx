@@ -33,7 +33,8 @@ const ComponentCards = ({ visualFeatures = [] }: ComponentCardsProps) => {
                 className="w-full h-full object-cover"
               />
             )}
-            <p className="absolute bottom-6 left-8 font-inter font-medium text-2xl text-white
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none" />
+            <p className="absolute bottom-6 left-8 font-inter font-medium text-2xl text-white z-10
                           md:text-xl md:bottom-5 md:left-6
                           sm:text-base sm:bottom-4 sm:left-4">
               {feature.text}
