@@ -12,6 +12,7 @@ import Cart from "./pages/Cart";
 import Product from "./pages/Product";
 import Products from "./pages/Products";
 import Profile from "./pages/Profile";
+import ProfileSetup from "./pages/ProfileSetup";
 import Checkout from "./pages/Checkout";
 import ProductConfig from "./pages/ProductConfig";
 import BookingConfirmation from "./pages/BookingConfirmation";
@@ -35,6 +36,7 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/auth" element={<Auth />} />
+              <Route path="/profile-setup" element={<ProfileSetup />} />
               <Route path="/products" element={<Products />} />
               <Route path="/product/:id" element={<Product />} />
               <Route path="/profile" element={

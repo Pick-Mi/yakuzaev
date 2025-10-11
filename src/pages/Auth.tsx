@@ -10,6 +10,7 @@ import { useToast } from '@/hooks/use-toast';
 import { ArrowLeft, Phone, Chrome, MessageSquare, Mail, Eye, EyeOff } from 'lucide-react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
+import { supabase } from '@/integrations/supabase/client';
 
 // Country codes data
 const countryCodes = [
@@ -135,6 +136,27 @@ const Auth = () => {
           variant: "destructive",
         });
       } else {
+        // Check if profile exists
+        const { data: session } = await supabase.auth.getSession();
+        if (session?.session?.user) {
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('first_name')
+            .eq('user_id', session.session.user.id)
+            .single();
+
+          // If no first_name, it's a new user - redirect to profile setup
+          if (!profile || !profile.first_name) {
+            toast({
+              title: "Welcome!",
+              description: "Please complete your profile to continue.",
+            });
+            navigate('/profile-setup', { state: { from: location.state?.from || { pathname: '/' } }, replace: true });
+            setLoading(false);
+            return;
+          }
+        }
+
         toast({
           title: "Welcome!",
           description: "You have been signed in successfully.",
