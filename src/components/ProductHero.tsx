@@ -7,6 +7,7 @@ interface ProductHeroProps {
   range?: string;
   chargeTime?: string;
   backgroundImage?: string;
+  previewTitle?: string;
   onBookNow: () => void;
   onAddToCart: () => void;
 }
@@ -18,6 +19,7 @@ const ProductHero = ({
   range = "161 km",
   chargeTime = "30 km",
   backgroundImage,
+  previewTitle,
   onBookNow,
   onAddToCart
 }: ProductHeroProps) => {
@@ -60,7 +62,7 @@ const ProductHero = ({
       <div className="absolute flex flex-col gap-[35px] items-start left-[70px] top-[530px] w-[635px] max-lg:left-5 max-lg:right-5 max-lg:w-auto max-md:top-auto max-md:bottom-[200px]">
         {/* Main Title */}
         <h1 className="font-['Inter'] font-normal leading-[73px] text-white text-[48px] min-w-full w-min max-md:text-[32px] max-md:leading-tight max-md:text-center">
-          {productName}
+          {previewTitle || productName}
         </h1>
         
         {/* Specifications */}

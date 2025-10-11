@@ -191,6 +191,7 @@ const Product = () => {
         range="161 km"
         chargeTime="30 km"
         backgroundImage={product.preview_section?.backgroundImage}
+        previewTitle={product.preview_section?.title}
         onBookNow={handleBuyNow}
         onAddToCart={handleAddToCart}
       />
