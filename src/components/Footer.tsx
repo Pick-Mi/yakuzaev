@@ -14,53 +14,47 @@ const Footer = () => {
         <div className="flex flex-col md:flex-row justify-between items-start gap-12 mb-20">
           {/* Navigation Links */}
           <div className="flex flex-wrap gap-12 md:gap-16">
-            {/* Ownership */}
+            {/* Yakuza Stores */}
             <div className="flex flex-col gap-5">
-              <h3 className="text-sm font-semibold opacity-50" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                Ownership
+              <h3 className="text-base font-normal" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                Yakuza Stores
               </h3>
               <div className="flex flex-col gap-5">
-                <Link to="/stores" className="text-[15px] opacity-70 hover:opacity-100 transition-opacity" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                  Yakuza Stores
-                </Link>
-                <Link to="/dealers" className="text-[15px] opacity-70 hover:opacity-100 transition-opacity" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                <Link to="/dealers" className="text-base opacity-70 hover:opacity-100 transition-opacity" style={{ fontFamily: 'Poppins, sans-serif' }}>
                   Become a Dealers
                 </Link>
               </div>
             </div>
 
-            {/* Company */}
+            {/* Product */}
             <div className="flex flex-col gap-5">
-              <h3 className="text-sm font-semibold opacity-50" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                Company
+              <h3 className="text-base font-normal" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                Product
               </h3>
               <div className="flex flex-col gap-5">
-                <Link to="/about" className="text-[15px] opacity-70 hover:opacity-100 transition-opacity" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                <Link to="/about" className="text-base opacity-70 hover:opacity-100 transition-opacity" style={{ fontFamily: 'Poppins, sans-serif' }}>
                   About Us
                 </Link>
-                <Link to="/careers" className="text-[15px] opacity-70 hover:opacity-100 transition-opacity" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                <Link to="/careers" className="text-base opacity-70 hover:opacity-100 transition-opacity" style={{ fontFamily: 'Poppins, sans-serif' }}>
                   Careers
                 </Link>
-                <Link to="/blogs" className="text-[15px] opacity-70 hover:opacity-100 transition-opacity" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                <Link to="/blogs" className="text-base opacity-70 hover:opacity-100 transition-opacity" style={{ fontFamily: 'Poppins, sans-serif' }}>
                   Blogs
-                </Link>
-                <Link to="/contact" className="text-[15px] opacity-70 hover:opacity-100 transition-opacity" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                  Contact Us
                 </Link>
               </div>
             </div>
 
-            {/* Profile */}
+            {/* Account */}
             <div className="flex flex-col gap-5">
-              <h3 className="text-sm font-semibold opacity-50" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                Profile
+              <h3 className="text-base font-normal" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                Account
               </h3>
               <div className="flex flex-col gap-5">
-                <Link to="/auth" className="text-[15px] opacity-70 hover:opacity-100 transition-opacity" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                  Sign IN
+                <Link to="/cart" className="text-base opacity-70 hover:opacity-100 transition-opacity" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                  Cart
                 </Link>
-                <Link to="/auth" className="text-[15px] opacity-70 hover:opacity-100 transition-opacity" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                  Sign Up
+                <Link to="/contact" className="text-base opacity-70 hover:opacity-100 transition-opacity" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                  Contact Us
                 </Link>
               </div>
             </div>
