@@ -19,7 +19,7 @@ const ProductShowcase = () => {
       try {
         const response = await (supabase as any)
           .from('products')
-          .select('id, name, price, image_url, images, description, variants, is_active, thumbnail')
+          .select('id, name, price, image_url, images, description, variants, is_active, thumbnail, features')
           .eq('is_active', true)
           .order('created_at', { ascending: false })
           .limit(4);
@@ -49,7 +49,8 @@ const ProductShowcase = () => {
             price: product.price,
             image: imageUrl,
             description: product.description,
-            variants: product.variants
+            variants: product.variants,
+            features: product.features || []
           };
         }) || [];
 
@@ -177,13 +178,21 @@ const ProductShowcase = () => {
                           {product.name}
                         </h3>
                         <div className="flex gap-[13.688px] items-center">
-                          <p className="font-['Poppins'] text-[15.758px] text-[#212121] opacity-80">
-                            65 km Range
-                          </p>
-                          <div className="w-[1.24px] h-[19.288px] bg-[#212121] opacity-80" />
-                          <p className="font-['Poppins'] text-[15.758px] text-[#212121] opacity-80">
-                            40 Km/h Speed
-                          </p>
+                          {product.features && product.features.length > 0 && (
+                            <>
+                              <p className="font-['Poppins'] text-[15.758px] text-[#212121] opacity-80">
+                                {product.features[0]}
+                              </p>
+                              {product.features.length > 1 && (
+                                <>
+                                  <div className="w-[1.24px] h-[19.288px] bg-[#212121] opacity-80" />
+                                  <p className="font-['Poppins'] text-[15.758px] text-[#212121] opacity-80">
+                                    {product.features[1]}
+                                  </p>
+                                </>
+                              )}
+                            </>
+                          )}
                         </div>
                       </div>
 
