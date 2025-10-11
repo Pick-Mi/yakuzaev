@@ -8,6 +8,7 @@ interface ProductHeroProps {
   chargeTime?: string;
   backgroundImage?: string;
   previewTitle?: string;
+  specs?: Array<{ value: string; label: string }>;
   onBookNow: () => void;
   onAddToCart: () => void;
 }
@@ -20,9 +21,11 @@ const ProductHero = ({
   chargeTime = "30 km",
   backgroundImage,
   previewTitle,
+  specs,
   onBookNow,
   onAddToCart
 }: ProductHeroProps) => {
+  const firstSpec = specs?.[0];
   return (
     <section 
       className="relative w-full h-[800px] bg-[#080f18]"
@@ -69,10 +72,10 @@ const ProductHero = ({
         <div className="flex gap-[50px] items-center max-md:gap-[30px] max-md:justify-center max-md:flex-wrap">
           <div className="flex flex-col gap-[13px] items-start font-['Inter'] font-medium leading-[0] text-white whitespace-nowrap">
             <div className="flex flex-col justify-center opacity-80 text-2xl">
-              <p className="leading-normal whitespace-nowrap">{topSpeed}</p>
+              <p className="leading-normal whitespace-nowrap">{firstSpec?.value || topSpeed}</p>
             </div>
             <div className="flex flex-col justify-center opacity-70 text-sm">
-              <p className="leading-normal whitespace-nowrap">Top Speed</p>
+              <p className="leading-normal whitespace-nowrap">{firstSpec?.label || "Top Speed"}</p>
             </div>
           </div>
           
