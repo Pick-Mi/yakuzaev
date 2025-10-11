@@ -36,7 +36,7 @@ const Auth = () => {
   const shouldShowSignUp = location.state?.showSignUp || false;
   
   const [authMethod, setAuthMethod] = useState<'email' | 'phone'>('phone');
-  const [step, setStep] = useState<'phone' | 'otp' | 'email'>('phone');
+  const [step, setStep] = useState<'phone' | 'otp' | 'email' | 'profile'>('phone');
   const [isSignUp, setIsSignUp] = useState(shouldShowSignUp);
   const [countryCode, setCountryCode] = useState('+91');
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -45,6 +45,8 @@ const Auth = () => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   
   const { signInWithPhone, verifyOTP, signInWithEmail, signUpWithEmail, signInWithGoogle, user } = useAuth();
   const { toast } = useToast();
@@ -141,24 +143,22 @@ const Auth = () => {
         if (session?.session?.user) {
           const { data: profile } = await supabase
             .from('profiles')
-            .select('first_name')
+            .select('first_name, last_name')
             .eq('user_id', session.session.user.id)
             .single();
 
-          // If no first_name, it's a new user - redirect to profile setup
+          // If no first_name, show profile form
           if (!profile || !profile.first_name) {
-            toast({
-              title: "Welcome!",
-              description: "Please complete your profile to continue.",
-            });
-            navigate('/profile-setup', { state: { from: location.state?.from || { pathname: '/' } }, replace: true });
+            setFirstName(profile?.first_name || '');
+            setLastName(profile?.last_name || '');
+            setStep('profile');
             setLoading(false);
             return;
           }
         }
 
         toast({
-          title: "Welcome!",
+          title: "Welcome back!",
           description: "You have been signed in successfully.",
         });
         navigate(from, { replace: true });
@@ -167,6 +167,52 @@ const Auth = () => {
       toast({
         title: "Error",
         description: "An unexpected error occurred. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleProfileSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!firstName.trim()) {
+      toast({
+        title: "Name required",
+        description: "Please enter your first name",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const { data: session } = await supabase.auth.getSession();
+      if (!session?.session?.user) {
+        throw new Error("No user session found");
+      }
+
+      const { error } = await supabase
+        .from('profiles')
+        .update({
+          first_name: firstName.trim(),
+          last_name: lastName.trim(),
+        })
+        .eq('user_id', session.session.user.id);
+
+      if (error) throw error;
+
+      toast({
+        title: "Welcome!",
+        description: "Your profile has been saved successfully.",
+      });
+      navigate(from, { replace: true });
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to save profile",
         variant: "destructive",
       });
     } finally {
@@ -248,11 +294,13 @@ const Auth = () => {
           <CardHeader className="space-y-2 text-center">
             <CardTitle className="text-2xl font-bold">
               {step === 'email' ? (isSignUp ? 'Create Account' : 'Welcome Back') :
-               step === 'phone' ? 'Sign In with Phone' : 'Enter Verification Code'}
+               step === 'phone' ? 'Sign In with Phone' :
+               step === 'profile' ? 'Complete Your Profile' : 'Enter Verification Code'}
             </CardTitle>
             <CardDescription>
               {step === 'email' ? (isSignUp ? 'Create your account to get started' : 'Sign in to your account') :
-               step === 'phone' ? 'Enter your mobile number to get started' : 
+               step === 'phone' ? 'Enter your mobile number to get started' :
+               step === 'profile' ? 'Please provide your name to continue' :
                `We sent a verification code to ${countryCode}${phoneNumber}`}
             </CardDescription>
           </CardHeader>
@@ -419,6 +467,43 @@ const Auth = () => {
                     Or sign in with email
                   </button>
                 </div>
+              </>
+            ) : step === 'profile' ? (
+              <>
+                {/* Profile Completion Form */}
+                <form onSubmit={handleProfileSubmit} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="firstName">First Name *</Label>
+                    <Input
+                      id="firstName"
+                      type="text"
+                      placeholder="Enter your first name"
+                      value={firstName}
+                      onChange={(e) => setFirstName(e.target.value)}
+                      required
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="lastName">Last Name</Label>
+                    <Input
+                      id="lastName"
+                      type="text"
+                      placeholder="Enter your last name"
+                      value={lastName}
+                      onChange={(e) => setLastName(e.target.value)}
+                    />
+                  </div>
+                  
+                  <Button 
+                    type="submit" 
+                    variant="hero" 
+                    className="w-full" 
+                    disabled={loading || !firstName.trim()}
+                  >
+                    {loading ? 'Saving...' : 'Continue'}
+                  </Button>
+                </form>
               </>
             ) : (
               <>
