@@ -469,7 +469,12 @@ const Auth = () => {
                   <button
                     type="button"
                     className="text-blue-600 text-sm font-medium hover:underline"
-                    onClick={() => setStep('phone')}
+                    onClick={() => {
+                      if (window.confirm('Are you sure you want to change your mobile number? You will need to enter a new number and verify it again.')) {
+                        setStep('phone');
+                        setOtp('');
+                      }
+                    }}
                   >
                     Change Mobile Number
                   </button>
