@@ -338,7 +338,11 @@ const Product = () => {
       <ColorVarietySection />
       
       {/* Variants Pricing Section */}
-      <VariantsPricingSection onVariantSelect={handleVariantSelect} />
+      <VariantsPricingSection 
+        onVariantSelect={handleVariantSelect}
+        variants={product.variants}
+        specificationTitles={product.specification_titles}
+      />
       
       {/* Accessories Section */}
       <AccessoriesSection accessories={product.accessories} />

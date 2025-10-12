@@ -13,12 +13,14 @@ interface VariantSpec {
 
 interface VariantsPricingSectionProps {
   onVariantSelect?: (variant: VariantSpec) => void;
+  variants?: VariantSpec[];
+  specificationTitles?: Array<{ label: string; key: string }>;
 }
 
-const VariantsPricingSection = ({ onVariantSelect }: VariantsPricingSectionProps) => {
+const VariantsPricingSection = ({ onVariantSelect, variants: propVariants, specificationTitles }: VariantsPricingSectionProps) => {
   const [selectedVariantIndex, setSelectedVariantIndex] = useState<number | null>(null);
 
-  const variants: VariantSpec[] = [
+  const defaultVariants: VariantSpec[] = [
     {
       name: 'YAKUZA NEU + 43V',
       price: '₹35,280.00',
@@ -48,7 +50,9 @@ const VariantsPricingSection = ({ onVariantSelect }: VariantsPricingSectionProps
     }
   ];
 
-  const specRows = [
+  const variants = propVariants && propVariants.length > 0 ? propVariants : defaultVariants;
+
+  const defaultSpecRows = [
     { label: 'Price', key: 'price' },
     { label: 'Colour', key: 'colors' },
     { label: 'Range', key: 'range' },
@@ -56,6 +60,8 @@ const VariantsPricingSection = ({ onVariantSelect }: VariantsPricingSectionProps
     { label: 'Battery Warranty', key: 'batteryWarranty' },
     { label: 'Peak Power', key: 'peakPower' }
   ];
+
+  const specRows = specificationTitles && specificationTitles.length > 0 ? specificationTitles : defaultSpecRows;
 
   return (
     <section className="bg-[#F8F9F9] w-full py-16 px-4 md:px-[70px] mt-[80px]">
