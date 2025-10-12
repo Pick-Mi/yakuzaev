@@ -17,6 +17,7 @@ const DesignSection = ({ designFeatures = [] }: DesignSectionProps) => {
   const secondCard = designFeatures[1];
   const thirdCard = designFeatures[2];
   const fourthCard = designFeatures[3];
+  const fifthCard = designFeatures[4];
 
   return (
     <section className="bg-[#F8F9F9] w-full py-12 px-4">
@@ -100,13 +101,21 @@ const DesignSection = ({ designFeatures = [] }: DesignSectionProps) => {
               </div>
             </div>
 
-            {/* Smart Boot Space Card */}
+            {/* Fifth Design Card - Dynamic from Database */}
             <div className="bg-[#e8ebf0] h-[242px] flex-1 relative overflow-hidden p-8">
               <div className="flex flex-col gap-6">
-                <Box className="w-8 h-8 text-[#5d637d]" strokeWidth={1.5} />
+                {fifthCard?.image ? (
+                  <img src={fifthCard.image} alt={fifthCard.title || fifthCard.text} className="w-12 h-12 object-contain" />
+                ) : (
+                  <Box className="w-12 h-12 text-[#5d637d]" strokeWidth={1.5} />
+                )}
                 <div className="flex flex-col gap-3">
-                  <p className="font-inter font-medium text-[24px] text-[#5d637d]">Smart Boot Space</p>
-                  <p className="font-inter font-normal text-[20px] text-[#5d637d] opacity-60">Compact design, ample room</p>
+                  <p className="font-inter font-medium text-[24px] text-[#5d637d]">
+                    {fifthCard?.title || fifthCard?.text || 'Smart Boot Space'}
+                  </p>
+                  <p className="font-inter font-normal text-[20px] text-[#5d637d] opacity-60">
+                    {fifthCard?.subtitle || 'Compact design, ample room'}
+                  </p>
                 </div>
               </div>
             </div>
