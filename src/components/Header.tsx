@@ -117,7 +117,7 @@ const Header = () => {
 
   return (
     <>
-      <div className="fixed top-0 left-0 w-full z-50">
+      <div className="w-full z-50">
         <NotificationBar />
         <nav className={`w-full p-[13px] transition-all duration-300 bg-transparent ${isMenuOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
           <div className="relative h-8 w-full max-w-[1360px] mx-auto">
