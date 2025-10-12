@@ -117,31 +117,31 @@ const Header = () => {
 
   return (
     <>
-      <div className="fixed top-0 left-0 w-full z-50">
+      <div className="w-full">
         <NotificationBar />
-        <nav className={`w-full p-[13px] transition-all duration-300 ${shouldShowFixedHeader ? 'bg-white' : 'bg-transparent'} ${isMenuOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
+        <nav className={`w-full p-[13px] bg-white ${isMenuOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
           <div className="relative h-8 w-full max-w-[1360px] mx-auto">
             {/* Logo */}
             <Link to="/" className="absolute left-0 top-0 px-4 py-2 h-8 flex items-center justify-center">
               {logoUrl ? (
                 <img src={logoUrl} alt="Logo" className="h-8 w-auto object-contain" />
               ) : (
-                <span className={`font-medium text-sm ${shouldShowFixedHeader ? 'text-foreground' : 'text-white'}`}>LOGO</span>
+                <span className="font-medium text-sm text-foreground">LOGO</span>
               )}
             </Link>
             
             {/* Navigation Menu - Desktop */}
             <div className="absolute left-1/2 top-2 -translate-x-1/2 hidden md:flex gap-9 items-center">
-              <Link to="/products" className={`text-[14px] font-sans leading-normal hover:opacity-80 transition-opacity whitespace-nowrap font-medium ${shouldShowFixedHeader ? 'text-black' : 'text-white'}`}>
+              <Link to="/products" className="text-[14px] font-sans leading-normal hover:opacity-80 transition-opacity whitespace-nowrap font-medium text-black">
                 Products
               </Link>
-              <Link to="/" className={`text-[14px] font-sans leading-normal hover:opacity-80 transition-opacity whitespace-nowrap font-normal ${shouldShowFixedHeader ? 'text-black' : 'text-white'}`}>
+              <Link to="/" className="text-[14px] font-sans leading-normal hover:opacity-80 transition-opacity whitespace-nowrap font-normal text-black">
                 Yakuza Store
               </Link>
-              <Link to="/" className={`text-[14px] font-sans leading-normal hover:opacity-80 transition-opacity whitespace-nowrap font-normal ${shouldShowFixedHeader ? 'text-black' : 'text-white'}`}>
+              <Link to="/" className="text-[14px] font-sans leading-normal hover:opacity-80 transition-opacity whitespace-nowrap font-normal text-black">
                 Become a Dealer
               </Link>
-              <Link to="/" className={`text-[14px] font-sans leading-normal hover:opacity-80 transition-opacity whitespace-nowrap font-normal ${shouldShowFixedHeader ? 'text-black' : 'text-white'}`}>
+              <Link to="/" className="text-[14px] font-sans leading-normal hover:opacity-80 transition-opacity whitespace-nowrap font-normal text-black">
                 About Us
               </Link>
             </div>
@@ -150,7 +150,7 @@ const Header = () => {
             <div className="absolute right-0 top-1 flex gap-[15px] items-center">
               <Link to={user ? "/cart" : "/auth"} onClick={handleCartClick} state={{ showSignUp: true, from: location }}>
                 <Button variant="ghost" size="icon" className="relative hover:bg-black/10 h-auto p-1 text-black">
-                  <img src={cartIcon} alt="Cart" className={`w-[22px] h-[22px] ${shouldShowFixedHeader ? 'invert' : ''}`} />
+                  <img src={cartIcon} alt="Cart" className="w-[22px] h-[22px] invert" />
                   {itemCount > 0 && (
                     <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs">
                       {itemCount}
@@ -160,7 +160,7 @@ const Header = () => {
               </Link>
               <Link to={user ? "/profile" : "/auth"} state={{ showSignUp: true, from: location }}>
                 <Button variant="ghost" size="icon" className="hover:bg-black/10 h-auto p-1 text-black">
-                  <img src={profileIcon} alt="Profile" className={`w-[22px] h-[22px] ${shouldShowFixedHeader ? 'invert' : ''}`} />
+                  <img src={profileIcon} alt="Profile" className="w-[22px] h-[22px] invert" />
                 </Button>
               </Link>
               <Button 
@@ -169,7 +169,7 @@ const Header = () => {
                 className="hover:bg-black/10 h-auto p-1 text-black"
                 onClick={handleMenuClick}
               >
-                <img src={menuIcon} alt="Menu" className={`w-[22px] h-[22px] ${shouldShowFixedHeader ? 'invert' : ''}`} />
+                <img src={menuIcon} alt="Menu" className="w-[22px] h-[22px] invert" />
               </Button>
             </div>
           </div>
