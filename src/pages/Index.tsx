@@ -4,7 +4,6 @@ import ProductShowcase from "@/components/ProductShowcase";
 import FearlessDesign from "@/components/FearlessDesign";
 import PromoSection from "@/components/PromoSection";
 import BlogSection from "@/components/BlogSection";
-import ProductListingSection from "@/components/ProductListingSection";
 import Footer from "@/components/Footer";
 
 const Index = () => {
@@ -15,7 +14,6 @@ const Index = () => {
       <ProductShowcase />
       <FearlessDesign />
       <PromoSection />
-      <ProductListingSection />
       <BlogSection />
       <Footer />
     </div>

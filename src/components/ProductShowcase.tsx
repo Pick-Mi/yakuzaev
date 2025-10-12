@@ -1,14 +1,16 @@
 import { useState, useEffect, useRef } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useCart } from "@/hooks/useCart";
+import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 
 const ProductShowcase = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("Registration Model");
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const { addToCart } = useCart();
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -98,23 +100,24 @@ const ProductShowcase = () => {
   };
 
   return (
-    <section className="bg-[#F8F9F9] w-full py-16 px-4 md:px-[70px]">
-      <div className="max-w-[1400px] mx-auto">
-        <h2 className="font-inter font-medium text-[48px] text-[#000000] mb-12">
+    <section className="relative bg-[#F8F9F9] py-20">
+      <div className="mx-auto px-[70px]">
+        {/* Header */}
+        <h2 className="font-['Inter'] font-medium text-[48px] text-[#12141d] mb-20">
           Experience the Next Generation of Riding
         </h2>
 
-        {/* Category Tabs */}
-        <div className="flex items-center gap-4 mb-12">
-          <div className="flex gap-2">
+        {/* Tab Navigation */}
+        <div className="flex items-center justify-between mb-20">
+          <div className="flex gap-5">
             {["Registration Model", "Family", "Business"].map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`px-6 py-3 font-inter font-medium text-[16px] transition-colors ${
+                className={`px-5 py-[13px] font-['Poppins'] text-[16px] transition-colors ${
                   activeTab === tab
-                    ? 'bg-[#000000] text-white'
-                    : 'bg-white text-[#000000] hover:bg-gray-100'
+                    ? "bg-[#12141d] text-white opacity-90 shadow-[3px_4px_16px_0px_rgba(0,0,0,0.1)]"
+                    : "bg-white text-[#12141d] opacity-90"
                 }`}
               >
                 {tab}
@@ -122,31 +125,27 @@ const ProductShowcase = () => {
             ))}
           </div>
 
-          {/* Navigation Arrows */}
-          <div className="flex gap-2 ml-auto">
+          <div className="flex gap-[25px] items-center">
             <button 
               onClick={scrollLeft}
-              className="w-10 h-10 flex items-center justify-center border border-gray-300 hover:bg-gray-100 transition-colors"
+              className="bg-[rgba(0,0,0,0.03)] p-[12.086px] flex items-center gap-[12.086px] hover:bg-[rgba(0,0,0,0.08)] transition-colors"
               aria-label="Scroll left"
             >
-              <ChevronLeft className="w-5 h-5" />
+              <ChevronDown className="w-[29px] h-[29px] text-[#4D4D4D] rotate-90" />
             </button>
             <button 
               onClick={scrollRight}
-              className="w-10 h-10 flex items-center justify-center border border-gray-300 hover:bg-gray-100 transition-colors"
+              className="bg-[rgba(0,0,0,0.03)] p-[12.086px] flex items-center gap-[12.086px] hover:bg-[rgba(0,0,0,0.08)] transition-colors"
               aria-label="Scroll right"
             >
-              <ChevronRight className="w-5 h-5" />
+              <ChevronDown className="w-[29px] h-[29px] text-[#4D4D4D] -rotate-90" />
             </button>
           </div>
         </div>
 
-        {/* Product Grid - Horizontal Scroll */}
-        <div 
-          ref={scrollContainerRef}
-          className="overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
-        >
-          <div className="flex gap-6 pb-4">
+        {/* Product Cards Horizontal Scroll */}
+        <div className="overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]" ref={scrollContainerRef}>
+          <div className="flex gap-[35px] pb-4">
             {loading ? (
               <div className="w-full text-center py-8">
                 <p className="text-[#212121] opacity-80">Loading products...</p>
@@ -157,63 +156,95 @@ const ProductShowcase = () => {
               </div>
             ) : (
               products.map((product: any) => (
-                <div key={product.id} className="bg-white rounded-lg overflow-hidden flex flex-col flex-shrink-0 w-[380px]">
+                <div
+                  key={product.id}
+                  className="bg-white flex-shrink-0 w-[403.788px] flex flex-col gap-[25px] pb-5"
+                >
                   {/* Product Image */}
-                  <div className="w-full h-[300px] bg-gradient-to-b from-[#E8E8E8] to-[#F5F5F5] flex items-center justify-center overflow-hidden">
-                    {product.image ? (
+                  <div className="w-full h-[270px] bg-[#b7b8b8] flex items-center justify-center overflow-hidden">
+                    {product.image && (
                       <img
                         src={product.image}
                         alt={product.name}
                         className="w-full h-full object-cover"
                       />
-                    ) : (
-                      <span className="text-gray-400 text-sm">{product.name}</span>
                     )}
                   </div>
 
-                  {/* Product Info */}
-                  <div className="p-6 flex flex-col gap-4 flex-1">
-                    <div>
-                      <h3 className="font-inter font-semibold text-[28px] text-[#000000] mb-3">
-                        {product.name}
-                      </h3>
-                      <p className="font-inter font-normal text-[14px] text-[#666666]">
-                        {product.feature1 && product.feature2 
-                          ? `${product.feature1} | ${product.feature2}`
-                          : product.feature1 || product.feature2 || '65 km Range | 40 Km/h Speed'}
-                      </p>
+                  {/* Product Details */}
+                  <div className="px-[26px] flex flex-col gap-[24.621px]">
+                    <div className="flex flex-col gap-[25px]">
+                      {/* Title & Specs */}
+                      <div className="flex flex-col gap-[13.688px]">
+                        <h3 className="font-['Poppins'] font-semibold text-[24px] text-[#212121]">
+                          {product.name}
+                        </h3>
+                        <div className="flex gap-[13.688px] items-center">
+                          {product.feature1 && (
+                            <p className="font-['Poppins'] text-[15.758px] text-[#212121] opacity-80">
+                              {product.feature1}
+                            </p>
+                          )}
+                          {product.feature1 && product.feature2 && (
+                            <div className="w-[1.24px] h-[19.288px] bg-[#212121] opacity-80" />
+                          )}
+                          {product.feature2 && (
+                            <p className="font-['Poppins'] text-[15.758px] text-[#212121] opacity-80">
+                              {product.feature2}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Divider */}
+                      <div className="w-full h-[1.24px] bg-black opacity-10" />
+
+                      {/* Price */}
+                      <div className="flex flex-col gap-[8.891px]">
+                        <p className="font-['Poppins'] text-[15.758px] text-[#212121] opacity-80">
+                          Starting Price
+                        </p>
+                        <p className="font-['Poppins']">
+                          <span className="text-[23.636px] font-semibold text-[#212121]">
+                            ₹{product.price.toLocaleString('en-IN')}
+                          </span>
+                          <span className="text-[17.727px] text-[rgba(33,33,33,0.75)]">
+                            {" "}/ showroom price
+                          </span>
+                        </p>
+                      </div>
                     </div>
 
-                    <div className="mt-auto">
-                      <p className="font-inter font-normal text-[14px] text-[#666666] mb-2">
-                        Starting Price
-                      </p>
-                      <p className="font-inter font-bold text-[24px] text-[#000000] mb-4">
-                        ₹{product.price.toLocaleString('en-IN')}{' '}
-                        <span className="font-normal text-[14px] text-[#666666]">/ showroom price</span>
-                      </p>
-
-                      <div className="flex flex-col gap-[15px]">
-                        <button
-                          onClick={() => handleBookNow(product)}
-                          className="bg-black text-white h-[55px] px-[23px] py-[13px] font-['Poppins'] font-medium text-[16px] w-full hover:bg-black/90 transition-colors"
-                        >
-                          Book Now
-                        </button>
-                        <Link to={`/product/${product.id}`} className="w-full">
-                          <button
-                            className="bg-[#f8f9f9] text-black h-[55px] px-[50px] py-[13px] font-['Inter'] font-medium text-[14px] w-full hover:bg-[#e8e9e9] transition-colors"
-                          >
-                            Explore {product.name}
-                          </button>
-                        </Link>
-                      </div>
+                    {/* Action Buttons */}
+                    <div className="flex flex-col gap-[15px] w-full">
+                      <button
+                        onClick={() => handleBookNow(product)}
+                        className="bg-black text-white h-[55px] px-[23px] py-[13px] font-['Poppins'] font-medium text-[16px] w-full hover:bg-black/90 transition-colors"
+                      >
+                        Book Now
+                      </button>
+                      <button
+                        onClick={() => handleExplore(product)}
+                        className="bg-[#f8f9f9] text-black h-[55px] px-[50px] py-[13px] font-['Inter'] font-medium text-[14px] w-full hover:bg-[#e8e9e9] transition-colors"
+                      >
+                        Explore {product.name}
+                      </button>
                     </div>
                   </div>
                 </div>
               ))
             )}
           </div>
+        </div>
+
+        {/* Explore CTA */}
+        <div className="flex justify-center mt-12">
+          <button
+            onClick={() => navigate('/products')}
+            className="bg-black text-white h-[55px] px-[50px] py-[13px] font-['Poppins'] font-medium text-[16px] hover:bg-black/90 transition-colors"
+          >
+            Explore Products
+          </button>
         </div>
       </div>
     </section>
