@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { useState } from 'react';
 
 interface VariantSpec {
@@ -42,74 +43,79 @@ const VariantsPricingSection = ({ onVariantSelect, variants: propVariants, speci
         </h2>
 
         <div className="bg-white rounded-lg overflow-hidden">
-          {/* Variant Names Header */}
-          <div className="grid grid-cols-4 border-b border-gray-200">
-            <div className="p-6"></div>
-            {variants.map((variant, index) => (
-              <div key={index} className="p-6 text-center border-l border-gray-200">
-                <h3 className="font-inter font-semibold text-[18px] text-[#000000]">
-                  {variant.name}
-                </h3>
+          <ScrollArea className="w-full">
+            <div className="min-w-max">
+              {/* Variant Names Header */}
+              <div className="flex border-b border-gray-200">
+                <div className="p-6 min-w-[250px] flex-shrink-0"></div>
+                {variants.map((variant, index) => (
+                  <div key={index} className="p-6 text-center border-l border-gray-200 min-w-[200px] flex-shrink-0">
+                    <h3 className="font-inter font-semibold text-[18px] text-[#000000]">
+                      {variant.name}
+                    </h3>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
 
-          {/* Specification Rows */}
-          {specRows.map((spec, rowIndex) => (
-            <div 
-              key={rowIndex} 
-              className={`grid grid-cols-4 ${rowIndex !== specRows.length - 1 ? 'border-b border-gray-200' : ''}`}
-            >
-              <div className="p-6 font-inter font-medium text-[16px] text-[#000000]">
-                {rowIndex + 1}. {spec.label}
-              </div>
-              {variants.map((variant, colIndex) => (
+              {/* Specification Rows */}
+              {specRows.map((spec, rowIndex) => (
                 <div 
-                  key={colIndex} 
-                  className="p-6 text-center border-l border-gray-200 flex items-center justify-center"
+                  key={rowIndex} 
+                  className={`flex ${rowIndex !== specRows.length - 1 ? 'border-b border-gray-200' : ''}`}
                 >
-                  {spec.key === 'colors' ? (
-                    <div className="flex gap-2 justify-center">
-                      {variant.colors.map((color, colorIndex) => (
-                        <div
-                          key={colorIndex}
-                          className="w-6 h-6 rounded"
-                          style={{ backgroundColor: color, border: color === '#FFFFFF' ? '1px solid #E0E0E0' : 'none' }}
-                        />
-                      ))}
+                  <div className="p-6 font-inter font-medium text-[16px] text-[#000000] min-w-[250px] flex-shrink-0">
+                    {rowIndex + 1}. {spec.label}
+                  </div>
+                  {variants.map((variant, colIndex) => (
+                    <div 
+                      key={colIndex} 
+                      className="p-6 text-center border-l border-gray-200 flex items-center justify-center min-w-[200px] flex-shrink-0"
+                    >
+                      {spec.key === 'colors' ? (
+                        <div className="flex gap-2 justify-center">
+                          {variant.colors.map((color, colorIndex) => (
+                            <div
+                              key={colorIndex}
+                              className="w-6 h-6 rounded"
+                              style={{ backgroundColor: color, border: color === '#FFFFFF' ? '1px solid #E0E0E0' : 'none' }}
+                            />
+                          ))}
+                        </div>
+                      ) : (
+                        <span className="font-inter font-normal text-[16px] text-[#000000]">
+                          {variant[spec.key as keyof VariantSpec]}
+                        </span>
+                      )}
                     </div>
-                  ) : (
-                    <span className="font-inter font-normal text-[16px] text-[#000000]">
-                      {variant[spec.key as keyof VariantSpec]}
-                    </span>
-                  )}
+                  ))}
                 </div>
               ))}
-            </div>
-          ))}
 
-          {/* Select Buttons Row */}
-          <div className="grid grid-cols-4 bg-white pt-6 pb-8">
-            <div className="p-6"></div>
-            {variants.map((variant, index) => (
-              <div key={index} className="p-6 flex items-center justify-center border-l border-gray-200">
-                <Button 
-                  variant="outline" 
-                  onClick={() => {
-                    setSelectedVariantIndex(index);
-                    onVariantSelect?.(variant);
-                  }}
-                  className={`w-full max-w-[160px] h-12 font-inter font-medium text-[16px] border-2 transition-colors ${
-                    selectedVariantIndex === index 
-                      ? 'bg-[#000000] text-white border-[#000000]' 
-                      : 'border-[#000000] hover:bg-[#000000] hover:text-white'
-                  }`}
-                >
-                  {selectedVariantIndex === index ? 'Selected' : 'Select'}
-                </Button>
+              {/* Select Buttons Row */}
+              <div className="flex bg-white pt-6 pb-8">
+                <div className="p-6 min-w-[250px] flex-shrink-0"></div>
+                {variants.map((variant, index) => (
+                  <div key={index} className="p-6 flex items-center justify-center border-l border-gray-200 min-w-[200px] flex-shrink-0">
+                    <Button 
+                      variant="outline" 
+                      onClick={() => {
+                        setSelectedVariantIndex(index);
+                        onVariantSelect?.(variant);
+                      }}
+                      className={`w-full max-w-[160px] h-12 font-inter font-medium text-[16px] border-2 transition-colors ${
+                        selectedVariantIndex === index 
+                          ? 'bg-[#000000] text-white border-[#000000]' 
+                          : 'border-[#000000] hover:bg-[#000000] hover:text-white'
+                      }`}
+                    >
+                      {selectedVariantIndex === index ? 'Selected' : 'Select'}
+                    </Button>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+            </div>
+            <ScrollBar orientation="horizontal" />
+          </ScrollArea>
         </div>
       </div>
     </section>
