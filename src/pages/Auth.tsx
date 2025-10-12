@@ -35,6 +35,7 @@ const Auth = () => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
+  const [showProfileSuccessDialog, setShowProfileSuccessDialog] = useState(false);
   
   const { signInWithPhone, verifyOTP, signInWithEmail, signUpWithEmail, signInWithGoogle, user } = useAuth();
   const { toast } = useToast();
@@ -192,11 +193,8 @@ const Auth = () => {
 
       if (error) throw error;
 
-      toast({
-        title: "Welcome!",
-        description: "Your profile has been saved successfully.",
-      });
-      navigate(from, { replace: true });
+      // Show success dialog instead of navigating directly
+      setShowProfileSuccessDialog(true);
     } catch (error: any) {
       toast({
         title: "Error",
@@ -305,6 +303,45 @@ const Auth = () => {
                 className="w-full h-12 bg-orange-500 hover:bg-orange-600 text-white text-base font-medium"
               >
                 Set up your basic information
+              </Button>
+            </AlertDialogFooter>
+          </div>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Profile Success Dialog */}
+      <AlertDialog open={showProfileSuccessDialog} onOpenChange={setShowProfileSuccessDialog}>
+        <AlertDialogContent className="max-w-md p-8">
+          <div className="flex flex-col items-center text-center space-y-6">
+            {/* Success Icon */}
+            <div className="relative">
+              <div className="w-32 h-32 rounded-full bg-green-100 flex items-center justify-center">
+                <div className="w-24 h-24 rounded-full bg-green-500 flex items-center justify-center">
+                  <CheckCircle2 className="w-12 h-12 text-white" strokeWidth={3} />
+                </div>
+              </div>
+            </div>
+            
+            {/* Title */}
+            <AlertDialogHeader>
+              <AlertDialogTitle className="text-3xl font-normal text-gray-900">
+                Successfully
+              </AlertDialogTitle>
+              <AlertDialogDescription className="text-base text-gray-600 pt-2">
+                Your journey with Yakuza starts here – successfully signed up.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            
+            {/* CTA Button */}
+            <AlertDialogFooter className="w-full pt-4">
+              <Button
+                onClick={() => {
+                  setShowProfileSuccessDialog(false);
+                  navigate(from, { replace: true });
+                }}
+                className="w-full h-12 bg-orange-500 hover:bg-orange-600 text-white text-base font-medium"
+              >
+                Explore Product
               </Button>
             </AlertDialogFooter>
           </div>
