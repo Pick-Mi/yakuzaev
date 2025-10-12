@@ -3,6 +3,7 @@ interface Benefit {
   text?: string;
   title?: string;
   subtitle?: string;
+  description?: string;
 }
 
 interface FeaturesAndBenefitsSectionProps {
@@ -54,7 +55,7 @@ const FeaturesAndBenefitsSection = ({ benefits = [] }: FeaturesAndBenefitsSectio
                 </p>
                 
                 <p className="font-inter font-normal text-base text-[#666666]">
-                  {benefit.subtitle || 'Benefit description'}
+                  {benefit.description || benefit.subtitle || 'Benefit description'}
                 </p>
               </div>
             </div>
