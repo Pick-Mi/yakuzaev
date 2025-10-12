@@ -33,7 +33,7 @@ const ProductShowcase = () => {
         // Fetch products
         let productsQuery = (supabase as any)
           .from('products')
-          .select('id, name, price, image_url, images, description, variants, is_active, thumbnail, features, feature1, feature2, category_id')
+          .select('id, name, price, image_url, images, description, is_active, thumbnail, features, feature1, feature2, category_id')
           .eq('is_active', true)
           .order('created_at', { ascending: false });
 
@@ -69,7 +69,6 @@ const ProductShowcase = () => {
             price: product.price,
             image: imageUrl,
             description: product.description,
-            variants: product.variants,
             features: product.features || [],
             feature1: product.feature1,
             feature2: product.feature2
@@ -96,7 +95,7 @@ const ProductShowcase = () => {
     navigate('/product-config', {
       state: {
         product,
-        selectedVariant: product.variants?.[0] || null,
+        selectedVariant: null,
         quantity: 1,
         from: 'Home'
       }

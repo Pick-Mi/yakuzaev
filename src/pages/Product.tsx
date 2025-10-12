@@ -45,7 +45,7 @@ const Product = () => {
         // Using any type to bypass the current type limitations
         const response = await (supabase as any)
           .from('products')
-          .select('id, name, price, image_url, images, description, variants, is_active, preview_section, features, visual_features, design_features, benefits, promo_card, videos, accessories, qa_section')
+          .select('id, name, price, image_url, images, description, is_active, preview_section, features, visual_features, design_features, benefits, promo_card, videos, accessories, qa_section')
           .eq('id', id)
           .eq('is_active', true)
           .single();
@@ -63,15 +63,8 @@ const Product = () => {
             parsedImages = [];
           }
 
-          // Parse variants if it's a JSON string
-          let parsedVariants = [];
-          try {
-            parsedVariants = typeof response.data.variants === 'string' 
-              ? JSON.parse(response.data.variants) 
-              : response.data.variants || [];
-          } catch (e) {
-            parsedVariants = [];
-          }
+          // Set empty variants array since column doesn't exist
+          const parsedVariants = [];
 
           // Parse preview_section if it's a JSON string
           let parsedPreviewSection = {};
