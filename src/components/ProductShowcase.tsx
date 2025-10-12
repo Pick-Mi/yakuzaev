@@ -7,22 +7,46 @@ import { ChevronDown } from "lucide-react";
 
 const ProductShowcase = () => {
   const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState("Registration Model");
+  const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const { addToCart } = useCart();
   const navigate = useNavigate();
   const { toast } = useToast();
 
   useEffect(() => {
-    const fetchProducts = async () => {
+    const fetchCategoriesAndProducts = async () => {
       try {
-        const response = await (supabase as any)
+        // Fetch categories
+        const categoriesResponse = await (supabase as any)
+          .from('categories')
+          .select('id, name, slug')
+          .order('created_at', { ascending: false });
+
+        if (categoriesResponse.error) throw categoriesResponse.error;
+
+        const fetchedCategories = categoriesResponse.data || [];
+        setCategories(fetchedCategories);
+        
+        // Set first category as active by default
+        if (fetchedCategories.length > 0 && !activeCategory) {
+          setActiveCategory(fetchedCategories[0].id);
+        }
+
+        // Fetch products
+        let productsQuery = (supabase as any)
           .from('products')
-          .select('id, name, price, image_url, images, description, variants, is_active, thumbnail, features, feature1, feature2')
+          .select('id, name, price, image_url, images, description, variants, is_active, thumbnail, features, feature1, feature2, category_id')
           .eq('is_active', true)
-          .order('created_at', { ascending: false })
-          .limit(4);
+          .order('created_at', { ascending: false });
+
+        // Filter by category if one is selected
+        if (activeCategory) {
+          productsQuery = productsQuery.eq('category_id', activeCategory);
+        }
+
+        const response = await productsQuery.limit(10);
 
         if (response.error) throw response.error;
 
@@ -58,7 +82,7 @@ const ProductShowcase = () => {
 
         setProducts(formattedProducts);
       } catch (error) {
-        console.error('Error fetching products:', error);
+        console.error('Error fetching data:', error);
         toast({
           title: "Error",
           description: "Failed to load products",
@@ -69,8 +93,8 @@ const ProductShowcase = () => {
       }
     };
 
-    fetchProducts();
-  }, [toast]);
+    fetchCategoriesAndProducts();
+  }, [toast, activeCategory]);
 
   const handleBookNow = (product: any) => {
     navigate('/product-config', {
@@ -110,17 +134,17 @@ const ProductShowcase = () => {
         {/* Tab Navigation */}
         <div className="flex items-center justify-between mb-20">
           <div className="flex gap-5">
-            {["Registration Model", "Family", "Business"].map((tab) => (
+            {categories.map((category: any) => (
               <button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
+                key={category.id}
+                onClick={() => setActiveCategory(category.id)}
                 className={`px-5 py-[13px] font-['Poppins'] text-[16px] transition-colors ${
-                  activeTab === tab
+                  activeCategory === category.id
                     ? "bg-[#12141d] text-white opacity-90 shadow-[3px_4px_16px_0px_rgba(0,0,0,0.1)]"
                     : "bg-white text-[#12141d] opacity-90"
                 }`}
               >
-                {tab}
+                {category.name}
               </button>
             ))}
           </div>
