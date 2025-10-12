@@ -125,9 +125,16 @@ const Auth = () => {
         return;
       }
 
-      // Check if user already has a complete profile
+      // Get the authenticated user session
       const { data: session } = await supabase.auth.getSession();
       if (session?.session?.user) {
+        // Update profile with phone number
+        await supabase
+          .from('profiles')
+          .update({ phone: fullPhone })
+          .eq('user_id', session.session.user.id);
+
+        // Check if user already has a complete profile
         const { data: profile } = await supabase
           .from('profiles')
           .select('first_name, last_name, email')
