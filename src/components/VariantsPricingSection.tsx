@@ -52,16 +52,8 @@ const VariantsPricingSection = ({ onVariantSelect, variants: propVariants, speci
 
   const variants = propVariants && propVariants.length > 0 ? propVariants : defaultVariants;
 
-  const defaultSpecRows = [
-    { label: 'Price', key: 'price' },
-    { label: 'Colour', key: 'colors' },
-    { label: 'Range', key: 'range' },
-    { label: 'kerb weight', key: 'kerbWeight' },
-    { label: 'Battery Warranty', key: 'batteryWarranty' },
-    { label: 'Peak Power', key: 'peakPower' }
-  ];
-
-  const specRows = specificationTitles && specificationTitles.length > 0 ? specificationTitles : defaultSpecRows;
+  // Only use specificationTitles from props (database), no defaults
+  const specRows = specificationTitles || [];
 
   return (
     <section className="bg-[#F8F9F9] w-full py-16 px-4 md:px-[70px] mt-[80px]">
