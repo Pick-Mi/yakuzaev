@@ -68,7 +68,7 @@ const DesignSection = ({ designFeatures = [] }: DesignSectionProps) => {
             <div className="bg-[#e8ebf0] h-[242px] flex-1 relative overflow-hidden p-8">
               <div className="flex flex-col gap-6">
                 {thirdCard?.image ? (
-                  <img src={thirdCard.image} alt={thirdCard.title || thirdCard.text} className="w-8 h-8 object-contain" />
+                  <img src={thirdCard.image} alt={thirdCard.title || thirdCard.text} className="w-12 h-12 object-contain" />
                 ) : (
                   <Box className="w-8 h-8 text-[#5d637d]" strokeWidth={1.5} />
                 )}
