@@ -104,40 +104,55 @@ const Auth = () => {
 
       if (error) {
         toast({
-          title: "Verification Error",
-          description: error.message,
+          title: "Incorrect OTP",
+          description: "The verification code you entered is incorrect. Please try again.",
           variant: "destructive",
         });
-      } else {
-        const { data: session } = await supabase.auth.getSession();
-        if (session?.session?.user) {
-          const { data: profile } = await supabase
-            .from('profiles')
-            .select('first_name, last_name')
-            .eq('user_id', session.session.user.id)
-            .single();
-
-          if (!profile || !profile.first_name) {
-            setFirstName(profile?.first_name || '');
-            setLastName(profile?.last_name || '');
-            setStep('profile');
-            setLoading(false);
-            return;
-          }
-        }
-
-        toast({
-          title: "Welcome back!",
-          description: "You have been signed in successfully.",
-        });
-        navigate(from, { replace: true });
+        setOtp(''); // Clear OTP input
+        setLoading(false);
+        return;
       }
+
+      // Check if profile exists
+      const { data: session } = await supabase.auth.getSession();
+      if (session?.session?.user) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('first_name, last_name')
+          .eq('user_id', session.session.user.id)
+          .single();
+
+        // If no first_name, show profile form
+        if (!profile || !profile.first_name) {
+          toast({
+            title: "OTP Verified Successfully! ✓",
+            description: "Please complete your profile to continue.",
+          });
+          setFirstName(profile?.first_name || '');
+          setLastName(profile?.last_name || '');
+          setStep('profile');
+          setLoading(false);
+          return;
+        }
+      }
+
+      // Show success toast
+      toast({
+        title: "OTP Verified Successfully! ✓",
+        description: "You have been signed in successfully.",
+      });
+
+      // Navigate after a short delay to let user see the success message
+      setTimeout(() => {
+        navigate(from, { replace: true });
+      }, 1000);
     } catch (error: any) {
       toast({
-        title: "Error",
+        title: "Verification Error",
         description: "An unexpected error occurred. Please try again.",
         variant: "destructive",
       });
+      setOtp(''); // Clear OTP input
     } finally {
       setLoading(false);
     }
