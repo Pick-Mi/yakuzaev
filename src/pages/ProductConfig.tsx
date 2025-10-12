@@ -120,7 +120,14 @@ const ProductConfig = () => {
     ? product.images 
     : [product.image];
 
-  const currentPrice = selectedVariant ? selectedVariant.price : product.price;
+  // Extract price from variant specifications or use product price
+  const getVariantPrice = (variant: any) => {
+    if (!variant) return product.price;
+    const priceSpec = variant.specifications?.find((s: any) => s.label === 'Price');
+    return priceSpec?.value ? parseFloat(priceSpec.value.replace(/[₹,]/g, '')) : variant.price || product.price;
+  };
+
+  const currentPrice = selectedVariant ? getVariantPrice(selectedVariant) : product.price;
   const bookingAmount = 999;
   const emiPerMonth = 999;
 
@@ -293,7 +300,7 @@ const ProductConfig = () => {
                           Starts at
                         </p>
                         <p className="font-['Poppins'] font-semibold text-[18px]">
-                          ₹{variant.price?.toLocaleString('en-IN')}
+                          ₹{getVariantPrice(variant)?.toLocaleString('en-IN')}
                         </p>
                       </div>
                     </button>
