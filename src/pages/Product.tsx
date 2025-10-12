@@ -45,7 +45,7 @@ const Product = () => {
         // Using any type to bypass the current type limitations
         const response = await (supabase as any)
           .from('products')
-          .select('id, name, price, image_url, images, description, variants, is_active, preview_section, features, visual_features, design_features, benefits, promo_card, videos, accessories, qa_section, specification_titles')
+          .select('id, name, price, image_url, images, description, variants, is_active, preview_section, features, visual_features, design_features, benefits, promo_card, videos, accessories, qa_section')
           .eq('id', id)
           .eq('is_active', true)
           .single();
@@ -166,19 +166,6 @@ const Product = () => {
             parsedQASection = [];
           }
 
-          // Parse specification_titles if it's a JSON string
-          let parsedSpecificationTitles = [];
-          try {
-            parsedSpecificationTitles = typeof response.data.specification_titles === 'string' 
-              ? JSON.parse(response.data.specification_titles) 
-              : response.data.specification_titles || [];
-            console.log('Specification Titles from DB:', response.data.specification_titles);
-            console.log('Parsed Specification Titles:', parsedSpecificationTitles);
-          } catch (e) {
-            console.error('Error parsing specification titles:', e);
-            parsedSpecificationTitles = [];
-          }
-
           const fetchedProduct = {
             id: response.data.id,
             name: response.data.name,
@@ -198,8 +185,7 @@ const Product = () => {
             promo_card: parsedPromoCard,
             videos: parsedVideos,
             accessories: parsedAccessories,
-            qa_section: parsedQASection,
-            specification_titles: parsedSpecificationTitles
+            qa_section: parsedQASection
           };
           setProduct(fetchedProduct);
           
