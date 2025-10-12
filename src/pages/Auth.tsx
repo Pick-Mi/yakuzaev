@@ -288,11 +288,7 @@ const Auth = () => {
     <div className="min-h-screen bg-background">
       <Header />
       <div className="min-h-[calc(100vh-200px)] bg-gradient-to-br from-background via-background to-accent/10 flex items-center justify-center p-4">
-        <div className="w-full max-w-md">
-        <Link to="/" className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground mb-8 transition-colors">
-          <ArrowLeft className="w-4 h-4" />
-          Back to store
-        </Link>
+         <div className="w-full max-w-md">
         
         <Card className="shadow-xl border-0 bg-gradient-card">
           <CardHeader className="space-y-2 text-center">
