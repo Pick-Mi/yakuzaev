@@ -445,49 +445,83 @@ const Auth = () => {
                 </form>
               </div>
             ) : (
-              <div className="space-y-6">
-                <form onSubmit={handleOTPSubmit} className="space-y-5">
-                  <div className="space-y-2">
-                    <Label htmlFor="otp" className="text-gray-700 text-sm">Verification Code</Label>
-                    <Input
-                      id="otp"
-                      type="text"
-                      placeholder="Enter 6-digit code"
-                      value={otp}
-                      onChange={(e) => setOtp(e.target.value)}
-                      className="h-12 bg-gray-50 border-gray-200 text-base text-center text-2xl tracking-widest"
-                      maxLength={6}
-                      required
-                    />
+              <div className="space-y-8">
+                <div className="space-y-3">
+                  <h2 className="text-2xl font-normal text-gray-900">Verify Phone Number</h2>
+                  <p className="text-gray-600 text-sm">
+                    Check Your SMS messages. We've sent you the PIN at {countryCode}{phoneNumber.substring(0, 3)}******{phoneNumber.substring(phoneNumber.length - 2)}
+                  </p>
+                  <button
+                    type="button"
+                    className="text-blue-600 text-sm font-medium hover:underline"
+                    onClick={() => setStep('phone')}
+                  >
+                    Change Mobile Number
+                  </button>
+                </div>
+
+                <form onSubmit={handleOTPSubmit} className="space-y-6">
+                  <div className="space-y-3">
+                    <Label htmlFor="otp" className="text-gray-700 text-sm font-medium">OTP</Label>
+                    <div className="flex gap-3">
+                      {[0, 1, 2, 3].map((index) => (
+                        <div key={index} className="flex-1">
+                          <Input
+                            type="text"
+                            maxLength={1}
+                            value={otp[index] || ''}
+                            onChange={(e) => {
+                              const value = e.target.value;
+                              if (value.match(/^[0-9]$/)) {
+                                const newOtp = otp.split('');
+                                newOtp[index] = value;
+                                setOtp(newOtp.join(''));
+                                // Auto-focus next input
+                                if (index < 3 && e.target.parentElement?.parentElement) {
+                                  const nextInput = e.target.parentElement.parentElement.children[index + 1]?.querySelector('input') as HTMLInputElement;
+                                  nextInput?.focus();
+                                }
+                              }
+                            }}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Backspace' && !otp[index] && index > 0 && e.target instanceof HTMLInputElement) {
+                                const prevInput = (e.target.parentElement?.parentElement?.children[index - 1] as HTMLElement)?.querySelector('input') as HTMLInputElement;
+                                prevInput?.focus();
+                              }
+                            }}
+                            className="w-full h-12 text-center text-xl bg-gray-50 border-gray-200"
+                            required={index === 0}
+                          />
+                        </div>
+                      ))}
+                    </div>
                   </div>
                   
                   <Button 
                     type="submit" 
                     className="w-full h-12 bg-gray-900 hover:bg-gray-800 text-white text-base font-medium"
-                    disabled={loading}
+                    disabled={loading || otp.length < 4}
                   >
                     {loading ? 'Verifying...' : 'Verify'}
                   </Button>
                 </form>
 
-                <div className="text-center">
+                <div className="text-center text-sm text-gray-600">
+                  Didn't receive SMS?{' '}
                   <button
                     type="button"
-                    className="text-sm text-gray-600 hover:text-gray-900"
-                    onClick={() => setStep('phone')}
+                    className="text-blue-600 font-medium hover:underline"
+                    onClick={handlePhoneSubmit}
                   >
-                    use phone number instead
+                    Resend Code
                   </button>
                 </div>
 
-                <div className="text-center">
-                  <button
-                    type="button"
-                    className="text-sm text-gray-600 hover:text-gray-900"
-                    onClick={() => setStep('email')}
-                  >
-                    use email instead
-                  </button>
+                <div className="text-center text-xs text-gray-500 pt-4">
+                  By continuing, you agree to{' '}
+                  <Link to="/terms" className="underline hover:text-gray-700">T&C</Link>
+                  {' & '}
+                  <Link to="/privacy" className="underline hover:text-gray-700">Privacy Policy</Link>
                 </div>
               </div>
             )}
