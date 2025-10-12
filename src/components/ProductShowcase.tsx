@@ -266,15 +266,6 @@ const ProductShowcase = () => {
           </div>
         </div>
 
-        {/* Explore CTA */}
-        <div className="flex justify-center mt-12">
-          <button
-            onClick={() => navigate('/products')}
-            className="bg-black text-white h-[55px] px-[50px] py-[13px] font-['Poppins'] font-medium text-[16px] hover:bg-black/90 transition-colors"
-          >
-            Explore Products
-          </button>
-        </div>
       </div>
     </section>
   );
