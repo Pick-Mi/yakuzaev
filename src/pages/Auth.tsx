@@ -1,43 +1,20 @@
 import { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Separator } from '@/components/ui/separator';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
-import { ArrowLeft, Phone, Chrome, MessageSquare, Mail, Eye, EyeOff } from 'lucide-react';
+import { Chrome, Eye, EyeOff } from 'lucide-react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
-// Country codes data
-const countryCodes = [
-  { code: '+91', country: 'India', flag: '🇮🇳' },
-  { code: '+1', country: 'United States', flag: '🇺🇸' },
-  { code: '+44', country: 'United Kingdom', flag: '🇬🇧' },
-  { code: '+86', country: 'China', flag: '🇨🇳' },
-  { code: '+81', country: 'Japan', flag: '🇯🇵' },
-  { code: '+49', country: 'Germany', flag: '🇩🇪' },
-  { code: '+33', country: 'France', flag: '🇫🇷' },
-  { code: '+39', country: 'Italy', flag: '🇮🇹' },
-  { code: '+7', country: 'Russia', flag: '🇷🇺' },
-  { code: '+55', country: 'Brazil', flag: '🇧🇷' },
-  { code: '+61', country: 'Australia', flag: '🇦🇺' },
-  { code: '+82', country: 'South Korea', flag: '🇰🇷' },
-  { code: '+34', country: 'Spain', flag: '🇪🇸' },
-  { code: '+52', country: 'Mexico', flag: '🇲🇽' },
-  { code: '+31', country: 'Netherlands', flag: '🇳🇱' },
-];
-
 const Auth = () => {
   const location = useLocation();
   const shouldShowSignUp = location.state?.showSignUp || false;
   
-  const [authMethod, setAuthMethod] = useState<'email' | 'phone'>('phone');
   const [step, setStep] = useState<'phone' | 'otp' | 'email' | 'profile'>('phone');
   const [isSignUp, setIsSignUp] = useState(shouldShowSignUp);
   const [countryCode, setCountryCode] = useState('+91');
@@ -63,21 +40,14 @@ const Auth = () => {
   }, [user, navigate, from]);
 
   const validatePhoneNumber = (fullPhone: string): string | null => {
-    // Remove all non-digit characters except +
     const cleaned = fullPhone.replace(/[^\d+]/g, '');
-    
-    // Check if it starts with + and has at least 10 digits
     if (!cleaned.startsWith('+')) {
       return 'Phone number must start with country code (e.g., +1)';
     }
-    
-    // Extract digits only (without +)
     const digits = cleaned.substring(1);
-    
     if (digits.length < 10 || digits.length > 15) {
       return 'Phone number must be between 10-15 digits';
     }
-    
     return null;
   };
 
@@ -85,7 +55,6 @@ const Auth = () => {
     e.preventDefault();
     setLoading(true);
 
-    // Combine country code with phone number
     const fullPhone = countryCode + phoneNumber;
     const validationError = validatePhoneNumber(fullPhone);
     if (validationError) {
@@ -140,7 +109,6 @@ const Auth = () => {
           variant: "destructive",
         });
       } else {
-        // Check if profile exists
         const { data: session } = await supabase.auth.getSession();
         if (session?.session?.user) {
           const { data: profile } = await supabase
@@ -149,7 +117,6 @@ const Auth = () => {
             .eq('user_id', session.session.user.id)
             .single();
 
-          // If no first_name, show profile form
           if (!profile || !profile.first_name) {
             setFirstName(profile?.first_name || '');
             setLastName(profile?.last_name || '');
@@ -287,67 +254,66 @@ const Auth = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <div className="min-h-[calc(100vh-200px)] bg-gradient-to-br from-background via-background to-accent/10 flex items-center justify-center p-4">
-         <div className="w-full max-w-md">
+      <div className="flex min-h-[calc(100vh-120px)] mt-[120px]">
+        {/* Left Side - Dark Background */}
+        <div className="hidden lg:block lg:w-1/2 bg-black"></div>
         
-        <Card className="shadow-xl border-0 bg-gradient-card">
-          <CardHeader className="space-y-2 text-center">
-            <CardTitle className="text-2xl font-bold">
-              {step === 'email' ? (isSignUp ? 'Create Account' : 'Welcome Back') :
-               step === 'phone' ? 'Sign In with Phone' :
-               step === 'profile' ? 'Complete Your Profile' : 'Enter Verification Code'}
-            </CardTitle>
-            <CardDescription>
-              {step === 'email' ? (isSignUp ? 'Create your account to get started' : 'Sign in to your account') :
-               step === 'phone' ? 'Enter your mobile number to get started' :
-               step === 'profile' ? 'Please provide your name to continue' :
-               `We sent a verification code to ${countryCode}${phoneNumber}`}
-            </CardDescription>
-          </CardHeader>
-          
-          <CardContent className="space-y-6">
+        {/* Right Side - Auth Form */}
+        <div className="w-full lg:w-1/2 bg-white flex items-center justify-center p-8">
+          <div className="w-full max-w-md space-y-8">
+            {/* Title and Description */}
+            <div className="space-y-4">
+              <h1 className="text-4xl font-normal text-gray-900">
+                {step === 'email' ? (isSignUp ? 'Create Account' : 'Welcome Back') :
+                 step === 'phone' ? 'Create a Quick Note' :
+                 step === 'profile' ? 'Complete Your Profile' : 'Verify Your Number'}
+              </h1>
+              <p className="text-gray-600 text-base leading-relaxed">
+                {step === 'email' ? (isSignUp ? 'Create your account to get started' : 'Sign in to your account') :
+                 step === 'phone' ? "You don't have an account yet. Create one to save your notes securely across devices." :
+                 step === 'profile' ? 'Please provide your name to continue' :
+                 `We sent a verification code to ${countryCode}${phoneNumber}`}
+              </p>
+            </div>
+
+            {/* Forms */}
             {step === 'email' ? (
-              <>
-                {/* Google Sign In */}
+              <div className="space-y-6">
                 <Button
                   variant="outline"
-                  className="w-full"
+                  className="w-full h-12 text-base"
                   onClick={handleGoogleSignIn}
                   disabled={loading}
                 >
-                  <Chrome className="w-4 h-4" />
+                  <Chrome className="w-5 h-5 mr-2" />
                   Continue with Google
                 </Button>
                 
                 <div className="relative">
                   <div className="absolute inset-0 flex items-center">
-                    <Separator />
+                    <div className="w-full border-t border-gray-200"></div>
                   </div>
-                  <div className="relative flex justify-center text-xs uppercase">
-                    <span className="bg-card px-2 text-muted-foreground">Or</span>
+                  <div className="relative flex justify-center text-sm">
+                    <span className="bg-white px-4 text-gray-500">Or</span>
                   </div>
                 </div>
 
-                {/* Email/Password Form */}
-                <form onSubmit={handleEmailSubmit} className="space-y-4">
+                <form onSubmit={handleEmailSubmit} className="space-y-5">
                   <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
-                    <div className="relative">
-                      <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                      <Input
-                        id="email"
-                        type="email"
-                        placeholder="Enter your email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="pl-10"
-                        required
-                      />
-                    </div>
+                    <Label htmlFor="email" className="text-gray-700 text-sm">Email</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="Enter your email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="h-12 bg-gray-50 border-gray-200 text-base"
+                      required
+                    />
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="password">Password</Label>
+                    <Label htmlFor="password" className="text-gray-700 text-sm">Password</Label>
                     <div className="relative">
                       <Input
                         id="password"
@@ -355,24 +321,23 @@ const Auth = () => {
                         placeholder="Enter your password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        className="pr-10"
+                        className="h-12 bg-gray-50 border-gray-200 text-base pr-10"
                         required
                         minLength={6}
                       />
                       <button
                         type="button"
-                        className="absolute right-3 top-3 text-muted-foreground hover:text-foreground"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
                         onClick={() => setShowPassword(!showPassword)}
                       >
-                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                        {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                       </button>
                     </div>
                   </div>
                   
                   <Button 
                     type="submit" 
-                    variant="hero" 
-                    className="w-full" 
+                    className="w-full h-12 bg-gray-900 hover:bg-gray-800 text-white text-base font-medium"
                     disabled={loading}
                   >
                     {loading ? (isSignUp ? 'Creating Account...' : 'Signing In...') : 
@@ -380,13 +345,13 @@ const Auth = () => {
                   </Button>
                 </form>
 
-                <div className="text-center text-sm">
-                  <span className="text-muted-foreground">
+                <div className="text-center text-sm text-gray-600">
+                  <span>
                     {isSignUp ? 'Already have an account?' : "Don't have an account?"}
                   </span>{' '}
                   <button
                     type="button"
-                    className="text-primary hover:underline font-medium"
+                    className="text-gray-900 hover:underline font-medium"
                     onClick={() => setIsSignUp(!isSignUp)}
                   >
                     {isSignUp ? 'Sign In' : 'Sign Up'}
@@ -396,131 +361,30 @@ const Auth = () => {
                 <div className="text-center">
                   <button
                     type="button"
-                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                    className="text-sm text-gray-600 hover:text-gray-900"
                     onClick={() => setStep('phone')}
                   >
                     Or sign in with phone number
                   </button>
                 </div>
-              </>
+              </div>
             ) : step === 'phone' ? (
-              <>
-                
-                {/* Phone Number Form */}
-                <form onSubmit={handlePhoneSubmit} className="space-y-4">
+              <div className="space-y-6">
+                <form onSubmit={handlePhoneSubmit} className="space-y-6">
                   <div className="space-y-2">
-                    <Label htmlFor="phone">Phone Number</Label>
-                    <div className="flex gap-2">
-                      {/* Country Code Selector */}
-                      <Select value={countryCode} onValueChange={setCountryCode}>
-                        <SelectTrigger className="w-32 bg-background/50 backdrop-blur-sm border-input/50">
-                          <SelectValue placeholder="Country" />
-                        </SelectTrigger>
-                        <SelectContent className="bg-background/95 backdrop-blur-sm border-border/50 z-50">
-                          {countryCodes.map((country) => (
-                            <SelectItem key={country.code} value={country.code} className="hover:bg-accent/50">
-                              <div className="flex items-center gap-2">
-                                <span>{country.flag}</span>
-                                <span>{country.code}</span>
-                                <span className="text-xs text-muted-foreground">{country.country}</span>
-                              </div>
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      
-                      {/* Phone Number Input */}
-                      <div className="relative flex-1">
-                        <Phone className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                        <Input
-                          id="phone"
-                          type="tel"
-                          placeholder="1234567890"
-                          value={phoneNumber}
-                          onChange={(e) => setPhoneNumber(e.target.value)}
-                          className="pl-10"
-                          required
-                        />
+                    <div className="flex gap-3 items-center bg-gray-50 border border-gray-200 rounded-lg px-4 py-3">
+                      <div className="flex items-center gap-2 text-gray-900">
+                        <span className="text-xl">🇮🇳</span>
+                        <span className="font-medium">{countryCode}</span>
                       </div>
-                    </div>
-                    <p className="text-xs text-muted-foreground">
-                      We'll send you a verification code via SMS
-                    </p>
-                  </div>
-                  
-                  <Button 
-                    type="submit" 
-                    variant="hero" 
-                    className="w-full" 
-                    disabled={loading}
-                  >
-                    {loading ? 'Sending...' : 'Send Verification Code'}
-                  </Button>
-                </form>
-
-                <div className="text-center">
-                  <button
-                    type="button"
-                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                    onClick={() => setStep('email')}
-                  >
-                    Or sign in with email
-                  </button>
-                </div>
-              </>
-            ) : step === 'profile' ? (
-              <>
-                {/* Profile Completion Form */}
-                <form onSubmit={handleProfileSubmit} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="firstName">First Name *</Label>
-                    <Input
-                      id="firstName"
-                      type="text"
-                      placeholder="Enter your first name"
-                      value={firstName}
-                      onChange={(e) => setFirstName(e.target.value)}
-                      required
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="lastName">Last Name</Label>
-                    <Input
-                      id="lastName"
-                      type="text"
-                      placeholder="Enter your last name"
-                      value={lastName}
-                      onChange={(e) => setLastName(e.target.value)}
-                    />
-                  </div>
-                  
-                  <Button 
-                    type="submit" 
-                    variant="hero" 
-                    className="w-full" 
-                    disabled={loading || !firstName.trim()}
-                  >
-                    {loading ? 'Saving...' : 'Continue'}
-                  </Button>
-                </form>
-              </>
-            ) : (
-              <>
-                {/* OTP Verification Form */}
-                <form onSubmit={handleOTPSubmit} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="otp">Verification Code</Label>
-                    <div className="relative">
-                      <MessageSquare className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                      
                       <Input
-                        id="otp"
-                        type="text"
-                        placeholder="Enter 6-digit code"
-                        value={otp}
-                        onChange={(e) => setOtp(e.target.value)}
-                        className="pl-10 text-center text-lg tracking-widest"
-                        maxLength={6}
+                        id="phone"
+                        type="tel"
+                        placeholder="Enter Phone Number"
+                        value={phoneNumber}
+                        onChange={(e) => setPhoneNumber(e.target.value)}
+                        className="border-0 bg-transparent p-0 h-auto text-base focus-visible:ring-0 focus-visible:ring-offset-0"
                         required
                       />
                     </div>
@@ -528,43 +392,115 @@ const Auth = () => {
                   
                   <Button 
                     type="submit" 
-                    variant="hero" 
-                    className="w-full" 
-                    disabled={loading || otp.length !== 6}
+                    className="w-full h-12 bg-gray-900 hover:bg-gray-800 text-white text-base font-medium"
+                    disabled={loading}
                   >
-                    {loading ? 'Verifying...' : 'Verify Code'}
+                    {loading ? 'Sending...' : 'Next'}
                   </Button>
                 </form>
-                
-                {/* Back to phone */}
-                <div className="text-center text-sm">
-                  <span className="text-muted-foreground">
-                    Didn't receive the code?
-                  </span>{' '}
+
+                <div className="text-center text-xs text-gray-500">
+                  By continuing, you agree to{' '}
+                  <Link to="/terms" className="underline hover:text-gray-700">T&C</Link>
+                  {' & '}
+                  <Link to="/privacy" className="underline hover:text-gray-700">Privacy Policy</Link>
+                </div>
+
+                <div className="text-center">
                   <button
                     type="button"
-                    className="text-primary hover:underline font-medium"
-                    onClick={() => {
-                      setStep('phone');
-                      setOtp('');
-                      setPhoneNumber('');
-                    }}
+                    className="text-sm text-gray-600 hover:text-gray-900"
+                    onClick={() => setStep('email')}
                   >
-                    Try different number
+                    Or sign in with email
                   </button>
-                  {' or '}
+                </div>
+              </div>
+            ) : step === 'profile' ? (
+              <div className="space-y-6">
+                <form onSubmit={handleProfileSubmit} className="space-y-5">
+                  <div className="space-y-2">
+                    <Label htmlFor="firstName" className="text-gray-700 text-sm">First Name *</Label>
+                    <Input
+                      id="firstName"
+                      type="text"
+                      placeholder="Enter your first name"
+                      value={firstName}
+                      onChange={(e) => setFirstName(e.target.value)}
+                      className="h-12 bg-gray-50 border-gray-200 text-base"
+                      required
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="lastName" className="text-gray-700 text-sm">Last Name</Label>
+                    <Input
+                      id="lastName"
+                      type="text"
+                      placeholder="Enter your last name"
+                      value={lastName}
+                      onChange={(e) => setLastName(e.target.value)}
+                      className="h-12 bg-gray-50 border-gray-200 text-base"
+                    />
+                  </div>
+                  
+                  <Button 
+                    type="submit" 
+                    className="w-full h-12 bg-gray-900 hover:bg-gray-800 text-white text-base font-medium"
+                    disabled={loading}
+                  >
+                    {loading ? 'Saving...' : 'Continue'}
+                  </Button>
+                </form>
+              </div>
+            ) : (
+              <div className="space-y-6">
+                <form onSubmit={handleOTPSubmit} className="space-y-5">
+                  <div className="space-y-2">
+                    <Label htmlFor="otp" className="text-gray-700 text-sm">Verification Code</Label>
+                    <Input
+                      id="otp"
+                      type="text"
+                      placeholder="Enter 6-digit code"
+                      value={otp}
+                      onChange={(e) => setOtp(e.target.value)}
+                      className="h-12 bg-gray-50 border-gray-200 text-base text-center text-2xl tracking-widest"
+                      maxLength={6}
+                      required
+                    />
+                  </div>
+                  
+                  <Button 
+                    type="submit" 
+                    className="w-full h-12 bg-gray-900 hover:bg-gray-800 text-white text-base font-medium"
+                    disabled={loading}
+                  >
+                    {loading ? 'Verifying...' : 'Verify'}
+                  </Button>
+                </form>
+
+                <div className="text-center">
                   <button
                     type="button"
-                    className="text-primary hover:underline font-medium"
+                    className="text-sm text-gray-600 hover:text-gray-900"
+                    onClick={() => setStep('phone')}
+                  >
+                    use phone number instead
+                  </button>
+                </div>
+
+                <div className="text-center">
+                  <button
+                    type="button"
+                    className="text-sm text-gray-600 hover:text-gray-900"
                     onClick={() => setStep('email')}
                   >
                     use email instead
                   </button>
                 </div>
-              </>
+              </div>
             )}
-          </CardContent>
-        </Card>
+          </div>
         </div>
       </div>
       <Footer />
