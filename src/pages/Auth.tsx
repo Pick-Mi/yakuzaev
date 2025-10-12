@@ -406,15 +406,6 @@ const Auth = () => {
                   <Link to="/privacy" className="underline hover:text-gray-700">Privacy Policy</Link>
                 </div>
 
-                <div className="text-center">
-                  <button
-                    type="button"
-                    className="text-sm text-gray-600 hover:text-gray-900"
-                    onClick={() => setStep('email')}
-                  >
-                    Or sign in with email
-                  </button>
-                </div>
               </div>
             ) : step === 'profile' ? (
               <div className="space-y-6">
