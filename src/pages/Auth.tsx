@@ -254,7 +254,7 @@ const Auth = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <div className="flex min-h-[calc(100vh-120px)] mt-[120px]">
+      <div className="flex min-h-[calc(100vh-120px)] mt-[120px] p-[70px]">
         {/* Left Side - Dark Background */}
         <div className="hidden lg:block lg:w-1/2 bg-black"></div>
         
