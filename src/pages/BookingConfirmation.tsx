@@ -885,10 +885,14 @@ const BookingConfirmation = () => {
                     type="text"
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
-                    className="h-12 border border-border rounded"
+                    className={`h-12 border border-border rounded ${isVerified && firstName ? 'bg-muted' : ''}`}
                     required
                     disabled={!isVerified}
+                    readOnly={isVerified && firstName !== ''}
                   />
+                  {isVerified && firstName && (
+                    <p className="text-xs text-muted-foreground">Auto-filled from profile</p>
+                  )}
                 </div>
 
                 {/* Last Name */}
@@ -899,10 +903,14 @@ const BookingConfirmation = () => {
                     type="text"
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
-                    className="h-12 border border-border rounded"
+                    className={`h-12 border border-border rounded ${isVerified && lastName ? 'bg-muted' : ''}`}
                     required
                     disabled={!isVerified}
+                    readOnly={isVerified && lastName !== ''}
                   />
+                  {isVerified && lastName && (
+                    <p className="text-xs text-muted-foreground">Auto-filled from profile</p>
+                  )}
                 </div>
 
                 {/* Address */}
@@ -1094,14 +1102,18 @@ const BookingConfirmation = () => {
                       placeholder="alex@gmail.com"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="h-12 border border-border rounded"
+                      className={`h-12 border border-border rounded ${isVerified && email ? 'bg-muted' : ''}`}
                       required
                       disabled={!isVerified}
+                      readOnly={isVerified && email !== ''}
                     />
                     {email && email.includes('@') && (
                       <span className="absolute right-3 top-4 w-2 h-2 bg-green-500 rounded-full"></span>
                     )}
                   </div>
+                  {isVerified && email && (
+                    <p className="text-xs text-muted-foreground">Auto-filled from profile</p>
+                  )}
                   <p className="text-xs text-muted-foreground">
                     A confirmation email will be sent after checkout.
                   </p>
