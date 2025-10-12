@@ -253,10 +253,19 @@ const Product = () => {
 
   const handleVariantSelect = (variant: any) => {
     setVariantFromSection(variant);
-    setSelectedVariant({
+    // Update selectedVariant to match the structure expected by ProductBottomNav
+    const updatedVariant = {
       name: variant.name,
-      price: parseFloat(variant.price.replace(/[₹,]/g, '')) || 0
-    });
+      price: parseFloat(variant.price.replace(/[₹,]/g, '')) || 0,
+      range: variant.range,
+      kerbWeight: variant.kerbWeight,
+      batteryWarranty: variant.batteryWarranty,
+      peakPower: variant.peakPower
+    };
+    setSelectedVariant(updatedVariant);
+    
+    // Scroll to bottom to show the updated bar
+    window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
   };
 
   if (loading) {
