@@ -36,21 +36,17 @@ const VariantsPricingSection = ({ onVariantSelect, variants: propVariants, speci
   }
 
   return (
-    <section className="bg-[#F8F9F9] w-full py-16 px-4 md:px-[70px] mt-[80px]">
+    <section className="bg-white w-full py-16 px-4 md:px-[70px] mt-[80px]">
       <div className="max-w-[1400px] mx-auto">
-        <h2 className="font-inter font-medium text-[48px] text-[#000000] mb-12">
-          Variants with their prices
-        </h2>
-
-        <div className="bg-white rounded-lg overflow-hidden">
+        <div className="bg-[#F8F9F9] rounded-2xl overflow-hidden p-8 md:p-12">
           <ScrollArea className="w-full">
             <div className="min-w-max">
               {/* Variant Names Header */}
-              <div className="flex border-b border-gray-200">
-                <div className="p-6 min-w-[250px] flex-shrink-0"></div>
+              <div className="flex mb-12">
+                <div className="min-w-[200px] flex-shrink-0"></div>
                 {variants.map((variant, index) => (
-                  <div key={index} className="p-6 text-center border-l border-gray-200 min-w-[200px] flex-shrink-0">
-                    <h3 className="font-inter font-semibold text-[18px] text-[#000000]">
+                  <div key={index} className="text-center min-w-[280px] flex-shrink-0 px-4">
+                    <h3 className="font-inter font-semibold text-[20px] text-[#000000] uppercase tracking-wide">
                       {variant.name}
                     </h3>
                   </div>
@@ -61,15 +57,15 @@ const VariantsPricingSection = ({ onVariantSelect, variants: propVariants, speci
               {specRows.map((spec, rowIndex) => (
                 <div 
                   key={rowIndex} 
-                  className={`flex ${rowIndex !== specRows.length - 1 ? 'border-b border-gray-200' : ''}`}
+                  className="flex py-6"
                 >
-                  <div className="p-6 font-inter font-medium text-[16px] text-[#000000] min-w-[250px] flex-shrink-0">
-                    {rowIndex + 1}. {spec.label}
+                  <div className="min-w-[200px] flex-shrink-0 font-inter font-normal text-[16px] text-[#000000]">
+                    {spec.label}
                   </div>
                   {variants.map((variant, colIndex) => (
                     <div 
                       key={colIndex} 
-                      className="p-6 text-center border-l border-gray-200 flex items-center justify-center min-w-[200px] flex-shrink-0"
+                      className="text-center flex items-center justify-center min-w-[280px] flex-shrink-0 px-4"
                     >
                       {spec.key === 'colors' ? (
                         <div className="flex gap-2 justify-center">
@@ -92,20 +88,20 @@ const VariantsPricingSection = ({ onVariantSelect, variants: propVariants, speci
               ))}
 
               {/* Select Buttons Row */}
-              <div className="flex bg-white pt-6 pb-8">
-                <div className="p-6 min-w-[250px] flex-shrink-0"></div>
+              <div className="flex pt-12">
+                <div className="min-w-[200px] flex-shrink-0"></div>
                 {variants.map((variant, index) => (
-                  <div key={index} className="p-6 flex items-center justify-center border-l border-gray-200 min-w-[200px] flex-shrink-0">
+                  <div key={index} className="flex items-center justify-center min-w-[280px] flex-shrink-0 px-4">
                     <Button 
                       variant="outline" 
                       onClick={() => {
                         setSelectedVariantIndex(index);
                         onVariantSelect?.(variant);
                       }}
-                      className={`w-full max-w-[160px] h-12 font-inter font-medium text-[16px] border-2 transition-colors ${
+                      className={`w-full max-w-[160px] h-12 font-inter font-medium text-[16px] rounded-lg transition-all ${
                         selectedVariantIndex === index 
                           ? 'bg-[#000000] text-white border-[#000000]' 
-                          : 'border-[#000000] hover:bg-[#000000] hover:text-white'
+                          : 'bg-white text-[#000000] border-[#E0E0E0] hover:bg-[#F5F5F5]'
                       }`}
                     >
                       {selectedVariantIndex === index ? 'Selected' : 'Select'}
