@@ -2,9 +2,17 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+} from '@/components/ui/alert-dialog';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
-import { Chrome, Eye, EyeOff } from 'lucide-react';
+import { Chrome, Eye, EyeOff, CheckCircle2 } from 'lucide-react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
@@ -26,6 +34,7 @@ const Auth = () => {
   const [loading, setLoading] = useState(false);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
+  const [showSuccessDialog, setShowSuccessDialog] = useState(false);
   
   const { signInWithPhone, verifyOTP, signInWithEmail, signUpWithEmail, signInWithGoogle, user } = useAuth();
   const { toast } = useToast();
@@ -122,27 +131,22 @@ const Auth = () => {
           .eq('user_id', session.session.user.id)
           .single();
 
-        // If no first_name, show profile form
+        // If no first_name, show success dialog
         if (!profile || !profile.first_name) {
-          toast({
-            title: "OTP Verified Successfully! ✓",
-            description: "Please complete your profile to continue.",
-          });
           setFirstName(profile?.first_name || '');
           setLastName(profile?.last_name || '');
-          setStep('profile');
+          setShowSuccessDialog(true);
           setLoading(false);
           return;
         }
       }
 
-      // Show success toast
+      // If profile exists, show success and navigate
       toast({
         title: "OTP Verified Successfully! ✓",
         description: "You have been signed in successfully.",
       });
 
-      // Navigate after a short delay to let user see the success message
       setTimeout(() => {
         navigate(from, { replace: true });
       }, 1000);
@@ -267,6 +271,46 @@ const Auth = () => {
   };
 
   return (
+    <>
+      {/* Success Dialog */}
+      <AlertDialog open={showSuccessDialog} onOpenChange={setShowSuccessDialog}>
+        <AlertDialogContent className="max-w-md p-8">
+          <div className="flex flex-col items-center text-center space-y-6">
+            {/* Success Icon */}
+            <div className="relative">
+              <div className="w-32 h-32 rounded-full bg-green-100 flex items-center justify-center">
+                <div className="w-24 h-24 rounded-full bg-green-500 flex items-center justify-center">
+                  <CheckCircle2 className="w-12 h-12 text-white" strokeWidth={3} />
+                </div>
+              </div>
+            </div>
+            
+            {/* Title */}
+            <AlertDialogHeader>
+              <AlertDialogTitle className="text-3xl font-normal text-gray-900">
+                Successfully
+              </AlertDialogTitle>
+              <AlertDialogDescription className="text-base text-gray-600 pt-2">
+                Your mobile number {countryCode}{phoneNumber} has been verified successfully!
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            
+            {/* CTA Button */}
+            <AlertDialogFooter className="w-full pt-4">
+              <Button
+                onClick={() => {
+                  setShowSuccessDialog(false);
+                  setStep('profile');
+                }}
+                className="w-full h-12 bg-orange-500 hover:bg-orange-600 text-white text-base font-medium"
+              >
+                Set up your basic information
+              </Button>
+            </AlertDialogFooter>
+          </div>
+        </AlertDialogContent>
+      </AlertDialog>
+
     <div className="min-h-screen bg-background">
       <Header />
       <div className="flex min-h-[calc(100vh-120px)] mt-[120px] p-[70px]">
@@ -550,6 +594,7 @@ const Auth = () => {
       </div>
       <Footer />
     </div>
+    </>
   );
 };
 
