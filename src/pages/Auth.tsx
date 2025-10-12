@@ -131,7 +131,7 @@ const Auth = () => {
           .from('profiles')
           .select('first_name, last_name')
           .eq('user_id', session.session.user.id)
-          .single();
+          .maybeSingle();
 
         // If no first_name, show success dialog
         if (!profile || !profile.first_name) {
