@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
+import Hero from "@/components/Hero";
 import ProductCard from "@/components/ProductCard";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Filter, Grid, List } from "lucide-react";
@@ -70,38 +71,9 @@ const Products = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
+      <Hero />
       
-      {/* Hero Section */}
-      <section className="relative w-full h-[800px] bg-[#080f18]">
-        {/* Main Content Section */}
-        <div className="absolute flex flex-col gap-[35px] items-start left-[70px] top-[530px] w-[635px] max-lg:left-5 max-lg:right-5 max-lg:w-auto max-md:top-auto max-md:bottom-[200px]">
-          {/* Main Title */}
-          <h1 className="font-['Inter'] font-normal leading-[73px] text-white text-[48px] min-w-full w-min max-md:text-[32px] max-md:leading-tight">
-            Explore Our Collection
-          </h1>
-          
-          {/* Tagline */}
-          <p className="font-['Inter'] font-normal text-white/80 text-lg max-md:text-base">
-            Discover premium products designed for your lifestyle
-          </p>
-        </div>
-
-        {/* CTA Buttons Section */}
-        <div className="absolute flex flex-col gap-5 items-start left-[1081px] top-[610px] w-[289px] max-lg:left-auto max-lg:right-5 max-lg:top-auto max-lg:bottom-10">
-          <div className="flex gap-[25px] items-center w-full max-md:flex-col max-md:gap-4">
-            <button
-              onClick={() => document.getElementById('products-grid')?.scrollIntoView({ behavior: 'smooth' })}
-              className="bg-white flex gap-2.5 items-center justify-center overflow-hidden px-[23px] py-[13px] transition-all hover:bg-gray-100 active:scale-95 max-md:w-full"
-            >
-              <span className="font-['Poppins'] font-medium leading-normal text-black text-base whitespace-nowrap">
-                View All
-              </span>
-            </button>
-          </div>
-        </div>
-      </section>
-      
-      <main id="products-grid" className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
