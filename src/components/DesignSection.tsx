@@ -16,6 +16,7 @@ const DesignSection = ({ designFeatures = [] }: DesignSectionProps) => {
   const firstCard = designFeatures[0];
   const secondCard = designFeatures[1];
   const thirdCard = designFeatures[2];
+  const fourthCard = designFeatures[3];
 
   return (
     <section className="bg-[#F8F9F9] w-full py-12 px-4">
@@ -74,11 +75,20 @@ const DesignSection = ({ designFeatures = [] }: DesignSectionProps) => {
               </div>
             </div>
 
-            {/* LED Matrix Headlight Card */}
-            <div className="bg-[#8a8a8a] h-[242px] flex-1 relative overflow-hidden p-8">
-              <div className="flex flex-col gap-3 text-white">
-                <p className="font-inter font-medium text-[24px]">LED Matrix Headlight</p>
-                <p className="font-inter font-normal text-[20px] opacity-70">Brightness that leads the way</p>
+            {/* Fourth Design Card - Dynamic from Database */}
+            <div 
+              className="h-[242px] flex-1 relative overflow-hidden p-8"
+              style={{
+                backgroundImage: fourthCard?.image ? `url(${fourthCard.image})` : undefined,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundColor: fourthCard?.image ? 'transparent' : '#8a8a8a'
+              }}
+            >
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+              <div className="flex flex-col gap-3 text-white relative z-10">
+                <p className="font-inter font-medium text-[24px]">{fourthCard?.title || fourthCard?.text || 'LED Matrix Headlight'}</p>
+                <p className="font-inter font-normal text-[20px] opacity-70">{fourthCard?.subtitle || 'Brightness that leads the way'}</p>
               </div>
             </div>
 
