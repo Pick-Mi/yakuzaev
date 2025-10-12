@@ -350,10 +350,10 @@ const Product = () => {
       <Footer />
 
       {/* Bottom Fixed Navigation */}
-      {product && product.variants && product.variants.length > 0 && (
+      {product && (
         <ProductBottomNav
           productName={product.name}
-          variants={product.variants}
+          variants={product.variants || []}
           selectedVariant={selectedVariant}
           onVariantChange={setSelectedVariant}
           price={getCurrentPrice()}
