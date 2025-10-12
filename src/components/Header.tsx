@@ -28,6 +28,7 @@ const Header = () => {
     location.pathname === '/booking-confirmation' ||
     location.pathname === '/products' ||
     location.pathname === '/profile' ||
+    location.pathname === '/profile-setup' ||
     location.pathname === '/orders' ||
     location.pathname === '/auth' ||
     location.pathname.startsWith('/orders/');
