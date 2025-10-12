@@ -36,7 +36,9 @@ const defaultFaqs = [
 ];
 
 export const FAQSection = ({ faqs = defaultFaqs }: FAQSectionProps) => {
+  console.log('FAQSection received faqs:', faqs);
   const displayFaqs = faqs && faqs.length > 0 ? faqs : defaultFaqs;
+  console.log('FAQSection displaying faqs:', displayFaqs);
   return (
     <section className="py-16 px-4 bg-[#f8f9f9]">
       <div className="container mx-auto max-w-7xl">

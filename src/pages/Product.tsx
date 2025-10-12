@@ -158,7 +158,10 @@ const Product = () => {
             parsedQASection = typeof response.data.qa_section === 'string' 
               ? JSON.parse(response.data.qa_section) 
               : response.data.qa_section || [];
+            console.log('Q&A Section from DB:', response.data.qa_section);
+            console.log('Parsed Q&A Section:', parsedQASection);
           } catch (e) {
+            console.error('Error parsing Q&A section:', e);
             parsedQASection = [];
           }
 
