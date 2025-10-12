@@ -68,7 +68,7 @@ export default function PayUPayment({
         // Original cart flow - create order from cart items
         const orderDataFromCart = {
           customer_id: user.id,
-          status: 'pending',
+          status: 'placed',
           payment_status: 'pending',
           total_amount: amount,
           order_items_data: cartItems.map(item => ({
