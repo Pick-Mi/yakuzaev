@@ -3,13 +3,14 @@ import { useCart } from "@/hooks/useCart";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Search } from "lucide-react";
 
 const ProductShowcase = () => {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const { addToCart } = useCart();
   const navigate = useNavigate();
@@ -154,6 +155,16 @@ const ProductShowcase = () => {
             ))}
           </div>
 
+          <div className="relative">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#4D4D4D]" />
+            <input
+              type="text"
+              placeholder="Search"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-12 pr-4 py-[13px] bg-white text-[#12141d] font-['Poppins'] text-[16px] border-none outline-none w-[300px]"
+            />
+          </div>
         </div>
 
         {/* Product Cards Grid */}
