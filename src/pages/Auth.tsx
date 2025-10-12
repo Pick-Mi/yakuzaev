@@ -11,6 +11,8 @@ import { ArrowLeft, Phone, Chrome, MessageSquare, Mail, Eye, EyeOff } from 'luci
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 
 // Country codes data
 const countryCodes = [
@@ -283,8 +285,10 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-accent/10 flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
+    <div className="min-h-screen bg-background">
+      <Header />
+      <div className="min-h-[calc(100vh-200px)] bg-gradient-to-br from-background via-background to-accent/10 flex items-center justify-center p-4">
+        <div className="w-full max-w-md">
         <Link to="/" className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground mb-8 transition-colors">
           <ArrowLeft className="w-4 h-4" />
           Back to store
@@ -565,7 +569,9 @@ const Auth = () => {
             )}
           </CardContent>
         </Card>
+        </div>
       </div>
+      <Footer />
     </div>
   );
 };
