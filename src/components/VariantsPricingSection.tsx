@@ -20,20 +20,8 @@ interface VariantsPricingSectionProps {
 const VariantsPricingSection = ({ onVariantSelect, variants: propVariants, specificationTitles }: VariantsPricingSectionProps) => {
   const [selectedVariantIndex, setSelectedVariantIndex] = useState<number | null>(null);
 
-  const defaultVariants: VariantSpec[] = [];
-
-  const variants = propVariants && propVariants.length > 0 ? propVariants : defaultVariants;
-
-  const defaultSpecRows = specificationTitles || [
-    { label: 'Price', key: 'pricing' },
-    { label: 'Colour', key: 'colors' },
-    { label: 'Motor Range', key: 'motor' },
-    { label: 'Battery', key: 'battery' },
-    { label: 'Battery Warranty', key: 'battery_warranty' },
-    { label: 'Peak Power', key: 'peak_power' }
-  ];
-
-  const specRows = defaultSpecRows;
+  const variants = propVariants || [];
+  const specRows = specificationTitles || [];
 
   return (
     <section className="bg-[#F8F9F9] w-full py-16 px-4 md:px-[70px] mt-[80px]">
@@ -64,28 +52,39 @@ const VariantsPricingSection = ({ onVariantSelect, variants: propVariants, speci
               <div className="p-6 font-inter font-medium text-[16px] text-[#000000]">
                 {spec.label}
               </div>
-              {variants.map((variant, colIndex) => (
-                <div 
-                  key={colIndex} 
-                  className="p-6 text-center border-l border-gray-200 flex items-center justify-center"
-                >
-                  {spec.key === 'colors' ? (
-                    <div className="flex gap-2 justify-center">
-                      {variant.colors.map((color, colorIndex) => (
-                        <div
-                          key={colorIndex}
-                          className="w-6 h-6 rounded"
-                          style={{ backgroundColor: color, border: color === '#FFFFFF' ? '1px solid #E0E0E0' : 'none' }}
-                        />
-                      ))}
-                    </div>
-                  ) : (
-                    <span className="font-inter font-normal text-[16px] text-[#000000]">
-                      {variant[spec.key as keyof VariantSpec]}
-                    </span>
-                  )}
-                </div>
-              ))}
+              {variants.map((variant: any, colIndex) => {
+                const specification = variant.specifications?.find((s: any) => s.label === spec.label);
+                return (
+                  <div 
+                    key={colIndex} 
+                    className="p-6 text-center border-l border-gray-200 flex items-center justify-center"
+                  >
+                    {spec.key === 'colors' ? (
+                      <div className="flex gap-2 justify-center">
+                        {variant.colors?.map((colorObj: any, colorIndex: number) => {
+                          const colorMatch = colorObj.name?.match(/#[0-9A-Fa-f]{6}/);
+                          const color = colorMatch ? colorMatch[0] : '#000000';
+                          return (
+                            <div
+                              key={colorIndex}
+                              className="w-6 h-6 rounded"
+                              style={{ backgroundColor: color, border: color === '#FFFFFF' ? '1px solid #E0E0E0' : 'none' }}
+                            />
+                          );
+                        })}
+                      </div>
+                    ) : spec.key === 'pricing' ? (
+                      <span className="font-inter font-normal text-[16px] text-[#000000]">
+                        ₹{specification?.value || '0'}
+                      </span>
+                    ) : (
+                      <span className="font-inter font-normal text-[16px] text-[#000000]">
+                        {specification?.value || '-'}
+                      </span>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           ))}
 
