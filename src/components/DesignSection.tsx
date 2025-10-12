@@ -65,23 +65,18 @@ const DesignSection = ({ designFeatures = [] }: DesignSectionProps) => {
           {/* Second Row - Three Feature Cards */}
           <div className="flex gap-8">
             {/* Third Design Card - Dynamic from Database */}
-            <div 
-              className="h-[242px] flex-1 relative overflow-hidden p-8"
-              style={{
-                backgroundImage: thirdCard?.image ? `url(${thirdCard.image})` : undefined,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                backgroundColor: thirdCard?.image ? 'transparent' : '#e8ebf0'
-              }}
-            >
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-              <div className="flex flex-col gap-6 relative z-10">
-                {!thirdCard?.image && <Box className="w-8 h-8 text-[#5d637d]" strokeWidth={1.5} />}
+            <div className="bg-[#e8ebf0] h-[242px] flex-1 relative overflow-hidden p-8">
+              <div className="flex flex-col gap-6">
+                {thirdCard?.image ? (
+                  <img src={thirdCard.image} alt={thirdCard.title || thirdCard.text} className="w-8 h-8 object-contain" />
+                ) : (
+                  <Box className="w-8 h-8 text-[#5d637d]" strokeWidth={1.5} />
+                )}
                 <div className="flex flex-col gap-3">
-                  <p className={`font-inter font-medium text-[24px] ${thirdCard?.image ? 'text-white' : 'text-[#5d637d]'}`}>
+                  <p className="font-inter font-medium text-[24px] text-[#5d637d]">
                     {thirdCard?.title || thirdCard?.text || 'Fast-Charge Battery'}
                   </p>
-                  <p className={`font-inter font-normal text-[20px] ${thirdCard?.image ? 'text-white opacity-90' : 'text-[#5d637d] opacity-60'}`}>
+                  <p className="font-inter font-normal text-[20px] text-[#5d637d] opacity-60">
                     {thirdCard?.subtitle || 'Get charged in minutes'}
                   </p>
                 </div>
