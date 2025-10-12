@@ -124,34 +124,8 @@ const Auth = () => {
         return;
       }
 
-      // Check if profile exists
-      const { data: session } = await supabase.auth.getSession();
-      if (session?.session?.user) {
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('first_name, last_name')
-          .eq('user_id', session.session.user.id)
-          .maybeSingle();
-
-        // If no first_name, show success dialog
-        if (!profile || !profile.first_name) {
-          setFirstName(profile?.first_name || '');
-          setLastName(profile?.last_name || '');
-          setShowSuccessDialog(true);
-          setLoading(false);
-          return;
-        }
-      }
-
-      // If profile exists, show success and navigate
-      toast({
-        title: "OTP Verified Successfully! ✓",
-        description: "You have been signed in successfully.",
-      });
-
-      setTimeout(() => {
-        navigate(from, { replace: true });
-      }, 1000);
+      // Show success dialog after OTP verification
+      setShowSuccessDialog(true);
     } catch (error: any) {
       toast({
         title: "Verification Error",
