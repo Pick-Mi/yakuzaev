@@ -62,6 +62,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const signOut = async () => {
     const { error } = await supabase.auth.signOut();
+    // Clear local state even if signOut fails (e.g., session expired)
+    // This ensures the user can always logout from the UI
+    setSession(null);
+    setUser(null);
     return { error };
   };
 
