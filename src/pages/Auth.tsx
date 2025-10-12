@@ -125,7 +125,27 @@ const Auth = () => {
         return;
       }
 
-      // Show success dialog after OTP verification
+      // Check if user already has a complete profile
+      const { data: session } = await supabase.auth.getSession();
+      if (session?.session?.user) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('first_name, last_name, email')
+          .eq('user_id', session.session.user.id)
+          .single();
+
+        // If profile exists with required fields, redirect to home
+        if (profile && profile.first_name && profile.email) {
+          toast({
+            title: "Welcome Back!",
+            description: "You have been signed in successfully.",
+          });
+          navigate(from, { replace: true });
+          return;
+        }
+      }
+
+      // New user - show success dialog and redirect to profile setup
       setShowSuccessDialog(true);
     } catch (error: any) {
       toast({
