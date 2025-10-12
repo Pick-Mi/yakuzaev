@@ -160,7 +160,7 @@ const Header = () => {
                   )}
                 </Button>
               </Link>
-              <Link to={user ? "/profile" : "/auth"} state={{ showSignUp: true, from: location }}>
+              <Link to={user ? "/profile" : "/auth"} state={!user ? { showSignUp: true, from: location } : undefined}>
                 <Button variant="ghost" size="icon" className={`h-auto p-1 transition-all ${shouldShowFixedHeader ? 'hover:bg-gray-100' : 'hover:bg-white/10'}`}>
                   <img src={profileIcon} alt="Profile" className={`w-[22px] h-[22px] transition-all ${shouldShowFixedHeader ? 'invert' : ''}`} />
                 </Button>
