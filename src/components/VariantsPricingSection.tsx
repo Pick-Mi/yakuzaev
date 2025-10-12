@@ -2,13 +2,22 @@ import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 
 interface VariantSpec {
+  id?: string;
   name: string;
-  price: string;
-  colors: string[];
-  range: string;
-  kerbWeight: string;
-  batteryWarranty: string;
-  peakPower: string;
+  specifications?: Array<{
+    id: string;
+    label: string;
+    value: string;
+  }>;
+  colors?: Array<{
+    name: string;
+  }>;
+  // Legacy properties for backward compatibility
+  price?: string;
+  range?: string;
+  kerbWeight?: string;
+  batteryWarranty?: string;
+  peakPower?: string;
 }
 
 interface VariantsPricingSectionProps {
@@ -23,30 +32,18 @@ const VariantsPricingSection = ({ onVariantSelect, variants: propVariants, speci
   const defaultVariants: VariantSpec[] = [
     {
       name: 'YAKUZA NEU + 43V',
-      price: '₹35,280.00',
-      colors: ['#2B4C7E', '#FFFFFF', '#000000', '#A8C5DD', '#888888'],
-      range: '70 km',
-      kerbWeight: '200 kg',
-      batteryWarranty: '3 yrs/50,000 km',
-      peakPower: '13 kW'
-    },
-    {
-      name: 'YAKUZA NEU + 63V',
-      price: '₹35,280.00',
-      colors: ['#2B4C7E', '#FFFFFF', '#000000', '#A8C5DD', '#888888'],
-      range: '70 km',
-      kerbWeight: '200 kg',
-      batteryWarranty: '3 yrs/50,000 km',
-      peakPower: '13 kW'
-    },
-    {
-      name: 'YAKUZA NEU + 73V',
-      price: '₹35,280.00',
-      colors: ['#2B4C7E', '#FFFFFF', '#000000', '#A8C5DD', '#888888'],
-      range: '70 km',
-      kerbWeight: '200 kg',
-      batteryWarranty: '3 yrs/50,000 km',
-      peakPower: '13 kW'
+      specifications: [
+        { id: '1', label: 'Price', value: '₹35,280.00' },
+        { id: '2', label: 'Range', value: '70 km' },
+        { id: '3', label: 'Kerb Weight', value: '200 kg' },
+        { id: '4', label: 'Battery Warranty', value: '3 yrs/50,000 km' },
+        { id: '5', label: 'Peak Power', value: '13 kW' }
+      ],
+      colors: [
+        { name: '1 (#2B4C7E)' },
+        { name: '2 (#FFFFFF)' },
+        { name: '3 (#000000)' }
+      ]
     }
   ];
 
@@ -84,28 +81,43 @@ const VariantsPricingSection = ({ onVariantSelect, variants: propVariants, speci
               <div className="p-6 font-inter font-medium text-[16px] text-[#000000]">
                 {spec.label}
               </div>
-              {variants.map((variant, colIndex) => (
-                <div 
-                  key={colIndex} 
-                  className="p-6 text-center border-l border-gray-200 flex items-center justify-center"
-                >
-                  {spec.key === 'colors' ? (
-                    <div className="flex gap-2 justify-center">
-                      {variant.colors.map((color, colorIndex) => (
-                        <div
-                          key={colorIndex}
-                          className="w-6 h-6 rounded"
-                          style={{ backgroundColor: color, border: color === '#FFFFFF' ? '1px solid #E0E0E0' : 'none' }}
-                        />
-                      ))}
-                    </div>
-                  ) : (
-                    <span className="font-inter font-normal text-[16px] text-[#000000]">
-                      {variant[spec.key as keyof VariantSpec]}
-                    </span>
-                  )}
-                </div>
-              ))}
+              {variants.map((variant, colIndex) => {
+                // Find the matching specification in the variant's specifications array
+                const variantSpec = variant.specifications?.find(
+                  (s: any) => s.label === spec.label
+                );
+                
+                return (
+                  <div 
+                    key={colIndex} 
+                    className="p-6 text-center border-l border-gray-200 flex items-center justify-center"
+                  >
+                    {spec.label === 'Colour' ? (
+                      <div className="flex gap-2 justify-center">
+                        {variant.colors?.map((color: any, colorIndex: number) => {
+                          // Extract hex color from "1 (#0A4886)" format
+                          const hexMatch = color.name?.match(/#[0-9A-Fa-f]{6}/);
+                          const hexColor = hexMatch ? hexMatch[0] : '#000000';
+                          return (
+                            <div
+                              key={colorIndex}
+                              className="w-6 h-6 rounded"
+                              style={{ 
+                                backgroundColor: hexColor, 
+                                border: hexColor.toLowerCase() === '#ffffff' ? '1px solid #E0E0E0' : 'none' 
+                              }}
+                            />
+                          );
+                        })}
+                      </div>
+                    ) : (
+                      <span className="font-inter font-normal text-[16px] text-[#000000]">
+                        {variantSpec?.value || '-'}
+                      </span>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           ))}
 
