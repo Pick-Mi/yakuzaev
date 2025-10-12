@@ -77,7 +77,7 @@ const VariantsPricingSection = ({ onVariantSelect, variants: propVariants, speci
             {variants.map((variant, index) => (
               <div key={index} className="p-6 text-center border-l border-gray-200">
                 <h3 className="font-inter font-semibold text-[18px] text-[#000000]">
-                  {variant.name}
+                  {variant.name || `Variant ${index + 1}`}
                 </h3>
               </div>
             ))}
