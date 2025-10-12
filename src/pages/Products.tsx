@@ -72,7 +72,7 @@ const Products = () => {
       <Header />
       
       {/* Hero Section */}
-      <section className="bg-black text-white pt-32 pb-20">
+      <section className="bg-black text-white py-20">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl">
             <h1 className="text-5xl md:text-6xl font-light mb-6">₹ 99,999/-</h1>
