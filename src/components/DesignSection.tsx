@@ -11,6 +11,7 @@ interface DesignSectionProps {
 }
 
 const DesignSection = ({ designFeatures = [] }: DesignSectionProps) => {
+  const firstCard = designFeatures[0];
   const thirdCard = designFeatures[2];
 
   return (
@@ -22,19 +23,19 @@ const DesignSection = ({ designFeatures = [] }: DesignSectionProps) => {
         <div className="flex flex-col gap-8">
           {/* First Row - Two Main Cards */}
           <div className="flex gap-8">
-            {/* Third Design Card - Dynamic from Database */}
+            {/* First Design Card - Dynamic from Database */}
             <div 
               className="h-[460px] flex-[63] relative overflow-hidden"
               style={{
-                backgroundImage: thirdCard?.image ? `url(${thirdCard.image})` : undefined,
+                backgroundImage: firstCard?.image ? `url(${firstCard.image})` : undefined,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
-                backgroundColor: thirdCard?.image ? 'transparent' : '#8a8a8a'
+                backgroundColor: firstCard?.image ? 'transparent' : '#8a8a8a'
               }}
             >
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
               <div className="absolute left-8 top-8 flex flex-col gap-3 text-white z-10">
-                <p className="font-inter font-medium text-[28px]">{thirdCard?.text || 'New Stylish Bike'}</p>
+                <p className="font-inter font-medium text-[28px]">{firstCard?.text || 'New Stylish Bike'}</p>
                 <p className="font-inter font-normal text-[22px] opacity-70">Elegance engineered for speed</p>
               </div>
             </div>
