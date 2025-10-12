@@ -318,7 +318,7 @@ const Auth = () => {
               <Button
                 onClick={() => {
                   setShowSuccessDialog(false);
-                  setStep('profile');
+                  navigate('/profile-setup', { replace: true });
                 }}
                 className="w-full h-12 bg-orange-500 hover:bg-orange-600 text-white text-base font-medium"
               >

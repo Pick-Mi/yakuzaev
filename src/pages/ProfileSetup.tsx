@@ -10,6 +10,7 @@ import { useAuth } from '@/hooks/useAuth';
 const ProfileSetup = () => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -30,6 +31,15 @@ const ProfileSetup = () => {
       return;
     }
 
+    if (!email.trim() || !email.includes('@')) {
+      toast({
+        title: "Valid email required",
+        description: "Please enter a valid email address",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -38,14 +48,15 @@ const ProfileSetup = () => {
         .update({
           first_name: firstName.trim(),
           last_name: lastName.trim(),
+          email: email.trim(),
         })
         .eq('user_id', user?.id);
 
       if (error) throw error;
 
       toast({
-        title: "Profile created",
-        description: "Your profile has been set up successfully",
+        title: "Success! 🎉",
+        description: "Your journey with Yakuza starts here – successfully signed up.",
       });
 
       navigate(from, { replace: true });
@@ -95,10 +106,22 @@ const ProfileSetup = () => {
             />
           </div>
 
+          <div className="space-y-2">
+            <Label htmlFor="email">Email *</Label>
+            <Input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter your email address"
+              required
+            />
+          </div>
+
           <Button
             type="submit"
             className="w-full"
-            disabled={loading || !firstName.trim()}
+            disabled={loading || !firstName.trim() || !email.trim()}
           >
             {loading ? 'Setting up...' : 'Continue'}
           </Button>
