@@ -45,10 +45,11 @@ const Auth = () => {
   const from = location.state?.from?.pathname || '/';
 
   useEffect(() => {
-    if (user) {
+    // Don't auto-redirect if we're showing the success dialog
+    if (user && !showSuccessDialog && !showProfileSuccessDialog) {
       navigate(from, { replace: true });
     }
-  }, [user, navigate, from]);
+  }, [user, navigate, from, showSuccessDialog, showProfileSuccessDialog]);
 
   const validatePhoneNumber = (fullPhone: string): string | null => {
     const cleaned = fullPhone.replace(/[^\d+]/g, '');
