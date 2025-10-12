@@ -29,6 +29,7 @@ const Header = () => {
     location.pathname === '/products' ||
     location.pathname === '/profile' ||
     location.pathname === '/orders' ||
+    location.pathname === '/auth' ||
     location.pathname.startsWith('/orders/');
 
   useEffect(() => {
@@ -119,29 +120,29 @@ const Header = () => {
     <>
       <div className="fixed top-0 left-0 w-full z-50">
         <NotificationBar />
-        <nav className={`w-full p-[13px] transition-all duration-300 ${isScrolled ? 'bg-white' : 'bg-transparent'} ${isMenuOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
+        <nav className={`w-full p-[13px] transition-all duration-300 ${shouldShowFixedHeader ? 'bg-white' : 'bg-transparent'} ${isMenuOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
           <div className="relative h-8 w-full max-w-[1360px] mx-auto">
             {/* Logo */}
             <Link to="/" className="absolute left-0 top-0 px-4 py-2 h-8 flex items-center justify-center">
               {logoUrl ? (
                 <img src={logoUrl} alt="Logo" className="h-8 w-auto object-contain" />
               ) : (
-                <span className={`font-medium text-sm transition-colors ${isScrolled ? 'text-gray-900' : 'text-white'}`}>LOGO</span>
+                <span className={`font-medium text-sm transition-colors ${shouldShowFixedHeader ? 'text-gray-900' : 'text-white'}`}>LOGO</span>
               )}
             </Link>
             
             {/* Navigation Menu - Desktop */}
             <div className="absolute left-1/2 top-2 -translate-x-1/2 hidden md:flex gap-9 items-center">
-              <Link to="/products" className={`text-[14px] font-sans leading-normal hover:opacity-80 transition-all whitespace-nowrap font-medium ${isScrolled ? 'text-gray-900' : 'text-white'}`}>
+              <Link to="/products" className={`text-[14px] font-sans leading-normal hover:opacity-80 transition-all whitespace-nowrap font-medium ${shouldShowFixedHeader ? 'text-gray-900' : 'text-white'}`}>
                 Products
               </Link>
-              <Link to="/" className={`text-[14px] font-sans leading-normal hover:opacity-80 transition-all whitespace-nowrap font-normal ${isScrolled ? 'text-gray-700' : 'text-white'}`}>
+              <Link to="/" className={`text-[14px] font-sans leading-normal hover:opacity-80 transition-all whitespace-nowrap font-normal ${shouldShowFixedHeader ? 'text-gray-700' : 'text-white'}`}>
                 Yakuza Store
               </Link>
-              <Link to="/" className={`text-[14px] font-sans leading-normal hover:opacity-80 transition-all whitespace-nowrap font-normal ${isScrolled ? 'text-gray-700' : 'text-white'}`}>
+              <Link to="/" className={`text-[14px] font-sans leading-normal hover:opacity-80 transition-all whitespace-nowrap font-normal ${shouldShowFixedHeader ? 'text-gray-700' : 'text-white'}`}>
                 Become a Dealer
               </Link>
-              <Link to="/" className={`text-[14px] font-sans leading-normal hover:opacity-80 transition-all whitespace-nowrap font-normal ${isScrolled ? 'text-gray-700' : 'text-white'}`}>
+              <Link to="/" className={`text-[14px] font-sans leading-normal hover:opacity-80 transition-all whitespace-nowrap font-normal ${shouldShowFixedHeader ? 'text-gray-700' : 'text-white'}`}>
                 About Us
               </Link>
             </div>
@@ -149,8 +150,8 @@ const Header = () => {
             {/* Icons */}
             <div className="absolute right-0 top-1 flex gap-[15px] items-center">
               <Link to={user ? "/cart" : "/auth"} onClick={handleCartClick} state={{ showSignUp: true, from: location }}>
-                <Button variant="ghost" size="icon" className={`relative h-auto p-1 transition-all ${isScrolled ? 'hover:bg-gray-100' : 'hover:bg-white/10'}`}>
-                  <img src={cartIcon} alt="Cart" className={`w-[22px] h-[22px] transition-all ${isScrolled ? 'invert' : ''}`} />
+                <Button variant="ghost" size="icon" className={`relative h-auto p-1 transition-all ${shouldShowFixedHeader ? 'hover:bg-gray-100' : 'hover:bg-white/10'}`}>
+                  <img src={cartIcon} alt="Cart" className={`w-[22px] h-[22px] transition-all ${shouldShowFixedHeader ? 'invert' : ''}`} />
                   {itemCount > 0 && (
                     <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs">
                       {itemCount}
@@ -159,17 +160,17 @@ const Header = () => {
                 </Button>
               </Link>
               <Link to={user ? "/profile" : "/auth"} state={{ showSignUp: true, from: location }}>
-                <Button variant="ghost" size="icon" className={`h-auto p-1 transition-all ${isScrolled ? 'hover:bg-gray-100' : 'hover:bg-white/10'}`}>
-                  <img src={profileIcon} alt="Profile" className={`w-[22px] h-[22px] transition-all ${isScrolled ? 'invert' : ''}`} />
+                <Button variant="ghost" size="icon" className={`h-auto p-1 transition-all ${shouldShowFixedHeader ? 'hover:bg-gray-100' : 'hover:bg-white/10'}`}>
+                  <img src={profileIcon} alt="Profile" className={`w-[22px] h-[22px] transition-all ${shouldShowFixedHeader ? 'invert' : ''}`} />
                 </Button>
               </Link>
               <Button 
                 variant="ghost" 
                 size="icon" 
-                className={`h-auto p-1 transition-all ${isScrolled ? 'hover:bg-gray-100' : 'hover:bg-white/10'}`}
+                className={`h-auto p-1 transition-all ${shouldShowFixedHeader ? 'hover:bg-gray-100' : 'hover:bg-white/10'}`}
                 onClick={handleMenuClick}
               >
-                <img src={menuIcon} alt="Menu" className={`w-[22px] h-[22px] transition-all ${isScrolled ? 'invert' : ''}`} />
+                <img src={menuIcon} alt="Menu" className={`w-[22px] h-[22px] transition-all ${shouldShowFixedHeader ? 'invert' : ''}`} />
               </Button>
             </div>
           </div>
