@@ -20,51 +20,19 @@ interface VariantsPricingSectionProps {
 const VariantsPricingSection = ({ onVariantSelect, variants: propVariants, specificationTitles }: VariantsPricingSectionProps) => {
   const [selectedVariantIndex, setSelectedVariantIndex] = useState<number | null>(null);
 
-  const defaultVariants: VariantSpec[] = [
-    {
-      name: 'YAKUZA NEU + 43V',
-      price: '₹35,280.00',
-      colors: ['#2B4C7E', '#FFFFFF', '#000000', '#A8C5DD', '#888888'],
-      range: '70 km',
-      kerbWeight: '200 kg',
-      batteryWarranty: '3 yrs/50,000 km',
-      peakPower: '13 kW'
-    },
-    {
-      name: 'YAKUZA NEU + 63V',
-      price: '₹35,280.00',
-      colors: ['#2B4C7E', '#FFFFFF', '#000000', '#A8C5DD', '#888888'],
-      range: '70 km',
-      kerbWeight: '200 kg',
-      batteryWarranty: '3 yrs/50,000 km',
-      peakPower: '13 kW'
-    },
-    {
-      name: 'YAKUZA NEU + 73V',
-      price: '₹35,280.00',
-      colors: ['#2B4C7E', '#FFFFFF', '#000000', '#A8C5DD', '#888888'],
-      range: '70 km',
-      kerbWeight: '200 kg',
-      batteryWarranty: '3 yrs/50,000 km',
-      peakPower: '13 kW'
-    }
-  ];
-
-  const variants = propVariants && propVariants.length > 0 ? propVariants : defaultVariants;
-
-  const defaultSpecRows = [
-    { label: 'Price', key: 'price' },
-    { label: 'Colour', key: 'colors' },
-    { label: 'Range', key: 'range' },
-    { label: 'kerb weight', key: 'kerbWeight' },
-    { label: 'Battery Warranty', key: 'batteryWarranty' },
-    { label: 'Peak Power', key: 'peakPower' }
-  ];
-
-  const specRows = specificationTitles && specificationTitles.length > 0 ? specificationTitles : defaultSpecRows;
+  // Only use variants from database, no defaults
+  const variants = propVariants || [];
+  
+  // Only use specification titles from database, no defaults
+  const specRows = specificationTitles || [];
 
   console.log('VariantsPricingSection - specificationTitles prop:', specificationTitles);
   console.log('VariantsPricingSection - specRows being used:', specRows);
+  
+  // Don't render if no variants or specs available
+  if (!variants.length || !specRows.length) {
+    return null;
+  }
 
   return (
     <section className="bg-[#F8F9F9] w-full py-16 px-4 md:px-[70px] mt-[80px]">
