@@ -71,7 +71,42 @@ const Products = () => {
     <div className="min-h-screen bg-background">
       <Header />
       
-      <main className="container mx-auto px-4 py-8 pt-32">
+      {/* Hero Section */}
+      <section className="bg-black text-white pt-32 pb-20">
+        <div className="container mx-auto px-4">
+          <div className="max-w-3xl">
+            <h1 className="text-5xl md:text-6xl font-light mb-6">₹ 99,999/-</h1>
+            <p className="text-2xl md:text-3xl font-normal mb-8">
+              Now Get 3 Scooters at only
+            </p>
+            <div className="flex flex-wrap gap-4 items-center mb-10 text-sm md:text-base">
+              <span>Zero Emissions</span>
+              <span className="text-white/40">|</span>
+              <span>Stylish Design</span>
+              <span className="text-white/40">|</span>
+              <span>Long Batter Life</span>
+              <span className="text-white/40">|</span>
+              <span>Easy to Charge</span>
+            </div>
+            <div className="flex flex-wrap gap-4">
+              <button 
+                onClick={() => navigate('/products')}
+                className="bg-white text-black px-8 py-3 font-medium hover:bg-white/90 transition-colors"
+              >
+                Book Now
+              </button>
+              <button 
+                onClick={() => navigate('/products')}
+                className="bg-white/10 text-white px-8 py-3 font-medium hover:bg-white/20 transition-colors border border-white/20"
+              >
+                Explore
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <main className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
