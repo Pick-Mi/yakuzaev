@@ -172,7 +172,10 @@ const Product = () => {
             parsedSpecificationTitles = typeof response.data.specification_titles === 'string' 
               ? JSON.parse(response.data.specification_titles) 
               : response.data.specification_titles || [];
+            console.log('Specification Titles from DB:', response.data.specification_titles);
+            console.log('Parsed Specification Titles:', parsedSpecificationTitles);
           } catch (e) {
+            console.error('Error parsing specification titles:', e);
             parsedSpecificationTitles = [];
           }
 

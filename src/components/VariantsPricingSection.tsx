@@ -63,6 +63,9 @@ const VariantsPricingSection = ({ onVariantSelect, variants: propVariants, speci
 
   const specRows = specificationTitles && specificationTitles.length > 0 ? specificationTitles : defaultSpecRows;
 
+  console.log('VariantsPricingSection - specificationTitles prop:', specificationTitles);
+  console.log('VariantsPricingSection - specRows being used:', specRows);
+
   return (
     <section className="bg-[#F8F9F9] w-full py-16 px-4 md:px-[70px] mt-[80px]">
       <div className="max-w-[1400px] mx-auto">
