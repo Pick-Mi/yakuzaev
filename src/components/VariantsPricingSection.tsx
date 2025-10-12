@@ -29,31 +29,13 @@ interface VariantsPricingSectionProps {
 const VariantsPricingSection = ({ onVariantSelect, variants: propVariants, specificationTitles }: VariantsPricingSectionProps) => {
   const [selectedVariantIndex, setSelectedVariantIndex] = useState<number | null>(null);
 
-  const defaultVariants: VariantSpec[] = [
-    {
-      name: 'YAKUZA NEU + 43V',
-      specifications: [
-        { id: '1', label: 'Price', value: '₹35,280.00' },
-        { id: '2', label: 'Range', value: '70 km' },
-        { id: '3', label: 'Kerb Weight', value: '200 kg' },
-        { id: '4', label: 'Battery Warranty', value: '3 yrs/50,000 km' },
-        { id: '5', label: 'Peak Power', value: '13 kW' }
-      ],
-      colors: [
-        { name: '1 (#2B4C7E)' },
-        { name: '2 (#FFFFFF)' },
-        { name: '3 (#000000)' }
-      ]
-    }
-  ];
 
-  const variants = propVariants && propVariants.length > 0 ? propVariants : defaultVariants;
-
-  // Only use specificationTitles from props (database), no defaults
+  // Only use data from database - no defaults
+  const actualVariants = propVariants && propVariants.length > 0 ? propVariants : [];
   const specRows = specificationTitles || [];
   
-  // Don't render if no variants or no specification titles
-  if (!variants || variants.length === 0 || !specRows || specRows.length === 0) {
+  // Don't render if no database data
+  if (actualVariants.length === 0 || specRows.length === 0) {
     return null;
   }
 
@@ -68,7 +50,7 @@ const VariantsPricingSection = ({ onVariantSelect, variants: propVariants, speci
           {/* Variant Names Header */}
           <div className="grid grid-cols-4 border-b border-gray-200">
             <div className="p-6"></div>
-            {variants.map((variant, index) => (
+            {actualVariants.map((variant, index) => (
               <div key={index} className="p-6 text-center border-l border-gray-200">
                 <h3 className="font-inter font-semibold text-[18px] text-[#000000]">
                   {variant.name || `Variant ${index + 1}`}
@@ -86,7 +68,7 @@ const VariantsPricingSection = ({ onVariantSelect, variants: propVariants, speci
               <div className="p-6 font-inter font-medium text-[16px] text-[#000000]">
                 {spec.label}
               </div>
-              {variants.map((variant, colIndex) => {
+              {actualVariants.map((variant, colIndex) => {
                 // Find the matching specification in the variant's specifications array
                 const variantSpec = variant.specifications?.find(
                   (s: any) => s.label === spec.label
@@ -129,7 +111,7 @@ const VariantsPricingSection = ({ onVariantSelect, variants: propVariants, speci
           {/* Select Buttons Row */}
           <div className="grid grid-cols-4 bg-white pt-6 pb-8">
             <div className="p-6"></div>
-            {variants.map((variant, index) => (
+            {actualVariants.map((variant, index) => (
               <div key={index} className="p-6 flex items-center justify-center border-l border-gray-200">
                 <Button 
                   variant="outline" 

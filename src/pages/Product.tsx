@@ -264,14 +264,16 @@ const Product = () => {
 
   const handleVariantSelect = (variant: any) => {
     setVariantFromSection(variant);
+    
+    // Extract price from specifications array
+    const priceSpec = variant.specifications?.find((s: any) => s.label === 'Price');
+    const priceValue = priceSpec?.value ? parseFloat(priceSpec.value.replace(/[₹,]/g, '')) || 0 : 0;
+    
     // Update selectedVariant to match the structure expected by ProductBottomNav
     const updatedVariant = {
       name: variant.name,
-      price: parseFloat(variant.price.replace(/[₹,]/g, '')) || 0,
-      range: variant.range,
-      kerbWeight: variant.kerbWeight,
-      batteryWarranty: variant.batteryWarranty,
-      peakPower: variant.peakPower
+      price: priceValue,
+      specifications: variant.specifications
     };
     setSelectedVariant(updatedVariant);
     
