@@ -1,7 +1,20 @@
 import { Button } from "@/components/ui/button";
 
-const ThrillsSection = () => {
-  const features = [
+interface PromoCard {
+  image?: string;
+  title?: string;
+  description?: string;
+  features?: string[];
+  buttonText?: string;
+  buttonLink?: string;
+}
+
+interface ThrillsSectionProps {
+  promoCard?: PromoCard;
+}
+
+const ThrillsSection = ({ promoCard }: ThrillsSectionProps) => {
+  const features = promoCard?.features || [
     "Call & Music Control",
     "RideChat™ & Music Sharing",
     "Yakuza Smart Sensor"
@@ -12,16 +25,23 @@ const ThrillsSection = () => {
       <div className="max-w-[1400px] mx-auto">
         <div className="bg-[#1a1a1a] flex overflow-hidden">
           {/* Left Image Section */}
-          <div className="w-1/2 bg-[#888888] min-h-[420px]" />
+          {promoCard?.image ? (
+            <div 
+              className="w-1/2 min-h-[420px] bg-cover bg-center"
+              style={{ backgroundImage: `url(${promoCard.image})` }}
+            />
+          ) : (
+            <div className="w-1/2 bg-[#888888] min-h-[420px]" />
+          )}
           
           {/* Right Content Section */}
           <div className="w-1/2 px-16 py-12 flex flex-col justify-center">
             <h2 className="font-inter font-medium text-[48px] text-white mb-4">
-              Say Yakuza to Thrills
+              {promoCard?.title || "Say Yakuza to Thrills"}
             </h2>
             
             <p className="font-inter font-normal text-lg text-[#b0b0b0] mb-8 max-w-[500px]">
-              The smart helmet built for riders who live for the rush — always connected, always safe.
+              {promoCard?.description || "The smart helmet built for riders who live for the rush — always connected, always safe."}
             </p>
             
             {/* Features List */}
