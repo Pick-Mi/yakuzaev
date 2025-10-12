@@ -24,7 +24,7 @@ const ProfileSetup = () => {
   const location = useLocation();
   const { user } = useAuth();
 
-  const from = location.state?.from || '/';
+  const from = location.state?.from?.pathname || '/';
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -86,14 +86,7 @@ const ProfileSetup = () => {
         description: "Your journey with Yakuza starts here – successfully signed up.",
       });
 
-      // Navigate to the intended page or home
-      if (typeof from === 'string') {
-        navigate(from, { replace: true });
-      } else if (from?.pathname) {
-        navigate(from.pathname, { replace: true });
-      } else {
-        navigate('/', { replace: true });
-      }
+      navigate(from, { replace: true });
     } catch (error: any) {
       console.error('Profile setup error:', error);
       toast({

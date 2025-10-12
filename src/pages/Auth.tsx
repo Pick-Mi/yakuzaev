@@ -61,9 +61,8 @@ const COUNTRIES = [
 const Auth = () => {
   const location = useLocation();
   const shouldShowSignUp = location.state?.showSignUp || false;
-  const shouldShowPhoneLogin = location.state?.showPhoneLogin || false;
   
-  const [step, setStep] = useState<'phone' | 'otp' | 'email' | 'profile'>(shouldShowPhoneLogin ? 'phone' : 'phone');
+  const [step, setStep] = useState<'phone' | 'otp' | 'email' | 'profile'>('phone');
   const [isSignUp, setIsSignUp] = useState(shouldShowSignUp);
   const [countryCode, setCountryCode] = useState('+91');
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -177,12 +176,12 @@ const Auth = () => {
         // Check if user already has a complete profile
         const { data: profile } = await supabase
           .from('profiles')
-          .select('first_name, last_name, email, country')
+          .select('first_name, last_name, email')
           .eq('user_id', session.session.user.id)
           .single();
 
         // If profile exists with required fields, redirect to home
-        if (profile && profile.first_name && profile.email && profile.country) {
+        if (profile && profile.first_name && profile.email) {
           toast({
             title: "Welcome Back!",
             description: "You have been signed in successfully.",
@@ -192,12 +191,8 @@ const Auth = () => {
         }
       }
 
-      // New user - redirect to profile setup
-      toast({
-        title: "OTP Verified!",
-        description: "Please complete your profile to continue.",
-      });
-      navigate('/profile-setup', { state: { from } });
+      // New user - show success dialog and redirect to profile setup
+      setShowSuccessDialog(true);
     } catch (error: any) {
       toast({
         title: "Verification Error",

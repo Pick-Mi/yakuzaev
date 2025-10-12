@@ -36,11 +36,7 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/auth" element={<Auth />} />
-              <Route path="/profile-setup" element={
-                <ProtectedRoute>
-                  <ProfileSetup />
-                </ProtectedRoute>
-              } />
+              <Route path="/profile-setup" element={<ProfileSetup />} />
               <Route path="/products" element={<Products />} />
               <Route path="/product/:id" element={<Product />} />
               <Route path="/profile" element={
