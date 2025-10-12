@@ -30,6 +30,7 @@ const Auth = () => {
   const [otp, setOtp] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [profileEmail, setProfileEmail] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [firstName, setFirstName] = useState('');
@@ -166,10 +167,21 @@ const Auth = () => {
   const handleProfileSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    console.log('Profile submit started', { firstName, lastName, profileEmail });
+    
     if (!firstName.trim()) {
       toast({
         title: "Name required",
         description: "Please enter your first name",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!profileEmail.trim()) {
+      toast({
+        title: "Email required",
+        description: "Please enter your email address",
         variant: "destructive",
       });
       return;
@@ -183,19 +195,27 @@ const Auth = () => {
         throw new Error("No user session found");
       }
 
+      console.log('Updating profile for user:', session.session.user.id);
+
       const { error } = await supabase
         .from('profiles')
         .update({
           first_name: firstName.trim(),
           last_name: lastName.trim(),
+          email: profileEmail.trim(),
         })
         .eq('user_id', session.session.user.id);
 
-      if (error) throw error;
+      if (error) {
+        console.error('Profile update error:', error);
+        throw error;
+      }
 
+      console.log('Profile updated successfully, showing dialog');
       // Show success dialog instead of navigating directly
       setShowProfileSuccessDialog(true);
     } catch (error: any) {
+      console.error('Profile submit error:', error);
       toast({
         title: "Error",
         description: error.message || "Failed to save profile",
@@ -528,6 +548,19 @@ const Auth = () => {
                       value={lastName}
                       onChange={(e) => setLastName(e.target.value)}
                       className="h-12 bg-gray-50 border-gray-200 text-base"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="profileEmail" className="text-gray-700 text-sm">Email *</Label>
+                    <Input
+                      id="profileEmail"
+                      type="email"
+                      placeholder="Enter your email"
+                      value={profileEmail}
+                      onChange={(e) => setProfileEmail(e.target.value)}
+                      className="h-12 bg-gray-50 border-gray-200 text-base"
+                      required
                     />
                   </div>
                   
