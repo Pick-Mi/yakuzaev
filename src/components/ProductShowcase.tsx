@@ -154,27 +154,11 @@ const ProductShowcase = () => {
             ))}
           </div>
 
-          <div className="flex gap-[25px] items-center">
-            <button 
-              onClick={scrollLeft}
-              className="bg-[rgba(0,0,0,0.03)] p-[12.086px] flex items-center gap-[12.086px] hover:bg-[rgba(0,0,0,0.08)] transition-colors"
-              aria-label="Scroll left"
-            >
-              <ChevronDown className="w-[29px] h-[29px] text-[#4D4D4D] rotate-90" />
-            </button>
-            <button 
-              onClick={scrollRight}
-              className="bg-[rgba(0,0,0,0.03)] p-[12.086px] flex items-center gap-[12.086px] hover:bg-[rgba(0,0,0,0.08)] transition-colors"
-              aria-label="Scroll right"
-            >
-              <ChevronDown className="w-[29px] h-[29px] text-[#4D4D4D] -rotate-90" />
-            </button>
-          </div>
         </div>
 
-        {/* Product Cards Horizontal Scroll */}
-        <div className="overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]" ref={scrollContainerRef}>
-          <div className="flex gap-[35px] pb-4">
+        {/* Product Cards Grid */}
+        <div>
+          <div className="grid grid-cols-3 gap-[35px] pb-4">
             {loading ? (
               <div className="w-full text-center py-8">
                 <p className="text-[#212121] opacity-80">Loading products...</p>
@@ -187,7 +171,7 @@ const ProductShowcase = () => {
               products.map((product: any) => (
                 <div
                   key={product.id}
-                  className="bg-white flex-shrink-0 w-[403.788px] flex flex-col gap-[25px] pb-5"
+                  className="bg-white flex flex-col gap-[25px] pb-5"
                 >
                   {/* Product Image */}
                   <div className="w-full h-[270px] bg-[#b7b8b8] flex items-center justify-center overflow-hidden">
