@@ -45,7 +45,7 @@ const Product = () => {
         // Using any type to bypass the current type limitations
         const response = await (supabase as any)
           .from('products')
-          .select('id, name, price, image_url, images, description, is_active, preview_section, features, visual_features, design_features, benefits, promo_card, videos, accessories, qa_section')
+          .select('id, name, price, image_url, images, description, is_active, preview_section, features, visual_features, design_features, benefits, promo_card, videos, accessories, qa_section, variants, specification_titles')
           .eq('id', id)
           .eq('is_active', true)
           .single();
@@ -63,8 +63,25 @@ const Product = () => {
             parsedImages = [];
           }
 
-          // Set empty variants array since column doesn't exist
-          const parsedVariants = [];
+          // Parse variants if it's a JSON string
+          let parsedVariants = [];
+          try {
+            parsedVariants = typeof response.data.variants === 'string' 
+              ? JSON.parse(response.data.variants) 
+              : response.data.variants || [];
+          } catch (e) {
+            parsedVariants = [];
+          }
+
+          // Parse specification_titles if it's a JSON string
+          let parsedSpecificationTitles = [];
+          try {
+            parsedSpecificationTitles = typeof response.data.specification_titles === 'string' 
+              ? JSON.parse(response.data.specification_titles) 
+              : response.data.specification_titles || [];
+          } catch (e) {
+            parsedSpecificationTitles = [];
+          }
 
           // Parse preview_section if it's a JSON string
           let parsedPreviewSection = {};
@@ -170,6 +187,7 @@ const Product = () => {
             recommended: true,
             description: response.data.description || "High-quality product for your needs.",
             variants: parsedVariants,
+            specification_titles: parsedSpecificationTitles,
             preview_section: parsedPreviewSection,
             features: parsedFeatures,
             visual_features: parsedVisualFeatures,
