@@ -28,11 +28,6 @@ const ProductShowcase = () => {
 
         const fetchedCategories = categoriesResponse.data || [];
         setCategories(fetchedCategories);
-        
-        // Set first category as active by default
-        if (fetchedCategories.length > 0 && !activeCategory) {
-          setActiveCategory(fetchedCategories[0].id);
-        }
 
         // Fetch products
         let productsQuery = (supabase as any)
@@ -134,6 +129,16 @@ const ProductShowcase = () => {
         {/* Tab Navigation */}
         <div className="flex items-center justify-between mb-20">
           <div className="flex gap-5">
+            <button
+              onClick={() => setActiveCategory(null)}
+              className={`px-5 py-[13px] font-['Poppins'] text-[16px] transition-colors ${
+                activeCategory === null
+                  ? "bg-[#12141d] text-white opacity-90 shadow-[3px_4px_16px_0px_rgba(0,0,0,0.1)]"
+                  : "bg-white text-[#12141d] opacity-90"
+              }`}
+            >
+              All Models
+            </button>
             {categories.map((category: any) => (
               <button
                 key={category.id}
