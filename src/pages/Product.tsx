@@ -37,6 +37,7 @@ const Product = () => {
   const [product, setProduct] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [selectedVariant, setSelectedVariant] = useState<any>(null);
+  const [variantFromSection, setVariantFromSection] = useState<any>(null);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -240,7 +241,22 @@ const Product = () => {
   };
 
   const getCurrentPrice = () => {
-    return selectedVariant ? selectedVariant.price : product?.price || 0;
+    // Prioritize variant from pricing section over bottom nav variant
+    const activeVariant = variantFromSection || selectedVariant;
+    if (activeVariant && activeVariant.price) {
+      // Remove currency symbol and parse
+      const priceStr = activeVariant.price.replace(/[₹,]/g, '');
+      return parseFloat(priceStr) || product?.price || 0;
+    }
+    return product?.price || 0;
+  };
+
+  const handleVariantSelect = (variant: any) => {
+    setVariantFromSection(variant);
+    setSelectedVariant({
+      name: variant.name,
+      price: parseFloat(variant.price.replace(/[₹,]/g, '')) || 0
+    });
   };
 
   if (loading) {
@@ -313,7 +329,7 @@ const Product = () => {
       <ColorVarietySection />
       
       {/* Variants Pricing Section */}
-      <VariantsPricingSection />
+      <VariantsPricingSection onVariantSelect={handleVariantSelect} />
       
       {/* Accessories Section */}
       <AccessoriesSection accessories={product.accessories} />

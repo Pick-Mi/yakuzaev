@@ -72,9 +72,16 @@ export const ProductBottomNav = ({
     >
       <div className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-between gap-4">
-          {/* Product Name */}
-          <div className="font-['Poppins'] font-medium text-[18px] text-gray-800 min-w-[150px]">
-            {productName}
+          {/* Product Name & Variant */}
+          <div className="flex items-center gap-3">
+            <div className="font-['Poppins'] font-medium text-[18px] text-gray-800 min-w-[150px]">
+              {productName}
+            </div>
+            {selectedVariant && (
+              <div className="text-[14px] text-gray-600">
+                {selectedVariant.name}
+              </div>
+            )}
           </div>
 
           {/* Variant Selector */}

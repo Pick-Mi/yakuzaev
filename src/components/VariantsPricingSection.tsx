@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import { useState } from 'react';
 
 interface VariantSpec {
   name: string;
@@ -10,7 +11,13 @@ interface VariantSpec {
   peakPower: string;
 }
 
-const VariantsPricingSection = () => {
+interface VariantsPricingSectionProps {
+  onVariantSelect?: (variant: VariantSpec) => void;
+}
+
+const VariantsPricingSection = ({ onVariantSelect }: VariantsPricingSectionProps) => {
+  const [selectedVariantIndex, setSelectedVariantIndex] = useState<number | null>(null);
+
   const variants: VariantSpec[] = [
     {
       name: 'YAKUZA NEU + 43V',
@@ -107,13 +114,21 @@ const VariantsPricingSection = () => {
           {/* Select Buttons Row */}
           <div className="grid grid-cols-4 bg-white pt-6 pb-8">
             <div className="p-6"></div>
-            {variants.map((_, index) => (
+            {variants.map((variant, index) => (
               <div key={index} className="p-6 flex items-center justify-center border-l border-gray-200">
                 <Button 
                   variant="outline" 
-                  className="w-full max-w-[160px] h-12 font-inter font-medium text-[16px] border-2 border-[#000000] hover:bg-[#000000] hover:text-white transition-colors"
+                  onClick={() => {
+                    setSelectedVariantIndex(index);
+                    onVariantSelect?.(variant);
+                  }}
+                  className={`w-full max-w-[160px] h-12 font-inter font-medium text-[16px] border-2 transition-colors ${
+                    selectedVariantIndex === index 
+                      ? 'bg-[#000000] text-white border-[#000000]' 
+                      : 'border-[#000000] hover:bg-[#000000] hover:text-white'
+                  }`}
                 >
-                  Select
+                  {selectedVariantIndex === index ? 'Selected' : 'Select'}
                 </Button>
               </div>
             ))}
