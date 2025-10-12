@@ -4,7 +4,7 @@ interface PromoCard {
   image?: string;
   title?: string;
   description?: string;
-  features?: string[];
+  features?: Array<string | { icon?: string; label?: string; text?: string }>;
   buttonText?: string;
   buttonLink?: string;
 }
@@ -49,7 +49,7 @@ const ThrillsSection = ({ promoCard }: ThrillsSectionProps) => {
               {features.map((feature, index) => (
                 <div key={index} className="text-center">
                   <p className="font-inter font-normal text-sm text-[#b0b0b0]">
-                    {feature}
+                    {typeof feature === 'string' ? feature : feature.label || feature.text}
                   </p>
                 </div>
               ))}
