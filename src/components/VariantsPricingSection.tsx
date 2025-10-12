@@ -61,7 +61,7 @@ const VariantsPricingSection = ({ onVariantSelect, variants: propVariants, speci
               className={`grid grid-cols-4 ${rowIndex !== specRows.length - 1 ? 'border-b border-gray-200' : ''}`}
             >
               <div className="p-6 font-inter font-medium text-[16px] text-[#000000]">
-                {spec.label}
+                {rowIndex + 1}. {spec.label}
               </div>
               {variants.map((variant, colIndex) => (
                 <div 
