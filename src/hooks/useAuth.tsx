@@ -61,8 +61,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const signOut = async () => {
-    const { error } = await supabase.auth.signOut();
-    return { error };
+    try {
+      const { error } = await supabase.auth.signOut();
+      // Clear local state regardless of API response
+      setSession(null);
+      setUser(null);
+      return { error };
+    } catch (error) {
+      // Clear local state even if signOut fails
+      setSession(null);
+      setUser(null);
+      return { error };
+    }
   };
 
   const signInWithEmail = async (email: string, password: string) => {

@@ -175,8 +175,14 @@ const Profile = () => {
   };
 
   const handleLogout = async () => {
-    await signOut();
-    navigate("/");
+    try {
+      await signOut();
+    } catch (error) {
+      console.error('Logout error:', error);
+    } finally {
+      // Always navigate to home and clear local state, even if API call fails
+      navigate("/", { replace: true });
+    }
   };
 
   return (
