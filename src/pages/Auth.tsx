@@ -61,8 +61,9 @@ const COUNTRIES = [
 const Auth = () => {
   const location = useLocation();
   const shouldShowSignUp = location.state?.showSignUp || false;
+  const shouldShowPhoneLogin = location.state?.showPhoneLogin || false;
   
-  const [step, setStep] = useState<'phone' | 'otp' | 'email' | 'profile'>('phone');
+  const [step, setStep] = useState<'phone' | 'otp' | 'email' | 'profile'>(shouldShowPhoneLogin ? 'phone' : 'phone');
   const [isSignUp, setIsSignUp] = useState(shouldShowSignUp);
   const [countryCode, setCountryCode] = useState('+91');
   const [phoneNumber, setPhoneNumber] = useState('');
