@@ -8,6 +8,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
+import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
 const ProfileSetup = () => {
@@ -100,9 +101,8 @@ const ProfileSetup = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      <header className="fixed top-0 left-0 right-0 bg-background border-b border-border z-50 h-16 flex items-center px-4">
-        <h1 className="text-xl font-semibold">Profile Setup</h1>
-      </header>
+      <Header />
+      
       
       
       <div className="flex-1 flex items-center justify-center p-4 pt-32 pb-16">
