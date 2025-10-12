@@ -152,6 +152,16 @@ const Product = () => {
             parsedAccessories = [];
           }
 
+          // Parse qa_section if it's a JSON string
+          let parsedQASection = [];
+          try {
+            parsedQASection = typeof response.data.qa_section === 'string' 
+              ? JSON.parse(response.data.qa_section) 
+              : response.data.qa_section || [];
+          } catch (e) {
+            parsedQASection = [];
+          }
+
           const fetchedProduct = {
             id: response.data.id,
             name: response.data.name,
@@ -170,7 +180,8 @@ const Product = () => {
             benefits: parsedBenefits,
             promo_card: parsedPromoCard,
             videos: parsedVideos,
-            accessories: parsedAccessories
+            accessories: parsedAccessories,
+            qa_section: parsedQASection
           };
           setProduct(fetchedProduct);
           
@@ -308,7 +319,7 @@ const Product = () => {
       <ProductShowcase />
       
       {/* FAQ Section */}
-      <FAQSection />
+      <FAQSection faqs={product.qa_section} />
 
       {/* Footer */}
       <Footer />

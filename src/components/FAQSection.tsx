@@ -5,7 +5,14 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 
-const faqs = [
+interface FAQSectionProps {
+  faqs?: Array<{
+    question: string;
+    answer: string;
+  }>;
+}
+
+const defaultFaqs = [
   {
     question: "Why is New a better choice for customers looking for a family scooter?",
     answer: "From the ground up, Other Yakuza New is made for your family. It has all the space, safety and smarts your loved ones need on their everyday rides.",
@@ -28,7 +35,8 @@ const faqs = [
   },
 ];
 
-export const FAQSection = () => {
+export const FAQSection = ({ faqs = defaultFaqs }: FAQSectionProps) => {
+  const displayFaqs = faqs && faqs.length > 0 ? faqs : defaultFaqs;
   return (
     <section className="py-16 px-4 bg-[#f8f9f9]">
       <div className="container mx-auto max-w-7xl">
@@ -45,7 +53,7 @@ export const FAQSection = () => {
           {/* FAQ Accordion */}
           <div>
             <Accordion type="single" collapsible className="w-full space-y-4">
-              {faqs.map((faq, index) => (
+              {displayFaqs.map((faq, index) => (
                 <AccordionItem 
                   key={index} 
                   value={`item-${index}`}
