@@ -382,7 +382,7 @@ const BookingConfirmation = () => {
       const orderData = {
         customer_id: user.id,
         total_amount: totalAmount,
-        status: 'pending',
+        status: 'placed',
         payment_status: 'pending',
         order_items_data: [{
           product_id: product.id,
