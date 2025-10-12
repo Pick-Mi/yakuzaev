@@ -10,6 +10,13 @@ import {
   AlertDialogDescription,
   AlertDialogFooter,
 } from '@/components/ui/alert-dialog';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import { Chrome, Eye, EyeOff, CheckCircle2 } from 'lucide-react';
@@ -18,6 +25,38 @@ import { useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+
+const COUNTRIES = [
+  { code: '+91', name: 'India', flag: '🇮🇳' },
+  { code: '+1', name: 'USA', flag: '🇺🇸' },
+  { code: '+44', name: 'UK', flag: '🇬🇧' },
+  { code: '+61', name: 'Australia', flag: '🇦🇺' },
+  { code: '+81', name: 'Japan', flag: '🇯🇵' },
+  { code: '+86', name: 'China', flag: '🇨🇳' },
+  { code: '+49', name: 'Germany', flag: '🇩🇪' },
+  { code: '+33', name: 'France', flag: '🇫🇷' },
+  { code: '+39', name: 'Italy', flag: '🇮🇹' },
+  { code: '+7', name: 'Russia', flag: '🇷🇺' },
+  { code: '+55', name: 'Brazil', flag: '🇧🇷' },
+  { code: '+27', name: 'South Africa', flag: '🇿🇦' },
+  { code: '+82', name: 'South Korea', flag: '🇰🇷' },
+  { code: '+34', name: 'Spain', flag: '🇪🇸' },
+  { code: '+52', name: 'Mexico', flag: '🇲🇽' },
+  { code: '+971', name: 'UAE', flag: '🇦🇪' },
+  { code: '+65', name: 'Singapore', flag: '🇸🇬' },
+  { code: '+60', name: 'Malaysia', flag: '🇲🇾' },
+  { code: '+62', name: 'Indonesia', flag: '🇮🇩' },
+  { code: '+66', name: 'Thailand', flag: '🇹🇭' },
+  { code: '+63', name: 'Philippines', flag: '🇵🇭' },
+  { code: '+84', name: 'Vietnam', flag: '🇻🇳' },
+  { code: '+20', name: 'Egypt', flag: '🇪🇬' },
+  { code: '+234', name: 'Nigeria', flag: '🇳🇬' },
+  { code: '+254', name: 'Kenya', flag: '🇰🇪' },
+  { code: '+92', name: 'Pakistan', flag: '🇵🇰' },
+  { code: '+880', name: 'Bangladesh', flag: '🇧🇩' },
+  { code: '+94', name: 'Sri Lanka', flag: '🇱🇰' },
+  { code: '+977', name: 'Nepal', flag: '🇳🇵' },
+];
 
 const Auth = () => {
   const location = useLocation();
@@ -491,10 +530,27 @@ const Auth = () => {
                 <form onSubmit={handlePhoneSubmit} className="space-y-6">
                   <div className="space-y-2">
                     <div className="flex gap-3 items-center bg-gray-50 border border-gray-200 rounded-lg px-4 py-3">
-                      <div className="flex items-center gap-2 text-gray-900">
-                        <span className="text-xl">🇮🇳</span>
-                        <span className="font-medium">{countryCode}</span>
-                      </div>
+                      <Select value={countryCode} onValueChange={setCountryCode}>
+                        <SelectTrigger className="w-[140px] border-0 bg-transparent p-0 h-auto gap-2 focus:ring-0 focus:ring-offset-0">
+                          <SelectValue>
+                            <div className="flex items-center gap-2 text-gray-900">
+                              <span className="text-xl">{COUNTRIES.find(c => c.code === countryCode)?.flag || '🇮🇳'}</span>
+                              <span className="font-medium">{countryCode}</span>
+                            </div>
+                          </SelectValue>
+                        </SelectTrigger>
+                        <SelectContent className="max-h-[300px]">
+                          {COUNTRIES.map((country) => (
+                            <SelectItem key={country.code} value={country.code}>
+                              <div className="flex items-center gap-2">
+                                <span className="text-xl">{country.flag}</span>
+                                <span>{country.name}</span>
+                                <span className="text-muted-foreground">{country.code}</span>
+                              </div>
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                       
                       <Input
                         id="phone"
