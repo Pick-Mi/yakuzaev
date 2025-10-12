@@ -105,7 +105,7 @@ const ProfileSetup = () => {
       
       <div className="flex-1 flex items-center justify-center p-4 pt-32 pb-16">
         <div className="w-full max-w-4xl">
-          <form onSubmit={handleSubmit} className="space-y-8 bg-card p-8 md:p-12 rounded-lg">
+          <form onSubmit={handleSubmit} className="space-y-8 bg-card p-8 md:p-12">
             <h1 className="text-4xl font-bold mb-8">Create Account</h1>
 
             {/* Personal Details */}
