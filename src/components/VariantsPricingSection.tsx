@@ -51,6 +51,11 @@ const VariantsPricingSection = ({ onVariantSelect, variants: propVariants, speci
 
   // Only use specificationTitles from props (database), no defaults
   const specRows = specificationTitles || [];
+  
+  // Don't render if no variants or no specification titles
+  if (!variants || variants.length === 0 || !specRows || specRows.length === 0) {
+    return null;
+  }
 
   return (
     <section className="bg-[#F8F9F9] w-full py-16 px-4 md:px-[70px] mt-[80px]">
