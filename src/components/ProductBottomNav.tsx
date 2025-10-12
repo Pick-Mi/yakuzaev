@@ -72,23 +72,13 @@ export const ProductBottomNav = ({
     >
       <div className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-between gap-4">
-          {/* Product Name & Variant */}
-          <div className="flex items-center gap-3">
-            <div className="font-['Poppins'] font-medium text-[18px] text-gray-800 min-w-[150px]">
-              {productName}
-            </div>
-            {selectedVariant && (
-              <div className="text-[14px] text-gray-600">
-                {selectedVariant.name}
-              </div>
-            )}
+          {/* Product Name */}
+          <div className="font-['Poppins'] font-medium text-[18px] text-gray-800 min-w-[150px]">
+            {productName}
           </div>
 
           {/* Variant Selector */}
           <div className="flex items-center gap-2">
-            <span className="font-['Inter'] text-[14px] text-gray-600">
-              Pick your variant
-            </span>
             <Select
               value={selectedVariant?.name || ""}
               onValueChange={(value) => {
@@ -96,8 +86,8 @@ export const ProductBottomNav = ({
                 if (variant) onVariantChange(variant);
               }}
             >
-              <SelectTrigger className="w-[140px] h-[36px] bg-white border-gray-300">
-                <SelectValue placeholder="Select variant" />
+              <SelectTrigger className="w-[200px] h-[40px] bg-white border-gray-300 font-['Inter'] text-[14px]">
+                <SelectValue placeholder="Pick your variant" />
               </SelectTrigger>
               <SelectContent className="bg-white z-[100]">
                 {variants.map((variant, index) => (
