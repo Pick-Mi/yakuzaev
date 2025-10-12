@@ -79,12 +79,35 @@ const Profile = () => {
         .from('profiles')
         .select('*')
         .eq('user_id', user?.id)
-        .single();
+        .maybeSingle();
 
       if (error) throw error;
 
       if (data) {
-        setProfile(data);
+        // Ensure all string fields have default values to prevent controlled/uncontrolled input warnings
+        setProfile({
+          ...data,
+          first_name: data.first_name || "",
+          last_name: data.last_name || "",
+          email: data.email || "",
+          phone: data.phone || "",
+          date_of_birth: data.date_of_birth || "",
+          gender: data.gender || "",
+          street_address: data.street_address || "",
+          apartment_unit: data.apartment_unit || "",
+          city: data.city || "",
+          state_province: data.state_province || "",
+          postal_code: data.postal_code || "",
+          country: data.country || "India",
+          billing_street_address: data.billing_street_address || "",
+          billing_apartment_unit: data.billing_apartment_unit || "",
+          billing_city: data.billing_city || "",
+          billing_state_province: data.billing_state_province || "",
+          billing_postal_code: data.billing_postal_code || "",
+          billing_country: data.billing_country || "India",
+          preferred_payment_method: data.preferred_payment_method || "",
+          customer_notes: data.customer_notes || "",
+        });
       }
     } catch (error) {
       console.error('Error fetching profile:', error);
