@@ -6,7 +6,6 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
-import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
 const ProfileSetup = () => {
@@ -76,9 +75,14 @@ const ProfileSetup = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      <Header />
+      {/* Simple Fixed Header */}
+      <header className="fixed top-0 left-0 right-0 z-50 bg-background border-b">
+        <div className="container mx-auto px-4 h-16 flex items-center justify-center">
+          <h2 className="text-xl font-bold">Profile Setup</h2>
+        </div>
+      </header>
       
-      <div className="flex-1 flex items-center justify-center p-4 pt-32">
+      <div className="flex-1 flex items-center justify-center p-4 pt-24">
         <div className="w-full max-w-md">
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold mb-2">Complete Your Profile</h1>
