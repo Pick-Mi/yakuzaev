@@ -43,7 +43,7 @@ const Product = () => {
         // Using any type to bypass the current type limitations
         const response = await (supabase as any)
           .from('products')
-          .select('id, name, price, image_url, images, description, variants, is_active, preview_section, features, visual_features, design_features')
+          .select('id, name, price, image_url, images, description, variants, is_active, preview_section, features, visual_features, design_features, benefits')
           .eq('id', id)
           .eq('is_active', true)
           .single();
@@ -111,6 +111,16 @@ const Product = () => {
             parsedDesignFeatures = [];
           }
 
+          // Parse benefits if it's a JSON string
+          let parsedBenefits = [];
+          try {
+            parsedBenefits = typeof response.data.benefits === 'string' 
+              ? JSON.parse(response.data.benefits) 
+              : response.data.benefits || [];
+          } catch (e) {
+            parsedBenefits = [];
+          }
+
           const fetchedProduct = {
             id: response.data.id,
             name: response.data.name,
@@ -125,7 +135,8 @@ const Product = () => {
             preview_section: parsedPreviewSection,
             features: parsedFeatures,
             visual_features: parsedVisualFeatures,
-            design_features: parsedDesignFeatures
+            design_features: parsedDesignFeatures,
+            benefits: parsedBenefits
           };
           setProduct(fetchedProduct);
           
@@ -242,7 +253,7 @@ const Product = () => {
       <DesignSection designFeatures={product.design_features} />
       
       {/* Features and Benefits Section */}
-      <FeaturesAndBenefitsSection />
+      <FeaturesAndBenefitsSection benefits={product.benefits} />
       
       {/* Thrills Section */}
       <ThrillsSection />
