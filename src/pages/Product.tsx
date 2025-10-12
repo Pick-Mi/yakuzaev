@@ -15,7 +15,7 @@ import RideInMotion from "@/components/RideInMotion";
 import ColorVarietySection from "@/components/ColorVarietySection";
 import VariantsPricingSection from "@/components/VariantsPricingSection";
 import AccessoriesSection from "@/components/AccessoriesSection";
-import ProductListingSection from "@/components/ProductListingSection";
+import ProductShowcase from "@/components/ProductShowcase";
 import { FAQSection } from "@/components/FAQSection";
 import { ProductBottomNav } from "@/components/ProductBottomNav";
 import Footer from "@/components/Footer";
@@ -304,8 +304,8 @@ const Product = () => {
       {/* Accessories Section */}
       <AccessoriesSection accessories={product.accessories} />
       
-      {/* Product Listing Section */}
-      <ProductListingSection />
+      {/* Product Showcase Section */}
+      <ProductShowcase />
       
       {/* FAQ Section */}
       <FAQSection />
