@@ -276,10 +276,24 @@ const BookingConfirmation = () => {
         setLastName(data.last_name || '');
         setEmail(data.email || '');
         setAddress(data.street_address || '');
+        setCity(data.city || '');
+        setState(data.state_province || '');
+        setPincode(data.postal_code || '');
         setDocumentType(data.document_type || 'aadhaar');
         setAadhaarNumber(data.document_number || '');
         setConsentChecked(data.consent_given || false);
         setAddressMatchChecked(data.address_matches_id || false);
+        
+        // If user has phone and is verified, auto-fill phone
+        if (data.phone && data.is_verified) {
+          // Extract country code and phone number
+          const phoneMatch = data.phone.match(/^(\+\d+)(\d+)$/);
+          if (phoneMatch) {
+            setCountryCode(phoneMatch[1]);
+            setPhoneNumber(phoneMatch[2]);
+            setIsVerified(true);
+          }
+        }
       }
     } catch (error) {
       console.error('Error loading profile:', error);
@@ -502,11 +516,12 @@ const BookingConfirmation = () => {
     }
   }, [product, navigate]);
 
+  // Load profile data on mount if user is already logged in
   useEffect(() => {
-    if (isVerified && user) {
+    if (user) {
       loadProfileData();
     }
-  }, [isVerified, user]);
+  }, [user]);
 
   if (!product) {
     return null;
@@ -723,37 +738,22 @@ const BookingConfirmation = () => {
                     {isVerified ? (
                       /* Verified Phone Display */
                       <div className="space-y-2">
-                        <Label className="text-sm text-muted-foreground">Phone No*</Label>
+                        <Label className="text-sm text-muted-foreground">Phone No* (Verified)</Label>
                         <div className="flex gap-3">
-                          <div className="flex-1 h-12 border border-border rounded px-4 flex items-center justify-between">
-                            <span className="text-base">{countryCode} {phoneNumber}</span>
+                          <div className="flex-1 h-12 border-2 border-green-500 bg-green-50/50 rounded px-4 flex items-center justify-between">
+                            <span className="text-base font-medium">{countryCode} {phoneNumber}</span>
                             <span className="flex items-center gap-2 text-green-600 text-sm font-medium">
                               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                               </svg>
+                              Verified
                             </span>
                           </div>
                         </div>
                         <div className="flex items-center justify-between">
-                          <p className="text-xs text-muted-foreground">
-                            A carrier might contact you to confirm delivery
+                          <p className="text-xs text-green-600 font-medium">
+                            ✓ Your verified mobile number
                           </p>
-                          <button
-                            type="button"
-                            className="text-xs text-primary hover:underline"
-                            onClick={() => {
-                              const confirmed = window.confirm(
-                                "Are you sure you want to change your verified phone number? You will need to verify the new number again."
-                              );
-                              if (confirmed) {
-                                setIsVerified(false);
-                                setPhoneNumber('');
-                                setOtp('');
-                              }
-                            }}
-                          >
-                            Change
-                          </button>
                         </div>
                       </div>
                     ) : (
