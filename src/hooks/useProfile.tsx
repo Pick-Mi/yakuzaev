@@ -4,8 +4,6 @@ import { useAuth } from './useAuth';
 
 interface Profile {
   id: string;
-  display_name: string | null;
-  username: string | null;
   first_name: string | null;
   last_name: string | null;
   email: string | null;
@@ -30,7 +28,7 @@ export const useProfile = () => {
       try {
         const { data, error } = await supabase
           .from('profiles')
-          .select('id, display_name, first_name, last_name, email, username')
+          .select('id, first_name, last_name, email')
           .eq('user_id', user.id)
           .maybeSingle(); // Use maybeSingle to handle case where profile doesn't exist
 
@@ -48,9 +46,9 @@ export const useProfile = () => {
             .insert({
               user_id: user.id,
               email: user.email,
-              display_name: user.email?.split('@')[0] || 'User'
+              first_name: user.email?.split('@')[0] || 'User'
             })
-            .select('id, display_name, first_name, last_name, email, username')
+            .select('id, first_name, last_name, email')
             .single();
 
           if (createError) {
@@ -75,8 +73,6 @@ export const useProfile = () => {
   const getDisplayName = () => {
     if (!profile) return user?.email || 'User';
     
-    if (profile.display_name) return profile.display_name;
-    if (profile.username) return profile.username;
     if (profile.first_name && profile.last_name) {
       return `${profile.first_name} ${profile.last_name}`;
     }
@@ -92,7 +88,7 @@ export const useProfile = () => {
       try {
         const { data, error } = await supabase
           .from('profiles')
-          .select('id, display_name, first_name, last_name, email, username')
+          .select('id, first_name, last_name, email')
           .eq('user_id', user.id)
           .single();
 
