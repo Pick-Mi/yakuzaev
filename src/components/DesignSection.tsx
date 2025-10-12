@@ -1,6 +1,18 @@
 import { Box } from "lucide-react";
 
-const DesignSection = () => {
+interface DesignFeature {
+  image?: string;
+  text?: string;
+  width?: string;
+}
+
+interface DesignSectionProps {
+  designFeatures?: DesignFeature[];
+}
+
+const DesignSection = ({ designFeatures = [] }: DesignSectionProps) => {
+  const thirdCard = designFeatures[2];
+
   return (
     <section className="bg-[#F8F9F9] w-full py-12 px-4">
       <div className="max-w-[1300px] mx-auto">
@@ -10,10 +22,19 @@ const DesignSection = () => {
         <div className="flex flex-col gap-8">
           {/* First Row - Two Main Cards */}
           <div className="flex gap-8">
-            {/* New Stylish Bike Card */}
-            <div className="bg-[#8a8a8a] h-[460px] flex-[63] relative overflow-hidden">
-              <div className="absolute left-8 top-8 flex flex-col gap-3 text-white">
-                <p className="font-inter font-medium text-[28px]">New Stylish Bike</p>
+            {/* Third Design Card - Dynamic from Database */}
+            <div 
+              className="h-[460px] flex-[63] relative overflow-hidden"
+              style={{
+                backgroundImage: thirdCard?.image ? `url(${thirdCard.image})` : undefined,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundColor: thirdCard?.image ? 'transparent' : '#8a8a8a'
+              }}
+            >
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+              <div className="absolute left-8 top-8 flex flex-col gap-3 text-white z-10">
+                <p className="font-inter font-medium text-[28px]">{thirdCard?.text || 'New Stylish Bike'}</p>
                 <p className="font-inter font-normal text-[22px] opacity-70">Elegance engineered for speed</p>
               </div>
             </div>
