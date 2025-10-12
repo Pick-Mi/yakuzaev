@@ -479,7 +479,7 @@ const Auth = () => {
                   <div className="space-y-3">
                     <Label htmlFor="otp" className="text-gray-700 text-sm font-medium">OTP</Label>
                     <div className="flex gap-3">
-                      {[0, 1, 2, 3].map((index) => (
+                      {[0, 1, 2, 3, 4, 5].map((index) => (
                         <div key={index} className="flex-1">
                           <Input
                             type="text"
@@ -492,7 +492,7 @@ const Auth = () => {
                                 newOtp[index] = value;
                                 setOtp(newOtp.join(''));
                                 // Auto-focus next input
-                                if (index < 3 && e.target.parentElement?.parentElement) {
+                                if (index < 5 && e.target.parentElement?.parentElement) {
                                   const nextInput = e.target.parentElement.parentElement.children[index + 1]?.querySelector('input') as HTMLInputElement;
                                   nextInput?.focus();
                                 }
@@ -515,7 +515,7 @@ const Auth = () => {
                   <Button 
                     type="submit" 
                     className="w-full h-12 bg-gray-900 hover:bg-gray-800 text-white text-base font-medium"
-                    disabled={loading || otp.length < 4}
+                    disabled={loading || otp.length < 6}
                   >
                     {loading ? 'Verifying...' : 'Verify'}
                   </Button>
