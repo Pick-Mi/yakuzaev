@@ -3,6 +3,8 @@ import { Box } from "lucide-react";
 interface DesignFeature {
   image?: string;
   text?: string;
+  title?: string;
+  subtitle?: string;
   width?: string;
 }
 
@@ -35,8 +37,8 @@ const DesignSection = ({ designFeatures = [] }: DesignSectionProps) => {
             >
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
               <div className="absolute left-8 top-8 flex flex-col gap-3 text-white z-10">
-                <p className="font-inter font-medium text-[28px]">{firstCard?.text || 'New Stylish Bike'}</p>
-                <p className="font-inter font-normal text-[22px] opacity-70">Elegance engineered for speed</p>
+                <p className="font-inter font-medium text-[28px]">{firstCard?.title || firstCard?.text || 'New Stylish Bike'}</p>
+                <p className="font-inter font-normal text-[22px] opacity-70">{firstCard?.subtitle || 'Elegance engineered for speed'}</p>
               </div>
             </div>
             
