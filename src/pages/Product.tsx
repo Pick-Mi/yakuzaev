@@ -18,6 +18,7 @@ import AccessoriesSection from "@/components/AccessoriesSection";
 import ProductListingSection from "@/components/ProductListingSection";
 import { FAQSection } from "@/components/FAQSection";
 import { ProductBottomNav } from "@/components/ProductBottomNav";
+import Footer from "@/components/Footer";
 
 
 
@@ -308,6 +309,9 @@ const Product = () => {
       
       {/* FAQ Section */}
       <FAQSection />
+
+      {/* Footer */}
+      <Footer />
 
       {/* Bottom Fixed Navigation */}
       {product && product.variants && product.variants.length > 0 && (
