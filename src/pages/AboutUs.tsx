@@ -1,5 +1,6 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import BlogSection from "@/components/BlogSection";
 import { Zap, Target, Eye, Heart, Users, Award, ArrowRight, BadgeCheck, Copyright } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import teamMeeting from "@/assets/team-meeting.jpg";
@@ -226,6 +227,9 @@ const AboutUs = () => {
             </div>
           </div>
         </section>
+
+        {/* Blog Section */}
+        <BlogSection />
 
         <section className="py-[70px] px-4 bg-[#191E22]">
           <div className="container mx-auto max-w-4xl text-center">
