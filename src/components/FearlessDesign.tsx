@@ -1,17 +1,22 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
 
 interface ProductCardProps {
-  name: string;
-  description: string;
-  price: string;
-  image: string;
-  slug: string;
+  product: {
+    id: string;
+    name: string;
+    thumbnail: string;
+    feature1: string;
+    feature2: string;
+    price: number;
+  };
 }
 
-const ProductCard = ({ name, description, price, image, slug }: ProductCardProps) => {
+const ProductCard = ({ product }: ProductCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
+  const { name, thumbnail, feature1, feature2, price } = product;
 
   return (
     <div
@@ -27,7 +32,7 @@ const ProductCard = ({ name, description, price, image, slug }: ProductCardProps
       >
         <div className="absolute top-0 left-0 w-full h-[503px] bg-gray-200 overflow-hidden">
           <img
-            src={image}
+            src={thumbnail}
             alt={name}
             className="w-full h-full object-cover"
           />
@@ -36,7 +41,7 @@ const ProductCard = ({ name, description, price, image, slug }: ProductCardProps
           <div className="flex items-center justify-between mb-[15px]">
             <div>
               <h3 className="font-medium text-[24px] text-foreground mb-2">{name}</h3>
-              <p className="text-[16px] text-muted-foreground">{description}</p>
+              <p className="text-[16px] text-muted-foreground">{feature1} {feature2}</p>
             </div>
             <div className="h-[36.5px] w-[1px] bg-border opacity-10 mx-4" />
             <div>
@@ -45,7 +50,7 @@ const ProductCard = ({ name, description, price, image, slug }: ProductCardProps
               </p>
               <p>
                 <span className="font-medium text-[20.939px] text-foreground">
-                  {price}
+                  ₹{price.toFixed(2)}
                 </span>
                 <span className="text-[15.705px] text-foreground/75 ml-1">
                   / showroom price
@@ -64,7 +69,7 @@ const ProductCard = ({ name, description, price, image, slug }: ProductCardProps
       >
         <div className="absolute top-0 left-0 w-full h-[329px] overflow-hidden transition-all duration-500">
           <img
-            src={image}
+            src={thumbnail}
             alt={name}
             className="w-full h-full object-cover"
           />
@@ -73,7 +78,7 @@ const ProductCard = ({ name, description, price, image, slug }: ProductCardProps
           <div className="flex items-center justify-between mb-[25px]">
             <div>
               <h3 className="font-medium text-[24px] text-foreground mb-2">{name}</h3>
-              <p className="text-[16px] text-muted-foreground">{description}</p>
+              <p className="text-[16px] text-muted-foreground">{feature1} {feature2}</p>
             </div>
             <div className="h-[36.5px] w-[1px] bg-border opacity-10 mx-4" />
             <div>
@@ -82,7 +87,7 @@ const ProductCard = ({ name, description, price, image, slug }: ProductCardProps
               </p>
               <p>
                 <span className="font-medium text-[20.939px] text-foreground">
-                  {price}
+                  ₹{price.toFixed(2)}
                 </span>
                 <span className="text-[15.705px] text-foreground/75 ml-1">
                   / showroom price
@@ -92,12 +97,12 @@ const ProductCard = ({ name, description, price, image, slug }: ProductCardProps
           </div>
           <div className="w-full h-[1px] bg-border opacity-10 mb-[15px]" />
           <div className="flex flex-col gap-[15px]">
-            <Link to={`/products/${slug}`} className="w-full">
+            <Link to={`/products/${product.id}`} className="w-full">
               <Button className="w-full h-[55px] bg-primary text-primary-foreground hover:bg-primary/90 rounded-none text-[16px] font-medium">
                 Book Now
               </Button>
             </Link>
-            <Link to={`/products/${slug}`} className="w-full">
+            <Link to={`/products/${product.id}`} className="w-full">
               <Button variant="outline" className="w-full h-[55px] bg-background text-foreground border-none rounded-none text-[14px] font-medium">
                 Explore {name}
               </Button>
@@ -110,22 +115,39 @@ const ProductCard = ({ name, description, price, image, slug }: ProductCardProps
 };
 
 const FearlessDesign = () => {
-  const products = [
-    {
-      name: "Nebula",
-      description: "Pure Power. Peak Performance",
-      price: "₹39,616.00",
-      image: "/placeholder.svg",
-      slug: "nebula",
-    },
-    {
-      name: "Cyclone Sway",
-      description: "Pure Power. Peak Performance",
-      price: "₹39,616.00",
-      image: "/placeholder.svg",
-      slug: "cyclone-sway",
-    },
-  ];
+  const [products, setProducts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        // First get the sports category ID
+        const { data: category } = await supabase
+          .from("categories")
+          .select("id")
+          .eq("slug", "sports")
+          .single();
+
+        if (category) {
+          // Fetch products from sports category
+          const { data } = await supabase
+            .from("products")
+            .select("id, name, thumbnail, feature1, feature2, price")
+            .eq("category_id", category.id)
+            .eq("is_active", true)
+            .limit(4);
+
+          setProducts(data || []);
+        }
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
 
   return (
     <section className="relative w-full min-h-[700px] bg-background py-[80px] px-[70px]">
@@ -133,11 +155,17 @@ const FearlessDesign = () => {
         <h2 className="font-medium text-[48px] text-foreground mb-[80px]">
           Fearless by Design
         </h2>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-[40px]">
-          {products.map((product) => (
-            <ProductCard key={product.slug} {...product} />
-          ))}
-        </div>
+        {loading ? (
+          <div className="text-center text-muted-foreground">Loading products...</div>
+        ) : products.length > 0 ? (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-[40px]">
+            {products.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        ) : (
+          <div className="text-center text-muted-foreground">No sports products available</div>
+        )}
       </div>
     </section>
   );
