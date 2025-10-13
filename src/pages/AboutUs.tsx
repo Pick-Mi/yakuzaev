@@ -1,0 +1,214 @@
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import { Zap, Target, Eye, Heart, Users, Award } from "lucide-react";
+
+const AboutUs = () => {
+  return (
+    <div className="min-h-screen bg-background">
+      <Header />
+      
+      <main>
+        {/* Hero Section */}
+        <section className="relative w-full h-[500px] bg-gradient-to-br from-gray-900 via-orange-900 to-orange-700 overflow-hidden">
+          <div className="absolute inset-0 opacity-10">
+            <div className="absolute inset-0" style={{
+              backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)',
+              backgroundSize: '40px 40px'
+            }}></div>
+          </div>
+          
+          <div className="relative z-10 container mx-auto px-6 h-full flex flex-col justify-center">
+            <div className="max-w-3xl">
+              <h1 className="font-sans font-bold text-5xl md:text-7xl leading-tight text-white mb-6">
+                About <span className="text-orange-300">YakuzaEV</span>
+              </h1>
+              <p className="text-xl md:text-2xl text-white/90">
+                Driving India towards a sustainable, electric future with innovative mobility solutions
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Story Section */}
+        <section className="py-[70px] px-4">
+          <div className="container mx-auto max-w-6xl">
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
+              <div>
+                <h2 className="text-4xl md:text-5xl font-bold mb-6">Our Story</h2>
+                <div className="space-y-4 text-lg text-muted-foreground">
+                  <p>
+                    Founded with a vision to revolutionize urban mobility, YakuzaEV emerged as a pioneer 
+                    in India's electric vehicle industry. We recognized the urgent need for sustainable 
+                    transportation solutions that don't compromise on performance or style.
+                  </p>
+                  <p>
+                    What started as a small team of passionate engineers and designers has grown into 
+                    a leading EV manufacturer, serving thousands of customers across India. Our commitment 
+                    to innovation, quality, and customer satisfaction drives everything we do.
+                  </p>
+                  <p>
+                    Today, we're not just building electric scooters – we're building a movement towards 
+                    cleaner cities, healthier communities, and a more sustainable future for generations to come.
+                  </p>
+                </div>
+              </div>
+              
+              <div className="bg-white p-8 rounded-lg">
+                <div className="grid grid-cols-2 gap-6">
+                  <div className="text-center">
+                    <div className="text-4xl font-bold text-orange-600 mb-2">50K+</div>
+                    <div className="text-sm text-muted-foreground">Happy Customers</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-4xl font-bold text-orange-600 mb-2">500+</div>
+                    <div className="text-sm text-muted-foreground">Dealer Network</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-4xl font-bold text-orange-600 mb-2">100+</div>
+                    <div className="text-sm text-muted-foreground">Cities Covered</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-4xl font-bold text-orange-600 mb-2">15+</div>
+                    <div className="text-sm text-muted-foreground">Models Available</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Mission & Vision */}
+        <section className="py-[70px] px-4 bg-muted/30">
+          <div className="container mx-auto max-w-6xl">
+            <div className="grid md:grid-cols-2 gap-8">
+              {/* Mission */}
+              <div className="bg-white p-10 rounded-lg">
+                <div className="w-16 h-16 bg-orange-100 rounded-lg flex items-center justify-center mb-6">
+                  <Target className="w-8 h-8 text-orange-600" strokeWidth={2} />
+                </div>
+                <h3 className="text-3xl font-bold mb-4">Our Mission</h3>
+                <p className="text-lg text-muted-foreground">
+                  To accelerate India's transition to electric mobility by delivering high-performance, 
+                  affordable, and sustainable electric vehicles that exceed customer expectations while 
+                  contributing to a cleaner environment.
+                </p>
+              </div>
+
+              {/* Vision */}
+              <div className="bg-white p-10 rounded-lg">
+                <div className="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center mb-6">
+                  <Eye className="w-8 h-8 text-blue-600" strokeWidth={2} />
+                </div>
+                <h3 className="text-3xl font-bold mb-4">Our Vision</h3>
+                <p className="text-lg text-muted-foreground">
+                  To become India's most trusted electric vehicle brand, leading the charge towards 
+                  zero-emission transportation and inspiring millions to embrace sustainable mobility 
+                  for a better tomorrow.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Core Values */}
+        <section className="py-[70px] px-4">
+          <div className="container mx-auto max-w-6xl">
+            <h2 className="text-4xl md:text-5xl font-bold text-center mb-12">Our Core Values</h2>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {/* Innovation */}
+              <div className="bg-white p-8 rounded-lg text-center">
+                <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <Zap className="w-8 h-8 text-purple-600" strokeWidth={2} />
+                </div>
+                <h4 className="text-xl font-bold mb-3">Innovation</h4>
+                <p className="text-muted-foreground">
+                  Continuously pushing boundaries with cutting-edge technology and design
+                </p>
+              </div>
+
+              {/* Quality */}
+              <div className="bg-white p-8 rounded-lg text-center">
+                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <Award className="w-8 h-8 text-green-600" strokeWidth={2} />
+                </div>
+                <h4 className="text-xl font-bold mb-3">Quality</h4>
+                <p className="text-muted-foreground">
+                  Uncompromising standards in manufacturing and customer service
+                </p>
+              </div>
+
+              {/* Sustainability */}
+              <div className="bg-white p-8 rounded-lg text-center">
+                <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <Heart className="w-8 h-8 text-emerald-600" strokeWidth={2} />
+                </div>
+                <h4 className="text-xl font-bold mb-3">Sustainability</h4>
+                <p className="text-muted-foreground">
+                  Committed to environmental responsibility in everything we do
+                </p>
+              </div>
+
+              {/* Customer First */}
+              <div className="bg-white p-8 rounded-lg text-center">
+                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <Users className="w-8 h-8 text-blue-600" strokeWidth={2} />
+                </div>
+                <h4 className="text-xl font-bold mb-3">Customer First</h4>
+                <p className="text-muted-foreground">
+                  Putting our customers at the heart of every decision we make
+                </p>
+              </div>
+
+              {/* Integrity */}
+              <div className="bg-white p-8 rounded-lg text-center">
+                <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <Target className="w-8 h-8 text-orange-600" strokeWidth={2} />
+                </div>
+                <h4 className="text-xl font-bold mb-3">Integrity</h4>
+                <p className="text-muted-foreground">
+                  Operating with transparency, honesty, and ethical practices
+                </p>
+              </div>
+
+              {/* Excellence */}
+              <div className="bg-white p-8 rounded-lg text-center">
+                <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <Zap className="w-8 h-8 text-red-600" strokeWidth={2} />
+                </div>
+                <h4 className="text-xl font-bold mb-3">Excellence</h4>
+                <p className="text-muted-foreground">
+                  Striving for perfection in every product and service we deliver
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* CTA Section */}
+        <section className="py-[70px] px-4 bg-gradient-to-br from-gray-900 via-orange-900 to-orange-700">
+          <div className="container mx-auto max-w-4xl text-center">
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+              Join the Electric Revolution
+            </h2>
+            <p className="text-xl text-white/90 mb-8">
+              Be part of our journey towards a sustainable future. Explore our range of electric vehicles today.
+            </p>
+            <div className="flex gap-4 justify-center flex-wrap">
+              <a href="/products" className="inline-flex items-center justify-center px-8 py-3 bg-white text-black font-medium rounded-none hover:bg-gray-100 transition-colors">
+                Explore Products
+              </a>
+              <a href="/become-dealer" className="inline-flex items-center justify-center px-8 py-3 bg-white/15 text-white font-medium rounded-none border border-white/30 hover:bg-white hover:text-black transition-colors">
+                Become a Dealer
+              </a>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <Footer />
+    </div>
+  );
+};
+
+export default AboutUs;

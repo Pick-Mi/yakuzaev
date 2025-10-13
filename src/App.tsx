@@ -23,6 +23,7 @@ import OrderDetails from "./pages/OrderDetails";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import PaymentFailure from "./pages/PaymentFailure";
 import BecomeDealer from "./pages/BecomeDealer";
+import AboutUs from "./pages/AboutUs";
 
 import NotFound from "./pages/NotFound";
 
@@ -44,6 +45,7 @@ const App = () => (
               <Route path="/products" element={<Products />} />
               <Route path="/blogs" element={<Blogs />} />
               <Route path="/become-dealer" element={<BecomeDealer />} />
+              <Route path="/about-us" element={<AboutUs />} />
               <Route path="/product/:id" element={<Product />} />
               <Route path="/profile" element={
                 <ProtectedRoute>

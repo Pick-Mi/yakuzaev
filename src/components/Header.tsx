@@ -132,7 +132,7 @@ const Header = () => {
               <Link to="/become-dealer" className={`text-[14px] font-sans leading-normal hover:opacity-80 transition-all whitespace-nowrap font-normal ${shouldShowFixedHeader ? 'text-gray-700' : 'text-white'}`}>
                 Become a Dealer
               </Link>
-              <Link to="/" className={`text-[14px] font-sans leading-normal hover:opacity-80 transition-all whitespace-nowrap font-normal ${shouldShowFixedHeader ? 'text-gray-700' : 'text-white'}`}>
+              <Link to="/about-us" className={`text-[14px] font-sans leading-normal hover:opacity-80 transition-all whitespace-nowrap font-normal ${shouldShowFixedHeader ? 'text-gray-700' : 'text-white'}`}>
                 About Us
               </Link>
             </div>
@@ -259,7 +259,7 @@ const Header = () => {
                       Product
                     </Link>
                     <Link
-                      to="/"
+                      to="/about-us"
                       onClick={() => setIsMenuOpen(false)}
                       className="block text-gray-700 text-sm mb-3 hover:opacity-70 transition-opacity"
                     >
