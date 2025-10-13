@@ -10,10 +10,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import Header from "@/components/Header";
-import { Save, User, MapPin, CreditCard, Bell, Shield, Package, ChevronRight, LogOut } from "lucide-react";
+import { Save, User, MapPin, CreditCard, Bell, Shield, Package, ChevronRight, LogOut, Edit } from "lucide-react";
 
 const Profile = () => {
   const { user, signOut } = useAuth();
@@ -24,6 +25,11 @@ const Profile = () => {
   const [activeSection, setActiveSection] = useState(searchParams.get("section") || "profile");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [editDialog, setEditDialog] = useState<{open: boolean, field: string, value: string}>({
+    open: false,
+    field: "",
+    value: ""
+  });
   
   const [profile, setProfile] = useState({
     first_name: "",
@@ -180,6 +186,45 @@ const Profile = () => {
     navigate("/");
   };
 
+  const openEditDialog = (field: string, value: string) => {
+    setEditDialog({ open: true, field, value });
+  };
+
+  const closeEditDialog = () => {
+    setEditDialog({ open: false, field: "", value: "" });
+  };
+
+  const saveFieldEdit = async () => {
+    setSaving(true);
+    try {
+      const { error } = await (supabase as any)
+        .from('profiles')
+        .update({ [editDialog.field]: editDialog.value })
+        .eq('user_id', user?.id);
+
+      if (error) throw error;
+
+      setProfile(prev => ({ ...prev, [editDialog.field]: editDialog.value }));
+      
+      toast({
+        title: "Success",
+        description: "Information updated successfully",
+      });
+
+      closeEditDialog();
+      await refreshProfile();
+    } catch (error) {
+      console.error('Error updating field:', error);
+      toast({
+        title: "Error",
+        description: "Failed to update information",
+        variant: "destructive"
+      });
+    } finally {
+      setSaving(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -285,28 +330,40 @@ const Profile = () => {
               {/* Information Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Phone Number */}
-                <div className="bg-gray-50 p-6 rounded-none">
+                <button 
+                  onClick={() => openEditDialog("phone", profile.phone)}
+                  className="bg-gray-50 p-6 rounded-none text-left hover:bg-gray-100 transition-colors"
+                >
                   <div className="font-semibold text-lg mb-2">Phone Number</div>
                   <div className="text-gray-600 text-lg">{profile.phone || 'Not provided'}</div>
-                </div>
+                </button>
 
                 {/* Email */}
-                <div className="border-2 border-blue-500 p-6 rounded-none bg-white">
+                <button 
+                  onClick={() => openEditDialog("email", profile.email)}
+                  className="border-2 border-blue-500 p-6 rounded-none bg-white text-left hover:bg-blue-50 transition-colors"
+                >
                   <div className="font-semibold text-lg mb-2 border-b-2 border-dashed border-gray-300 pb-2">Email</div>
                   <div className="text-blue-600 text-lg border-b-2 border-dashed border-gray-300 pb-2">{profile.email || 'Not provided'}</div>
-                </div>
+                </button>
 
                 {/* Country */}
-                <div className="bg-gray-50 p-6 rounded-none">
+                <button 
+                  onClick={() => openEditDialog("country", profile.country)}
+                  className="bg-gray-50 p-6 rounded-none text-left hover:bg-gray-100 transition-colors"
+                >
                   <div className="font-semibold text-lg mb-2">Country</div>
                   <div className="text-gray-600 text-lg">{profile.country || 'India'}</div>
-                </div>
+                </button>
 
                 {/* Gender */}
-                <div className="bg-gray-50 p-6 rounded-none">
+                <button 
+                  onClick={() => openEditDialog("gender", profile.gender)}
+                  className="bg-gray-50 p-6 rounded-none text-left hover:bg-gray-100 transition-colors"
+                >
                   <div className="font-semibold text-lg mb-2">Gender</div>
                   <div className="text-gray-600 text-lg capitalize">{profile.gender || 'Not specified'}</div>
-                </div>
+                </button>
               </div>
 
               {/* Note Section */}
@@ -601,17 +658,48 @@ const Profile = () => {
           </main>
         </div>
 
-        {/* Save Button */}
-        <div className="flex justify-end mt-8">
-          <Button 
-            onClick={saveProfile} 
-            disabled={saving}
-            className="flex items-center gap-2"
-          >
-            <Save className="w-4 h-4" />
-            {saving ? "Saving..." : "Save Changes"}
-          </Button>
-        </div>
+        {/* Edit Dialog */}
+        <Dialog open={editDialog.open} onOpenChange={closeEditDialog}>
+          <DialogContent className="rounded-none">
+            <DialogHeader>
+              <DialogTitle>Edit {editDialog.field.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4 py-4">
+              {editDialog.field === "gender" ? (
+                <Select 
+                  value={editDialog.value} 
+                  onValueChange={(value) => setEditDialog(prev => ({ ...prev, value }))}
+                >
+                  <SelectTrigger className="rounded-none">
+                    <SelectValue placeholder="Select gender" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="male">Male</SelectItem>
+                    <SelectItem value="female">Female</SelectItem>
+                    <SelectItem value="other">Other</SelectItem>
+                    <SelectItem value="prefer_not_to_say">Prefer not to say</SelectItem>
+                  </SelectContent>
+                </Select>
+              ) : (
+                <Input
+                  className="rounded-none"
+                  type={editDialog.field === "email" ? "email" : "text"}
+                  value={editDialog.value}
+                  onChange={(e) => setEditDialog(prev => ({ ...prev, value: e.target.value }))}
+                  placeholder={`Enter ${editDialog.field.replace(/_/g, ' ')}`}
+                />
+              )}
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={closeEditDialog} className="rounded-none">
+                Cancel
+              </Button>
+              <Button onClick={saveFieldEdit} disabled={saving} className="rounded-none">
+                {saving ? "Saving..." : "Save"}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );
