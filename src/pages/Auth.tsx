@@ -484,7 +484,7 @@ const Auth = () => {
               <div className="space-y-6">
                 <Button
                   variant="outline"
-                  className="w-full h-12 text-base"
+                  className="w-full h-12 text-base rounded-none"
                   onClick={handleGoogleSignIn}
                   disabled={loading}
                 >
@@ -510,7 +510,7 @@ const Auth = () => {
                       placeholder="Enter your email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="h-12 bg-gray-50 border-gray-200 text-base"
+                      className="h-12 bg-gray-50 border-gray-200 text-base rounded-none"
                       required
                     />
                   </div>
@@ -524,7 +524,7 @@ const Auth = () => {
                         placeholder="Enter your password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        className="h-12 bg-gray-50 border-gray-200 text-base pr-10"
+                        className="h-12 bg-gray-50 border-gray-200 text-base pr-10 rounded-none"
                         required
                         minLength={6}
                       />
@@ -540,7 +540,7 @@ const Auth = () => {
                   
                   <Button 
                     type="submit" 
-                    className="w-full h-12 bg-gray-900 hover:bg-gray-800 text-white text-base font-medium"
+                    className="w-full h-12 bg-gray-900 hover:bg-gray-800 text-white text-base font-medium rounded-none"
                     disabled={loading}
                   >
                     {loading ? (isSignUp ? 'Creating Account...' : 'Signing In...') : 
@@ -575,7 +575,7 @@ const Auth = () => {
               <div className="space-y-6">
                 <form onSubmit={handlePhoneSubmit} className="space-y-6">
                   <div className="space-y-2">
-                    <div className="flex gap-3 items-center bg-gray-50 border border-gray-200 rounded-lg px-4 py-3">
+                    <div className="flex gap-3 items-center bg-gray-50 border border-gray-200 rounded-none px-4 py-3">
                       <Select value={countryCode} onValueChange={setCountryCode}>
                         <SelectTrigger className="w-[140px] border-0 bg-transparent p-0 h-auto gap-2 focus:ring-0 focus:ring-offset-0">
                           <SelectValue>
@@ -612,7 +612,7 @@ const Auth = () => {
                   
                   <Button 
                     type="submit" 
-                    className="w-full h-12 bg-gray-900 hover:bg-gray-800 text-white text-base font-medium"
+                    className="w-full h-12 bg-gray-900 hover:bg-gray-800 text-white text-base font-medium rounded-none"
                     disabled={loading || otpCooldown > 0}
                   >
                     {loading ? 'Sending...' : otpCooldown > 0 ? `Wait ${otpCooldown}s` : 'Next'}
@@ -638,7 +638,7 @@ const Auth = () => {
                       placeholder="Enter your first name"
                       value={firstName}
                       onChange={(e) => setFirstName(e.target.value)}
-                      className="h-12 bg-gray-50 border-gray-200 text-base"
+                      className="h-12 bg-gray-50 border-gray-200 text-base rounded-none"
                       required
                     />
                   </div>
@@ -651,7 +651,7 @@ const Auth = () => {
                       placeholder="Enter your last name"
                       value={lastName}
                       onChange={(e) => setLastName(e.target.value)}
-                      className="h-12 bg-gray-50 border-gray-200 text-base"
+                      className="h-12 bg-gray-50 border-gray-200 text-base rounded-none"
                     />
                   </div>
 
@@ -663,14 +663,14 @@ const Auth = () => {
                       placeholder="Enter your email"
                       value={profileEmail}
                       onChange={(e) => setProfileEmail(e.target.value)}
-                      className="h-12 bg-gray-50 border-gray-200 text-base"
+                      className="h-12 bg-gray-50 border-gray-200 text-base rounded-none"
                       required
                     />
                   </div>
                   
                   <Button 
                     type="submit" 
-                    className="w-full h-12 bg-gray-900 hover:bg-gray-800 text-white text-base font-medium"
+                    className="w-full h-12 bg-gray-900 hover:bg-gray-800 text-white text-base font-medium rounded-none"
                     disabled={loading}
                   >
                     {loading ? 'Saving...' : 'Continue'}
@@ -727,7 +727,7 @@ const Auth = () => {
                                 prevInput?.focus();
                               }
                             }}
-                            className="w-full h-12 text-center text-xl bg-gray-50 border-gray-200"
+                            className="w-full h-12 text-center text-xl bg-gray-50 border-gray-200 rounded-none"
                             required={index === 0}
                           />
                         </div>
@@ -737,7 +737,7 @@ const Auth = () => {
                   
                   <Button 
                     type="submit" 
-                    className="w-full h-12 bg-gray-900 hover:bg-gray-800 text-white text-base font-medium"
+                    className="w-full h-12 bg-gray-900 hover:bg-gray-800 text-white text-base font-medium rounded-none"
                     disabled={loading || otp.length < 6}
                   >
                     {loading ? 'Verifying...' : 'Verify'}
