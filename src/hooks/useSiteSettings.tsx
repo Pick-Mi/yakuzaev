@@ -25,14 +25,23 @@ export const useSiteSettings = () => {
           // Update favicon
           if (settings.favicon_url) {
             console.log("Setting favicon to:", settings.favicon_url);
-            // Remove existing favicon links
-            const existingFavicons = document.querySelectorAll("link[rel*='icon']");
-            existingFavicons.forEach(favicon => favicon.remove());
+            
+            // Remove ALL existing favicon-related links
+            const existingLinks = document.querySelectorAll(
+              "link[rel='icon'], link[rel='shortcut icon'], link[rel='apple-touch-icon']"
+            );
+            existingLinks.forEach(link => {
+              console.log("Removing existing link:", link);
+              link.remove();
+            });
 
+            // Add cache-busting parameter to force reload
+            const cacheBustUrl = `${settings.favicon_url}?v=${Date.now()}`;
+            
             // Create new favicon link
             const link = document.createElement("link");
             link.rel = "icon";
-            link.href = settings.favicon_url;
+            link.href = cacheBustUrl;
             
             // Determine type based on URL extension
             if (settings.favicon_url.endsWith('.png')) {
@@ -44,7 +53,7 @@ export const useSiteSettings = () => {
             }
             
             document.head.appendChild(link);
-            console.log("Favicon updated successfully");
+            console.log("Favicon updated successfully with URL:", cacheBustUrl);
           }
         }
       } catch (error) {
