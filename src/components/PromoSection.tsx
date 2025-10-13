@@ -7,13 +7,17 @@ const PromoSection = () => {
   const [subtitle, setSubtitle] = useState("₹ 99,999/-");
   const [feature1, setFeature1] = useState("Zero Emissions");
   const [feature2, setFeature2] = useState("Stylish Design");
+  const [image1, setImage1] = useState("https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=288&fit=crop");
+  const [image2, setImage2] = useState("https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=572&h=288&fit=crop");
+  const [image3, setImage3] = useState("https://images.unsplash.com/photo-1571068316344-75bc76f77890?w=393&h=214&fit=crop");
+  const [image4, setImage4] = useState("https://images.unsplash.com/photo-1571068316344-75bc76f77890?w=394&h=214&fit=crop");
 
   useEffect(() => {
     const fetchFeatureSection = async () => {
       try {
         const { data, error } = await (supabase as any)
           .from("feature_section")
-          .select("title, subtitle, feature1, feature2")
+          .select("title, subtitle, feature1, feature2, image1_url, image2_url, image3_url, image4_url")
           .eq("is_active", true)
           .limit(1)
           .maybeSingle();
@@ -28,6 +32,10 @@ const PromoSection = () => {
           if (data.subtitle) setSubtitle(data.subtitle);
           if (data.feature1) setFeature1(data.feature1);
           if (data.feature2) setFeature2(data.feature2);
+          if (data.image1_url) setImage1(data.image1_url);
+          if (data.image2_url) setImage2(data.image2_url);
+          if (data.image3_url) setImage3(data.image3_url);
+          if (data.image4_url) setImage4(data.image4_url);
         }
       } catch (error) {
         console.error("Error fetching feature section:", error);
@@ -87,7 +95,7 @@ const PromoSection = () => {
         {/* Main Image - Top Right */}
         <div className="absolute bg-[#d9d9d9] h-[288px] right-0 top-0 w-[572px]">
           <img
-            src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=572&h=288&fit=crop"
+            src={image2}
             alt="Main Scooter"
             className="absolute w-full h-full object-cover"
           />
@@ -96,7 +104,7 @@ const PromoSection = () => {
         {/* Bottom Right Image */}
         <div className="absolute bg-[#d9d9d9] bottom-0 h-[214px] right-0 w-[394px]">
           <img
-            src="https://images.unsplash.com/photo-1571068316344-75bc76f77890?w=394&h=214&fit=crop"
+            src={image4}
             alt="Scooter Detail"
             className="absolute w-full h-full object-cover"
           />
@@ -105,7 +113,7 @@ const PromoSection = () => {
         {/* Bottom Center Image */}
         <div className="absolute bg-[#d9d9d9] bottom-0 h-[214px] left-[calc(50%+39.5px)] -translate-x-1/2 w-[393px]">
           <img
-            src="https://images.unsplash.com/photo-1571068316344-75bc76f77890?w=393&h=214&fit=crop"
+            src={image3}
             alt="Scooter Side View"
             className="absolute w-full h-full object-cover"
           />
@@ -114,7 +122,7 @@ const PromoSection = () => {
         {/* Top Center Image */}
         <div className="absolute bg-[#d9d9d9] h-[288px] left-[calc(50%-49.5px)] -translate-x-1/2 top-0 w-[215px] overflow-hidden">
           <img
-            src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=288&fit=crop"
+            src={image1}
             alt="Scooter Front"
             className="absolute h-full left-[-50.51%] top-0 w-[201.01%]"
           />
