@@ -68,6 +68,10 @@ const ProfileSetup = () => {
     setLoading(true);
 
     try {
+      if (!user?.id) {
+        throw new Error('User not authenticated');
+      }
+
       const { error } = await supabase
         .from('profiles')
         .update({
@@ -77,7 +81,7 @@ const ProfileSetup = () => {
           country: country.trim(),
           gender: gender || null,
         })
-        .eq('user_id', user?.id);
+        .eq('user_id', user.id);
 
       if (error) throw error;
 
