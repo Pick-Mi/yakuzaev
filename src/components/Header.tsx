@@ -130,9 +130,6 @@ const Header = () => {
                 Products
               </Link>
               <Link to="/" className={`text-[14px] font-sans leading-normal hover:opacity-80 transition-all whitespace-nowrap font-normal ${shouldShowFixedHeader ? 'text-gray-700' : 'text-white'}`}>
-                Yakuza Store
-              </Link>
-              <Link to="/" className={`text-[14px] font-sans leading-normal hover:opacity-80 transition-all whitespace-nowrap font-normal ${shouldShowFixedHeader ? 'text-gray-700' : 'text-white'}`}>
                 Become a Dealer
               </Link>
               <Link to="/" className={`text-[14px] font-sans leading-normal hover:opacity-80 transition-all whitespace-nowrap font-normal ${shouldShowFixedHeader ? 'text-gray-700' : 'text-white'}`}>
@@ -243,13 +240,6 @@ const Header = () => {
                 <div className="grid grid-cols-3 gap-6 pt-4">
                   {/* Column 1 */}
                   <div>
-                    <Link
-                      to="/"
-                      onClick={() => setIsMenuOpen(false)}
-                      className="block text-gray-900 text-sm font-medium mb-4 hover:opacity-70 transition-opacity"
-                    >
-                      Yakuza Stores
-                    </Link>
                     <Link
                       to="/"
                       onClick={() => setIsMenuOpen(false)}
