@@ -85,11 +85,11 @@ const Auth = () => {
   const from = location.state?.from?.pathname || '/';
 
   useEffect(() => {
-    // Don't auto-redirect if we're showing the success dialog
-    if (user && !showSuccessDialog && !showProfileSuccessDialog) {
+    // Don't auto-redirect if we're showing the success dialog or in OTP flow
+    if (user && !showSuccessDialog && !showProfileSuccessDialog && step !== 'otp') {
       navigate(from, { replace: true });
     }
-  }, [user, navigate, from, showSuccessDialog, showProfileSuccessDialog]);
+  }, [user, navigate, from, showSuccessDialog, showProfileSuccessDialog, step]);
 
   useEffect(() => {
     if (otpCooldown > 0) {
