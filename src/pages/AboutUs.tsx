@@ -1,9 +1,10 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { Zap, Target, Eye, Heart, Users, Award } from "lucide-react";
+import { Zap, Target, Eye, Heart, Users, Award, ArrowRight } from "lucide-react";
 import teamMeeting from "@/assets/team-meeting.jpg";
 import manufacturing from "@/assets/manufacturing.jpg";
 import teamCollaboration from "@/assets/team-collaboration.jpg";
+import factoryTeam from "@/assets/factory-team.jpg";
 
 const AboutUs = () => {
   return (
@@ -71,6 +72,44 @@ const AboutUs = () => {
                   alt="Team collaboration at office campus" 
                   className="w-full h-[500px] object-cover"
                 />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* From India Section */}
+        <section className="py-[70px] px-4">
+          <div className="container mx-auto max-w-7xl">
+            <h2 className="text-4xl md:text-5xl font-bold mb-12">
+              We build to rule , We build to perform
+            </h2>
+            
+            <div className="grid lg:grid-cols-2 gap-12 items-center bg-muted/30 p-8">
+              {/* Left - Image */}
+              <div className="overflow-hidden">
+                <img 
+                  src={factoryTeam} 
+                  alt="Factory team members at manufacturing facility" 
+                  className="w-full h-[500px] object-cover"
+                />
+              </div>
+
+              {/* Right - Content */}
+              <div className="flex flex-col justify-center">
+                <h3 className="text-3xl md:text-4xl font-bold mb-6">
+                  From India. For The World.
+                </h3>
+                <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
+                  Yakuza, as a brand, embodies resilience and hard work. We are a pioneering electric vehicle 
+                  company with manufacturing facilities in Haryana, Madhya Pradesh, and West Bengal. 
+                  As a rapidly evolving startup led by industry veterans, we offer a diverse range of electric 
+                  scooters catering to college students, young professionals, and
+                </p>
+                <div>
+                  <a href="/products" className="inline-flex items-center gap-2 text-orange-600 hover:text-orange-700 font-medium text-lg transition-colors">
+                    Learn more <ArrowRight className="w-5 h-5" />
+                  </a>
+                </div>
               </div>
             </div>
           </div>
