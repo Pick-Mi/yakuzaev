@@ -187,7 +187,7 @@ const Profile = () => {
         <div className="flex gap-6">
           {/* Sidebar */}
           <aside className="w-80 flex-shrink-0">
-            <nav className="space-y-0">
+            <nav className="flex flex-col gap-[25px]">
               {/* Account Settings Section */}
               <div className="bg-white mb-6">
                 <div className="flex items-center gap-3 px-6 py-4 border-b">
