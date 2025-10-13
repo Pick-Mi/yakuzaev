@@ -76,6 +76,7 @@ const Auth = () => {
   const [lastName, setLastName] = useState('');
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
   const [showProfileSuccessDialog, setShowProfileSuccessDialog] = useState(false);
+  const [otpCooldown, setOtpCooldown] = useState(0);
   
   const { signInWithPhone, verifyOTP, signInWithEmail, signUpWithEmail, signInWithGoogle, user } = useAuth();
   const { toast } = useToast();
@@ -89,6 +90,13 @@ const Auth = () => {
       navigate(from, { replace: true });
     }
   }, [user, navigate, from, showSuccessDialog, showProfileSuccessDialog]);
+
+  useEffect(() => {
+    if (otpCooldown > 0) {
+      const timer = setTimeout(() => setOtpCooldown(otpCooldown - 1), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [otpCooldown]);
 
   const validatePhoneNumber = (fullPhone: string): string | null => {
     const cleaned = fullPhone.replace(/[^\d+]/g, '');
@@ -104,6 +112,16 @@ const Auth = () => {
 
   const handlePhoneSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (otpCooldown > 0) {
+      toast({
+        title: "Please Wait",
+        description: `You can request a new OTP in ${otpCooldown} seconds.`,
+        variant: "destructive",
+      });
+      return;
+    }
+    
     setLoading(true);
 
     const fullPhone = countryCode + phoneNumber;
@@ -122,12 +140,24 @@ const Auth = () => {
       const { error } = await signInWithPhone(fullPhone);
 
       if (error) {
-        toast({
-          title: "Phone Authentication Error",
-          description: error.message,
-          variant: "destructive",
-        });
+        // Check if it's a rate limit error
+        if (error.message.includes('security purposes') || error.message.includes('rate')) {
+          const waitTime = 60; // Default to 60 seconds
+          setOtpCooldown(waitTime);
+          toast({
+            title: "Too Many Requests",
+            description: `Please wait ${waitTime} seconds before requesting another OTP.`,
+            variant: "destructive",
+          });
+        } else {
+          toast({
+            title: "Phone Authentication Error",
+            description: error.message,
+            variant: "destructive",
+          });
+        }
       } else {
+        setOtpCooldown(60); // Set 60 second cooldown after successful send
         toast({
           title: "OTP Sent!",
           description: "Please check your phone for the verification code.",
@@ -567,9 +597,9 @@ const Auth = () => {
                   <Button 
                     type="submit" 
                     className="w-full h-12 bg-gray-900 hover:bg-gray-800 text-white text-base font-medium"
-                    disabled={loading}
+                    disabled={loading || otpCooldown > 0}
                   >
-                    {loading ? 'Sending...' : 'Next'}
+                    {loading ? 'Sending...' : otpCooldown > 0 ? `Wait ${otpCooldown}s` : 'Next'}
                   </Button>
                 </form>
 
