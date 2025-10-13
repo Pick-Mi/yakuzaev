@@ -124,6 +124,7 @@ const AboutUs = () => {
             <div className="grid md:grid-cols-3 gap-6">
               <Card className="bg-gray-800 border-none">
                 <CardContent className="p-8">
+                  <Users className="w-12 h-12 text-white mb-6" strokeWidth={1.5} />
                   <div className="text-5xl font-bold text-white mb-2">959</div>
                   <div className="text-lg text-gray-300">Employees in R&D</div>
                 </CardContent>
@@ -131,6 +132,7 @@ const AboutUs = () => {
 
               <Card className="bg-gray-800 border-none">
                 <CardContent className="p-8">
+                  <BadgeCheck className="w-12 h-12 text-white mb-6" strokeWidth={1.5} />
                   <div className="text-5xl font-bold text-white mb-2">569</div>
                   <div className="text-lg text-gray-300">Patents in India</div>
                 </CardContent>
@@ -138,6 +140,7 @@ const AboutUs = () => {
 
               <Card className="bg-gray-800 border-none">
                 <CardContent className="p-8">
+                  <Copyright className="w-12 h-12 text-white mb-6" strokeWidth={1.5} />
                   <div className="text-5xl font-bold text-white mb-2">959</div>
                   <div className="text-lg text-gray-300">Registered design</div>
                 </CardContent>
