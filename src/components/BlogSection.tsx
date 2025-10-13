@@ -69,7 +69,7 @@ const BlogSection = () => {
               className="bg-black h-[55px] px-[23px] py-[13px] flex items-center justify-center w-[200px] rounded-none hover:bg-black/90 transition-colors"
             >
               <span className="font-['Poppins',sans-serif] font-medium text-[16px] text-white">
-                Explore All Blogs
+                Explore
               </span>
             </Link>
           </div>
