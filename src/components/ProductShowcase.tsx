@@ -172,7 +172,7 @@ const ProductShowcase = () => {
         </div>
 
         {/* Product Cards Horizontal Scroll */}
-        <div ref={scrollContainerRef} className="overflow-x-auto pb-4 scroll-smooth">
+        <div ref={scrollContainerRef} className="overflow-x-auto pb-4 scroll-smooth [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
           <div className="flex gap-[35px] pb-4 min-w-max">
             {loading ? (
               <div className="w-full text-center py-8">
