@@ -27,11 +27,15 @@ import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
-const AppContent = () => {
-  useSiteSettings();
-  
-  return (
-    <BrowserRouter>
+const App = () => (
+  <QueryClientProvider client={queryClient}>
+    <AuthProvider>
+      <CartProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <SiteSettingsLoader />
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/auth" element={<Auth />} />
@@ -73,21 +77,15 @@ const AppContent = () => {
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
-  );
-};
-
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <AuthProvider>
-      <CartProvider>
-        <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <AppContent />
         </TooltipProvider>
       </CartProvider>
     </AuthProvider>
   </QueryClientProvider>
 );
+
+const SiteSettingsLoader = () => {
+  useSiteSettings();
+  return null;
+};
 
 export default App;
