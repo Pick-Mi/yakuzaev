@@ -166,9 +166,9 @@ const ProductShowcase = () => {
           </div>
         </div>
 
-        {/* Product Cards Grid */}
-        <div>
-          <div className="grid grid-cols-3 gap-[35px] pb-4">
+        {/* Product Cards Horizontal Scroll */}
+        <div className="overflow-x-auto pb-4">
+          <div className="flex gap-[35px] pb-4 min-w-max">
             {loading ? (
               <div className="w-full text-center py-8">
                 <p className="text-[#212121] opacity-80">Loading products...</p>
@@ -181,7 +181,7 @@ const ProductShowcase = () => {
               products.map((product: any) => (
                 <div
                   key={product.id}
-                  className="bg-white flex flex-col gap-[25px] pb-5"
+                  className="bg-white flex flex-col gap-[25px] pb-5 w-[420px] flex-shrink-0"
                 >
                   {/* Product Image */}
                   <div className="w-full h-[270px] bg-[#b7b8b8] flex items-center justify-center overflow-hidden">
