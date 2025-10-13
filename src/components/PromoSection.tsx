@@ -2,20 +2,16 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
-interface FeatureData {
-  title: string;
-  subtitle: string;
-  feature1: string;
-  feature2: string;
-}
-
 const PromoSection = () => {
-  const [featureData, setFeatureData] = useState<FeatureData | null>(null);
+  const [title, setTitle] = useState("Now Get 3 Scooters at only");
+  const [subtitle, setSubtitle] = useState("₹ 99,999/-");
+  const [feature1, setFeature1] = useState("Zero Emissions");
+  const [feature2, setFeature2] = useState("Stylish Design");
 
   useEffect(() => {
     const fetchFeatureSection = async () => {
       try {
-        const { data, error } = await supabase
+        const { data, error } = await (supabase as any)
           .from("feature_section")
           .select("title, subtitle, feature1, feature2")
           .eq("is_active", true)
@@ -28,7 +24,10 @@ const PromoSection = () => {
         }
 
         if (data) {
-          setFeatureData(data as FeatureData);
+          if (data.title) setTitle(data.title);
+          if (data.subtitle) setSubtitle(data.subtitle);
+          if (data.feature1) setFeature1(data.feature1);
+          if (data.feature2) setFeature2(data.feature2);
         }
       } catch (error) {
         console.error("Error fetching feature section:", error);
@@ -43,24 +42,24 @@ const PromoSection = () => {
       <div className="absolute bg-white h-[522px] left-1/2 -translate-x-1/2 overflow-hidden top-[45px] w-[1300px] max-w-[95%]">
         {/* Main Title */}
         <h2 className="absolute font-['Inter'] font-medium leading-[54px] left-[40px] text-[#212121] text-[28px] top-[51px] w-[267px]">
-          {featureData?.title || "Now Get 3 Scooters at only"}
+          {title}
         </h2>
         
         {/* Price */}
         <div className="absolute font-['Inter'] font-extrabold leading-[54px] left-[167.5px] -translate-x-1/2 text-[#212121] text-[48px] text-center whitespace-nowrap top-[217px]">
-          {featureData?.subtitle || "₹ 99,999/-"}
+          {subtitle}
         </div>
         
         {/* Features */}
         <div className="absolute flex gap-[20px] items-center left-[40px] top-[337px]">
           <span className="font-['Poppins'] leading-normal text-[#4b4f54] opacity-50 text-[15.932px] whitespace-nowrap">
-            {featureData?.feature1 || "Zero Emissions"}
+            {feature1}
           </span>
           <div className="relative h-[14.936px] w-0">
             <div className="absolute bottom-0 left-[-0.5px] right-[-0.5px] top-0 w-[1px] bg-[#B5B5B4]"></div>
           </div>
           <span className="font-['Poppins'] leading-normal text-[#212121] opacity-50 text-[15.932px] whitespace-nowrap">
-            {featureData?.feature2 || "Stylish Design"}
+            {feature2}
           </span>
         </div>
         
