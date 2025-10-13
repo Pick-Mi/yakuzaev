@@ -107,13 +107,7 @@ const AboutUs = () => {
                   Yakuza, as a brand, embodies resilience and hard work. We are a pioneering electric vehicle 
                   company with manufacturing facilities in Haryana, Madhya Pradesh, and West Bengal. 
                   As a rapidly evolving startup led by industry veterans, we offer a diverse range of electric 
-                  scooters catering to college students, young professionals, and
                 </p>
-                <div>
-                  <a href="/products" className="inline-flex items-center gap-2 text-orange-600 hover:text-orange-700 font-medium text-lg transition-colors">
-                    Learn more <ArrowRight className="w-5 h-5" />
-                  </a>
-                </div>
               </div>
             </div>
           </div>
