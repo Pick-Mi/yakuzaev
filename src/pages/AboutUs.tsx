@@ -117,7 +117,7 @@ const AboutUs = () => {
         {/* Stats Section */}
         <section className="py-[70px] px-4 bg-gray-900">
           <div className="container mx-auto max-w-7xl">
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-12">
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-[100px]">
               We build to rule , We build to perform
             </h2>
             
