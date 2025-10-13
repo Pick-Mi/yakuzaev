@@ -25,6 +25,7 @@ import { useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import authScooterImage from '@/assets/auth-scooter.png';
 
 const COUNTRIES = [
   { code: '+91', name: 'India', flag: '🇮🇳' },
@@ -441,13 +442,28 @@ const Auth = () => {
 
     <div className="min-h-screen bg-background">
       <Header />
-      <div className="flex min-h-[calc(100vh-120px)] mt-[120px] p-[70px]">
-        {/* Left Side - Dark Background */}
-        <div className="hidden lg:block lg:w-1/2 bg-black"></div>
+      <div className="flex min-h-[calc(100vh-120px)] mt-[120px] lg:p-[70px]">
+        {/* Left Side - Image Background (Desktop) */}
+        <div className="hidden lg:block lg:w-1/2 bg-black relative overflow-hidden">
+          <img 
+            src={authScooterImage} 
+            alt="Scooter" 
+            className="w-full h-full object-cover"
+          />
+        </div>
         
         {/* Right Side - Auth Form */}
         <div className="w-full lg:w-1/2 bg-white flex items-center justify-center p-8">
-          <div className="w-full max-w-md space-y-8">
+          {/* Mobile Image */}
+          <div className="lg:hidden absolute inset-0 opacity-10 pointer-events-none">
+            <img 
+              src={authScooterImage} 
+              alt="Scooter" 
+              className="w-full h-full object-cover"
+            />
+          </div>
+          
+          <div className="w-full max-w-md space-y-8 relative z-10">
             {/* Title and Description */}
             <div className="space-y-4">
               <h1 className="text-4xl font-normal text-gray-900">
