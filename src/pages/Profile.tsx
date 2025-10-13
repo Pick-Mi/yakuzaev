@@ -164,6 +164,21 @@ const Profile = () => {
     }
   };
 
+  const fetchAddresses = async () => {
+    try {
+      const { data, error } = await (supabase as any)
+        .from('user_addresses')
+        .select('*')
+        .eq('user_id', user?.id)
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      setAddresses(data || []);
+    } catch (error) {
+      console.error('Error fetching addresses:', error);
+    }
+  };
+
   const saveProfile = async () => {
     setSaving(true);
     try {
@@ -364,20 +379,6 @@ const Profile = () => {
     }
   };
 
-  const fetchAddresses = async () => {
-    try {
-      const { data, error } = await (supabase as any)
-        .from('user_addresses')
-        .select('*')
-        .eq('user_id', user?.id)
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      setAddresses(data || []);
-    } catch (error) {
-      console.error('Error fetching addresses:', error);
-    }
-  };
 
   const openAddressDialog = (address?: Address) => {
     if (address) {
