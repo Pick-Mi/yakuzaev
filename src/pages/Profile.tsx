@@ -33,6 +33,7 @@ const Profile = () => {
     date_of_birth: "",
     gender: "",
     customer_type: "individual",
+    avatar_url: "",
     
     // Address fields
     street_address: "",
@@ -257,127 +258,65 @@ const Profile = () => {
 
           {/* Profile Details Section */}
           {activeSection === "profile" && (
-            <div className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <User className="w-5 h-5" />
-                  Personal Information
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <Label htmlFor="first_name">First Name</Label>
-                  <Input
-                    id="first_name"
-                    value={profile.first_name}
-                    onChange={(e) => handleInputChange("first_name", e.target.value)}
-                    placeholder="Enter first name"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="last_name">Last Name</Label>
-                  <Input
-                    id="last_name"
-                    value={profile.last_name}
-                    onChange={(e) => handleInputChange("last_name", e.target.value)}
-                    placeholder="Enter last name"
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    value={profile.email}
-                    onChange={(e) => handleInputChange("email", e.target.value)}
-                    placeholder="Enter email"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="phone">Phone</Label>
-                  <Input
-                    id="phone"
-                    value={profile.phone}
-                    onChange={(e) => handleInputChange("phone", e.target.value)}
-                    placeholder="Enter phone number"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="date_of_birth">Date of Birth</Label>
-                  <Input
-                    id="date_of_birth"
-                    type="date"
-                    value={profile.date_of_birth}
-                    onChange={(e) => handleInputChange("date_of_birth", e.target.value)}
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="gender">Gender</Label>
-                  <Select value={profile.gender} onValueChange={(value) => handleInputChange("gender", value)}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select gender" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="male">Male</SelectItem>
-                      <SelectItem value="female">Female</SelectItem>
-                      <SelectItem value="other">Other</SelectItem>
-                      <SelectItem value="prefer_not_to_say">Prefer not to say</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="customer_type">Account Type</Label>
-                  <Select value={profile.customer_type} onValueChange={(value) => handleInputChange("customer_type", value)}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select account type" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="individual">Individual</SelectItem>
-                      <SelectItem value="business">Business</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Account Status */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Shield className="w-5 h-5" />
-                  Account Status
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <div className="text-center">
-                    <Badge variant={profile.is_verified ? "default" : "secondary"}>
-                      {profile.is_verified ? "Verified" : "Unverified"}
-                    </Badge>
-                    <p className="text-sm text-muted-foreground mt-1">Verification Status</p>
+            <div className="space-y-6 bg-white p-8 rounded-none">
+              <h1 className="text-3xl font-bold mb-8">Personal Information</h1>
+              
+              {/* Avatar and Name Section */}
+              <div className="mb-8">
+                <div className="relative w-40 h-40 mb-4">
+                  <div className="w-full h-full rounded-full bg-gray-200 overflow-hidden">
+                    {profile.avatar_url ? (
+                      <img src={profile.avatar_url} alt="Profile" className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center bg-gray-300">
+                        <User className="w-20 h-20 text-gray-500" />
+                      </div>
+                    )}
                   </div>
-                  <div className="text-center">
-                    <p className="text-2xl font-bold text-primary">{profile.total_orders}</p>
-                    <p className="text-sm text-muted-foreground">Total Orders</p>
-                  </div>
-                  <div className="text-center">
-                    <p className="text-2xl font-bold text-primary">₹{profile.total_spent}</p>
-                    <p className="text-sm text-muted-foreground">Total Spent</p>
-                  </div>
-                  <div className="text-center">
-                    <p className="text-2xl font-bold text-primary">{profile.loyalty_points}</p>
-                    <p className="text-sm text-muted-foreground">Loyalty Points</p>
-                  </div>
+                  <button className="absolute top-2 right-2 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-md hover:bg-gray-50">
+                    <Save className="w-5 h-5 text-gray-700" />
+                  </button>
                 </div>
-              </CardContent>
-            </Card>
+                <h2 className="text-2xl font-bold">
+                  {profile.first_name} {profile.last_name ? profile.last_name.charAt(0) : ''}
+                </h2>
+              </div>
+
+              {/* Information Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Phone Number */}
+                <div className="bg-gray-50 p-6 rounded-none">
+                  <div className="font-semibold text-lg mb-2">Phone Number</div>
+                  <div className="text-gray-600 text-lg">{profile.phone || 'Not provided'}</div>
+                </div>
+
+                {/* Email */}
+                <div className="border-2 border-blue-500 p-6 rounded-none bg-white">
+                  <div className="font-semibold text-lg mb-2 border-b-2 border-dashed border-gray-300 pb-2">Email</div>
+                  <div className="text-blue-600 text-lg border-b-2 border-dashed border-gray-300 pb-2">{profile.email || 'Not provided'}</div>
+                </div>
+
+                {/* Country */}
+                <div className="bg-gray-50 p-6 rounded-none">
+                  <div className="font-semibold text-lg mb-2">Country</div>
+                  <div className="text-gray-600 text-lg">{profile.country || 'India'}</div>
+                </div>
+
+                {/* Gender */}
+                <div className="bg-gray-50 p-6 rounded-none">
+                  <div className="font-semibold text-lg mb-2">Gender</div>
+                  <div className="text-gray-600 text-lg capitalize">{profile.gender || 'Not specified'}</div>
+                </div>
+              </div>
+
+              {/* Note Section */}
+              <div className="mt-8 pt-6 border-t border-gray-200">
+                <p className="text-gray-700 text-base">
+                  <span className="font-semibold">Note:</span> This account is needed for login and can't be disconnected{' '}
+                  <a href="/contact" className="text-orange-500 hover:text-orange-600 font-semibold">Contact us</a>{' '}
+                  for more info. We are working on improving this experience
+                </p>
+              </div>
             </div>
           )}
 
