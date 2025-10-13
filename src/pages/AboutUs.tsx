@@ -193,24 +193,6 @@ const AboutUs = () => {
         {/* Blog Section */}
         <BlogSection />
 
-        <section className="py-[70px] px-4 bg-[#191E22]">
-          <div className="container mx-auto max-w-4xl text-center">
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-              Join the Electric Revolution
-            </h2>
-            <p className="text-xl text-white/90 mb-8">
-              Be part of our journey towards a sustainable future. Explore our range of electric vehicles today.
-            </p>
-            <div className="flex gap-4 justify-center flex-wrap">
-              <a href="/products" className="inline-flex items-center justify-center px-8 py-3 bg-white text-black font-medium rounded-none hover:bg-gray-100 transition-colors">
-                Explore Products
-              </a>
-              <a href="/become-dealer" className="inline-flex items-center justify-center px-8 py-3 bg-white/15 text-white font-medium rounded-none border border-white/30 hover:bg-white hover:text-black transition-colors">
-                Become a Dealer
-              </a>
-            </div>
-          </div>
-        </section>
       </main>
 
       <Footer />
