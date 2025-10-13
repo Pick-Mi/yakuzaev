@@ -186,100 +186,69 @@ const Profile = () => {
       <div className="container mx-auto px-4 pt-40 pb-8">
         <div className="flex gap-6">
           {/* Sidebar */}
-          <aside className="w-64 flex-shrink-0">
-            <nav className="space-y-1">
-              {/* My Orders */}
-              <button
-                onClick={() => navigate("/orders")}
-                className="w-full flex items-center justify-between px-4 py-3 text-left hover:bg-accent rounded-lg transition-colors group"
-              >
-                <div className="flex items-center gap-3">
-                  <Package className="w-5 h-5 text-primary" />
-                  <span className="font-medium">MY ORDERS</span>
+          <aside className="w-80 flex-shrink-0">
+            <nav className="space-y-0">
+              {/* Account Settings Section */}
+              <div className="bg-white mb-6">
+                <div className="flex items-center gap-3 px-6 py-4 border-b">
+                  <div className="w-10 h-10 rounded-full bg-orange-500 flex items-center justify-center">
+                    <User className="w-6 h-6 text-white" />
+                  </div>
+                  <span className="font-semibold text-lg text-gray-700">ACCOUNT SETTINGS</span>
                 </div>
-                <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-foreground" />
-              </button>
-
-              {/* Account Settings */}
-              <div className="pt-4">
-                <div className="flex items-center gap-3 px-4 py-2 text-muted-foreground">
-                  <User className="w-5 h-5" />
-                  <span className="font-medium text-sm">ACCOUNT SETTINGS</span>
-                </div>
-                <div className="ml-4 space-y-1">
+                
+                <div className="space-y-0">
                   <button
                     onClick={() => handleSectionChange("profile")}
-                    className={`w-full text-left px-4 py-2 rounded-lg transition-colors ${
-                      activeSection === "profile" ? "bg-primary/10 text-primary font-medium" : "hover:bg-accent"
+                    className={`w-full text-left px-6 py-4 transition-colors ${
+                      activeSection === "profile" ? "bg-orange-50 text-orange-500 font-medium" : "text-gray-900 hover:bg-gray-50"
                     }`}
                   >
-                    Profile Information
+                    Profile information
                   </button>
                   <button
                     onClick={() => handleSectionChange("address")}
-                    className={`w-full text-left px-4 py-2 rounded-lg transition-colors ${
-                      activeSection === "address" ? "bg-primary/10 text-primary font-medium" : "hover:bg-accent"
+                    className={`w-full text-left px-6 py-4 transition-colors ${
+                      activeSection === "address" ? "bg-orange-50 text-orange-500 font-medium" : "text-gray-900 hover:bg-gray-50"
                     }`}
                   >
                     Manage Addresses
                   </button>
                   <button
                     onClick={() => handleSectionChange("pan")}
-                    className={`w-full text-left px-4 py-2 rounded-lg transition-colors ${
-                      activeSection === "pan" ? "bg-primary/10 text-primary font-medium" : "hover:bg-accent"
+                    className={`w-full text-left px-6 py-4 transition-colors ${
+                      activeSection === "pan" ? "bg-orange-50 text-orange-500 font-medium" : "text-gray-900 hover:bg-gray-50"
                     }`}
                   >
-                    PAN Card Information
+                    ID Proof
                   </button>
                 </div>
               </div>
 
-              {/* Payments */}
-              <div className="pt-4">
-                <div className="flex items-center gap-3 px-4 py-2 text-muted-foreground">
-                  <CreditCard className="w-5 h-5" />
-                  <span className="font-medium text-sm">PAYMENTS</span>
+              {/* My Orders */}
+              <button
+                onClick={() => navigate("/orders")}
+                className="w-full flex items-center justify-between px-6 py-4 text-left bg-white hover:bg-gray-50 transition-colors group mb-6"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 flex items-center justify-center">
+                    <Package className="w-6 h-6 text-orange-500" />
+                  </div>
+                  <span className="font-semibold text-lg text-gray-700">MY ORDERS</span>
                 </div>
-                <div className="ml-4 space-y-1">
-                  <button
-                    onClick={() => handleSectionChange("payment")}
-                    className={`w-full text-left px-4 py-2 rounded-lg transition-colors ${
-                      activeSection === "payment" ? "bg-primary/10 text-primary font-medium" : "hover:bg-accent"
-                    }`}
-                  >
-                    Payment Methods
-                  </button>
-                </div>
-              </div>
-
-              {/* Preferences */}
-              <div className="pt-4">
-                <div className="flex items-center gap-3 px-4 py-2 text-muted-foreground">
-                  <Bell className="w-5 h-5" />
-                  <span className="font-medium text-sm">MY STUFF</span>
-                </div>
-                <div className="ml-4 space-y-1">
-                  <button
-                    onClick={() => handleSectionChange("preferences")}
-                    className={`w-full text-left px-4 py-2 rounded-lg transition-colors ${
-                      activeSection === "preferences" ? "bg-primary/10 text-primary font-medium" : "hover:bg-accent"
-                    }`}
-                  >
-                    Preferences
-                  </button>
-                </div>
-              </div>
+                <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-gray-600" />
+              </button>
 
               {/* Logout */}
-              <div className="pt-4">
-                <button
-                  onClick={handleLogout}
-                  className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-accent rounded-lg transition-colors text-destructive"
-                >
-                  <LogOut className="w-5 h-5" />
-                  <span className="font-medium">Logout</span>
-                </button>
-              </div>
+              <button
+                onClick={handleLogout}
+                className="w-full flex items-center gap-3 px-6 py-4 text-left bg-white hover:bg-gray-50 transition-colors"
+              >
+                <div className="w-10 h-10 flex items-center justify-center">
+                  <LogOut className="w-6 h-6 text-orange-500" />
+                </div>
+                <span className="font-semibold text-lg text-gray-700">Logout</span>
+              </button>
             </nav>
           </aside>
 
