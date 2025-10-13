@@ -121,22 +121,26 @@ const FearlessDesign = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
+        console.log("Fetching sports category...");
         // First get the sports category ID
-        const { data: category } = await supabase
+        const { data: category, error: categoryError } = await supabase
           .from("categories")
           .select("id")
           .eq("slug", "sports")
           .single();
 
+        console.log("Category data:", category, "Error:", categoryError);
+
         if (category) {
           // Fetch products from sports category
-          const { data } = await supabase
+          const { data, error: productsError } = await supabase
             .from("products")
             .select("id, name, thumbnail, feature1, feature2, price")
             .eq("category_id", category.id)
             .eq("is_active", true)
             .limit(4);
 
+          console.log("Products data:", data, "Error:", productsError);
           setProducts(data || []);
         }
       } catch (error) {
