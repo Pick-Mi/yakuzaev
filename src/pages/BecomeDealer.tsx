@@ -76,9 +76,9 @@ const BecomeDealer = () => {
         <DealerHero />
 
         {/* Benefits Section */}
-        <section className="py-16 px-4">
+        <section className="py-[70px] px-4">
           <div className="container mx-auto max-w-6xl">
-            <div className="grid md:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               <div className="bg-white p-6 rounded-lg">
                 <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4">
                   <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
