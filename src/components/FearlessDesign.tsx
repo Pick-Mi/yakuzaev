@@ -1,141 +1,160 @@
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
 
-interface ProductCardProps {
+interface Product {
+  id: string;
   name: string;
-  description: string;
-  price: string;
-  image: string;
-  slug: string;
+  thumbnail: string | null;
+  feature1: string | null;
+  feature2: string | null;
+  price: number;
 }
 
-const ProductCard = ({ name, description, price, image, slug }: ProductCardProps) => {
+const ProductCard = ({ product }: { product: Product }) => {
+  const navigate = useNavigate();
   const [isHovered, setIsHovered] = useState(false);
 
   return (
     <div
-      className="relative bg-white h-[629px] w-full max-w-[630px] overflow-hidden cursor-pointer transition-all duration-500 ease-in-out hover:shadow-xl hover:scale-[1.02]"
+      className="relative h-[400px] overflow-hidden cursor-pointer"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      onClick={() => navigate(`/product/${product.id}`)}
     >
-      {/* Default State */}
+      {/* Product Image */}
+      <div className="absolute inset-0 bg-[#b7b8b8]">
+        {product.thumbnail && (
+          <img
+            src={product.thumbnail}
+            alt={product.name}
+            className="w-full h-full object-cover"
+          />
+        )}
+      </div>
+
+      {/* Default Content (visible when not hovered) */}
       <div
-        className={`absolute inset-0 transition-opacity duration-500 ${
+        className={`absolute inset-0 bg-black/40 flex flex-col justify-end p-6 transition-opacity duration-300 ${
           isHovered ? "opacity-0" : "opacity-100"
         }`}
       >
-        <div className="absolute top-0 left-0 w-full h-[503px] bg-gray-200 overflow-hidden">
-          <img
-            src={image}
-            alt={name}
-            className="w-full h-full object-cover"
-          />
+        <h3 className="text-white font-['Poppins'] font-semibold text-2xl mb-2">
+          {product.name}
+        </h3>
+        <div className="flex gap-3 items-center text-white/80 text-sm">
+          {product.feature1 && <span>{product.feature1}</span>}
+          {product.feature1 && product.feature2 && (
+            <span className="text-white/60">|</span>
+          )}
+          {product.feature2 && <span>{product.feature2}</span>}
         </div>
-        <div className="absolute bottom-0 left-0 right-0 px-[25px] pb-[25px]">
-          <div className="flex items-center justify-between mb-[15px]">
-            <div>
-              <h3 className="font-medium text-[24px] text-foreground mb-2">{name}</h3>
-              <p className="text-[16px] text-muted-foreground">{description}</p>
-            </div>
-            <div className="h-[36.5px] w-[1px] bg-border opacity-10 mx-4" />
-            <div>
-              <p className="text-[14px] text-muted-foreground opacity-80 mb-2">
-                Starting Price
-              </p>
-              <p>
-                <span className="font-medium text-[20.939px] text-foreground">
-                  {price}
-                </span>
-                <span className="text-[15.705px] text-foreground/75 ml-1">
-                  / showroom price
-                </span>
-              </p>
-            </div>
-          </div>
-        </div>
+        <p className="text-white font-semibold text-xl mt-2">
+          ₹{product.price.toLocaleString('en-IN')}
+        </p>
       </div>
 
-      {/* Hover State */}
+      {/* Hover Content */}
       <div
-        className={`absolute inset-0 bg-white transition-opacity duration-500 ${
+        className={`absolute inset-0 bg-black/60 flex flex-col items-center justify-center gap-4 transition-opacity duration-300 ${
           isHovered ? "opacity-100" : "opacity-0"
         }`}
       >
-        <div className="absolute top-0 left-0 w-full h-[329px] overflow-hidden transition-all duration-500">
-          <img
-            src={image}
-            alt={name}
-            className="w-full h-full object-cover"
-          />
-        </div>
-        <div className="absolute bottom-[25px] left-[25px] right-[25px]">
-          <div className="flex items-center justify-between mb-[25px]">
-            <div>
-              <h3 className="font-medium text-[24px] text-foreground mb-2">{name}</h3>
-              <p className="text-[16px] text-muted-foreground">{description}</p>
-            </div>
-            <div className="h-[36.5px] w-[1px] bg-border opacity-10 mx-4" />
-            <div>
-              <p className="text-[14px] text-muted-foreground opacity-80 mb-2">
-                Starting Price
-              </p>
-              <p>
-                <span className="font-medium text-[20.939px] text-foreground">
-                  {price}
-                </span>
-                <span className="text-[15.705px] text-foreground/75 ml-1">
-                  / showroom price
-                </span>
-              </p>
-            </div>
-          </div>
-          <div className="w-full h-[1px] bg-border opacity-10 mb-[15px]" />
-          <div className="flex flex-col gap-[15px]">
-            <Link to={`/products/${slug}`} className="w-full">
-              <Button className="w-full h-[55px] bg-primary text-primary-foreground hover:bg-primary/90 rounded-none text-[16px] font-medium">
-                Book Now
-              </Button>
-            </Link>
-            <Link to={`/products/${slug}`} className="w-full">
-              <Button variant="outline" className="w-full h-[55px] bg-background text-foreground border-none rounded-none text-[14px] font-medium">
-                Explore {name}
-              </Button>
-            </Link>
-          </div>
-        </div>
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            navigate('/product-config', {
+              state: {
+                product: {
+                  id: product.id,
+                  name: product.name,
+                  price: product.price,
+                  image: product.thumbnail
+                },
+                selectedVariant: null,
+                quantity: 1,
+                from: 'FearlessDesign'
+              }
+            });
+          }}
+          className="bg-black text-white px-8 py-3 font-['Poppins'] font-medium hover:bg-black/90 transition-colors"
+        >
+          Book Now
+        </button>
+        <button
+          onClick={() => navigate(`/product/${product.id}`)}
+          className="bg-white/10 text-white px-8 py-3 font-['Poppins'] font-medium hover:bg-white/20 transition-colors border border-white/30"
+        >
+          Explore {product.name}
+        </button>
       </div>
     </div>
   );
 };
 
+
 const FearlessDesign = () => {
-  const products = [
-    {
-      name: "Nebula",
-      description: "Pure Power. Peak Performance",
-      price: "₹39,616.00",
-      image: "/placeholder.svg",
-      slug: "nebula",
-    },
-    {
-      name: "Cyclone Sway",
-      description: "Pure Power. Peak Performance",
-      price: "₹39,616.00",
-      image: "/placeholder.svg",
-      slug: "cyclone-sway",
-    },
-  ];
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchSportsProducts = async () => {
+      try {
+        // First, get the Sports category ID
+        const { data: categoryData, error: categoryError } = await supabase
+          .from('categories')
+          .select('id')
+          .eq('slug', 'sports')
+          .single();
+
+        if (categoryError) throw categoryError;
+
+        if (categoryData) {
+          // Fetch products from Sports category
+          const { data: productsData, error: productsError } = await (supabase as any)
+            .from('products')
+            .select('id, name, thumbnail, feature1, feature2, price')
+            .eq('category_id', categoryData.id)
+            .eq('is_active', true)
+            .limit(4);
+
+          if (productsError) throw productsError;
+
+          setProducts(productsData || []);
+        }
+      } catch (error) {
+        console.error('Error fetching sports products:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSportsProducts();
+  }, []);
+
+  if (loading) {
+    return (
+      <section className="py-16 px-4">
+        <div className="container mx-auto">
+          <p className="text-center text-gray-600">Loading products...</p>
+        </div>
+      </section>
+    );
+  }
+
+  if (products.length === 0) {
+    return null;
+  }
 
   return (
-    <section className="relative w-full min-h-[700px] bg-background py-[80px] px-[70px]">
-      <div className="max-w-[1300px] mx-auto">
-        <h2 className="font-medium text-[48px] text-foreground mb-[80px]">
+    <section className="py-16 px-4">
+      <div className="container mx-auto max-w-7xl">
+        <h2 className="font-['Inter'] font-medium text-5xl text-center mb-12">
           Fearless by Design
         </h2>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-[40px]">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {products.map((product) => (
-            <ProductCard key={product.slug} {...product} />
+            <ProductCard key={product.id} product={product} />
           ))}
         </div>
       </div>
