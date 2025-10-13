@@ -133,6 +133,54 @@ export type Database = {
         }
         Relationships: []
       }
+      feature_section: {
+        Row: {
+          created_at: string
+          cta_buttons: Json | null
+          feature1: string | null
+          feature2: string | null
+          id: string
+          image1_url: string | null
+          image2_url: string | null
+          image3_url: string | null
+          image4_url: string | null
+          is_active: boolean
+          subtitle: string | null
+          title: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          cta_buttons?: Json | null
+          feature1?: string | null
+          feature2?: string | null
+          id?: string
+          image1_url?: string | null
+          image2_url?: string | null
+          image3_url?: string | null
+          image4_url?: string | null
+          is_active?: boolean
+          subtitle?: string | null
+          title?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          cta_buttons?: Json | null
+          feature1?: string | null
+          feature2?: string | null
+          id?: string
+          image1_url?: string | null
+          image2_url?: string | null
+          image3_url?: string | null
+          image4_url?: string | null
+          is_active?: boolean
+          subtitle?: string | null
+          title?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       hero_sections: {
         Row: {
           created_at: string
@@ -169,21 +217,6 @@ export type Database = {
           is_active?: boolean
           title?: string | null
           updated_at?: string
-        }
-        Relationships: []
-      }
-      kv_store_eecafcd0: {
-        Row: {
-          key: string
-          value: Json
-        }
-        Insert: {
-          key: string
-          value: Json
-        }
-        Update: {
-          key?: string
-          value?: Json
         }
         Relationships: []
       }
@@ -255,6 +288,7 @@ export type Database = {
           shipping_address: Json | null
           shipping_charge: number | null
           status: string
+          status_history: Json | null
           tax_amount: number | null
           total_amount: number
           updated_at: string
@@ -281,6 +315,7 @@ export type Database = {
           shipping_address?: Json | null
           shipping_charge?: number | null
           status?: string
+          status_history?: Json | null
           tax_amount?: number | null
           total_amount?: number
           updated_at?: string
@@ -307,6 +342,7 @@ export type Database = {
           shipping_address?: Json | null
           shipping_charge?: number | null
           status?: string
+          status_history?: Json | null
           tax_amount?: number | null
           total_amount?: number
           updated_at?: string
@@ -342,55 +378,97 @@ export type Database = {
       }
       products: {
         Row: {
+          accessories: Json | null
+          benefits: Json | null
           category_id: string | null
+          color_variety: Json | null
           cost_price: number | null
           created_at: string
           description: string | null
+          design_features: Json | null
+          feature1: string | null
+          feature2: string | null
+          features: Json | null
           id: string
           image_url: string | null
           images: Json | null
           is_active: boolean
           name: string
+          preview_section: Json | null
           price: number
+          promo_card: Json | null
+          qa_section: Json | null
           sku: string | null
           slug: string
+          specification_titles: Json | null
           stock_quantity: number
+          thumbnail: string | null
           updated_at: string
           variants: Json | null
+          videos: Json | null
+          visual_features: Json | null
         }
         Insert: {
+          accessories?: Json | null
+          benefits?: Json | null
           category_id?: string | null
+          color_variety?: Json | null
           cost_price?: number | null
           created_at?: string
           description?: string | null
+          design_features?: Json | null
+          feature1?: string | null
+          feature2?: string | null
+          features?: Json | null
           id?: string
           image_url?: string | null
           images?: Json | null
           is_active?: boolean
           name: string
+          preview_section?: Json | null
           price?: number
+          promo_card?: Json | null
+          qa_section?: Json | null
           sku?: string | null
           slug: string
+          specification_titles?: Json | null
           stock_quantity?: number
+          thumbnail?: string | null
           updated_at?: string
           variants?: Json | null
+          videos?: Json | null
+          visual_features?: Json | null
         }
         Update: {
+          accessories?: Json | null
+          benefits?: Json | null
           category_id?: string | null
+          color_variety?: Json | null
           cost_price?: number | null
           created_at?: string
           description?: string | null
+          design_features?: Json | null
+          feature1?: string | null
+          feature2?: string | null
+          features?: Json | null
           id?: string
           image_url?: string | null
           images?: Json | null
           is_active?: boolean
           name?: string
+          preview_section?: Json | null
           price?: number
+          promo_card?: Json | null
+          qa_section?: Json | null
           sku?: string | null
           slug?: string
+          specification_titles?: Json | null
           stock_quantity?: number
+          thumbnail?: string | null
           updated_at?: string
           variants?: Json | null
+          videos?: Json | null
+          visual_features?: Json | null
         }
         Relationships: [
           {
@@ -422,7 +500,6 @@ export type Database = {
           customer_status: string | null
           customer_type: string | null
           date_of_birth: string | null
-          display_name: string | null
           document_file_url: string | null
           document_number: string | null
           document_type: string | null
@@ -448,7 +525,6 @@ export type Database = {
           total_spent: number | null
           updated_at: string
           user_id: string
-          username: string | null
           verification_date: string | null
         }
         Insert: {
@@ -470,7 +546,6 @@ export type Database = {
           customer_status?: string | null
           customer_type?: string | null
           date_of_birth?: string | null
-          display_name?: string | null
           document_file_url?: string | null
           document_number?: string | null
           document_type?: string | null
@@ -496,7 +571,6 @@ export type Database = {
           total_spent?: number | null
           updated_at?: string
           user_id: string
-          username?: string | null
           verification_date?: string | null
         }
         Update: {
@@ -518,7 +592,6 @@ export type Database = {
           customer_status?: string | null
           customer_type?: string | null
           date_of_birth?: string | null
-          display_name?: string | null
           document_file_url?: string | null
           document_number?: string | null
           document_type?: string | null
@@ -544,7 +617,6 @@ export type Database = {
           total_spent?: number | null
           updated_at?: string
           user_id?: string
-          username?: string | null
           verification_date?: string | null
         }
         Relationships: []
@@ -560,6 +632,8 @@ export type Database = {
           hero_title: string | null
           id: string
           logo_url: string | null
+          notification_cta_text: string | null
+          notification_cta_url: string | null
           notification_enabled: boolean | null
           notification_type: string | null
           updated_at: string | null
@@ -574,6 +648,8 @@ export type Database = {
           hero_title?: string | null
           id?: string
           logo_url?: string | null
+          notification_cta_text?: string | null
+          notification_cta_url?: string | null
           notification_enabled?: boolean | null
           notification_type?: string | null
           updated_at?: string | null
@@ -588,6 +664,8 @@ export type Database = {
           hero_title?: string | null
           id?: string
           logo_url?: string | null
+          notification_cta_text?: string | null
+          notification_cta_url?: string | null
           notification_enabled?: boolean | null
           notification_type?: string | null
           updated_at?: string | null
@@ -699,6 +777,23 @@ export type Database = {
           p_requested_fields?: string[]
         }
         Returns: Json
+      }
+      get_customers_for_admin: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          city: string
+          country: string
+          created_at: string
+          customer_status: string
+          email: string
+          first_name: string
+          id: string
+          last_name: string
+          phone: string
+          total_orders: number
+          total_spent: number
+          user_id: string
+        }[]
       }
       get_public_products: {
         Args: Record<PropertyKey, never>

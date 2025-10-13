@@ -12,12 +12,14 @@ const NotificationBar = () => {
     const fetchNotification = async () => {
       const { data, error } = await supabase
         .from("site_settings")
-        .select("header_notification, notification_enabled")
+        .select("header_notification, notification_enabled, notification_cta_text, notification_cta_url")
         .single();
 
       if (data && !error) {
         setNotificationMessage(data.header_notification || "");
         setIsEnabled(data.notification_enabled || false);
+        if (data.notification_cta_text) setNotificationCtaText(data.notification_cta_text);
+        if (data.notification_cta_url) setNotificationCtaUrl(data.notification_cta_url);
       }
     };
 
