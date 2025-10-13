@@ -490,163 +490,49 @@ const Profile = () => {
 
           {/* Address Details Section */}
           {activeSection === "address" && (
-            <div className="space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Primary Address */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Primary Address</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="street_address">Street Address</Label>
-                    <Input
-                      id="street_address"
-                      value={profile.street_address}
-                      onChange={(e) => handleInputChange("street_address", e.target.value)}
-                      placeholder="Enter street address"
-                    />
-                  </div>
+            <div className="space-y-6 bg-white p-8 rounded-none">
+              <h1 className="text-3xl font-bold mb-8">Manage Addresses</h1>
+              
+              {/* Address Card */}
+              <div className="bg-gray-50 p-6 rounded-none relative">
+                {/* Header with badge and menu */}
+                <div className="flex items-center justify-between mb-4">
+                  <span className="bg-gray-200 px-3 py-1 text-sm font-semibold text-gray-700">HOME</span>
+                  <button className="text-gray-600 hover:text-gray-900">
+                    <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
+                    </svg>
+                  </button>
+                </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="apartment_unit">Apartment/Unit</Label>
-                    <Input
-                      id="apartment_unit"
-                      value={profile.apartment_unit}
-                      onChange={(e) => handleInputChange("apartment_unit", e.target.value)}
-                      placeholder="Apt, suite, unit, etc."
-                    />
-                  </div>
+                {/* Name and Phone */}
+                <div className="mb-4">
+                  <h3 className="text-lg font-bold text-gray-900">
+                    {profile.first_name}.{profile.last_name ? profile.last_name.charAt(0) : 'D'} {profile.phone}
+                  </h3>
+                </div>
 
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="city">City</Label>
-                      <Input
-                        id="city"
-                        value={profile.city}
-                        onChange={(e) => handleInputChange("city", e.target.value)}
-                        placeholder="Enter city"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="state_province">State/Province</Label>
-                      <Input
-                        id="state_province"
-                        value={profile.state_province}
-                        onChange={(e) => handleInputChange("state_province", e.target.value)}
-                        placeholder="Enter state"
-                      />
-                    </div>
-                  </div>
+                {/* Full Address */}
+                <div className="text-gray-700">
+                  <p>
+                    {profile.street_address}{profile.apartment_unit ? `, ${profile.apartment_unit}` : ''} {profile.street_address ? profile.phone : ''}, {profile.city}, {profile.state_province} - {profile.postal_code}    {profile.phone}
+                  </p>
+                </div>
+              </div>
 
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="postal_code">Postal Code</Label>
-                      <Input
-                        id="postal_code"
-                        value={profile.postal_code}
-                        onChange={(e) => handleInputChange("postal_code", e.target.value)}
-                        placeholder="Enter postal code"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="country">Country</Label>
-                      <Input
-                        id="country"
-                        value={profile.country}
-                        onChange={(e) => handleInputChange("country", e.target.value)}
-                        placeholder="Enter country"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="address_type">Address Type</Label>
-                    <Select value={profile.address_type} onValueChange={(value) => handleInputChange("address_type", value)}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select address type" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="home">Home</SelectItem>
-                        <SelectItem value="work">Work</SelectItem>
-                        <SelectItem value="billing">Billing</SelectItem>
-                        <SelectItem value="shipping">Shipping</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Billing Address */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Billing Address</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="billing_street_address">Street Address</Label>
-                    <Input
-                      id="billing_street_address"
-                      value={profile.billing_street_address}
-                      onChange={(e) => handleInputChange("billing_street_address", e.target.value)}
-                      placeholder="Enter billing street address"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="billing_apartment_unit">Apartment/Unit</Label>
-                    <Input
-                      id="billing_apartment_unit"
-                      value={profile.billing_apartment_unit}
-                      onChange={(e) => handleInputChange("billing_apartment_unit", e.target.value)}
-                      placeholder="Apt, suite, unit, etc."
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="billing_city">City</Label>
-                      <Input
-                        id="billing_city"
-                        value={profile.billing_city}
-                        onChange={(e) => handleInputChange("billing_city", e.target.value)}
-                        placeholder="Enter billing city"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="billing_state_province">State/Province</Label>
-                      <Input
-                        id="billing_state_province"
-                        value={profile.billing_state_province}
-                        onChange={(e) => handleInputChange("billing_state_province", e.target.value)}
-                        placeholder="Enter billing state"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="billing_postal_code">Postal Code</Label>
-                      <Input
-                        id="billing_postal_code"
-                        value={profile.billing_postal_code}
-                        onChange={(e) => handleInputChange("billing_postal_code", e.target.value)}
-                        placeholder="Enter billing postal code"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="billing_country">Country</Label>
-                      <Input
-                        id="billing_country"
-                        value={profile.billing_country}
-                        onChange={(e) => handleInputChange("billing_country", e.target.value)}
-                        placeholder="Enter billing country"
-                      />
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
+              {/* Add New Address Button */}
+              <button 
+                className="flex items-center gap-2 text-orange-500 hover:text-orange-600 font-semibold mt-6"
+                onClick={() => {
+                  toast({
+                    title: "Coming Soon",
+                    description: "Add new address feature will be available soon",
+                  });
+                }}
+              >
+                <span className="text-2xl">+</span>
+                <span>ADD A NEW ADDRESS</span>
+              </button>
             </div>
           )}
 
