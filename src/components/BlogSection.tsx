@@ -1,23 +1,37 @@
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 const BlogSection = () => {
-  const blogs = [
-    {
-      title: "Stories spark",
-      description: "Confidently go electric by learning about charging, range and the cost of electric driving.",
-      image: "/placeholder.svg"
-    },
-    {
-      title: "lifestyle-driven",
-      description: "Confidently go electric by learning about charging, range and the cost of electric driving.",
-      image: "/placeholder.svg"
-    },
-    {
-      title: "a place to pause,",
-      description: "Confidently go electric by learning about charging, range and the cost of electric driving.",
-      image: "/placeholder.svg"
-    }
-  ];
+  const [blogs, setBlogs] = useState<Array<{
+    id: string;
+    title: string;
+    excerpt: string;
+    featured_image: string;
+  }>>([]);
+
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        const { data, error } = await supabase
+          .from("blog_posts")
+          .select("id, title, excerpt, featured_image")
+          .eq("status", "published")
+          .limit(3);
+
+        if (error) {
+          console.error("Error fetching blogs:", error);
+          return;
+        }
+
+        setBlogs(data || []);
+      } catch (error) {
+        console.error("Error fetching blogs:", error);
+      }
+    };
+
+    fetchBlogs();
+  }, []);
 
   return (
     <section className="w-full py-[42px] px-[70px]" style={{ backgroundColor: '#F8F9F9' }}>
@@ -28,11 +42,11 @@ const BlogSection = () => {
           </h2>
           
           <div className="flex gap-[40px]">
-            {blogs.map((blog, index) => (
-              <div key={index} className="bg-white w-[407px] h-[388px] shrink-0 overflow-hidden">
+            {blogs.map((blog) => (
+              <div key={blog.id} className="bg-white w-[407px] h-[388px] shrink-0 overflow-hidden">
                 <div className="relative w-full h-[244px] bg-[#d9d9d9]">
                   <img 
-                    src={blog.image} 
+                    src={blog.featured_image || "/placeholder.svg"} 
                     alt={blog.title}
                     className="w-full h-full object-cover"
                   />
@@ -42,7 +56,7 @@ const BlogSection = () => {
                     {blog.title}
                   </h3>
                   <p className="font-['Inter',sans-serif] font-normal text-[15.386px] text-black opacity-80">
-                    {blog.description}
+                    {blog.excerpt}
                   </p>
                 </div>
               </div>
