@@ -30,6 +30,13 @@ const Profile = () => {
     field: "",
     value: ""
   });
+  const [phoneDialog, setPhoneDialog] = useState({
+    open: false,
+    phone: "",
+    otp: "",
+    otpSent: false,
+    verifying: false
+  });
   
   const [profile, setProfile] = useState({
     first_name: "",
@@ -114,6 +121,7 @@ const Profile = () => {
           billing_country: data.billing_country || "India",
           preferred_payment_method: data.preferred_payment_method || "",
           customer_notes: data.customer_notes || "",
+          avatar_url: data.avatar_url || "",
         });
       }
     } catch (error) {
@@ -225,6 +233,109 @@ const Profile = () => {
     }
   };
 
+  const openPhoneDialog = () => {
+    setPhoneDialog({ open: true, phone: "", otp: "", otpSent: false, verifying: false });
+  };
+
+  const closePhoneDialog = () => {
+    setPhoneDialog({ open: false, phone: "", otp: "", otpSent: false, verifying: false });
+  };
+
+  const sendOTP = async () => {
+    if (!phoneDialog.phone || phoneDialog.phone.length < 10) {
+      toast({
+        title: "Invalid Phone",
+        description: "Please enter a valid phone number",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setPhoneDialog(prev => ({ ...prev, verifying: true }));
+    
+    try {
+      const { error } = await supabase.functions.invoke('send-otp', {
+        body: { phoneNumber: phoneDialog.phone }
+      });
+
+      if (error) throw error;
+
+      setPhoneDialog(prev => ({ ...prev, otpSent: true, verifying: false }));
+      
+      toast({
+        title: "OTP Sent",
+        description: "Please check your phone for the verification code",
+      });
+    } catch (error) {
+      console.error('Error sending OTP:', error);
+      toast({
+        title: "Error",
+        description: "Failed to send OTP. Please try again.",
+        variant: "destructive"
+      });
+      setPhoneDialog(prev => ({ ...prev, verifying: false }));
+    }
+  };
+
+  const verifyAndUpdatePhone = async () => {
+    if (!phoneDialog.otp || phoneDialog.otp.length !== 6) {
+      toast({
+        title: "Invalid OTP",
+        description: "Please enter the 6-digit code",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setPhoneDialog(prev => ({ ...prev, verifying: true }));
+    
+    try {
+      const { data, error } = await supabase.functions.invoke('verify-otp', {
+        body: { 
+          phoneNumber: phoneDialog.phone,
+          otp: phoneDialog.otp
+        }
+      });
+
+      if (error) throw error;
+
+      if (data?.verified) {
+        // Update phone number in profile
+        const { error: updateError } = await (supabase as any)
+          .from('profiles')
+          .update({ phone: phoneDialog.phone })
+          .eq('user_id', user?.id);
+
+        if (updateError) throw updateError;
+
+        setProfile(prev => ({ ...prev, phone: phoneDialog.phone }));
+        
+        toast({
+          title: "Success",
+          description: "Phone number updated successfully",
+        });
+
+        closePhoneDialog();
+        await refreshProfile();
+      } else {
+        toast({
+          title: "Invalid OTP",
+          description: "The verification code is incorrect",
+          variant: "destructive"
+        });
+      }
+    } catch (error) {
+      console.error('Error verifying OTP:', error);
+      toast({
+        title: "Error",
+        description: "Failed to verify OTP. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setPhoneDialog(prev => ({ ...prev, verifying: false }));
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -331,7 +442,7 @@ const Profile = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Phone Number */}
                 <button 
-                  onClick={() => openEditDialog("phone", profile.phone)}
+                  onClick={openPhoneDialog}
                   className="bg-gray-50 p-6 rounded-none text-left hover:bg-gray-100 transition-colors"
                 >
                   <div className="font-semibold text-lg mb-2">Phone Number</div>
@@ -550,111 +661,6 @@ const Profile = () => {
               </CardContent>
             </Card>
           )}
-
-          {/* Payment Details Section */}
-          {activeSection === "payment" && (
-            <div className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <CreditCard className="w-5 h-5" />
-                  Payment Preferences
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="space-y-2">
-                  <Label htmlFor="preferred_payment_method">Preferred Payment Method</Label>
-                  <Select value={profile.preferred_payment_method} onValueChange={(value) => handleInputChange("preferred_payment_method", value)}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select preferred payment method" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="card">Credit/Debit Card</SelectItem>
-                      <SelectItem value="upi">UPI</SelectItem>
-                      <SelectItem value="netbanking">Net Banking</SelectItem>
-                      <SelectItem value="wallet">Digital Wallet</SelectItem>
-                      <SelectItem value="cod">Cash on Delivery</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="customer_notes">Notes</Label>
-                  <Textarea
-                    id="customer_notes"
-                    value={profile.customer_notes}
-                    onChange={(e) => handleInputChange("customer_notes", e.target.value)}
-                    placeholder="Add any special notes or preferences..."
-                    className="min-h-20"
-                  />
-                </div>
-              </CardContent>
-            </Card>
-            </div>
-          )}
-
-          {/* Preferences Section */}
-          {activeSection === "preferences" && (
-            <div className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Bell className="w-5 h-5" />
-                  Notification Preferences
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="flex items-center justify-between">
-                  <div className="space-y-1">
-                    <Label htmlFor="email_notifications">Email Notifications</Label>
-                    <p className="text-sm text-muted-foreground">Receive order updates and important information via email</p>
-                  </div>
-                  <Switch
-                    id="email_notifications"
-                    checked={profile.email_notifications}
-                    onCheckedChange={(checked) => handleInputChange("email_notifications", checked)}
-                  />
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <div className="space-y-1">
-                    <Label htmlFor="sms_notifications">SMS Notifications</Label>
-                    <p className="text-sm text-muted-foreground">Receive order updates and delivery information via SMS</p>
-                  </div>
-                  <Switch
-                    id="sms_notifications"
-                    checked={profile.sms_notifications}
-                    onCheckedChange={(checked) => handleInputChange("sms_notifications", checked)}
-                  />
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <div className="space-y-1">
-                    <Label htmlFor="marketing_consent">Marketing Communications</Label>
-                    <p className="text-sm text-muted-foreground">Receive promotional offers and marketing emails</p>
-                  </div>
-                  <Switch
-                    id="marketing_consent"
-                    checked={profile.marketing_consent}
-                    onCheckedChange={(checked) => handleInputChange("marketing_consent", checked)}
-                  />
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <div className="space-y-1">
-                    <Label htmlFor="newsletter_subscription">Newsletter Subscription</Label>
-                    <p className="text-sm text-muted-foreground">Subscribe to our newsletter for updates and news</p>
-                  </div>
-                  <Switch
-                    id="newsletter_subscription"
-                    checked={profile.newsletter_subscription}
-                    onCheckedChange={(checked) => handleInputChange("newsletter_subscription", checked)}
-                  />
-                </div>
-              </CardContent>
-            </Card>
-            </div>
-          )}
           </main>
         </div>
 
@@ -698,6 +704,73 @@ const Profile = () => {
                 {saving ? "Saving..." : "Save"}
               </Button>
             </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* Phone Number Edit Dialog with OTP */}
+        <Dialog open={phoneDialog.open} onOpenChange={closePhoneDialog}>
+          <DialogContent className="rounded-none">
+            <DialogHeader>
+              <DialogTitle>Change Phone Number</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4 py-4">
+              {!phoneDialog.otpSent ? (
+                <>
+                  <div className="space-y-2">
+                    <Label htmlFor="new-phone">New Phone Number</Label>
+                    <Input
+                      id="new-phone"
+                      className="rounded-none"
+                      type="tel"
+                      value={phoneDialog.phone}
+                      onChange={(e) => setPhoneDialog(prev => ({ ...prev, phone: e.target.value }))}
+                      placeholder="Enter new phone number"
+                    />
+                  </div>
+                  <Button 
+                    onClick={sendOTP} 
+                    disabled={phoneDialog.verifying}
+                    className="w-full rounded-none"
+                  >
+                    {phoneDialog.verifying ? "Sending..." : "Send OTP"}
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <div className="space-y-2">
+                    <Label htmlFor="otp">Verification Code</Label>
+                    <Input
+                      id="otp"
+                      className="rounded-none"
+                      type="text"
+                      maxLength={6}
+                      value={phoneDialog.otp}
+                      onChange={(e) => setPhoneDialog(prev => ({ ...prev, otp: e.target.value }))}
+                      placeholder="Enter 6-digit OTP"
+                    />
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    OTP sent to {phoneDialog.phone}
+                  </p>
+                  <div className="flex gap-2">
+                    <Button 
+                      variant="outline"
+                      onClick={() => setPhoneDialog(prev => ({ ...prev, otpSent: false, otp: "" }))}
+                      className="rounded-none"
+                    >
+                      Change Number
+                    </Button>
+                    <Button 
+                      onClick={verifyAndUpdatePhone} 
+                      disabled={phoneDialog.verifying}
+                      className="flex-1 rounded-none"
+                    >
+                      {phoneDialog.verifying ? "Verifying..." : "Verify & Update"}
+                    </Button>
+                  </div>
+                </>
+              )}
+            </div>
           </DialogContent>
         </Dialog>
       </div>
