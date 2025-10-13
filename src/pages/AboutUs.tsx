@@ -9,22 +9,33 @@ const AboutUs = () => {
       
       <main>
         {/* Hero Section */}
-        <section className="relative w-full h-[500px] bg-gradient-to-br from-gray-900 via-orange-900 to-orange-700 overflow-hidden">
-          <div className="absolute inset-0 opacity-10">
-            <div className="absolute inset-0" style={{
-              backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)',
-              backgroundSize: '40px 40px'
-            }}></div>
-          </div>
-          
-          <div className="relative z-10 container mx-auto px-6 h-full flex flex-col justify-center">
-            <div className="max-w-3xl">
-              <h1 className="font-sans font-bold text-5xl md:text-7xl leading-tight text-white mb-6">
-                About <span className="text-orange-300">YakuzaEV</span>
-              </h1>
-              <p className="text-xl md:text-2xl text-white/90">
-                Driving India towards a sustainable, electric future with innovative mobility solutions
-              </p>
+        <section 
+          className="relative w-full min-h-screen h-[829px] bg-black overflow-hidden"
+          style={{
+            backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("/placeholder.svg")',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
+        >
+          <div className="absolute left-10 top-[520px] w-[601px] max-w-[90%] flex flex-col gap-6 items-start">
+            <h1 className="font-sans font-normal text-[52px] leading-[73px] text-white m-0">
+              About <span className="text-orange-300">YakuzaEV</span>
+            </h1>
+            <p className="text-xl text-white/90 mb-4">
+              Driving India towards a sustainable, electric future with innovative mobility solutions
+            </p>
+            
+            <div className="flex gap-6 items-center flex-wrap">
+              <a href="/products">
+                <button className="flex justify-center items-center gap-[10px] bg-white text-black hover:bg-gray-100 px-[35px] h-[50px] text-[14px] font-medium font-sans rounded-none transition-colors">
+                  Explore Products
+                </button>
+              </a>
+              <a href="/become-dealer">
+                <button className="bg-white/15 text-white hover:bg-white hover:text-black px-12 h-[50px] text-[14px] font-medium font-sans rounded-none transition-colors">
+                  Become a Dealer
+                </button>
+              </a>
             </div>
           </div>
         </section>
