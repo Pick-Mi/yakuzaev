@@ -127,7 +127,7 @@ const ProfileSetup = () => {
                     onChange={(e) => setFirstName(e.target.value)}
                     placeholder=""
                     required
-                    className="border-border"
+                    className="border-border rounded-none"
                   />
                 </div>
                 <div className="space-y-2">
@@ -138,7 +138,7 @@ const ProfileSetup = () => {
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
                     placeholder=""
-                    className="border-border"
+                    className="border-border rounded-none"
                   />
                 </div>
               </div>
@@ -157,7 +157,7 @@ const ProfileSetup = () => {
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder=""
                     required
-                    className="border-border"
+                    className="border-border rounded-none"
                   />
                 </div>
                 <div className="space-y-2">
@@ -169,7 +169,7 @@ const ProfileSetup = () => {
                     onChange={(e) => setCountry(e.target.value)}
                     placeholder=""
                     required
-                    className="border-border"
+                    className="border-border rounded-none"
                   />
                 </div>
               </div>
@@ -216,7 +216,7 @@ const ProfileSetup = () => {
             {/* Submit Button */}
             <Button
               type="submit"
-              className="w-full bg-black hover:bg-black/90 text-white h-12 text-base"
+              className="w-full bg-black hover:bg-black/90 text-white h-12 text-base rounded-none"
               disabled={loading || !firstName.trim() || !email.trim() || !country.trim() || !agreedToTerms}
             >
               {loading ? 'Creating Account...' : 'Create Account'}
