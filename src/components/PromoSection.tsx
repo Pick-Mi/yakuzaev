@@ -124,7 +124,7 @@ const PromoSection = () => {
           <img
             src={image1}
             alt="Scooter Front"
-            className="absolute h-full left-[-50.51%] top-0 w-[201.01%]"
+            className="absolute w-full h-full object-cover"
           />
         </div>
       </div>
