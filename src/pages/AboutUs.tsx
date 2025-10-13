@@ -185,7 +185,7 @@ const AboutUs = () => {
         </section>
 
         {/* CTA Section */}
-        <section className="py-[70px] px-4 bg-gradient-to-br from-gray-900 via-orange-900 to-orange-700">
+        <section className="py-[70px] px-4 bg-[#191E22]">
           <div className="container mx-auto max-w-4xl text-center">
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
               Join the Electric Revolution
