@@ -1,11 +1,11 @@
 import { useState } from "react";
 import Header from "@/components/Header";
+import DealerHero from "@/components/DealerHero";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
 
 const BecomeDealer = () => {
   const { toast } = useToast();
@@ -69,16 +69,9 @@ const BecomeDealer = () => {
     <div className="min-h-screen bg-background">
       <Header />
       
-      <main className="pt-20">
+      <main>
         {/* Hero Section */}
-        <section className="bg-gradient-to-br from-primary/10 to-primary/5 py-16 px-4">
-          <div className="container mx-auto max-w-4xl text-center">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">Become a Dealer</h1>
-            <p className="text-lg text-muted-foreground">
-              Join our network of authorized dealers and be part of the electric revolution
-            </p>
-          </div>
-        </section>
+        <DealerHero />
 
         {/* Benefits Section */}
         <section className="py-16 px-4">
@@ -125,7 +118,7 @@ const BecomeDealer = () => {
         </section>
 
         {/* Application Form */}
-        <section className="py-16 px-4 bg-muted/30">
+        <section id="dealer-application-form" className="py-16 px-4 bg-muted/30">
           <div className="container mx-auto max-w-2xl">
             <h2 className="text-3xl font-bold text-center mb-8">Apply Now</h2>
             <form onSubmit={handleSubmit} className="space-y-6 bg-card p-8 rounded-lg border">
