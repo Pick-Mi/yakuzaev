@@ -6,6 +6,8 @@ import teamMeeting from "@/assets/team-meeting.jpg";
 import manufacturing from "@/assets/manufacturing.jpg";
 import teamCollaboration from "@/assets/team-collaboration.jpg";
 import factoryTeam from "@/assets/factory-team.jpg";
+import batteryCenter from "@/assets/battery-innovation-center.jpg";
+import futureFactory from "@/assets/future-factory-construction.jpg";
 
 const AboutUs = () => {
   return (
@@ -184,7 +186,47 @@ const AboutUs = () => {
           </div>
         </section>
 
-        {/* CTA Section */}
+        {/* Future Ready Section */}
+        <section className="py-[70px] px-4 bg-background">
+          <div className="container mx-auto max-w-7xl">
+            <h2 className="text-4xl md:text-5xl font-bold mb-12">
+              Future Ready. Already
+            </h2>
+            
+            <div className="grid md:grid-cols-2 gap-8">
+              {/* Battery Innovation Center */}
+              <div className="flex flex-col">
+                <div className="overflow-hidden mb-6">
+                  <img 
+                    src={batteryCenter} 
+                    alt="Battery Innovation Center architectural rendering" 
+                    className="w-full h-[400px] object-cover"
+                  />
+                </div>
+                <h3 className="text-2xl font-bold mb-4">Battery Innovation Center</h3>
+                <p className="text-lg text-muted-foreground">
+                  An R&D facility dedicated entirely to battery innovation, housing some of the brightest minds from around the world.
+                </p>
+              </div>
+
+              {/* Future Factory */}
+              <div className="flex flex-col">
+                <div className="overflow-hidden mb-6">
+                  <img 
+                    src={futureFactory} 
+                    alt="Future Factory construction site in Krishanagiri" 
+                    className="w-full h-[400px] object-cover"
+                  />
+                </div>
+                <h3 className="text-2xl font-bold mb-4">Future Factory,</h3>
+                <p className="text-lg text-muted-foreground">
+                  We have largest integrated and automated Electric 2 Wheeler manufacturing plant in India, spread across 400+ acres* in Krishanagiri, Tamil Nadu
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
         <section className="py-[70px] px-4 bg-[#191E22]">
           <div className="container mx-auto max-w-4xl text-center">
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
