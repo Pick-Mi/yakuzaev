@@ -119,38 +119,6 @@ const AboutUs = () => {
           </div>
         </section>
 
-        {/* Mission & Vision */}
-        <section className="py-[70px] px-4 bg-muted/30">
-          <div className="container mx-auto max-w-6xl">
-            <div className="grid md:grid-cols-2 gap-8">
-              {/* Mission */}
-              <div className="bg-white p-10 rounded-lg">
-                <div className="w-16 h-16 bg-orange-100 rounded-lg flex items-center justify-center mb-6">
-                  <Target className="w-8 h-8 text-orange-600" strokeWidth={2} />
-                </div>
-                <h3 className="text-3xl font-bold mb-4">Our Mission</h3>
-                <p className="text-lg text-muted-foreground">
-                  To accelerate India's transition to electric mobility by delivering high-performance, 
-                  affordable, and sustainable electric vehicles that exceed customer expectations while 
-                  contributing to a cleaner environment.
-                </p>
-              </div>
-
-              {/* Vision */}
-              <div className="bg-white p-10 rounded-lg">
-                <div className="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center mb-6">
-                  <Eye className="w-8 h-8 text-blue-600" strokeWidth={2} />
-                </div>
-                <h3 className="text-3xl font-bold mb-4">Our Vision</h3>
-                <p className="text-lg text-muted-foreground">
-                  To become India's most trusted electric vehicle brand, leading the charge towards 
-                  zero-emission transportation and inspiring millions to embrace sustainable mobility 
-                  for a better tomorrow.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
 
         {/* Stats Section */}
         <section className="py-[70px] px-4 bg-gray-900">
