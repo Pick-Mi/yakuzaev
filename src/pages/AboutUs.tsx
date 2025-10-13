@@ -40,53 +40,6 @@ const AboutUs = () => {
           </div>
         </section>
 
-        {/* Story Section */}
-        <section className="py-[70px] px-4">
-          <div className="container mx-auto max-w-6xl">
-            <div className="grid lg:grid-cols-2 gap-12 items-center">
-              <div>
-                <h2 className="text-4xl md:text-5xl font-bold mb-6">Our Story</h2>
-                <div className="space-y-4 text-lg text-muted-foreground">
-                  <p>
-                    Founded with a vision to revolutionize urban mobility, YakuzaEV emerged as a pioneer 
-                    in India's electric vehicle industry. We recognized the urgent need for sustainable 
-                    transportation solutions that don't compromise on performance or style.
-                  </p>
-                  <p>
-                    What started as a small team of passionate engineers and designers has grown into 
-                    a leading EV manufacturer, serving thousands of customers across India. Our commitment 
-                    to innovation, quality, and customer satisfaction drives everything we do.
-                  </p>
-                  <p>
-                    Today, we're not just building electric scooters – we're building a movement towards 
-                    cleaner cities, healthier communities, and a more sustainable future for generations to come.
-                  </p>
-                </div>
-              </div>
-              
-              <div className="bg-white p-8 rounded-lg">
-                <div className="grid grid-cols-2 gap-6">
-                  <div className="text-center">
-                    <div className="text-4xl font-bold text-orange-600 mb-2">50K+</div>
-                    <div className="text-sm text-muted-foreground">Happy Customers</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-4xl font-bold text-orange-600 mb-2">500+</div>
-                    <div className="text-sm text-muted-foreground">Dealer Network</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-4xl font-bold text-orange-600 mb-2">100+</div>
-                    <div className="text-sm text-muted-foreground">Cities Covered</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-4xl font-bold text-orange-600 mb-2">15+</div>
-                    <div className="text-sm text-muted-foreground">Models Available</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
 
         {/* Mission & Vision */}
         <section className="py-[70px] px-4 bg-muted/30">
