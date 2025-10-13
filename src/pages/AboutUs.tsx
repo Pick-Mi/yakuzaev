@@ -55,21 +55,21 @@ const AboutUs = () => {
                 <img 
                   src={teamMeeting} 
                   alt="Leadership team presenting to employees" 
-                  className="w-full h-[500px] object-cover"
+                  className="w-full h-[700px] object-cover"
                 />
               </div>
               <div className="overflow-hidden">
                 <img 
                   src={manufacturing} 
                   alt="Manufacturing facility with EV production" 
-                  className="w-full h-[500px] object-cover"
+                  className="w-full h-[340px] object-cover"
                 />
               </div>
               <div className="overflow-hidden">
                 <img 
                   src={teamCollaboration} 
                   alt="Team collaboration at office campus" 
-                  className="w-full h-[500px] object-cover"
+                  className="w-full h-[340px] object-cover"
                 />
               </div>
             </div>
