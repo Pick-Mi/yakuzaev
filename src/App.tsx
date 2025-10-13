@@ -22,6 +22,7 @@ import Orders from "./pages/Orders";
 import OrderDetails from "./pages/OrderDetails";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import PaymentFailure from "./pages/PaymentFailure";
+import BecomeDealer from "./pages/BecomeDealer";
 
 import NotFound from "./pages/NotFound";
 
@@ -42,6 +43,7 @@ const App = () => (
               <Route path="/profile-setup" element={<ProfileSetup />} />
               <Route path="/products" element={<Products />} />
               <Route path="/blogs" element={<Blogs />} />
+              <Route path="/become-dealer" element={<BecomeDealer />} />
               <Route path="/product/:id" element={<Product />} />
               <Route path="/profile" element={
                 <ProtectedRoute>
