@@ -108,12 +108,6 @@ const Profile = () => {
     loyalty_points: 0
   });
 
-  useEffect(() => {
-    if (user) {
-      fetchProfile();
-      fetchAddresses();
-    }
-  }, [user]);
 
   const fetchProfile = async () => {
     try {
@@ -178,6 +172,13 @@ const Profile = () => {
       console.error('Error fetching addresses:', error);
     }
   };
+
+  useEffect(() => {
+    if (user) {
+      fetchProfile();
+      fetchAddresses();
+    }
+  }, [user]);
 
   const saveProfile = async () => {
     setSaving(true);
