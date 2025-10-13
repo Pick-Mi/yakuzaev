@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
+import { DollarSign, MapPin } from "lucide-react";
+import dealerMeetingImage from "@/assets/dealer-meeting.jpg";
 
 const BecomeDealer = () => {
   const { toast } = useToast();
@@ -117,130 +119,72 @@ const BecomeDealer = () => {
           </div>
         </section>
 
-        {/* Application Form */}
-        <section id="dealer-application-form" className="py-16 px-4 bg-muted/30">
-          <div className="container mx-auto max-w-2xl">
-            <h2 className="text-3xl font-bold text-center mb-8">Apply Now</h2>
-            <form onSubmit={handleSubmit} className="space-y-6 bg-card p-8 rounded-lg border">
-              <div className="grid md:grid-cols-2 gap-6">
-                <div>
-                  <label htmlFor="businessName" className="block text-sm font-medium mb-2">
-                    Business Name *
-                  </label>
-                  <Input
-                    id="businessName"
-                    name="businessName"
-                    value={formData.businessName}
-                    onChange={handleChange}
-                    required
-                    placeholder="Your business name"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="contactPerson" className="block text-sm font-medium mb-2">
-                    Contact Person *
-                  </label>
-                  <Input
-                    id="contactPerson"
-                    name="contactPerson"
-                    value={formData.contactPerson}
-                    onChange={handleChange}
-                    required
-                    placeholder="Full name"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium mb-2">
-                    Email *
-                  </label>
-                  <Input
-                    id="email"
-                    name="email"
-                    type="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
-                    placeholder="your@email.com"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="phone" className="block text-sm font-medium mb-2">
-                    Phone *
-                  </label>
-                  <Input
-                    id="phone"
-                    name="phone"
-                    type="tel"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    required
-                    placeholder="+91 XXXXX XXXXX"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="city" className="block text-sm font-medium mb-2">
-                    City *
-                  </label>
-                  <Input
-                    id="city"
-                    name="city"
-                    value={formData.city}
-                    onChange={handleChange}
-                    required
-                    placeholder="Your city"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="state" className="block text-sm font-medium mb-2">
-                    State *
-                  </label>
-                  <Input
-                    id="state"
-                    name="state"
-                    value={formData.state}
-                    onChange={handleChange}
-                    required
-                    placeholder="Your state"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label htmlFor="experience" className="block text-sm font-medium mb-2">
-                  Prior Experience in Automotive/EV Industry
-                </label>
-                <Input
-                  id="experience"
-                  name="experience"
-                  value={formData.experience}
-                  onChange={handleChange}
-                  placeholder="Years of experience"
+        {/* Official Dealer Section */}
+        <section className="py-16 px-4">
+          <div className="container mx-auto max-w-7xl">
+            <h2 className="text-5xl md:text-6xl font-bold mb-16">Official dealer today!</h2>
+            
+            {/* Two Column Layout */}
+            <div className="grid lg:grid-cols-2 gap-12 mb-16">
+              {/* Left - Image */}
+              <div className="relative">
+                <img 
+                  src={dealerMeetingImage} 
+                  alt="Business meeting for dealer partnership" 
+                  className="w-full h-full object-cover rounded-lg"
                 />
               </div>
 
-              <div>
-                <label htmlFor="message" className="block text-sm font-medium mb-2">
-                  Message
-                </label>
-                <Textarea
-                  id="message"
-                  name="message"
-                  value={formData.message}
-                  onChange={handleChange}
-                  placeholder="Tell us about your business and why you want to become a dealer"
-                  rows={4}
-                />
+              {/* Right - Content */}
+              <div className="flex flex-col justify-center">
+                <p className="text-muted-foreground mb-4">With YakuzaEV</p>
+                <h3 className="text-3xl md:text-4xl font-bold mb-6">
+                  Be part of the electric revolution.
+                </h3>
+                <p className="text-muted-foreground mb-8 text-lg">
+                  Partner with us - apply to become an official dealer today. Become a Direct Dealer and drive the future of electric mobility.
+                </p>
+                <div>
+                  <Button 
+                    onClick={() => {
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
+                    className="px-12 h-12 text-base font-medium rounded-none"
+                  >
+                    Request
+                  </Button>
+                </div>
+              </div>
+            </div>
+
+            {/* Benefit Cards */}
+            <div className="grid md:grid-cols-2 gap-8">
+              {/* Card 1 - Higher Margins */}
+              <div className="bg-muted/30 p-8 rounded-lg">
+                <div className="w-16 h-16 bg-green-100 rounded-lg flex items-center justify-center mb-6">
+                  <DollarSign className="w-8 h-8 text-green-600" strokeWidth={2.5} />
+                </div>
+                <h4 className="text-2xl font-bold mb-4">
+                  Dealers enjoy higher margins with lower OEM commissions.
+                </h4>
+                <p className="text-muted-foreground">
+                  Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                </p>
               </div>
 
-              <Button type="submit" className="w-full" disabled={isSubmitting}>
-                {isSubmitting ? "Submitting..." : "Submit Application"}
-              </Button>
-            </form>
+              {/* Card 2 - Location */}
+              <div className="bg-muted/30 p-8 rounded-lg">
+                <div className="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center mb-6">
+                  <MapPin className="w-8 h-8 text-blue-600" strokeWidth={2.5} />
+                </div>
+                <h4 className="text-2xl font-bold mb-4">
+                  Get it today. Find your place to start a powerful partnership
+                </h4>
+                <p className="text-muted-foreground">
+                  Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                </p>
+              </div>
+            </div>
           </div>
         </section>
       </main>
