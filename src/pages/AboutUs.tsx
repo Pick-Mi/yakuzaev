@@ -51,21 +51,21 @@ const AboutUs = () => {
             </h2>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="overflow-hidden rounded-lg">
+              <div className="overflow-hidden">
                 <img 
                   src={teamMeeting} 
                   alt="Leadership team presenting to employees" 
                   className="w-full h-[500px] object-cover"
                 />
               </div>
-              <div className="overflow-hidden rounded-lg">
+              <div className="overflow-hidden">
                 <img 
                   src={manufacturing} 
                   alt="Manufacturing facility with EV production" 
                   className="w-full h-[500px] object-cover"
                 />
               </div>
-              <div className="overflow-hidden rounded-lg">
+              <div className="overflow-hidden">
                 <img 
                   src={teamCollaboration} 
                   alt="Team collaboration at office campus" 
