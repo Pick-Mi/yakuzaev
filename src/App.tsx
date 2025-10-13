@@ -11,6 +11,7 @@ import Auth from "./pages/Auth";
 import Cart from "./pages/Cart";
 import Product from "./pages/Product";
 import Products from "./pages/Products";
+import Blogs from "./pages/Blogs";
 import Profile from "./pages/Profile";
 import ProfileSetup from "./pages/ProfileSetup";
 import Checkout from "./pages/Checkout";
@@ -38,6 +39,7 @@ const App = () => (
               <Route path="/auth" element={<Auth />} />
               <Route path="/profile-setup" element={<ProfileSetup />} />
               <Route path="/products" element={<Products />} />
+              <Route path="/blogs" element={<Blogs />} />
               <Route path="/product/:id" element={<Product />} />
               <Route path="/profile" element={
                 <ProtectedRoute>

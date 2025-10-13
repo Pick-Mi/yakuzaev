@@ -1,13 +1,15 @@
-import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import { supabase } from "@/integrations/supabase/client";
 
-const BlogSection = () => {
+const Blogs = () => {
   const [blogs, setBlogs] = useState<Array<{
     id: string;
     title: string;
     excerpt: string;
     featured_image: string;
+    published_at: string;
   }>>([]);
 
   useEffect(() => {
@@ -15,9 +17,9 @@ const BlogSection = () => {
       try {
         const { data, error } = await supabase
           .from("blog_posts")
-          .select("id, title, excerpt, featured_image")
+          .select("id, title, excerpt, featured_image, published_at")
           .eq("status", "published")
-          .limit(3);
+          .order("published_at", { ascending: false });
 
         if (error) {
           console.error("Error fetching blogs:", error);
@@ -34,16 +36,17 @@ const BlogSection = () => {
   }, []);
 
   return (
-    <section className="w-full py-[42px] px-[70px]" style={{ backgroundColor: '#F8F9F9' }}>
-      <div className="max-w-[1300px] mx-auto">
-        <div className="flex flex-col gap-[70px]">
-          <h2 className="font-['Inter',sans-serif] font-medium text-[48px] text-[#12141d]">
-            Compelling reasons
-          </h2>
+    <div className="min-h-screen bg-background">
+      <Header />
+      <main className="w-full py-[60px] px-[70px]">
+        <div className="max-w-[1300px] mx-auto">
+          <h1 className="font-['Inter',sans-serif] font-medium text-[48px] text-[#12141d] mb-[50px]">
+            All Blogs
+          </h1>
           
-          <div className="flex gap-[40px]">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[40px]">
             {blogs.map((blog) => (
-              <div key={blog.id} className="bg-white w-[407px] h-[388px] shrink-0 overflow-hidden">
+              <div key={blog.id} className="bg-white w-full overflow-hidden shadow-sm hover:shadow-md transition-shadow">
                 <div className="relative w-full h-[244px] bg-[#d9d9d9]">
                   <img 
                     src={blog.featured_image || "/placeholder.svg"} 
@@ -62,21 +65,15 @@ const BlogSection = () => {
               </div>
             ))}
           </div>
-          
-          <div className="flex justify-center mt-[46px]">
-            <Link
-              to="/blogs"
-              className="bg-black h-[55px] px-[23px] py-[13px] flex items-center justify-center w-[200px] rounded-none hover:bg-black/90 transition-colors"
-            >
-              <span className="font-['Poppins',sans-serif] font-medium text-[16px] text-white">
-                Explore All Blogs
-              </span>
-            </Link>
-          </div>
+
+          {blogs.length === 0 && (
+            <p className="text-center text-gray-500 py-20">No blogs published yet.</p>
+          )}
         </div>
-      </div>
-    </section>
+      </main>
+      <Footer />
+    </div>
   );
 };
 
-export default BlogSection;
+export default Blogs;
