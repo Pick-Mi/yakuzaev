@@ -50,26 +50,26 @@ const AboutUs = () => {
               We build to rule, We build to perform
             </h2>
             
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="overflow-hidden">
+            <div className="flex flex-col md:flex-row gap-6">
+              <div className="overflow-hidden md:w-[60%]">
                 <img 
                   src={teamMeeting} 
                   alt="Leadership team presenting to employees" 
-                  className="w-full h-[700px] object-cover"
+                  className="w-full h-[500px] object-cover"
                 />
               </div>
-              <div className="overflow-hidden">
+              <div className="overflow-hidden md:w-[20%]">
                 <img 
                   src={manufacturing} 
                   alt="Manufacturing facility with EV production" 
-                  className="w-full h-[340px] object-cover"
+                  className="w-full h-[500px] object-cover"
                 />
               </div>
-              <div className="overflow-hidden">
+              <div className="overflow-hidden md:w-[20%]">
                 <img 
                   src={teamCollaboration} 
                   alt="Team collaboration at office campus" 
-                  className="w-full h-[340px] object-cover"
+                  className="w-full h-[500px] object-cover"
                 />
               </div>
             </div>
