@@ -78,7 +78,6 @@ const BecomeDealer = () => {
         {/* Benefits Section */}
         <section className="py-16 px-4">
           <div className="container mx-auto max-w-6xl">
-            <h2 className="text-3xl font-bold text-center mb-12">Why Partner With Us?</h2>
             <div className="grid md:grid-cols-3 gap-8">
               <div className="bg-card p-6 rounded-lg border">
                 <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4">
