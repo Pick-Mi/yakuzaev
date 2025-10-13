@@ -1,6 +1,9 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Zap, Target, Eye, Heart, Users, Award } from "lucide-react";
+import teamMeeting from "@/assets/team-meeting.jpg";
+import manufacturing from "@/assets/manufacturing.jpg";
+import teamCollaboration from "@/assets/team-collaboration.jpg";
 
 const AboutUs = () => {
   return (
@@ -40,6 +43,38 @@ const AboutUs = () => {
           </div>
         </section>
 
+        {/* Build to Rule Section */}
+        <section className="py-[70px] px-4">
+          <div className="container mx-auto max-w-7xl">
+            <h2 className="text-4xl md:text-5xl font-bold mb-12">
+              We build to rule, We build to perform
+            </h2>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="overflow-hidden rounded-lg">
+                <img 
+                  src={teamMeeting} 
+                  alt="Leadership team presenting to employees" 
+                  className="w-full h-[500px] object-cover"
+                />
+              </div>
+              <div className="overflow-hidden rounded-lg">
+                <img 
+                  src={manufacturing} 
+                  alt="Manufacturing facility with EV production" 
+                  className="w-full h-[500px] object-cover"
+                />
+              </div>
+              <div className="overflow-hidden rounded-lg">
+                <img 
+                  src={teamCollaboration} 
+                  alt="Team collaboration at office campus" 
+                  className="w-full h-[500px] object-cover"
+                />
+              </div>
+            </div>
+          </div>
+        </section>
 
         {/* Mission & Vision */}
         <section className="py-[70px] px-4 bg-muted/30">
