@@ -22,16 +22,8 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [featuredProduct, setFeaturedProduct] = useState<any>(null);
   
-  // Show fixed header on scroll or specific pages
-  const shouldShowFixedHeader = isScrolled || 
-    location.pathname === '/product-config' || 
-    location.pathname === '/booking-confirmation' ||
-    location.pathname === '/products' ||
-    location.pathname === '/profile' ||
-    location.pathname === '/profile-setup' ||
-    location.pathname === '/orders' ||
-    location.pathname === '/auth' ||
-    location.pathname.startsWith('/orders/');
+  // Show fixed header on scroll only
+  const shouldShowFixedHeader = isScrolled;
 
   useEffect(() => {
     const handleScroll = () => {
