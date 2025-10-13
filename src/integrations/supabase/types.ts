@@ -636,6 +636,7 @@ export type Database = {
           notification_cta_url: string | null
           notification_enabled: boolean | null
           notification_type: string | null
+          site_title: string | null
           updated_at: string | null
         }
         Insert: {
@@ -652,6 +653,7 @@ export type Database = {
           notification_cta_url?: string | null
           notification_enabled?: boolean | null
           notification_type?: string | null
+          site_title?: string | null
           updated_at?: string | null
         }
         Update: {
@@ -668,6 +670,7 @@ export type Database = {
           notification_cta_url?: string | null
           notification_enabled?: boolean | null
           notification_type?: string | null
+          site_title?: string | null
           updated_at?: string | null
         }
         Relationships: []
