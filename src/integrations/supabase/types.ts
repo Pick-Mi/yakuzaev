@@ -133,6 +133,51 @@ export type Database = {
         }
         Relationships: []
       }
+      dealer_enquiries: {
+        Row: {
+          business_name: string | null
+          city: string | null
+          created_at: string
+          email: string
+          id: string
+          location: string | null
+          message: string | null
+          name: string
+          phone: string | null
+          state: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          business_name?: string | null
+          city?: string | null
+          created_at?: string
+          email: string
+          id?: string
+          location?: string | null
+          message?: string | null
+          name: string
+          phone?: string | null
+          state?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          business_name?: string | null
+          city?: string | null
+          created_at?: string
+          email?: string
+          id?: string
+          location?: string | null
+          message?: string | null
+          name?: string
+          phone?: string | null
+          state?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       feature_section: {
         Row: {
           created_at: string
@@ -723,6 +768,54 @@ export type Database = {
           transaction_id?: string | null
           updated_at?: string | null
           user_id?: string | null
+        }
+        Relationships: []
+      }
+      user_addresses: {
+        Row: {
+          address: string
+          address_type: string
+          city: string
+          created_at: string
+          id: string
+          is_default: boolean | null
+          locality: string
+          name: string
+          phone: string
+          pincode: string
+          state: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          address: string
+          address_type?: string
+          city: string
+          created_at?: string
+          id?: string
+          is_default?: boolean | null
+          locality: string
+          name: string
+          phone: string
+          pincode: string
+          state: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          address?: string
+          address_type?: string
+          city?: string
+          created_at?: string
+          id?: string
+          is_default?: boolean | null
+          locality?: string
+          name?: string
+          phone?: string
+          pincode?: string
+          state?: string
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }

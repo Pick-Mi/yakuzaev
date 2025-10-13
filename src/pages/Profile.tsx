@@ -11,10 +11,24 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import Header from "@/components/Header";
-import { Save, User, MapPin, CreditCard, Bell, Shield, Package, ChevronRight, LogOut, Edit } from "lucide-react";
+import { Save, User, MapPin, CreditCard, Bell, Shield, Package, ChevronRight, LogOut, Edit, Trash2, MoreVertical } from "lucide-react";
+
+interface Address {
+  id: string;
+  name: string;
+  phone: string;
+  pincode: string;
+  state: string;
+  city: string;
+  locality: string;
+  address: string;
+  address_type: string;
+  is_default: boolean;
+}
 
 const Profile = () => {
   const { user, signOut } = useAuth();
@@ -36,6 +50,19 @@ const Profile = () => {
     otp: "",
     otpSent: false,
     verifying: false
+  });
+  const [addresses, setAddresses] = useState<Address[]>([]);
+  const [addressDialog, setAddressDialog] = useState({
+    open: false,
+    editId: null as string | null,
+    name: "",
+    phone: "",
+    pincode: "",
+    state: "",
+    city: "",
+    locality: "",
+    address: "",
+    address_type: "home"
   });
   
   const [profile, setProfile] = useState({
@@ -84,6 +111,7 @@ const Profile = () => {
   useEffect(() => {
     if (user) {
       fetchProfile();
+      fetchAddresses();
     }
   }, [user]);
 
@@ -336,6 +364,156 @@ const Profile = () => {
     }
   };
 
+  const fetchAddresses = async () => {
+    try {
+      const { data, error } = await (supabase as any)
+        .from('user_addresses')
+        .select('*')
+        .eq('user_id', user?.id)
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      setAddresses(data || []);
+    } catch (error) {
+      console.error('Error fetching addresses:', error);
+    }
+  };
+
+  const openAddressDialog = (address?: Address) => {
+    if (address) {
+      setAddressDialog({
+        open: true,
+        editId: address.id,
+        name: address.name,
+        phone: address.phone,
+        pincode: address.pincode,
+        state: address.state,
+        city: address.city,
+        locality: address.locality,
+        address: address.address,
+        address_type: address.address_type
+      });
+    } else {
+      setAddressDialog({
+        open: true,
+        editId: null,
+        name: "",
+        phone: "",
+        pincode: "",
+        state: "",
+        city: "",
+        locality: "",
+        address: "",
+        address_type: "home"
+      });
+    }
+  };
+
+  const closeAddressDialog = () => {
+    setAddressDialog({
+      open: false,
+      editId: null,
+      name: "",
+      phone: "",
+      pincode: "",
+      state: "",
+      city: "",
+      locality: "",
+      address: "",
+      address_type: "home"
+    });
+  };
+
+  const saveAddress = async () => {
+    if (!addressDialog.name || !addressDialog.phone || !addressDialog.address) {
+      toast({
+        title: "Missing Fields",
+        description: "Please fill in all required fields",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setSaving(true);
+    try {
+      const addressData = {
+        user_id: user?.id,
+        name: addressDialog.name,
+        phone: addressDialog.phone,
+        pincode: addressDialog.pincode,
+        state: addressDialog.state,
+        city: addressDialog.city,
+        locality: addressDialog.locality,
+        address: addressDialog.address,
+        address_type: addressDialog.address_type
+      };
+
+      if (addressDialog.editId) {
+        const { error } = await (supabase as any)
+          .from('user_addresses')
+          .update(addressData)
+          .eq('id', addressDialog.editId);
+
+        if (error) throw error;
+
+        toast({
+          title: "Success",
+          description: "Address updated successfully",
+        });
+      } else {
+        const { error } = await (supabase as any)
+          .from('user_addresses')
+          .insert(addressData);
+
+        if (error) throw error;
+
+        toast({
+          title: "Success",
+          description: "Address added successfully",
+        });
+      }
+
+      closeAddressDialog();
+      await fetchAddresses();
+    } catch (error) {
+      console.error('Error saving address:', error);
+      toast({
+        title: "Error",
+        description: "Failed to save address",
+        variant: "destructive"
+      });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const deleteAddress = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this address?')) return;
+
+    try {
+      const { error } = await (supabase as any)
+        .from('user_addresses')
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: "Address deleted successfully",
+      });
+
+      await fetchAddresses();
+    } catch (error) {
+      console.error('Error deleting address:', error);
+      toast({
+        title: "Error",
+        description: "Failed to delete address",
+        variant: "destructive"
+      });
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -493,42 +671,48 @@ const Profile = () => {
             <div className="space-y-6 bg-white p-8 rounded-none">
               <h1 className="text-3xl font-bold mb-8">Manage Addresses</h1>
               
-              {/* Address Card */}
-              <div className="bg-gray-50 p-6 rounded-none relative">
-                {/* Header with badge and menu */}
-                <div className="flex items-center justify-between mb-4">
-                  <span className="bg-gray-200 px-3 py-1 text-sm font-semibold text-gray-700">HOME</span>
-                  <button className="text-gray-600 hover:text-gray-900">
-                    <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
-                    </svg>
-                  </button>
-                </div>
+              {/* Address List */}
+              {addresses.map((address) => (
+                <div key={address.id} className="bg-gray-50 p-6 rounded-none relative mb-4">
+                  {/* Header with badge and menu */}
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="bg-gray-200 px-3 py-1 text-sm font-semibold text-gray-700 uppercase">{address.address_type}</span>
+                    <div className="flex gap-2">
+                      <button 
+                        onClick={() => openAddressDialog(address)}
+                        className="text-blue-600 hover:text-blue-800 p-2"
+                      >
+                        <Edit className="w-5 h-5" />
+                      </button>
+                      <button 
+                        onClick={() => deleteAddress(address.id)}
+                        className="text-red-600 hover:text-red-800 p-2"
+                      >
+                        <Trash2 className="w-5 h-5" />
+                      </button>
+                    </div>
+                  </div>
 
-                {/* Name and Phone */}
-                <div className="mb-4">
-                  <h3 className="text-lg font-bold text-gray-900">
-                    {profile.first_name}.{profile.last_name ? profile.last_name.charAt(0) : 'D'} {profile.phone}
-                  </h3>
-                </div>
+                  {/* Name and Phone */}
+                  <div className="mb-4">
+                    <h3 className="text-lg font-bold text-gray-900">
+                      {address.name} {address.phone}
+                    </h3>
+                  </div>
 
-                {/* Full Address */}
-                <div className="text-gray-700">
-                  <p>
-                    {profile.street_address}{profile.apartment_unit ? `, ${profile.apartment_unit}` : ''} {profile.street_address ? profile.phone : ''}, {profile.city}, {profile.state_province} - {profile.postal_code}    {profile.phone}
-                  </p>
+                  {/* Full Address */}
+                  <div className="text-gray-700">
+                    <p>
+                      {address.address}, {address.locality}, {address.city}, {address.state} - {address.pincode}    {address.phone}
+                    </p>
+                  </div>
                 </div>
-              </div>
+              ))}
 
               {/* Add New Address Button */}
               <button 
                 className="flex items-center gap-2 text-orange-500 hover:text-orange-600 font-semibold mt-6"
-                onClick={() => {
-                  toast({
-                    title: "Coming Soon",
-                    description: "Add new address feature will be available soon",
-                  });
-                }}
+                onClick={() => openAddressDialog()}
               >
                 <span className="text-2xl">+</span>
                 <span>ADD A NEW ADDRESS</span>
@@ -657,6 +841,118 @@ const Profile = () => {
                 </>
               )}
             </div>
+          </DialogContent>
+        </Dialog>
+
+        {/* Add/Edit Address Dialog */}
+        <Dialog open={addressDialog.open} onOpenChange={closeAddressDialog}>
+          <DialogContent className="rounded-none max-w-3xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="text-orange-500 text-xl">
+                {addressDialog.editId ? "EDIT ADDRESS" : "ADD A NEW ADDRESS"}
+              </DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4 py-4">
+              {/* Use Current Location Button */}
+              <Button className="bg-blue-600 hover:bg-blue-700 text-white rounded-none">
+                <MapPin className="w-5 h-5 mr-2" />
+                Use my current location
+              </Button>
+
+              {/* Form Fields */}
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Input
+                    className="rounded-none"
+                    placeholder="Name"
+                    value={addressDialog.name}
+                    onChange={(e) => setAddressDialog(prev => ({ ...prev, name: e.target.value }))}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Input
+                    className="rounded-none"
+                    placeholder="10-digit mobile number"
+                    value={addressDialog.phone}
+                    onChange={(e) => setAddressDialog(prev => ({ ...prev, phone: e.target.value }))}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Input
+                    className="rounded-none"
+                    placeholder="Pincode"
+                    value={addressDialog.pincode}
+                    onChange={(e) => setAddressDialog(prev => ({ ...prev, pincode: e.target.value }))}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Input
+                    className="rounded-none"
+                    placeholder="State"
+                    value={addressDialog.state}
+                    onChange={(e) => setAddressDialog(prev => ({ ...prev, state: e.target.value }))}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Input
+                    className="rounded-none"
+                    placeholder="City / District"
+                    value={addressDialog.city}
+                    onChange={(e) => setAddressDialog(prev => ({ ...prev, city: e.target.value }))}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Input
+                    className="rounded-none"
+                    placeholder="Locality"
+                    value={addressDialog.locality}
+                    onChange={(e) => setAddressDialog(prev => ({ ...prev, locality: e.target.value }))}
+                  />
+                </div>
+              </div>
+
+              {/* Full Address */}
+              <div className="space-y-2">
+                <Textarea
+                  className="rounded-none min-h-32"
+                  placeholder="Address"
+                  value={addressDialog.address}
+                  onChange={(e) => setAddressDialog(prev => ({ ...prev, address: e.target.value }))}
+                />
+              </div>
+
+              {/* Address Type */}
+              <RadioGroup 
+                value={addressDialog.address_type} 
+                onValueChange={(value) => setAddressDialog(prev => ({ ...prev, address_type: value }))}
+              >
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="home" id="home" />
+                  <Label htmlFor="home" className="cursor-pointer">Home (All Day Delivery)</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="work" id="work" />
+                  <Label htmlFor="work" className="cursor-pointer">Work ( Delivery Between 10 AM – 05 PM )</Label>
+                </div>
+              </RadioGroup>
+            </div>
+
+            <DialogFooter className="flex gap-2">
+              <Button 
+                onClick={saveAddress} 
+                disabled={saving}
+                className="flex-1 bg-orange-500 hover:bg-orange-600 rounded-none"
+              >
+                {saving ? "SAVING..." : "SAVE"}
+              </Button>
+              <Button 
+                variant="outline" 
+                onClick={closeAddressDialog}
+                className="flex-1 rounded-none"
+              >
+                CANCEL
+              </Button>
+            </DialogFooter>
           </DialogContent>
         </Dialog>
       </div>
