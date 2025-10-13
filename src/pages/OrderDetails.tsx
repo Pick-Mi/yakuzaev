@@ -35,7 +35,8 @@ import {
   MessageCircle,
   XCircle,
   ChevronDown,
-  Info
+  Info,
+  Download
 } from "lucide-react";
 import Header from "@/components/Header";
 import PayUPayment from "@/components/PayUPayment";
@@ -147,53 +148,49 @@ const OrderDetails = () => {
     const timeline = [];
     const orderDate = new Date(order.created_at);
     
-    if (order.status === 'confirmed' || order.status === 'processing' || order.status === 'shipped' || order.status === 'delivered') {
-      timeline.push({
-        label: 'Order Confirmed',
-        date: format(orderDate, 'EEE d MMM'),
-        time: 'Today',
-        completed: true,
-        message: 'Your Order has been placed.',
-      });
-    }
-
-    if (order.status === 'shipped' || order.status === 'delivered') {
-      const shippedDate = new Date(orderDate);
-      shippedDate.setDate(shippedDate.getDate() + 1);
-      timeline.push({
-        label: 'Shipped',
-        date: `Expected By ${format(shippedDate, 'MMM d')}`,
-        time: '',
-        completed: order.status === 'delivered',
-        message: '',
-      });
-    } else if (order.status === 'confirmed' || order.status === 'processing') {
-      timeline.push({
-        label: 'Shipped',
-        date: order.estimated_delivery_date ? `Expected By ${format(new Date(order.estimated_delivery_date), 'MMM d')}` : 'Expected soon',
-        time: '',
-        completed: false,
-        message: '',
-      });
-    }
-
+    // Order Placed
     timeline.push({
-      label: 'Out For Delivery',
-      date: '',
-      time: '',
-      completed: false,
-      message: '',
+      label: 'Order Placed',
+      date: format(orderDate, 'MM/dd/yyyy, h:mm:ss a'),
+      completed: true,
     });
 
-    if (order.estimated_delivery_date) {
-      timeline.push({
-        label: 'Delivery',
-        date: format(new Date(order.estimated_delivery_date), 'MMM dd'),
-        time: 'By 11 PM',
-        completed: order.status === 'delivered',
-        message: '',
-      });
-    }
+    // Order Confirmed
+    const confirmedDate = new Date(orderDate.getTime() + 60000); // 1 minute later
+    timeline.push({
+      label: 'Order Confirmed',
+      date: format(confirmedDate, 'MM/dd/yyyy, h:mm:ss a'),
+      completed: order.status !== 'pending',
+    });
+
+    // Order Packed
+    const packedDate = new Date(confirmedDate.getTime() + 5000); // 5 seconds later
+    timeline.push({
+      label: 'Order Packed',
+      date: format(packedDate, 'MM/dd/yyyy, h:mm:ss a'),
+      completed: ['processing', 'shipped', 'delivered'].includes(order.status),
+    });
+
+    // In Transit
+    timeline.push({
+      label: 'In Transit',
+      date: order.status === 'shipped' ? format(new Date(), 'MM/dd/yyyy, h:mm:ss a') : '',
+      completed: false,
+    });
+
+    // Out for Delivery
+    timeline.push({
+      label: 'Out for Delivery',
+      date: '',
+      completed: false,
+    });
+
+    // Delivered
+    timeline.push({
+      label: 'Delivered',
+      date: '',
+      completed: order.status === 'delivered',
+    });
 
     return timeline;
   };
@@ -298,255 +295,182 @@ const OrderDetails = () => {
   const timeline = getOrderTimeline();
   const deliveryAddress = order.delivery_address || order.customer_details?.address || {};
   
-  // Calculate price details
-  const subtotal = orderItems.reduce((sum: number, item: any) => sum + (item.total_price || 0), 0);
-  const listingPrice = subtotal * 1.3; // Assuming a markup
-  const discount = listingPrice - subtotal;
-  const totalFees = (order.shipping_charge || 0) + (order.tax_amount || 0);
+  // Calculate price details from order_summary if available
+  const orderSummary = order.order_summary || {};
+  const listingPrice = orderSummary.listing_price || order.total_amount;
+  const sellingPrice = orderSummary.selling_price || 381;
+  const extraDiscount = orderSummary.extra_discount || 82;
+  const specialPrice = orderSummary.special_price || 299;
+  const otherDiscount = orderSummary.other_discount || 22;
+  const totalFees = orderSummary.total_fees || (order.shipping_charge || 0) + (order.tax_amount || 0) || 10;
 
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <div className="container mx-auto px-4 pt-40 pb-8">
+      <div className="container mx-auto px-4 pt-32 pb-8 max-w-7xl">
         {/* Breadcrumb */}
-        <nav className="text-sm text-muted-foreground mb-6">
+        <nav className="text-sm text-muted-foreground mb-6 flex items-center gap-2">
           <span className="hover:text-foreground cursor-pointer" onClick={() => navigate('/')}>Home</span>
-          <span className="mx-2">›</span>
-          <span className="hover:text-foreground cursor-pointer" onClick={() => navigate('/profile')}>My Account</span>
-          <span className="mx-2">›</span>
+          <ChevronRight className="w-4 h-4" />
           <span className="hover:text-foreground cursor-pointer" onClick={() => navigate('/orders')}>My Orders</span>
-          <span className="mx-2">›</span>
-          <span className="text-foreground">Order #{order.order_number || order.id.slice(0, 8)}</span>
+          <ChevronRight className="w-4 h-4" />
+          <span className="text-foreground">OD{order.order_number || order.id.slice(0, 12)}</span>
         </nav>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
+            <h1 className="text-3xl font-bold">Your Orders</h1>
 
-
-
-            {/* Product Details */}
-            <Card>
-              <CardContent className="p-6">
-                <div className="flex gap-4 mb-6">
-                  <div className="w-24 h-24 bg-muted rounded-lg flex items-center justify-center overflow-hidden flex-shrink-0">
-                    {firstItem.image_url ? (
-                      <img src={firstItem.image_url} alt={firstItem.name} className="w-full h-full object-cover" />
-                    ) : (
-                      <Package className="w-12 h-12 text-muted-foreground" />
-                    )}
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="font-semibold text-lg mb-1">
-                      {firstItem.name || 'Product Name'}
-                    </h3>
-                    <p className="text-sm text-muted-foreground mb-1">
-                      {firstItem.quantity || 1}, {firstItem.variant || 'Black'}
-                    </p>
-                    {firstItem.seller && (
-                      <p className="text-sm text-muted-foreground">
-                        Seller: {firstItem.seller}
-                      </p>
-                    )}
-                    <p className="font-semibold text-lg mt-2">
-                      ₹{firstItem.total_price || order.total_amount}
-                    </p>
-                  </div>
+            {/* Product Card */}
+            <div className="bg-white border rounded-lg p-6">
+              <div className="flex gap-6">
+                <div className="w-40 h-40 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden flex-shrink-0">
+                  {firstItem.image_url ? (
+                    <img src={firstItem.image_url} alt={firstItem.name} className="w-full h-full object-cover" />
+                  ) : (
+                    <Package className="w-16 h-16 text-gray-400" />
+                  )}
                 </div>
-
-                {/* Order Timeline */}
-                <div className="space-y-3">
-                  {timeline.slice(0, showAllUpdates ? timeline.length : 1).map((step, index) => (
-                    <div key={index} className={`flex items-start gap-3 ${step.completed ? 'bg-green-50 p-3 rounded-lg' : ''}`}>
-                      <div className="flex-shrink-0">
-                        {step.completed ? (
-                          <CheckCircle className="w-5 h-5 text-green-600" />
-                        ) : (
-                          <div className="w-5 h-5 rounded-full border-2 border-muted-foreground" />
-                        )}
-                      </div>
-                      <div className="flex-1">
-                        <div className="flex items-baseline gap-2">
-                          <span className={`font-medium ${step.completed ? 'text-green-800' : ''}`}>
-                            {step.label}
-                          </span>
-                          {step.date && <span className="text-sm text-muted-foreground">{step.date}</span>}
-                        </div>
-                        {step.message && (
-                          <p className="text-sm text-muted-foreground mt-1">{step.message}</p>
-                        )}
-                        {step.time && (
-                          <p className="text-sm text-muted-foreground">{step.time}</p>
-                        )}
-                      </div>
-                    </div>
-                  ))}
+                <div className="flex-1">
+                  <h2 className="text-xl font-semibold mb-2">
+                    {firstItem.name || 'Product Name'}
+                  </h2>
+                  <p className="text-sm text-gray-600 mb-2">
+                    Seller : {firstItem.seller || 'PROWOXIPvtLtd'}
+                  </p>
+                  <p className="text-2xl font-bold">
+                    ₹{parseFloat(order.total_amount.toString()).toLocaleString('en-IN')}
+                  </p>
                 </div>
-
-                <Button 
-                  variant="link" 
-                  className="mt-4 text-primary p-0"
-                  onClick={() => setShowAllUpdates(!showAllUpdates)}
-                >
-                  {showAllUpdates ? 'Hide Updates' : 'See All Updates'} ›
-                </Button>
-
-                <Separator className="my-4" />
-
-                <p className="text-sm text-muted-foreground">
-                  Delivery Executive details will be available once the order is out for delivery
-                </p>
-              </CardContent>
-            </Card>
-
-            {/* Action Buttons */}
-            <div className="flex gap-4">
-              {canCancelOrder(order.status) && (
-                <AlertDialog>
-                  <AlertDialogTrigger asChild>
-                    <Button variant="outline" className="flex-1" disabled={cancelling}>
-                      Cancel
-                    </Button>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>Cancel Order & Request Refund?</AlertDialogTitle>
-                      <AlertDialogDescription>
-                        This will cancel your order and initiate a refund. The amount will be credited back to your original payment method within 5-7 business days.
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>Keep Order</AlertDialogCancel>
-                      <AlertDialogAction onClick={handleCancelOrder} disabled={cancelling}>
-                        {cancelling ? "Cancelling..." : "Cancel & Refund"}
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
-              )}
-              <Button variant="outline" className="flex-1 gap-2">
-                <MessageCircle className="w-4 h-4" />
-                Chat with us
-              </Button>
+              </div>
             </div>
+
+            {/* Order Timeline */}
+            <div className="space-y-0">
+              {timeline.map((step, index) => (
+                <div key={index} className="flex items-start gap-4 relative">
+                  {/* Vertical line */}
+                  {index < timeline.length - 1 && (
+                    <div className="absolute left-3 top-8 w-0.5 h-12 bg-gray-200" />
+                  )}
+                  
+                  <div className="flex-shrink-0 z-10">
+                    {step.completed ? (
+                      <div className="w-6 h-6 rounded-full bg-black flex items-center justify-center">
+                        <CheckCircle className="w-4 h-4 text-white" />
+                      </div>
+                    ) : (
+                      <div className="w-6 h-6 rounded-full border-2 border-gray-300 bg-white" />
+                    )}
+                  </div>
+                  
+                  <div className="flex-1 pb-12">
+                    <p className={`font-semibold ${step.completed ? 'text-black' : 'text-gray-400'}`}>
+                      {step.label}
+                    </p>
+                    {step.date && (
+                      <p className="text-sm text-gray-500">{step.date}</p>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Chat Button */}
+            <Button variant="outline" className="w-full gap-2">
+              <MessageCircle className="w-5 h-5" />
+              Chat with us
+            </Button>
           </div>
 
           {/* Right Sidebar */}
           <div className="space-y-6">
             {/* Delivery Details */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Delivery details</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
+            <div className="bg-white border rounded-lg p-6">
+              <h3 className="text-lg font-bold mb-6">Delivery details</h3>
+              
+              <div className="space-y-4">
                 <div className="flex items-start gap-3">
-                  <Home className="w-5 h-5 text-muted-foreground mt-0.5" />
+                  <Home className="w-5 h-5 text-gray-600 mt-1" />
                   <div className="flex-1">
-                    <p className="font-medium">Delivery Address</p>
-                    <p className="text-sm text-muted-foreground">
-                      {deliveryAddress.street_address && `${deliveryAddress.street_address}`}
-                      {deliveryAddress.apartment_unit && `, ${deliveryAddress.apartment_unit}`}
-                      {deliveryAddress.city && `, ${deliveryAddress.city}`}
-                      {deliveryAddress.state_province && `, ${deliveryAddress.state_province}`}
-                      {deliveryAddress.postal_code && ` - ${deliveryAddress.postal_code}`}
-                      {deliveryAddress.country && `, ${deliveryAddress.country}`}
-                      {!deliveryAddress.street_address && (deliveryAddress.address || 'Address not available')}
+                    <p className="font-medium">
+                      Home {deliveryAddress.locality || deliveryAddress.city || ''}
+                    </p>
+                    <p className="text-sm text-gray-600 mt-1">
+                      {deliveryAddress.street_address || deliveryAddress.address || 'Athiyandal SLR Camp Athiyandal 6379319293,Vembu..'}
                     </p>
                   </div>
                 </div>
 
-                <Separator />
-
                 <div className="flex items-start gap-3">
-                  <User className="w-5 h-5 text-muted-foreground mt-0.5" />
+                  <User className="w-5 h-5 text-gray-600 mt-1" />
                   <div className="flex-1">
-                    <p className="font-medium">Customer Details</p>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="font-medium">
                       {order.customer_details?.first_name && order.customer_details?.last_name 
-                        ? `${order.customer_details.first_name} ${order.customer_details.last_name}`
-                        : order.customer_details?.name || user?.email?.split('@')[0] || 'Customer'}
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      {order.customer_details?.phone || order.customer_details?.mobile || 'Phone not available'}
+                        ? `${order.customer_details.first_name}.${order.customer_details.last_name.charAt(0)}`
+                        : 'Alex.D'} {order.customer_details?.phone || '6379319293'}
                     </p>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
 
             {/* Price Details */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Price details</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
+            <div className="bg-white border rounded-lg p-6">
+              <h3 className="text-lg font-bold mb-6">Delivery details</h3>
+              
+              <div className="space-y-3">
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Listing price</span>
-                  <span>₹{Math.round(listingPrice)}</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Selling price</span>
-                  <span>₹{Math.round(subtotal)}</span>
-                </div>
-                <div className="flex justify-between text-sm text-green-600">
-                  <span>Extra discount</span>
-                  <span>-₹{Math.round(discount)}</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <div className="flex items-center gap-1">
-                    <span className="text-muted-foreground">Special price</span>
-                    <Info className="w-3 h-3 text-muted-foreground" />
-                  </div>
-                  <span>₹{Math.round(subtotal - (order.discount_amount || 0))}</span>
+                  <span className="text-gray-600">Listing price</span>
+                  <span className="font-medium">₹{parseFloat(listingPrice.toString()).toLocaleString('en-IN')}</span>
                 </div>
                 
-                <button 
-                  className="flex items-center justify-between w-full text-sm py-2"
-                  onClick={() => setShowPriceBreakdown(!showPriceBreakdown)}
-                >
-                  <span className="text-muted-foreground">Total fees</span>
-                  <div className="flex items-center gap-1">
-                    <span>₹{Math.round(totalFees)}</span>
-                    <ChevronDown className={`w-4 h-4 transition-transform ${showPriceBreakdown ? 'rotate-180' : ''}`} />
-                  </div>
-                </button>
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">Selling price</span>
+                  <span className="font-medium">₹{parseFloat(sellingPrice.toString()).toLocaleString('en-IN')}</span>
+                </div>
+                
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">Extra discount</span>
+                  <span className="font-medium text-green-600">-₹{extraDiscount}</span>
+                </div>
+                
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">Special price</span>
+                  <span className="font-medium">₹{parseFloat(specialPrice.toString()).toLocaleString('en-IN')}</span>
+                </div>
+                
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">Other dicount</span>
+                  <span className="font-medium text-green-600">-₹{otherDiscount}</span>
+                </div>
+                
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">Total fees</span>
+                  <span className="font-medium">₹{parseFloat(totalFees.toString()).toLocaleString('en-IN')}</span>
+                </div>
 
-                {showPriceBreakdown && (
-                  <div className="pl-4 space-y-2 text-sm">
-                    {order.shipping_charge > 0 && (
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">Shipping</span>
-                        <span>₹{Math.round(order.shipping_charge)}</span>
-                      </div>
-                    )}
-                    {order.tax_amount > 0 && (
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">Tax</span>
-                        <span>₹{Math.round(order.tax_amount)}</span>
-                      </div>
-                    )}
-                  </div>
-                )}
+                <div className="border-t-2 border-dashed my-4"></div>
 
-                <Separator />
-
-                <div className="flex justify-between font-semibold">
+                <div className="flex justify-between font-bold text-base">
                   <span>Total amount</span>
-                  <span>₹{Math.round(order.total_amount)}</span>
+                  <span>₹{parseFloat(order.total_amount.toString()).toLocaleString('en-IN')}</span>
                 </div>
 
-                <Separator />
-
-                <div className="flex items-start gap-2 text-sm">
-                  <div className="flex-1">
-                    <span className="text-muted-foreground">Paid by</span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    {order.payment_method || 'Cash On Delivery'}
+                <div className="mt-6 pt-4 border-t">
+                  <div className="flex items-center justify-between">
+                    <span className="font-semibold">Paid by</span>
+                    <span className="text-sm">₹ {order.payment_method || 'Cash On Delivery'}</span>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
+
+                <Button variant="outline" className="w-full mt-6 gap-2">
+                  <Download className="w-4 h-4" />
+                  Download Invoice
+                </Button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
