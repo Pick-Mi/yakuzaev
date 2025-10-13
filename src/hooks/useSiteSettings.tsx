@@ -3,6 +3,8 @@ import { supabase } from "@/integrations/supabase/client";
 
 export const useSiteSettings = () => {
   useEffect(() => {
+    console.log("useSiteSettings hook mounted");
+    
     const fetchSiteSettings = async () => {
       try {
         console.log("Fetching site settings...");
@@ -11,7 +13,7 @@ export const useSiteSettings = () => {
           .select("site_title, favicon_url")
           .limit(1);
 
-        console.log("Site settings data:", data, "Error:", error);
+        console.log("Site settings response - data:", data, "error:", error);
 
         if (!error && data && data.length > 0) {
           const settings = data[0];
