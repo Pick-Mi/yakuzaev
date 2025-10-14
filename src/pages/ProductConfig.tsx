@@ -431,7 +431,11 @@ const ProductConfig = () => {
                       if (variant.specifications) {
                         const specs = Array.isArray(variant.specifications) ? variant.specifications : [];
                         const priceSpec = specs.find((s: any) => s.label?.toLowerCase() === 'price');
-                        return priceSpec?.value || product.price;
+                        if (priceSpec?.value) {
+                          // Extract number from string like "₹35,280.00"
+                          const numericPrice = priceSpec.value.replace(/[^\d.]/g, '');
+                          return numericPrice || product.price;
+                        }
                       }
                       
                       return product.price;
