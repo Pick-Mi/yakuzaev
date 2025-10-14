@@ -11,11 +11,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import Header from "@/components/Header";
 import { Save, User, MapPin, CreditCard, Bell, Shield, Package, ChevronRight, LogOut, Edit, Trash2, MoreVertical } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface Address {
   id: string;
@@ -36,6 +38,7 @@ const Profile = () => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const { toast } = useToast();
+  const isMobile = useIsMobile();
   const [activeSection, setActiveSection] = useState(searchParams.get("section") || "profile");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -575,7 +578,124 @@ const Profile = () => {
     <div className="min-h-screen bg-background">
       <Header />
       
-      <div className="container mx-auto px-4 pt-40 pb-8">
+      <div className={`container mx-auto ${isMobile ? 'px-0 pt-[120px]' : 'px-4 pt-40'} pb-8`}>
+        {isMobile ? (
+          // Mobile Layout
+          <div className="space-y-0">
+            {/* Profile Header */}
+            <div className="bg-gray-100 px-4 py-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h1 className="text-2xl font-bold text-gray-900">
+                    {profile.first_name} {profile.last_name || ''}
+                  </h1>
+                  <button className="text-sm text-gray-600 flex items-center gap-1 mt-1">
+                    Explore <ChevronRight className="w-4 h-4" />
+                  </button>
+                </div>
+                <div className="w-20 h-20 rounded-full bg-gray-300 flex items-center justify-center overflow-hidden">
+                  {profile.avatar_url ? (
+                    <img src={profile.avatar_url} alt="Profile" className="w-full h-full object-cover" />
+                  ) : (
+                    <User className="w-10 h-10 text-gray-500" />
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Tab Buttons */}
+            <div className="grid grid-cols-2 gap-4 px-4 py-6 bg-white">
+              <button
+                onClick={() => handleSectionChange("address")}
+                className={`py-4 px-6 border-2 text-lg font-medium transition-colors ${
+                  activeSection === "address" 
+                    ? "border-orange-500 text-orange-500" 
+                    : "border-gray-300 text-gray-900"
+                }`}
+              >
+                Manage Addresses
+              </button>
+              <button
+                onClick={() => handleSectionChange("pan")}
+                className={`py-4 px-6 border-2 text-lg font-medium transition-colors ${
+                  activeSection === "pan" 
+                    ? "border-orange-500 text-orange-500" 
+                    : "border-gray-300 text-gray-900"
+                }`}
+              >
+                ID Proof
+              </button>
+            </div>
+
+            {/* MY ORDERS */}
+            <button
+              onClick={() => navigate("/orders")}
+              className="w-full flex items-center justify-between px-4 py-6 bg-white border-t border-b border-gray-200"
+            >
+              <div className="flex items-center gap-3">
+                <Package className="w-6 h-6 text-orange-500" />
+                <span className="text-lg font-bold text-gray-900">MY ORDERS</span>
+              </div>
+              <ChevronRight className="w-5 h-5 text-gray-400" />
+            </button>
+
+            {/* Content Area */}
+            <div className="px-4 py-6 bg-white min-h-[300px]">
+              {activeSection === "address" && (
+                <div className="space-y-6">
+                  <h2 className="text-xl font-bold">Manage Addresses</h2>
+                  {addresses.map((address) => (
+                    <div key={address.id} className="bg-gray-50 p-4 relative">
+                      <div className="flex items-center justify-between mb-3">
+                        <span className="bg-gray-200 px-3 py-1 text-xs font-semibold text-gray-700 uppercase">{address.address_type}</span>
+                        <div className="flex gap-2">
+                          <button onClick={() => openAddressDialog(address)} className="text-blue-600 p-1">
+                            <Edit className="w-4 h-4" />
+                          </button>
+                          <button onClick={() => deleteAddress(address.id)} className="text-red-600 p-1">
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </div>
+                      <div className="mb-2">
+                        <h3 className="font-bold text-gray-900">{address.name} {address.phone}</h3>
+                      </div>
+                      <div className="text-sm text-gray-700">
+                        <p>{address.address}, {address.locality}, {address.city}, {address.state} - {address.pincode}</p>
+                      </div>
+                    </div>
+                  ))}
+                  <button 
+                    className="flex items-center gap-2 text-orange-500 font-semibold"
+                    onClick={() => openAddressDialog()}
+                  >
+                    <span className="text-xl">+</span>
+                    <span>ADD A NEW ADDRESS</span>
+                  </button>
+                </div>
+              )}
+              
+              {activeSection === "pan" && (
+                <div>
+                  <h2 className="text-xl font-bold mb-4">ID Proof</h2>
+                  <p className="text-gray-600">PAN card information management coming soon.</p>
+                </div>
+              )}
+            </div>
+
+            {/* Logout Button - Fixed at bottom */}
+            <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200">
+              <button
+                onClick={handleLogout}
+                className="w-full flex items-center justify-center gap-3 px-4 py-6"
+              >
+                <LogOut className="w-6 h-6 text-orange-500" />
+                <span className="text-lg font-bold text-gray-900">Logout</span>
+              </button>
+            </div>
+          </div>
+        ) : (
+          // Desktop Layout
         <div className="flex gap-6">
           {/* Sidebar */}
           <aside className="w-80 flex-shrink-0">
@@ -802,6 +922,7 @@ const Profile = () => {
           )}
           </main>
         </div>
+        )}
 
         {/* Edit Dialog */}
         <Dialog open={editDialog.open} onOpenChange={closeEditDialog}>
