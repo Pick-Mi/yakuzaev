@@ -628,7 +628,7 @@ const Auth = () => {
         </div>
       ) : (
         /* Desktop View - Original Layout */
-        <div className="flex min-h-[calc(100vh-120px)] mt-[120px] lg:p-[70px]">
+        <div className="flex min-h-[calc(100vh-120px)] mt-[120px]">
           {/* Left Side - Image Background (Desktop) */}
           <div className="hidden lg:block lg:w-1/2 bg-black relative overflow-hidden">
             <img 
