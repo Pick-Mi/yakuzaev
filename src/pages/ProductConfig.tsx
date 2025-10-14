@@ -126,6 +126,8 @@ const ProductConfig = () => {
       parsedVariants = typeof rawProduct.variants === 'string' 
         ? JSON.parse(rawProduct.variants) 
         : Array.isArray(rawProduct.variants) ? rawProduct.variants : [];
+      
+      console.log('📦 Parsed variants:', parsedVariants);
     } catch (e) {
       console.error('Error parsing variants:', e);
       parsedVariants = [];
@@ -141,22 +143,39 @@ const ProductConfig = () => {
       parsedImages = [];
     }
 
+    // Parse color_variety if it's a string
+    let parsedColorVariety = rawProduct.color_variety;
+    try {
+      if (typeof rawProduct.color_variety === 'string') {
+        parsedColorVariety = JSON.parse(rawProduct.color_variety);
+      }
+    } catch (e) {
+      console.error('Error parsing color_variety:', e);
+    }
+
     const processedProduct = {
       ...rawProduct,
       variants: parsedVariants,
-      images: parsedImages
+      images: parsedImages,
+      color_variety: parsedColorVariety
     };
 
     setProduct(processedProduct);
     
-    // Auto-select default variant if no variants exist
-    if (!parsedVariants || parsedVariants.length === 0) {
+    // Auto-select first variant if variants exist, otherwise create default
+    if (parsedVariants && parsedVariants.length > 0) {
+      if (!initialVariant) {
+        console.log('✓ Auto-selecting first variant:', parsedVariants[0].name);
+        setSelectedVariant(parsedVariants[0]);
+      }
+    } else {
+      console.log('⚠ No variants found, using default');
       setSelectedVariant({
         name: 'Standard',
         price: rawProduct.price
       });
     }
-  }, [rawProduct, navigate]);
+  }, [rawProduct, navigate, initialVariant]);
 
   if (!product) {
     return null;
