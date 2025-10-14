@@ -476,55 +476,43 @@ const OrderDetails = () => {
             <div className="bg-white border p-6">
               <h3 className="text-lg font-bold mb-6">Delivery details</h3>
               
-              <div className="space-y-3">
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Listing price</span>
-                  <span className="font-medium">₹{parseFloat(listingPrice.toString()).toLocaleString('en-IN')}</span>
+              <div className="bg-gray-50 p-6 space-y-4">
+                <div className="flex justify-between text-base">
+                  <span className="text-foreground">Product price</span>
+                  <span className="font-medium">₹{parseFloat(order.total_amount.toString()).toLocaleString('en-IN')}</span>
                 </div>
                 
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Selling price</span>
-                  <span className="font-medium">₹{parseFloat(sellingPrice.toString()).toLocaleString('en-IN')}</span>
+                <div className="flex justify-between text-base">
+                  <span className="text-foreground">Discount</span>
+                  <span className="font-medium">₹{order.discount_amount || 0}</span>
                 </div>
                 
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Extra discount</span>
-                  <span className="font-medium text-green-600">-₹{extraDiscount}</span>
-                </div>
-                
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Special price</span>
-                  <span className="font-medium">₹{parseFloat(specialPrice.toString()).toLocaleString('en-IN')}</span>
-                </div>
-                
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Other dicount</span>
-                  <span className="font-medium text-green-600">-₹{otherDiscount}</span>
-                </div>
-                
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Total fees</span>
-                  <span className="font-medium">₹{parseFloat(totalFees.toString()).toLocaleString('en-IN')}</span>
+                <div className="flex justify-between text-base">
+                  <span className="text-foreground">Sub Total</span>
+                  <span className="font-medium">₹{parseFloat(order.total_amount.toString()).toLocaleString('en-IN')}</span>
                 </div>
 
-                <div className="border-t-2 border-dashed my-4"></div>
+                <div className="border-t-2 border-dashed border-gray-300 my-4"></div>
 
-                <div className="flex justify-between font-bold text-base">
+                <div className="flex justify-between text-base font-bold">
                   <span>Total amount</span>
                   <span>₹{parseFloat(order.total_amount.toString()).toLocaleString('en-IN')}</span>
                 </div>
 
-                <div className="mt-6 pt-4 border-t">
-                  <div className="flex items-center justify-between">
+                <div className="mt-6 pt-4">
+                  <div className="flex items-center justify-between text-base mb-6">
                     <span className="font-semibold">Paid by</span>
-                    <span className="text-sm">₹ {order.payment_method || 'Cash On Delivery'}</span>
+                    <span className="flex items-center gap-1">
+                      <span>₹</span>
+                      <span>{order.payment_method === 'payu' ? 'Online Payment' : 'Cash On Delivery'}</span>
+                    </span>
                   </div>
-                </div>
 
-                <Button variant="outline" className="w-full mt-6 gap-2">
-                  <Download className="w-4 h-4" />
-                  Download Invoice
-                </Button>
+                  <Button variant="outline" className="w-full gap-2 rounded-none">
+                    <Download className="w-5 h-5" />
+                    Download Invoice
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
