@@ -157,7 +157,7 @@ const BecomeDealer = () => {
             <h2 className="text-5xl md:text-6xl font-bold mb-16">Official dealer today!</h2>
             
             {/* Two Column Layout */}
-            <div className="grid lg:grid-cols-2 gap-12 mb-16 bg-white p-8 rounded-lg">
+            <div className="grid lg:grid-cols-2 gap-12 mb-16 bg-white p-8">
               {/* Left - Image */}
               <div className="relative">
                 <img 
