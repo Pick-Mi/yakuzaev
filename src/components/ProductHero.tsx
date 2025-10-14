@@ -43,7 +43,7 @@ const ProductHero = ({
         <p className="font-['Inter'] font-semibold leading-normal text-white text-sm w-full">
           Starting at just ₹{price} -/
         </p>
-        <div className="flex gap-5 items-center w-full max-md:flex-col max-md:gap-5 max-md:pr-5">
+        <div className="flex gap-5 items-center w-full max-md:w-auto max-md:gap-5 max-md:px-5">
           <button
             onClick={onBookNow}
             className="bg-white flex gap-2.5 items-center justify-center overflow-hidden px-[23px] py-[13px] transition-all hover:bg-gray-100 active:scale-95"
