@@ -37,13 +37,43 @@ const ProductConfig = () => {
     }
   };
 
-  // Sample colors
-  const colors = [
-    { name: "White", value: "#FFFFFF", border: "#E5E5E5" },
-    { name: "Blue", value: "#2B4C7E" },
-    { name: "Gray", value: "#4A4A4A" },
-    { name: "Black", value: "#000000" },
-  ];
+  // Get available colors based on selected variant or from color_variety
+  const getAvailableColors = () => {
+    // First, try to get colors from the selected variant
+    if (selectedVariant && selectedVariant.colors && Array.isArray(selectedVariant.colors) && selectedVariant.colors.length > 0) {
+      return selectedVariant.colors.map((c: any) => {
+        // Extract color name and hex from format like "White (#FFFFFF)" or "1 (#0A4886)"
+        const match = c.name?.match(/^(.+?)\s*\(#([0-9A-Fa-f]{6})\)/);
+        if (match) {
+          return {
+            name: match[1].trim(),
+            value: `#${match[2]}`,
+            border: match[2].toLowerCase() === 'ffffff' ? '#E5E5E5' : undefined
+          };
+        }
+        return null;
+      }).filter(Boolean);
+    }
+    
+    // If not in variant, try color_variety
+    if (product?.color_variety?.colors && Array.isArray(product.color_variety.colors)) {
+      return product.color_variety.colors.map((c: any) => ({
+        name: c.name,
+        value: c.hex,
+        border: c.hex?.toLowerCase() === '#ffffff' ? '#E5E5E5' : undefined
+      }));
+    }
+    
+    // Fallback to default colors if no colors found in database
+    return [
+      { name: "White", value: "#FFFFFF", border: "#E5E5E5" },
+      { name: "Blue", value: "#2B4C7E" },
+      { name: "Gray", value: "#4A4A4A" },
+      { name: "Black", value: "#000000" },
+    ];
+  };
+
+  const colors = getAvailableColors();
 
   // Scroll detection for header
   useEffect(() => {
