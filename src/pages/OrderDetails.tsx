@@ -390,7 +390,7 @@ const OrderDetails = () => {
 
             {/* Price Details */}
             <div className="bg-white border p-6">
-              <h3 className="text-lg font-bold mb-6">Delivery details</h3>
+              <h3 className="text-lg font-bold mb-6">Order Sumarry</h3>
               
               <div className="bg-gray-50 p-6 space-y-4">
                 <div className="flex justify-between text-base">
