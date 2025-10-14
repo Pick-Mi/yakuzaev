@@ -163,7 +163,7 @@ const BecomeDealer = () => {
                 <img 
                   src={dealerMeetingImage} 
                   alt="Business meeting for dealer partnership" 
-                  className="w-full h-full object-cover rounded-lg"
+                  className="w-full h-full object-cover"
                 />
               </div>
 
