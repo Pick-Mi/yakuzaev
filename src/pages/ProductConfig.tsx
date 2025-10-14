@@ -339,7 +339,7 @@ const ProductConfig = () => {
                   <button
                     key={color.name}
                     onClick={() => setSelectedColor(color.name)}
-                    className={`w-12 h-12 rounded-lg border-2 transition-all ${
+                    className={`w-12 h-12 border-2 transition-all ${
                       selectedColor === color.name
                         ? "border-black scale-110"
                         : color.border ? `border-[${color.border}]` : "border-gray-300"
