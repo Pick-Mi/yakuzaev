@@ -34,7 +34,7 @@ const NotificationBar = () => {
         <span className="text-white font-['Inter'] text-[10px] font-normal leading-normal text-center sm:text-xs md:text-sm">{notificationMessage}</span>
         <Link 
           to={notificationCtaUrl} 
-          className="font-medium hover:underline underline-offset-4 transition-all text-[10px] sm:text-xs md:text-sm whitespace-nowrap"
+          className="text-white text-center font-['Inter'] text-[10px] font-medium leading-normal underline decoration-solid decoration-auto underline-offset-auto whitespace-nowrap sm:text-xs md:text-sm hover:opacity-80 transition-all"
         >
           {notificationCtaText}
         </Link>
