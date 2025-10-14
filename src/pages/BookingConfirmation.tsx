@@ -657,7 +657,7 @@ const BookingConfirmation = () => {
 
             {/* Right Side - Delivery Details Form */}
             <div className="space-y-6">
-              <h2 className="font-['Poppins'] font-semibold text-[32px] text-center">
+              <h2 className="font-['Poppins'] font-semibold text-[32px] text-left">
                 Delivery Details
               </h2>
 
