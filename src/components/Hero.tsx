@@ -56,11 +56,9 @@ const Hero = () => {
 
   return (
     <section 
-      className="relative w-full min-h-screen h-[600px] sm:h-[700px] md:h-[829px] bg-black overflow-hidden transition-all duration-1000 ease-in-out"
+      className="relative w-full min-h-screen h-[600px] sm:h-[700px] md:h-[829px] bg-black overflow-hidden transition-all duration-1000 ease-in-out bg-center bg-cover"
       style={{
         backgroundImage: currentHero.image_url ? `url(${currentHero.image_url})` : 'none',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
       }}
     >
       <div className="absolute bottom-8 sm:bottom-16 md:bottom-24 left-4 sm:left-6 md:left-10 right-4 sm:right-auto w-auto sm:w-[601px] max-w-[calc(100%-2rem)] sm:max-w-[90%] flex flex-col gap-4 sm:gap-6 items-start px-2 sm:px-0">
