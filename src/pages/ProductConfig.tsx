@@ -327,7 +327,7 @@ const ProductConfig = () => {
                 <img 
                   src={productImages[currentImageIndex]} 
                   alt={product.name}
-                  className="w-full h-full object-contain"
+                  className="w-full h-full object-fill"
                 />
               ) : (
                 <div className="text-gray-400 text-center">
