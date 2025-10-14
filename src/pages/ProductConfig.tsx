@@ -183,9 +183,39 @@ const ProductConfig = () => {
     return null;
   }
 
-  const productImages = product.thumbnail 
-    ? [product.thumbnail, ...(product.images && product.images.length > 0 ? product.images : [])]
-    : (product.images && product.images.length > 0 ? product.images : [product.image_url || product.image]);
+  // Determine which images to show - prioritize thumbnail
+  const getProductImages = () => {
+    console.log('🖼️ Product image data:', {
+      thumbnail: product.thumbnail,
+      images: product.images,
+      image_url: product.image_url,
+      image: product.image
+    });
+
+    // Priority 1: Use thumbnail if available
+    if (product.thumbnail) {
+      const images = [product.thumbnail];
+      // Add additional images if available
+      if (product.images && Array.isArray(product.images) && product.images.length > 0) {
+        images.push(...product.images);
+      }
+      console.log('✓ Using thumbnail + images:', images);
+      return images;
+    }
+
+    // Priority 2: Use images array
+    if (product.images && Array.isArray(product.images) && product.images.length > 0) {
+      console.log('✓ Using images array:', product.images);
+      return product.images;
+    }
+
+    // Priority 3: Use image_url or image as fallback
+    const fallback = product.image_url || product.image;
+    console.log('✓ Using fallback image:', fallback);
+    return fallback ? [fallback] : [];
+  };
+
+  const productImages = getProductImages();
 
   // Get current price based on selected variant
   const getCurrentPrice = () => {
