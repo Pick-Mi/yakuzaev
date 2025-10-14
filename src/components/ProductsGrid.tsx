@@ -112,44 +112,43 @@ const ProductsGrid = () => {
           All Products
         </h2>
 
+        {/* Search Input */}
+        <div className="relative w-full md:w-[300px] mb-6 md:mb-10">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 md:w-5 h-4 md:h-5 text-[#4D4D4D]" />
+          <input
+            type="text"
+            placeholder="Search"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-10 md:pl-12 pr-4 py-2 md:py-[13px] bg-white text-[#12141d] font-['Poppins'] text-sm md:text-[16px] border-none outline-none w-full"
+          />
+        </div>
+
         {/* Tab Navigation */}
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 md:gap-0 mb-10 md:mb-20">
-          <div className="flex gap-2 md:gap-5 overflow-x-auto pb-2 w-full md:w-auto">
+        <div className="flex gap-2 md:gap-5 overflow-x-auto pb-2 w-full mb-10 md:mb-20">
+          <button
+            onClick={() => setActiveCategory(null)}
+            className={`px-3 md:px-5 py-2 md:py-[13px] font-['Poppins'] text-sm md:text-[16px] transition-colors whitespace-nowrap ${
+              activeCategory === null
+                ? "bg-[#12141d] text-white opacity-90 shadow-[3px_4px_16px_0px_rgba(0,0,0,0.1)]"
+                : "bg-white text-[#12141d] opacity-90"
+            }`}
+          >
+            All Models
+          </button>
+          {categories.map((category: any) => (
             <button
-              onClick={() => setActiveCategory(null)}
+              key={category.id}
+              onClick={() => setActiveCategory(category.id)}
               className={`px-3 md:px-5 py-2 md:py-[13px] font-['Poppins'] text-sm md:text-[16px] transition-colors whitespace-nowrap ${
-                activeCategory === null
+                activeCategory === category.id
                   ? "bg-[#12141d] text-white opacity-90 shadow-[3px_4px_16px_0px_rgba(0,0,0,0.1)]"
                   : "bg-white text-[#12141d] opacity-90"
               }`}
             >
-              All Models
+              {category.name}
             </button>
-            {categories.map((category: any) => (
-              <button
-                key={category.id}
-                onClick={() => setActiveCategory(category.id)}
-                className={`px-3 md:px-5 py-2 md:py-[13px] font-['Poppins'] text-sm md:text-[16px] transition-colors whitespace-nowrap ${
-                  activeCategory === category.id
-                    ? "bg-[#12141d] text-white opacity-90 shadow-[3px_4px_16px_0px_rgba(0,0,0,0.1)]"
-                    : "bg-white text-[#12141d] opacity-90"
-                }`}
-              >
-                {category.name}
-              </button>
-            ))}
-          </div>
-
-          <div className="relative w-full md:w-auto">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 md:w-5 h-4 md:h-5 text-[#4D4D4D]" />
-            <input
-              type="text"
-              placeholder="Search"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 md:pl-12 pr-4 py-2 md:py-[13px] bg-white text-[#12141d] font-['Poppins'] text-sm md:text-[16px] border-none outline-none w-full md:w-[300px]"
-            />
-          </div>
+          ))}
         </div>
 
         {/* Product Cards Grid - Vertical Layout */}
