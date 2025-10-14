@@ -236,6 +236,8 @@ export type Database = {
           id: string
           image_url: string | null
           is_active: boolean
+          mobile_image_url: string | null
+          tablet_image_url: string | null
           title: string | null
           updated_at: string
         }
@@ -248,6 +250,8 @@ export type Database = {
           id?: string
           image_url?: string | null
           is_active?: boolean
+          mobile_image_url?: string | null
+          tablet_image_url?: string | null
           title?: string | null
           updated_at?: string
         }
@@ -260,6 +264,8 @@ export type Database = {
           id?: string
           image_url?: string | null
           is_active?: boolean
+          mobile_image_url?: string | null
+          tablet_image_url?: string | null
           title?: string | null
           updated_at?: string
         }
