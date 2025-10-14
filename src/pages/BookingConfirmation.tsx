@@ -921,7 +921,7 @@ const BookingConfirmation = () => {
                         detectCurrentLocation();
                       }}
                       disabled={!isVerified || detectingLocation}
-                      className="flex-1"
+                      className="flex-1 rounded-none"
                     >
                       <MapPin className="w-4 h-4 mr-2" />
                       {detectingLocation ? 'Detecting...' : 'Detect Location'}
