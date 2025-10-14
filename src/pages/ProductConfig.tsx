@@ -110,6 +110,14 @@ const ProductConfig = () => {
     };
 
     setProduct(processedProduct);
+    
+    // Auto-select default variant if no variants exist
+    if (!parsedVariants || parsedVariants.length === 0) {
+      setSelectedVariant({
+        name: 'Standard',
+        price: rawProduct.price
+      });
+    }
   }, [rawProduct, navigate]);
 
   if (!product) {
