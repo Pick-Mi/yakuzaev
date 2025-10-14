@@ -202,7 +202,7 @@ const ProductConfig = () => {
               <img 
                 src={productImages[currentImageIndex]} 
                 alt={product.name}
-                className="w-full h-full object-contain"
+                className="w-full h-full object-cover"
               />
               
               {/* Navigation Arrows */}
