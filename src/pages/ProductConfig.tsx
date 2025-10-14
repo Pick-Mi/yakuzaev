@@ -389,7 +389,7 @@ const ProductConfig = () => {
               ) : (
                 <>
                   {/* Full payment for Buy a Bike */}
-                  <div className="bg-[#F8F9F9] rounded-lg p-4">
+                  <div className="bg-[#F8F9F9] p-4">
                     <div className="flex items-center justify-between">
                       <span className="font-['Inter'] font-medium text-[16px]">
                         Total amount
