@@ -82,10 +82,9 @@ serve(async (req) => {
       }
       
       // Build redirect URL with all parameters
-      const redirectUrl = new URL(
-        status === 'success' ? '/payment-success' : '/payment-failure', 
-        Deno.env.get('SITE_URL') || 'https://preview--yakuzaev.lovable.app'
-      )
+      const baseUrl = Deno.env.get('SITE_URL') || 'https://preview--yakuzaev.lovable.app'
+      const redirectPath = status === 'success' ? '/payment-success' : '/payment-failure'
+      const redirectUrl = new URL(redirectPath, baseUrl)
       
       // Add all PayU parameters as query params
       Object.entries(params).forEach(([key, value]) => {
@@ -96,11 +95,28 @@ serve(async (req) => {
       
       console.log('Redirecting to:', redirectUrl.toString())
       
-      // Redirect to the success/failure page with all parameters
-      return new Response(null, {
-        status: 302,
+      // Return HTML with auto-redirect instead of 302 redirect
+      // This ensures browser follows the redirect with query parameters
+      const html = `
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <title>Processing Payment...</title>
+            <script>
+              window.location.href = "${redirectUrl.toString()}";
+            </script>
+          </head>
+          <body>
+            <p>Processing payment... Please wait.</p>
+            <p>If you are not redirected automatically, <a href="${redirectUrl.toString()}">click here</a>.</p>
+          </body>
+        </html>
+      `
+      
+      return new Response(html, {
+        status: 200,
         headers: {
-          'Location': redirectUrl.toString(),
+          'Content-Type': 'text/html',
           ...corsHeaders
         }
       })
