@@ -28,7 +28,7 @@ interface VariantsPricingSectionProps {
 
 const VariantsPricingSection = ({ onVariantSelect, variants: propVariants, specificationTitles }: VariantsPricingSectionProps) => {
   const [selectedVariantIndex, setSelectedVariantIndex] = useState<number | null>(null);
-
+  const [selectedColorIndex, setSelectedColorIndex] = useState<number>(0);
 
   // Only use data from database - no defaults
   const actualVariants = propVariants && propVariants.length > 0 ? propVariants : [];
@@ -38,6 +38,10 @@ const VariantsPricingSection = ({ onVariantSelect, variants: propVariants, speci
   if (actualVariants.length === 0 || specRows.length === 0) {
     return null;
   }
+
+  const selectedVariant = selectedVariantIndex !== null ? actualVariants[selectedVariantIndex] : null;
+  const selectedColor = selectedVariant?.colors?.[selectedColorIndex];
+  const selectedPrice = selectedVariant?.specifications?.find(s => s.label === 'Ex-showroom Price')?.value || '-';
 
   return (
     <section className="bg-[#F8F9F9] w-full py-16 px-4 md:px-[70px] mt-[80px]">
@@ -114,15 +118,15 @@ const VariantsPricingSection = ({ onVariantSelect, variants: propVariants, speci
             {actualVariants.map((variant, index) => (
               <div key={index} className="p-6 flex items-center justify-center border-l border-gray-200">
                 <Button 
-                  variant="outline" 
                   onClick={() => {
                     setSelectedVariantIndex(index);
+                    setSelectedColorIndex(0);
                     onVariantSelect?.(variant);
                   }}
-                  className={`w-full max-w-[160px] h-12 font-inter font-medium text-[16px] border-2 transition-colors ${
+                  className={`w-full max-w-[160px] h-12 font-inter font-medium text-[16px] transition-colors ${
                     selectedVariantIndex === index 
-                      ? 'bg-[#000000] text-white border-[#000000]' 
-                      : 'border-[#000000] hover:bg-[#000000] hover:text-white'
+                      ? 'bg-[#000000] text-white' 
+                      : 'bg-transparent text-[#000000] hover:bg-[#000000] hover:text-white'
                   }`}
                 >
                   {selectedVariantIndex === index ? 'Selected' : 'Select'}
@@ -132,6 +136,57 @@ const VariantsPricingSection = ({ onVariantSelect, variants: propVariants, speci
           </div>
         </div>
       </div>
+
+      {/* Fixed Bottom Box - Shows when variant is selected */}
+      {selectedVariant && (
+        <div className="fixed bottom-0 left-0 right-0 bg-white border-t-2 border-gray-200 shadow-lg z-50 py-6 px-4 md:px-[70px]">
+          <div className="max-w-[1400px] mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="flex flex-col md:flex-row items-center gap-6 flex-1">
+              <div>
+                <p className="font-inter font-medium text-sm text-gray-600">Selected Variant</p>
+                <p className="font-inter font-semibold text-lg text-[#000000]">{selectedVariant.name}</p>
+              </div>
+              
+              {selectedVariant.colors && selectedVariant.colors.length > 0 && (
+                <div>
+                  <p className="font-inter font-medium text-sm text-gray-600 mb-2">Select Color</p>
+                  <div className="flex gap-2">
+                    {selectedVariant.colors.map((color: any, colorIndex: number) => {
+                      const hexMatch = color.name?.match(/#[0-9A-Fa-f]{6}/);
+                      const hexColor = hexMatch ? hexMatch[0] : '#000000';
+                      return (
+                        <button
+                          key={colorIndex}
+                          onClick={() => setSelectedColorIndex(colorIndex)}
+                          className={`w-8 h-8 rounded transition-all ${
+                            selectedColorIndex === colorIndex ? 'ring-2 ring-[#000000] ring-offset-2' : ''
+                          }`}
+                          style={{ 
+                            backgroundColor: hexColor, 
+                            border: hexColor.toLowerCase() === '#ffffff' ? '1px solid #E0E0E0' : 'none' 
+                          }}
+                        />
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+              
+              <div>
+                <p className="font-inter font-medium text-sm text-gray-600">Price</p>
+                <p className="font-inter font-bold text-xl text-[#000000]">{selectedPrice}</p>
+              </div>
+            </div>
+            
+            <Button 
+              onClick={() => onVariantSelect?.(selectedVariant)}
+              className="bg-[#000000] text-white hover:bg-gray-800 px-8 h-12 font-inter font-medium text-[16px]"
+            >
+              Continue
+            </Button>
+          </div>
+        </div>
+      )}
     </section>
   );
 };
