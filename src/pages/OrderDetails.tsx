@@ -323,7 +323,7 @@ const OrderDetails = () => {
             <h1 className="text-3xl font-bold">Your Orders</h1>
 
             {/* Product Card */}
-            <div className="bg-white border-b rounded-lg p-6">
+            <div className="bg-white border-b p-6">
               <div className="flex gap-6">
                 <div className="w-52 h-52 bg-muted rounded-lg flex items-center justify-center overflow-hidden flex-shrink-0">
                   {firstItem.image_url ? (
