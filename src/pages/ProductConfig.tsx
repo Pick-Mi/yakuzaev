@@ -328,9 +328,9 @@ const ProductConfig = () => {
         </div>
 
         <div className="grid lg:grid-cols-2 gap-12">
-          {/* Left Side - Product Image - Sticky */}
-          <div className="sticky top-32 self-start h-fit">
-            <div className="relative w-full h-[500px] flex items-center justify-center bg-gray-100">
+          {/* Left Side - Product Image - Mobile: Smaller & Scrollable, Desktop: Sticky */}
+          <div className="lg:sticky lg:top-32 self-start h-fit max-h-[350px] lg:max-h-none overflow-y-auto lg:overflow-visible">
+            <div className="relative w-full h-[350px] lg:h-[500px] flex items-center justify-center bg-gray-100">
               {productImages.length > 0 ? (
                 <img 
                   src={productImages[currentImageIndex]} 
