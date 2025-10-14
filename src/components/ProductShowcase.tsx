@@ -124,7 +124,7 @@ const ProductShowcase = () => {
           <div className="flex gap-2 sm:gap-4 md:gap-5 overflow-x-auto pb-2 w-full sm:w-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
             <button
               onClick={() => setActiveCategory(null)}
-              className={`px-3 sm:px-4 md:px-5 py-2 sm:py-[13px] font-['Poppins'] text-[12px] sm:text-[14px] md:text-[16px] transition-colors whitespace-nowrap ${
+              className={`px-[15px] sm:px-4 md:px-5 py-[15px] sm:py-[13px] font-['Poppins'] text-[12px] sm:text-[14px] md:text-[16px] transition-colors whitespace-nowrap ${
                 activeCategory === null
                   ? "bg-[#12141d] text-white opacity-90 shadow-[3px_4px_16px_0px_rgba(0,0,0,0.1)]"
                   : "bg-white text-[#12141d] opacity-90"
