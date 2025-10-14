@@ -81,9 +81,9 @@ const Orders = () => {
           if (productId) {
             const { data: productData } = await supabase
               .from('products')
-              .select('thumbnail, image_url, images, name, variants')
+              .select('thumbnail, image_url, images, name, variants, color_variety')
               .eq('id', productId)
-              .single();
+              .maybeSingle();
             
             if (productData) {
               // Add product thumbnail to order_items_data
@@ -92,8 +92,22 @@ const Orders = () => {
                 (productData.images && productData.images[0]?.url);
               order.order_items_data[0].product_name = order.order_items_data[0].product_name || productData.name;
               
-              // Find color hex from product variants
-              if (productData.variants && Array.isArray(productData.variants) && colorName && variantName) {
+              // Find color hex code from color_variety first
+              let colorHex = null;
+              if (productData.color_variety && colorName) {
+                const colorVariety = productData.color_variety as any;
+                if (colorVariety.colors && Array.isArray(colorVariety.colors)) {
+                  const colorMatch = colorVariety.colors.find((c: any) => 
+                    c.name?.toLowerCase() === colorName.toLowerCase()
+                  );
+                  if (colorMatch && colorMatch.hex) {
+                    colorHex = colorMatch.hex;
+                  }
+                }
+              }
+              
+              // If not found in color_variety, try variants
+              if (!colorHex && productData.variants && Array.isArray(productData.variants) && colorName && variantName) {
                 const variant = (productData.variants as any[]).find((v: any) => v.name === variantName);
                 if (variant && variant.colors && Array.isArray(variant.colors)) {
                   const colorMatch = (variant.colors as any[]).find((c: any) => {
@@ -106,10 +120,15 @@ const Orders = () => {
                     // Extract hex code from format like "White (#FFFFFF)"
                     const hexMatch = colorMatch.name.match(/#([0-9A-Fa-f]{6})/);
                     if (hexMatch) {
-                      order.order_items_data[0].color_hex = hexMatch[0];
+                      colorHex = hexMatch[0];
                     }
                   }
                 }
+              }
+              
+              // Set the color hex if found
+              if (colorHex) {
+                order.order_items_data[0].color_hex = colorHex;
               }
             }
           }
