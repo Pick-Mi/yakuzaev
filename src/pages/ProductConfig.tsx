@@ -115,6 +115,8 @@ const ProductConfig = () => {
   }, []);
 
   useEffect(() => {
+    console.log('🔍 Raw product received:', rawProduct);
+    
     if (!rawProduct) {
       navigate('/');
       return;

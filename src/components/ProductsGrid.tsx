@@ -32,7 +32,7 @@ const ProductsGrid = () => {
         // Fetch products
         let productsQuery = (supabase as any)
           .from('products')
-          .select('id, name, price, image_url, images, description, is_active, thumbnail, features, feature1, feature2, category_id')
+          .select('*')
           .eq('is_active', true)
           .order('created_at', { ascending: false });
 
@@ -63,14 +63,8 @@ const ProductsGrid = () => {
           }
 
           return {
-            id: product.id,
-            name: product.name,
-            price: product.price,
-            image: imageUrl,
-            description: product.description,
-            features: product.features || [],
-            feature1: product.feature1,
-            feature2: product.feature2
+            ...product, // Pass all product data
+            image: imageUrl
           };
         }) || [];
 

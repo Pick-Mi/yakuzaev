@@ -23,7 +23,7 @@ const ProductListingSection = () => {
         setLoading(true);
         const response = await (supabase as any)
           .from('products')
-          .select('id, name, price, image_url, images, description, is_active')
+          .select('*')
           .eq('is_active', true)
           .order('created_at', { ascending: false });
 
@@ -47,11 +47,8 @@ const ProductListingSection = () => {
           }
 
           return {
-            id: product.id,
-            name: product.name,
-            price: product.price,
-            image: imageUrl,
-            description: product.description
+            ...product, // Pass all product data
+            image: imageUrl
           };
         }) || [];
 
