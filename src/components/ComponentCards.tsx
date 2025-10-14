@@ -14,10 +14,10 @@ const ComponentCards = ({ visualFeatures = [] }: ComponentCardsProps) => {
   const thirdCard = visualFeatures[2];
   
   return (
-    <section className="bg-[#f5f5f5] w-full py-16 px-[70px]">
+    <section className="bg-[#f5f5f5] w-full py-16 px-[70px] sm:px-4">
       <div className="max-w-[1400px] mx-auto flex gap-5
                       md:gap-4
-                      sm:gap-3">
+                      sm:flex-col sm:gap-4">
         
         {/* First Card - Dynamic from Database */}
         <div 
@@ -25,7 +25,7 @@ const ComponentCards = ({ visualFeatures = [] }: ComponentCardsProps) => {
                      transition-all duration-300 ease-out cursor-pointer
                      hover:-translate-y-1 hover:shadow-lg
                      md:h-[250px]
-                     sm:h-[200px]"
+                     sm:w-full sm:h-[250px]"
           style={{
             backgroundImage: firstCard?.image ? `url(${firstCard.image})` : undefined,
             backgroundSize: 'cover',
@@ -47,7 +47,7 @@ const ComponentCards = ({ visualFeatures = [] }: ComponentCardsProps) => {
                      transition-all duration-300 ease-out cursor-pointer
                      hover:-translate-y-1 hover:shadow-lg
                      md:h-[250px]
-                     sm:h-[200px]"
+                     sm:w-full sm:h-[250px]"
           style={{
             backgroundImage: secondCard?.image ? `url(${secondCard.image})` : undefined,
             backgroundSize: 'cover',
@@ -69,7 +69,7 @@ const ComponentCards = ({ visualFeatures = [] }: ComponentCardsProps) => {
                      transition-all duration-300 ease-out cursor-pointer
                      hover:-translate-y-1 hover:shadow-lg
                      md:h-[250px]
-                     sm:h-[200px]"
+                     sm:w-full sm:h-[250px]"
           style={{
             backgroundImage: thirdCard?.image ? `url(${thirdCard.image})` : undefined,
             backgroundSize: 'cover',
