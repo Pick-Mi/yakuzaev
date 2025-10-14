@@ -110,10 +110,12 @@ const VariantsPricingSection = ({ onVariantSelect, variants: propVariants, speci
                       <p className="font-inter font-semibold text-[16px] text-[#000000]">{batteryWarranty}</p>
                     </div>
 
-                    <div>
-                      <p className="font-inter text-[12px] text-gray-500 mb-1">Peak Power</p>
-                      <p className="font-inter font-semibold text-[16px] text-[#000000]">{peakPower}</p>
-                    </div>
+                    {peakPower && peakPower !== '-' && (
+                      <div>
+                        <p className="font-inter text-[12px] text-gray-500 mb-1">Peak Power</p>
+                        <p className="font-inter font-semibold text-[16px] text-[#000000]">{peakPower}</p>
+                      </div>
+                    )}
                   </div>
 
                   <Button 
