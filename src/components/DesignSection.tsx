@@ -30,7 +30,7 @@ const DesignSection = ({ designFeatures = [] }: DesignSectionProps) => {
           <div className="flex flex-col md:flex-row gap-8">
             {/* First Design Card - Dynamic from Database */}
             <div 
-              className="h-[460px] flex-[63] relative overflow-hidden"
+              className="h-[460px] w-full md:flex-[63] relative overflow-hidden"
               style={{
                 backgroundImage: firstCard?.image ? `url(${firstCard.image})` : undefined,
                 backgroundSize: 'cover',
@@ -47,7 +47,7 @@ const DesignSection = ({ designFeatures = [] }: DesignSectionProps) => {
             
             {/* Second Design Card - Dynamic from Database */}
             <div 
-              className="h-[460px] flex-[37] relative overflow-hidden"
+              className="h-[460px] w-full md:flex-[37] relative overflow-hidden"
               style={{
                 backgroundImage: secondCard?.image ? `url(${secondCard.image})` : undefined,
                 backgroundSize: 'cover',
@@ -66,7 +66,7 @@ const DesignSection = ({ designFeatures = [] }: DesignSectionProps) => {
           {/* Second Row - Three Feature Cards */}
           <div className="flex flex-col md:flex-row gap-8">
             {/* Third Design Card - Dynamic from Database */}
-            <div className="bg-[#e8ebf0] h-[242px] flex-1 relative overflow-hidden p-8">
+            <div className="bg-[#e8ebf0] h-[242px] w-full md:flex-1 relative overflow-hidden p-8">
               <div className="flex flex-col gap-6">
                 {thirdCard?.image ? (
                   <img src={thirdCard.image} alt={thirdCard.title || thirdCard.text} className="w-12 h-12 object-contain" />
@@ -86,7 +86,7 @@ const DesignSection = ({ designFeatures = [] }: DesignSectionProps) => {
 
             {/* Fourth Design Card - Dynamic from Database */}
             <div 
-              className="h-[242px] flex-1 relative overflow-hidden p-8"
+              className="h-[242px] w-full md:flex-1 relative overflow-hidden p-8"
               style={{
                 backgroundImage: fourthCard?.image ? `url(${fourthCard.image})` : undefined,
                 backgroundSize: 'cover',
@@ -102,7 +102,7 @@ const DesignSection = ({ designFeatures = [] }: DesignSectionProps) => {
             </div>
 
             {/* Fifth Design Card - Dynamic from Database */}
-            <div className="bg-[#e8ebf0] h-[242px] flex-1 relative overflow-hidden p-8">
+            <div className="bg-[#e8ebf0] h-[242px] w-full md:flex-1 relative overflow-hidden p-8">
               <div className="flex flex-col gap-6">
                 {fifthCard?.image ? (
                   <img src={fifthCard.image} alt={fifthCard.title || fifthCard.text} className="w-12 h-12 object-contain" />
