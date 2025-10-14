@@ -21,7 +21,7 @@ const ComponentCards = ({ visualFeatures = [] }: ComponentCardsProps) => {
         
         {/* First Card - Dynamic from Database */}
         <div 
-          className="w-[46%] h-[300px] relative overflow-hidden
+          className="w-full md:w-[46%] h-[300px] relative overflow-hidden
                      transition-all duration-300 ease-out cursor-pointer
                      hover:-translate-y-1 hover:shadow-lg
                      md:h-[250px]
@@ -43,7 +43,7 @@ const ComponentCards = ({ visualFeatures = [] }: ComponentCardsProps) => {
 
         {/* Second Card - Dynamic from Database */}
         <div 
-          className="w-[27%] h-[300px] relative overflow-hidden
+          className="w-full md:w-[27%] h-[300px] relative overflow-hidden
                      transition-all duration-300 ease-out cursor-pointer
                      hover:-translate-y-1 hover:shadow-lg
                      md:h-[250px]
@@ -65,7 +65,7 @@ const ComponentCards = ({ visualFeatures = [] }: ComponentCardsProps) => {
 
         {/* Third Card - Dynamic from Database */}
         <div 
-          className="w-[27%] h-[300px] relative overflow-hidden
+          className="w-full md:w-[27%] h-[300px] relative overflow-hidden
                      transition-all duration-300 ease-out cursor-pointer
                      hover:-translate-y-1 hover:shadow-lg
                      md:h-[250px]
