@@ -40,6 +40,7 @@ import {
 } from "lucide-react";
 import Header from "@/components/Header";
 import PayUPayment from "@/components/PayUPayment";
+import heroScooter from "@/assets/hero-scooter.png";
 
 interface Transaction {
   id: string;
@@ -347,11 +348,11 @@ const OrderDetails = () => {
             <div className="bg-white border-b p-6">
               <div className="flex gap-6">
                 <div className="w-52 h-52 bg-muted rounded-lg flex items-center justify-center overflow-hidden flex-shrink-0">
-                  {firstItem.image_url ? (
-                    <img src={firstItem.image_url} alt={firstItem.name} className="w-full h-full object-cover" />
-                  ) : (
-                    <Package className="w-20 h-20 text-muted-foreground" />
-                  )}
+                  <img 
+                    src={firstItem.image_url || heroScooter} 
+                    alt={firstItem.name || 'Product'} 
+                    className="w-full h-full object-cover" 
+                  />
                 </div>
                 <div className="flex-1 space-y-3">
                   <h2 className="text-2xl font-semibold">
