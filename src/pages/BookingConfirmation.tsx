@@ -439,8 +439,8 @@ const BookingConfirmation = () => {
             firstName: `${firstName} ${lastName}`,
             email: email,
             phone: countryCode + phoneNumber,
-            surl: `${window.location.origin}/payment-success`,
-            furl: `${window.location.origin}/payment-failure`,
+            surl: `https://tqhwoizjlvjdiuemirsy.supabase.co/functions/v1/payu-webhook`,
+            furl: `https://tqhwoizjlvjdiuemirsy.supabase.co/functions/v1/payu-webhook`,
             udf1: user.id, // Store user ID for verification
             udf2: orderId, // Store order ID for verification
           }

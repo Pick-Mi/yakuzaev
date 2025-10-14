@@ -83,7 +83,7 @@ serve(async (req) => {
       
       // Build redirect URL with all parameters
       const redirectUrl = new URL(
-        status === 'success' ? '/payment/success' : '/payment/failure', 
+        status === 'success' ? '/payment-success' : '/payment-failure', 
         Deno.env.get('SITE_URL') || 'https://preview--yakuzaev.lovable.app'
       )
       
