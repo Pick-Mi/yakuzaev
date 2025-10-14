@@ -21,6 +21,7 @@ interface Order {
   order_items_data?: any;
   customer_details?: any;
   estimated_delivery_date?: string;
+  order_type?: string;
 }
 
 const Orders = () => {
@@ -68,8 +69,33 @@ const Orders = () => {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setOrders(data || []);
-      setFilteredOrders(data || []);
+      
+      // Fetch product details for each order
+      const ordersWithProducts = await Promise.all((data || []).map(async (order) => {
+        const orderItemsData = order.order_items_data as any[];
+        if (orderItemsData && Array.isArray(orderItemsData) && orderItemsData.length > 0) {
+          const productId = orderItemsData[0].product_id;
+          if (productId) {
+            const { data: productData } = await supabase
+              .from('products')
+              .select('thumbnail, image_url, images, name')
+              .eq('id', productId)
+              .single();
+            
+            if (productData) {
+              // Add product thumbnail to order_items_data
+              order.order_items_data[0].image_url = productData.thumbnail || 
+                productData.image_url || 
+                (productData.images && productData.images[0]?.url);
+              order.order_items_data[0].product_name = order.order_items_data[0].product_name || productData.name;
+            }
+          }
+        }
+        return order;
+      }));
+      
+      setOrders(ordersWithProducts);
+      setFilteredOrders(ordersWithProducts);
     } catch (error) {
       console.error('Error fetching orders:', error);
     } finally {
@@ -355,12 +381,12 @@ const Orders = () => {
 
                         {/* Product Details */}
                         <div className="flex-1">
-                          <h4 className="font-bold text-lg mb-1">
-                            {firstItem?.name || 'Product'}
+                          <h4 className="font-bold text-lg mb-2">
+                            {firstItem?.product_name || firstItem?.name || 'Product'}
                           </h4>
-                          <p className="text-sm text-gray-500 mb-1">
-                            Return or Replace: Eligible through {format(new Date(new Date(deliveryDate).getTime() + 15 * 24 * 60 * 60 * 1000), 'MMM dd, yyyy')}
-                          </p>
+                          <div className="inline-flex items-center px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium mb-2">
+                            {order.order_type === 'test_ride' ? 'Book a Bike' : order.order_type === 'purchase' ? 'Book a Buy' : 'Order'}
+                          </div>
                           {firstItem?.variant && (
                             <p className="text-sm text-gray-700 mb-1">
                               Variant : <span className="font-medium">{firstItem.variant}</span>
@@ -369,7 +395,10 @@ const Orders = () => {
                           <div className="flex items-center gap-2 text-sm">
                             <span className="text-gray-700">Colour :</span>
                             <span className="font-medium">{firstItem?.color || 'Black'}</span>
-                            <div className="w-4 h-4 bg-black rounded-full border border-gray-300"></div>
+                            <div 
+                              className="w-4 h-4 rounded-full border border-gray-300"
+                              style={{ backgroundColor: firstItem?.color_hex || '#000000' }}
+                            ></div>
                           </div>
                         </div>
 
