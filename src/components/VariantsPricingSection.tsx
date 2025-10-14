@@ -57,7 +57,7 @@ const VariantsPricingSection = ({ onVariantSelect, variants: propVariants, speci
           <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-2 scrollbar-hide"
                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
             {actualVariants.map((variant, index) => {
-              const price = variant.specifications?.find(s => s.label === 'Ex-showroom Price')?.value || '-';
+              const price = variant.specifications?.find(s => s.label === 'Price')?.value || '-';
               const range = variant.specifications?.find(s => s.label === 'Range')?.value || '-';
               const kerbWeight = variant.specifications?.find(s => s.label === 'Kerb Weight')?.value || '-';
               const batteryWarranty = variant.specifications?.find(s => s.label === 'Battery Warranty')?.value || '-';
