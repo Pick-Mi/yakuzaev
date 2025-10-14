@@ -180,7 +180,7 @@ const ProductShowcase = () => {
               products.map((product: any) => (
                 <div
                   key={product.id}
-                  className="bg-white flex flex-col gap-4 sm:gap-[25px] pb-4 sm:pb-5 w-screen sm:w-full md:w-full flex-shrink-0 last:pr-4"
+                  className="bg-white flex flex-col gap-4 sm:gap-[25px] pb-4 sm:pb-5 w-[calc(100vw-2rem)] sm:w-[350px] md:w-[420px] flex-shrink-0 last:pr-4"
                 >
                   {/* Product Image */}
                   <div className="w-full h-[200px] sm:h-[220px] md:h-[270px] bg-[#b7b8b8] flex items-center justify-center overflow-hidden">
