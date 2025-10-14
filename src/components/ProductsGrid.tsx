@@ -106,18 +106,18 @@ const ProductsGrid = () => {
 
   return (
     <section className="relative bg-[#F8F9F9] py-20">
-      <div className="mx-auto px-[70px]">
+      <div className="mx-auto px-4 md:px-8 lg:px-[70px]">
         {/* Header */}
-        <h2 className="font-['Inter'] font-medium text-[48px] text-[#12141d] mb-20">
+        <h2 className="font-['Inter'] font-medium text-3xl md:text-4xl lg:text-[48px] text-[#12141d] mb-10 md:mb-20">
           All Products
         </h2>
 
         {/* Tab Navigation */}
-        <div className="flex items-center justify-between mb-20">
-          <div className="flex gap-5">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 md:gap-0 mb-10 md:mb-20">
+          <div className="flex gap-2 md:gap-5 overflow-x-auto pb-2 w-full md:w-auto">
             <button
               onClick={() => setActiveCategory(null)}
-              className={`px-5 py-[13px] font-['Poppins'] text-[16px] transition-colors ${
+              className={`px-3 md:px-5 py-2 md:py-[13px] font-['Poppins'] text-sm md:text-[16px] transition-colors whitespace-nowrap ${
                 activeCategory === null
                   ? "bg-[#12141d] text-white opacity-90 shadow-[3px_4px_16px_0px_rgba(0,0,0,0.1)]"
                   : "bg-white text-[#12141d] opacity-90"
@@ -129,7 +129,7 @@ const ProductsGrid = () => {
               <button
                 key={category.id}
                 onClick={() => setActiveCategory(category.id)}
-                className={`px-5 py-[13px] font-['Poppins'] text-[16px] transition-colors ${
+                className={`px-3 md:px-5 py-2 md:py-[13px] font-['Poppins'] text-sm md:text-[16px] transition-colors whitespace-nowrap ${
                   activeCategory === category.id
                     ? "bg-[#12141d] text-white opacity-90 shadow-[3px_4px_16px_0px_rgba(0,0,0,0.1)]"
                     : "bg-white text-[#12141d] opacity-90"
@@ -140,36 +140,36 @@ const ProductsGrid = () => {
             ))}
           </div>
 
-          <div className="relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#4D4D4D]" />
+          <div className="relative w-full md:w-auto">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 md:w-5 h-4 md:h-5 text-[#4D4D4D]" />
             <input
               type="text"
               placeholder="Search"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-12 pr-4 py-[13px] bg-white text-[#12141d] font-['Poppins'] text-[16px] border-none outline-none w-[300px]"
+              className="pl-10 md:pl-12 pr-4 py-2 md:py-[13px] bg-white text-[#12141d] font-['Poppins'] text-sm md:text-[16px] border-none outline-none w-full md:w-[300px]"
             />
           </div>
         </div>
 
         {/* Product Cards Grid - Vertical Layout */}
-        <div className="grid grid-cols-3 gap-[35px]">
+        <div className="flex flex-col gap-6 md:gap-8 lg:grid lg:grid-cols-2 xl:grid-cols-3 lg:gap-[35px]">
           {loading ? (
-            <div className="col-span-3 w-full text-center py-8">
+            <div className="w-full text-center py-8">
               <p className="text-[#212121] opacity-80">Loading products...</p>
             </div>
           ) : filteredProducts.length === 0 ? (
-            <div className="col-span-3 w-full text-center py-8">
+            <div className="w-full text-center py-8">
               <p className="text-[#212121] opacity-80">No products available</p>
             </div>
           ) : (
             filteredProducts.map((product: any) => (
               <div
                 key={product.id}
-                className="bg-white flex flex-col gap-[25px] pb-5"
+                className="bg-white flex flex-col gap-[25px] pb-5 animate-fade-in w-full"
               >
                 {/* Product Image */}
-                <div className="w-full h-[270px] bg-[#b7b8b8] flex items-center justify-center overflow-hidden">
+                <div className="w-full h-[200px] md:h-[250px] lg:h-[270px] bg-[#b7b8b8] flex items-center justify-center overflow-hidden">
                   {product.image && (
                     <img
                       src={product.image}
@@ -180,16 +180,16 @@ const ProductsGrid = () => {
                 </div>
 
                 {/* Product Details */}
-                <div className="px-[26px] flex flex-col gap-[24.621px]">
+                <div className="px-4 md:px-[26px] flex flex-col gap-4 md:gap-[24.621px]">
                   <div className="flex flex-col gap-[25px]">
                     {/* Title & Specs */}
                     <div className="flex flex-col gap-[13.688px]">
-                      <h3 className="font-['Poppins'] font-semibold text-[24px] text-[#212121]">
+                      <h3 className="font-['Poppins'] font-semibold text-xl md:text-2xl lg:text-[24px] text-[#212121]">
                         {product.name}
                       </h3>
                       <div className="flex gap-[13.688px] items-center">
                         {product.feature1 && (
-                          <p className="font-['Poppins'] text-[15.758px] text-[#212121] opacity-80">
+                          <p className="font-['Poppins'] text-sm md:text-[15.758px] text-[#212121] opacity-80">
                             {product.feature1}
                           </p>
                         )}
@@ -197,7 +197,7 @@ const ProductsGrid = () => {
                           <div className="w-[1.24px] h-[19.288px] bg-[#212121] opacity-80" />
                         )}
                         {product.feature2 && (
-                          <p className="font-['Poppins'] text-[15.758px] text-[#212121] opacity-80">
+                          <p className="font-['Poppins'] text-sm md:text-[15.758px] text-[#212121] opacity-80">
                             {product.feature2}
                           </p>
                         )}
@@ -209,14 +209,14 @@ const ProductsGrid = () => {
 
                     {/* Price */}
                     <div className="flex flex-col gap-[8.891px]">
-                      <p className="font-['Poppins'] text-[15.758px] text-[#212121] opacity-80">
+                      <p className="font-['Poppins'] text-sm md:text-[15.758px] text-[#212121] opacity-80">
                         Starting Price
                       </p>
                       <p className="font-['Poppins']">
-                        <span className="text-[23.636px] font-semibold text-[#212121]">
+                        <span className="text-lg md:text-xl lg:text-[23.636px] font-semibold text-[#212121]">
                           ₹{product.price.toLocaleString('en-IN')}
                         </span>
-                        <span className="text-[17.727px] text-[rgba(33,33,33,0.75)]">
+                        <span className="text-sm md:text-base lg:text-[17.727px] text-[rgba(33,33,33,0.75)]">
                           {" "}/ showroom price
                         </span>
                       </p>
@@ -227,13 +227,13 @@ const ProductsGrid = () => {
                   <div className="flex flex-col gap-[15px] w-full">
                     <button
                       onClick={() => handleBookNow(product)}
-                      className="bg-black text-white h-[55px] px-[23px] py-[13px] font-['Poppins'] font-medium text-[16px] w-full hover:bg-black/90 transition-colors"
+                      className="bg-black text-white h-12 md:h-[55px] px-4 md:px-[23px] py-2 md:py-[13px] font-['Poppins'] font-medium text-sm md:text-[16px] w-full hover:bg-black/90 transition-colors"
                     >
                       Book Now
                     </button>
                     <button
                       onClick={() => handleExplore(product)}
-                      className="bg-[#f8f9f9] text-black h-[55px] px-[50px] py-[13px] font-['Inter'] font-medium text-[14px] w-full hover:bg-[#e8e9e9] transition-colors"
+                      className="bg-[#f8f9f9] text-black h-12 md:h-[55px] px-8 md:px-[50px] py-2 md:py-[13px] font-['Inter'] font-medium text-sm md:text-[14px] w-full hover:bg-[#e8e9e9] transition-colors"
                     >
                       Explore {product.name}
                     </button>
