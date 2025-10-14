@@ -85,13 +85,13 @@ const Hero = () => {
 
   return (
     <section 
-      className="relative w-full min-h-screen h-[600px] sm:h-[700px] md:h-[829px] bg-black overflow-hidden bg-center bg-cover"
+      className="relative w-full min-h-screen h-[600px] sm:h-[700px] md:h-[829px] bg-black overflow-hidden bg-center bg-cover transition-all duration-700 ease-in-out"
       style={{
         backgroundImage: backgroundImage ? `url(${backgroundImage})` : 'none',
       }}
     >
-      <div className="absolute bottom-8 sm:bottom-16 md:bottom-24 left-4 sm:left-6 md:left-10 right-4 sm:right-auto w-auto sm:w-[601px] max-w-[calc(100%-2rem)] sm:max-w-[90%] flex flex-col gap-4 sm:gap-6 items-start px-2 sm:px-0">
-        <h1 className="font-sans font-normal text-[32px] sm:text-[42px] md:text-[52px] leading-[1.3] sm:leading-[1.4] md:leading-[73px] text-white m-0 transition-opacity duration-700">
+      <div className="absolute bottom-8 sm:bottom-16 md:bottom-24 left-4 sm:left-6 md:left-10 right-4 sm:right-auto w-auto sm:w-[601px] max-w-[calc(100%-2rem)] sm:max-w-[90%] flex flex-col gap-4 sm:gap-6 items-start px-2 sm:px-0 animate-fade-in">
+        <h1 className="font-sans font-normal text-[32px] sm:text-[42px] md:text-[52px] leading-[1.3] sm:leading-[1.4] md:leading-[73px] text-white m-0">
           {currentHero.title}
         </h1>
         
@@ -118,14 +118,14 @@ const Hero = () => {
         <>
           <button
             onClick={handlePrevious}
-            className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 text-white p-3 rounded-none backdrop-blur-sm"
+            className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 text-white p-3 rounded-none backdrop-blur-sm transition-colors duration-300"
             aria-label="Previous slide"
           >
             <ChevronLeft size={24} />
           </button>
           <button
             onClick={handleNext}
-            className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 text-white p-3 rounded-none backdrop-blur-sm"
+            className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 text-white p-3 rounded-none backdrop-blur-sm transition-colors duration-300"
             aria-label="Next slide"
           >
             <ChevronRight size={24} />
