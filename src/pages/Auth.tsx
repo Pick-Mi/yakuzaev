@@ -462,7 +462,7 @@ const Auth = () => {
           </div>
           
           {/* Bottom Sheet Popup */}
-          <div className="bg-white rounded-t-[32px] shadow-2xl animate-slide-in-bottom relative">
+          <div className="bg-white shadow-2xl animate-slide-in-bottom relative">
             {/* Close button */}
             <button
               onClick={() => navigate(-1)}
