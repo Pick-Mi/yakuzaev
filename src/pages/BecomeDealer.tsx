@@ -192,7 +192,7 @@ const BecomeDealer = () => {
             {/* Benefit Cards */}
             <div className="grid md:grid-cols-2 gap-8">
               {/* Card 1 - Higher Margins */}
-              <div className="bg-white p-8 rounded-lg">
+              <div className="bg-white p-8">
                 <div className="w-16 h-16 bg-green-100 rounded-lg flex items-center justify-center mb-6">
                   <DollarSign className="w-8 h-8 text-green-600" strokeWidth={2.5} />
                 </div>
@@ -205,7 +205,7 @@ const BecomeDealer = () => {
               </div>
 
               {/* Card 2 - Location */}
-              <div className="bg-white p-8 rounded-lg">
+              <div className="bg-white p-8">
                 <div className="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center mb-6">
                   <MapPin className="w-8 h-8 text-blue-600" strokeWidth={2.5} />
                 </div>
