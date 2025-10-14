@@ -308,41 +308,38 @@ const OrderDetails = () => {
     <div className="min-h-screen bg-background">
       <Header />
       <div className="container mx-auto px-4 pt-32 pb-8 max-w-7xl">
+        {/* Breadcrumb */}
+        <nav className="text-sm text-muted-foreground mb-6 flex items-center gap-2">
+          <span className="hover:text-foreground cursor-pointer" onClick={() => navigate('/')}>Home</span>
+          <ChevronRight className="w-4 h-4" />
+          <span className="hover:text-foreground cursor-pointer" onClick={() => navigate('/orders')}>My Orders</span>
+          <ChevronRight className="w-4 h-4" />
+          <span className="text-foreground">OD{order.order_number || order.id.slice(0, 12)}</span>
+        </nav>
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
-            <h1 className="text-3xl font-bold mb-6">Your Orders</h1>
+            <h1 className="text-3xl font-bold">Your Orders</h1>
 
             {/* Product Card */}
             <div className="bg-white border rounded-lg p-6">
-              <div className="flex gap-4">
-                <div className="w-32 h-32 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden flex-shrink-0">
+              <div className="flex gap-6">
+                <div className="w-40 h-40 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden flex-shrink-0">
                   {firstItem.image_url ? (
                     <img src={firstItem.image_url} alt={firstItem.name} className="w-full h-full object-cover" />
                   ) : (
-                    <Package className="w-12 h-12 text-gray-400" />
+                    <Package className="w-16 h-16 text-gray-400" />
                   )}
                 </div>
                 <div className="flex-1">
-                  <h2 className="text-lg font-semibold mb-1">
-                    {firstItem.name || 'Product'}
+                  <h2 className="text-xl font-semibold mb-2">
+                    {firstItem.name || 'Product Name'}
                   </h2>
-                  {order.estimated_delivery_date && (
-                    <p className="text-sm text-gray-600 mb-1">
-                      Return or Replace: Eligible through {format(new Date(order.estimated_delivery_date), 'MMM dd, yyyy')}
-                    </p>
-                  )}
-                  {firstItem.variant && (
-                    <p className="text-sm text-gray-700 mb-1">
-                      Variant : {firstItem.variant}
-                    </p>
-                  )}
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="text-sm text-gray-700">Colour :</span>
-                    <span className="text-sm font-medium">{firstItem.color || 'Blue'}</span>
-                    <div className="w-4 h-4 rounded-full bg-blue-600 border border-gray-300"></div>
-                  </div>
-                  <p className="text-xl font-bold">
+                  <p className="text-sm text-gray-600 mb-2">
+                    Seller : {firstItem.seller || 'PROWOXIPvtLtd'}
+                  </p>
+                  <p className="text-2xl font-bold">
                     ₹{parseFloat(order.total_amount.toString()).toLocaleString('en-IN')}
                   </p>
                 </div>
@@ -350,30 +347,30 @@ const OrderDetails = () => {
             </div>
 
             {/* Order Timeline */}
-            <div className="space-y-0 mt-6">
+            <div className="space-y-0">
               {timeline.map((step, index) => (
-                <div key={index} className="flex items-start gap-3 relative">
+                <div key={index} className="flex items-start gap-4 relative">
                   {/* Vertical line */}
                   {index < timeline.length - 1 && (
-                    <div className="absolute left-2 top-6 w-0.5 h-10 bg-gray-200" />
+                    <div className="absolute left-3 top-8 w-0.5 h-12 bg-gray-200" />
                   )}
                   
                   <div className="flex-shrink-0 z-10">
                     {step.completed ? (
-                      <div className="w-5 h-5 rounded-full bg-black flex items-center justify-center">
-                        <div className="w-2 h-2 rounded-full bg-white" />
+                      <div className="w-6 h-6 rounded-full bg-black flex items-center justify-center">
+                        <CheckCircle className="w-4 h-4 text-white" />
                       </div>
                     ) : (
-                      <div className="w-5 h-5 rounded-full border-2 border-gray-300 bg-white" />
+                      <div className="w-6 h-6 rounded-full border-2 border-gray-300 bg-white" />
                     )}
                   </div>
                   
-                  <div className="flex-1 pb-8">
-                    <p className={`text-sm font-medium ${step.completed ? 'text-black' : 'text-gray-400'}`}>
+                  <div className="flex-1 pb-12">
+                    <p className={`font-semibold ${step.completed ? 'text-black' : 'text-gray-400'}`}>
                       {step.label}
                     </p>
                     {step.date && (
-                      <p className="text-xs text-gray-500 mt-0.5">{step.date}</p>
+                      <p className="text-sm text-gray-500">{step.date}</p>
                     )}
                   </div>
                 </div>
@@ -381,12 +378,10 @@ const OrderDetails = () => {
             </div>
 
             {/* Chat Button */}
-            <div className="flex justify-center mt-8">
-              <Button variant="outline" className="gap-2 px-8">
-                <MessageCircle className="w-4 h-4" />
-                Chat with us
-              </Button>
-            </div>
+            <Button variant="outline" className="w-full gap-2">
+              <MessageCircle className="w-5 h-5" />
+              Chat with us
+            </Button>
           </div>
 
           {/* Right Sidebar */}
@@ -395,23 +390,23 @@ const OrderDetails = () => {
             <div className="bg-white border rounded-lg p-6">
               <h3 className="text-lg font-bold mb-6">Delivery details</h3>
               
-              <div className="space-y-4 mb-6">
+              <div className="space-y-4">
                 <div className="flex items-start gap-3">
-                  <Home className="w-5 h-5 text-gray-600 mt-0.5" />
+                  <Home className="w-5 h-5 text-gray-600 mt-1" />
                   <div className="flex-1">
-                    <p className="text-sm font-medium">
-                      Home {deliveryAddress.locality || deliveryAddress.city || 'Athiyandal SLR Camp Athiyandal'}
+                    <p className="font-medium">
+                      Home {deliveryAddress.locality || deliveryAddress.city || ''}
                     </p>
-                    <p className="text-xs text-gray-600 mt-1">
-                      {deliveryAddress.street_address || deliveryAddress.address || '6379319293,Vembu..'}
+                    <p className="text-sm text-gray-600 mt-1">
+                      {deliveryAddress.street_address || deliveryAddress.address || 'Athiyandal SLR Camp Athiyandal 6379319293,Vembu..'}
                     </p>
                   </div>
                 </div>
 
                 <div className="flex items-start gap-3">
-                  <User className="w-5 h-5 text-gray-600 mt-0.5" />
+                  <User className="w-5 h-5 text-gray-600 mt-1" />
                   <div className="flex-1">
-                    <p className="text-sm font-medium">
+                    <p className="font-medium">
                       {order.customer_details?.first_name && order.customer_details?.last_name 
                         ? `${order.customer_details.first_name}.${order.customer_details.last_name.charAt(0)}`
                         : 'Alex.D'} {order.customer_details?.phone || '6379319293'}
@@ -419,42 +414,54 @@ const OrderDetails = () => {
                   </div>
                 </div>
               </div>
+            </div>
 
-              <Separator className="my-6" />
-
-              {/* Price Details */}
-              <h3 className="text-lg font-bold mb-4">Delivery details</h3>
+            {/* Price Details */}
+            <div className="bg-white border rounded-lg p-6">
+              <h3 className="text-lg font-bold mb-6">Delivery details</h3>
               
               <div className="space-y-3">
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Product price</span>
-                  <span className="font-medium">₹{parseFloat(order.total_amount.toString()).toLocaleString('en-IN')}</span>
+                  <span className="text-gray-600">Listing price</span>
+                  <span className="font-medium">₹{parseFloat(listingPrice.toString()).toLocaleString('en-IN')}</span>
                 </div>
                 
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Discount</span>
-                  <span className="font-medium">₹0</span>
+                  <span className="text-gray-600">Selling price</span>
+                  <span className="font-medium">₹{parseFloat(sellingPrice.toString()).toLocaleString('en-IN')}</span>
                 </div>
                 
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Sub Total</span>
-                  <span className="font-medium">₹{parseFloat(order.total_amount.toString()).toLocaleString('en-IN')}</span>
+                  <span className="text-gray-600">Extra discount</span>
+                  <span className="font-medium text-green-600">-₹{extraDiscount}</span>
+                </div>
+                
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">Special price</span>
+                  <span className="font-medium">₹{parseFloat(specialPrice.toString()).toLocaleString('en-IN')}</span>
+                </div>
+                
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">Other dicount</span>
+                  <span className="font-medium text-green-600">-₹{otherDiscount}</span>
+                </div>
+                
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">Total fees</span>
+                  <span className="font-medium">₹{parseFloat(totalFees.toString()).toLocaleString('en-IN')}</span>
                 </div>
 
-                <div className="border-t border-dashed my-3"></div>
+                <div className="border-t-2 border-dashed my-4"></div>
 
                 <div className="flex justify-between font-bold text-base">
                   <span>Total amount</span>
                   <span>₹{parseFloat(order.total_amount.toString()).toLocaleString('en-IN')}</span>
                 </div>
 
-                <div className="mt-4 pt-4 border-t">
+                <div className="mt-6 pt-4 border-t">
                   <div className="flex items-center justify-between">
-                    <span className="font-medium text-sm">Paid by</span>
-                    <div className="flex items-center gap-1.5">
-                      <Package className="w-4 h-4" />
-                      <span className="text-sm">{order.payment_method || 'Cash On Delivery'}</span>
-                    </div>
+                    <span className="font-semibold">Paid by</span>
+                    <span className="text-sm">₹ {order.payment_method || 'Cash On Delivery'}</span>
                   </div>
                 </div>
 
