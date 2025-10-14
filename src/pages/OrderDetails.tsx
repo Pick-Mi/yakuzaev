@@ -72,6 +72,8 @@ interface Order {
   order_summary?: any;
   order_number?: number;
   order_type?: string;
+  customer_id?: string;
+  customer_name?: string;
 }
 
 const OrderDetails = () => {
@@ -125,7 +127,21 @@ const OrderDetails = () => {
         }
       }
       
-      setOrder(data);
+      // Fetch customer profile for name
+      const { data: customerProfile } = await supabase
+        .from('profiles')
+        .select('first_name, last_name')
+        .eq('user_id', data.customer_id)
+        .single();
+      
+      const orderWithName = {
+        ...data,
+        customer_name: customerProfile 
+          ? `${customerProfile.first_name || ''} ${customerProfile.last_name || ''}`.trim()
+          : undefined
+      };
+      
+      setOrder(orderWithName);
 
       // Fetch transaction details for this order
       try {
@@ -446,7 +462,7 @@ const OrderDetails = () => {
                   <User className="w-5 h-5 text-foreground mt-1" />
                   <div className="flex-1">
                     <span className="font-semibold">
-                      {order.customer_details?.first_name || ''} {order.customer_details?.last_name || ''}
+                      {order.customer_name || `${order.customer_details?.first_name || ''} ${order.customer_details?.last_name || ''}`.trim() || 'Customer'}
                     </span>
                     <span className="text-foreground ml-2">
                       {order.customer_details?.phone || order.customer_details?.mobile || ''}
