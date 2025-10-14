@@ -125,10 +125,10 @@ const ProductsGrid = () => {
         </div>
 
         {/* Tab Navigation */}
-        <div className="flex gap-2 md:gap-5 overflow-x-auto pb-2 w-full mb-10 md:mb-20">
+        <div className="flex gap-2 md:gap-5 overflow-x-auto pb-2 w-full mb-10 md:mb-20 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
           <button
             onClick={() => setActiveCategory(null)}
-            className={`px-3 md:px-5 py-2 md:py-[13px] font-['Poppins'] text-sm md:text-[16px] transition-colors whitespace-nowrap ${
+            className={`px-6 md:px-5 py-[13px] font-['Poppins'] text-[14px] md:text-[16px] transition-colors whitespace-nowrap ${
               activeCategory === null
                 ? "bg-[#12141d] text-white opacity-90 shadow-[3px_4px_16px_0px_rgba(0,0,0,0.1)]"
                 : "bg-white text-[#12141d] opacity-90"
@@ -140,7 +140,7 @@ const ProductsGrid = () => {
             <button
               key={category.id}
               onClick={() => setActiveCategory(category.id)}
-              className={`px-3 md:px-5 py-2 md:py-[13px] font-['Poppins'] text-sm md:text-[16px] transition-colors whitespace-nowrap ${
+              className={`px-6 md:px-5 py-[13px] font-['Poppins'] text-[14px] md:text-[16px] transition-colors whitespace-nowrap ${
                 activeCategory === category.id
                   ? "bg-[#12141d] text-white opacity-90 shadow-[3px_4px_16px_0px_rgba(0,0,0,0.1)]"
                   : "bg-white text-[#12141d] opacity-90"
