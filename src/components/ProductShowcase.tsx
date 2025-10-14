@@ -121,7 +121,7 @@ const ProductShowcase = () => {
 
         {/* Tab Navigation */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-10 sm:mb-16 md:mb-20 gap-4 px-4 sm:px-0">
-          <div className="flex gap-2 sm:gap-4 md:gap-5 overflow-x-auto pb-2 w-full sm:w-auto">
+          <div className="flex gap-2 sm:gap-4 md:gap-5 overflow-x-auto pb-2 w-full sm:w-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
             <button
               onClick={() => setActiveCategory(null)}
               className={`px-3 sm:px-4 md:px-5 py-2 sm:py-[13px] font-['Poppins'] text-[12px] sm:text-[14px] md:text-[16px] transition-colors whitespace-nowrap ${
