@@ -446,9 +446,7 @@ const OrderDetails = () => {
                   <User className="w-5 h-5 text-foreground mt-1" />
                   <div className="flex-1">
                     <span className="font-semibold">
-                      {order.customer_details?.first_name && order.customer_details?.last_name 
-                        ? `${order.customer_details.first_name} ${order.customer_details.last_name}`
-                        : order.customer_details?.name || 'Customer'} 
+                      {order.customer_details?.first_name || ''} {order.customer_details?.last_name || ''}
                     </span>
                     <span className="text-foreground ml-2">
                       {order.customer_details?.phone || order.customer_details?.mobile || ''}
