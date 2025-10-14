@@ -500,12 +500,27 @@ const OrderDetails = () => {
                 </div>
 
                 <div className="mt-6 pt-4">
-                  <div className="flex items-center justify-between text-base mb-6">
-                    <span className="font-semibold">Paid by</span>
-                    <span className="flex items-center gap-1">
-                      <span>₹</span>
-                      <span>{order.payment_method === 'payu' ? 'Online Payment' : 'Cash On Delivery'}</span>
-                    </span>
+                  <div className="space-y-4 mb-6">
+                    <div className="flex items-center justify-between text-base">
+                      <span className="font-semibold">Payment Gateway</span>
+                      <span className="font-medium">
+                        {order.payment_method === 'payu' ? 'PayU' : order.payment_method === 'cod' ? 'Cash On Delivery' : order.payment_method || 'Not specified'}
+                      </span>
+                    </div>
+                    
+                    <div className="flex items-center justify-between text-base">
+                      <span className="font-semibold">Payment Status</span>
+                      <Badge 
+                        variant={
+                          order.payment_status === 'completed' ? 'default' : 
+                          order.payment_status === 'pending' ? 'secondary' : 
+                          'destructive'
+                        }
+                        className="capitalize"
+                      >
+                        {order.payment_status || 'pending'}
+                      </Badge>
+                    </div>
                   </div>
 
                   <Button variant="outline" className="w-full gap-2 rounded-none">
