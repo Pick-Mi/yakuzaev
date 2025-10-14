@@ -63,8 +63,8 @@ const Hero = () => {
         backgroundPosition: 'center',
       }}
     >
-      <div className="absolute left-1/2 -translate-x-1/2 top-[520px] w-[601px] max-w-[90%] flex flex-col gap-6 items-start">
-        <h1 className="text-white font-['Inter'] text-[25.655px] font-normal leading-normal self-stretch m-0 transition-opacity duration-700 sm:text-[52px] sm:leading-[73px]">
+      <div className="absolute left-10 top-[520px] w-[601px] max-w-[90%] flex flex-col gap-6 items-start">
+        <h1 className="font-sans font-normal text-[52px] leading-[73px] text-white m-0 transition-opacity duration-700">
           {currentHero.title}
         </h1>
         

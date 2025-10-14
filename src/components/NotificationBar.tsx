@@ -29,12 +29,12 @@ const NotificationBar = () => {
   if (!isEnabled || !notificationMessage) return null;
 
   return (
-    <div className="w-full bg-[#0C121C] text-white flex flex-col justify-end items-center gap-2.5 py-[15px] px-4 sm:px-[493px]">
+    <div className="w-full bg-[#0C121C] text-white h-10 sm:h-12 px-2 sm:px-4 flex items-center">
       <div className="container mx-auto flex items-center justify-center gap-2 sm:gap-4 flex-wrap" style={{ fontFamily: 'Poppins, sans-serif' }}>
-        <span className="text-white font-['Inter'] text-[10px] font-normal leading-normal text-center sm:text-xs md:text-sm">{notificationMessage}</span>
+        <span className="text-[10px] sm:text-xs md:text-sm text-center">{notificationMessage}</span>
         <Link 
           to={notificationCtaUrl} 
-          className="text-white text-center font-['Inter'] text-[10px] font-medium leading-normal underline decoration-solid decoration-auto underline-offset-auto whitespace-nowrap sm:text-xs md:text-sm hover:opacity-80 transition-all"
+          className="font-medium hover:underline underline-offset-4 transition-all text-[10px] sm:text-xs md:text-sm whitespace-nowrap"
         >
           {notificationCtaText}
         </Link>
