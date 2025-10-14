@@ -84,7 +84,7 @@ const AboutUs = () => {
         </section>
 
         {/* From India Section */}
-        <section className="py-[70px] px-4">
+        <section className="py-[25px] px-4">
           <div className="container mx-auto max-w-7xl p-0">
             <h2 className="text-4xl md:text-5xl font-bold mb-12">
               We build to rule , We build to perform
