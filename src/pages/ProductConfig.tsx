@@ -316,34 +316,60 @@ const ProductConfig = () => {
               </h3>
               <div className="space-y-3">
                 {product.variants && product.variants.length > 0 ? (
-                  product.variants.map((variant: any, index: number) => (
-                    <button
-                      key={index}
-                      onClick={() => setSelectedVariant(variant)}
-                      className={`w-full border-2 rounded-lg p-4 flex items-center justify-between transition-all ${
-                        selectedVariant?.name === variant.name
-                          ? "border-black bg-gray-50"
-                          : "border-gray-300 hover:border-gray-400"
-                      }`}
-                    >
-                      <div className="text-left">
-                        <p className="font-['Poppins'] font-semibold text-[20px]">
-                          {variant.name}
-                        </p>
-                        <p className="font-['Inter'] text-[14px] text-gray-600">
-                          IDC Range
-                        </p>
-                      </div>
-                      <div className="text-right">
-                        <p className="font-['Inter'] text-[12px] text-gray-500">
-                          Starts at
-                        </p>
-                        <p className="font-['Poppins'] font-semibold text-[18px]">
-                          ₹{variant.price?.toLocaleString('en-IN')}
-                        </p>
-                      </div>
-                    </button>
-                  ))
+                  product.variants.map((variant: any, index: number) => {
+                    // Get key specifications to display
+                    const getVariantSpecs = () => {
+                      if (!variant.specifications) return null;
+                      const specs = Array.isArray(variant.specifications) ? variant.specifications : [];
+                      
+                      // Find range specification
+                      const range = specs.find((s: any) => s.label?.toLowerCase() === 'range');
+                      return range ? range.value : 'IDC Range';
+                    };
+                    
+                    // Get variant price
+                    const getVariantPrice = () => {
+                      if (variant.price) return variant.price;
+                      
+                      // Try to get from specifications
+                      if (variant.specifications) {
+                        const specs = Array.isArray(variant.specifications) ? variant.specifications : [];
+                        const priceSpec = specs.find((s: any) => s.label?.toLowerCase() === 'price');
+                        return priceSpec?.value || product.price;
+                      }
+                      
+                      return product.price;
+                    };
+                    
+                    return (
+                      <button
+                        key={variant.id || index}
+                        onClick={() => setSelectedVariant(variant)}
+                        className={`w-full border-2 rounded-lg p-4 flex items-center justify-between transition-all ${
+                          selectedVariant?.id === variant.id
+                            ? "border-black bg-gray-50"
+                            : "border-gray-300 hover:border-gray-400"
+                        }`}
+                      >
+                        <div className="text-left">
+                          <p className="font-['Poppins'] font-semibold text-[20px]">
+                            {variant.name}
+                          </p>
+                          <p className="font-['Inter'] text-[14px] text-gray-600">
+                            {getVariantSpecs()}
+                          </p>
+                        </div>
+                        <div className="text-right">
+                          <p className="font-['Inter'] text-[12px] text-gray-500">
+                            Starts at
+                          </p>
+                          <p className="font-['Poppins'] font-semibold text-[18px]">
+                            ₹{Number(getVariantPrice()).toLocaleString('en-IN')}
+                          </p>
+                        </div>
+                      </button>
+                    );
+                  })
                 ) : (
                 <div className="border-2 border-black bg-gray-50 p-4 flex items-center justify-between">
                   <div className="text-left">
