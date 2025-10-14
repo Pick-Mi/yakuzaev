@@ -449,7 +449,7 @@ const ProductConfig = () => {
                       <button
                         key={variant.id || index}
                         onClick={() => setSelectedVariant(variant)}
-                        className={`w-full border-2 rounded-lg p-4 flex items-center justify-between transition-all ${
+                        className={`w-full border-2 p-4 flex items-center justify-between transition-all ${
                           selectedVariant?.id === variant.id
                             ? "border-black bg-gray-50"
                             : "border-gray-300 hover:border-gray-400"
