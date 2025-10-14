@@ -41,6 +41,7 @@ const ProductConfig = () => {
   const getAvailableColors = () => {
     // First, try to get colors from the selected variant
     if (selectedVariant && selectedVariant.colors && Array.isArray(selectedVariant.colors) && selectedVariant.colors.length > 0) {
+      console.log('Loading colors from variant:', selectedVariant.name, selectedVariant.colors);
       return selectedVariant.colors.map((c: any) => {
         // Extract color name and hex from format like "White (#FFFFFF)" or "1 (#0A4886)"
         const match = c.name?.match(/^(.+?)\s*\(#([0-9A-Fa-f]{6})\)/);
@@ -57,6 +58,7 @@ const ProductConfig = () => {
     
     // If not in variant, try color_variety
     if (product?.color_variety?.colors && Array.isArray(product.color_variety.colors)) {
+      console.log('Loading colors from color_variety:', product.color_variety.colors);
       return product.color_variety.colors.map((c: any) => ({
         name: c.name,
         value: c.hex,
@@ -64,13 +66,9 @@ const ProductConfig = () => {
       }));
     }
     
-    // Fallback to default colors if no colors found in database
-    return [
-      { name: "White", value: "#FFFFFF", border: "#E5E5E5" },
-      { name: "Blue", value: "#2B4C7E" },
-      { name: "Gray", value: "#4A4A4A" },
-      { name: "Black", value: "#000000" },
-    ];
+    // Return empty array if no colors found in database
+    console.warn('No colors found in database for product:', product?.name);
+    return [];
   };
 
   const colors = getAvailableColors();
