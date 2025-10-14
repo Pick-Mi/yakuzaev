@@ -369,7 +369,7 @@ const ProductConfig = () => {
                   </div>
 
                   {/* Booking amount - what they pay now */}
-                  <div className="bg-[#F8F9F9] rounded-lg p-4">
+                  <div className="bg-[#F8F9F9] p-4">
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-2">
                         <span className="font-['Inter'] font-medium text-[16px]">
