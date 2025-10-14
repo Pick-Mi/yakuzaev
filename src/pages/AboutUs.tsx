@@ -85,7 +85,7 @@ const AboutUs = () => {
 
         {/* From India Section */}
         <section className="py-[25px] px-4">
-          <div className="container mx-auto max-w-7xl p-0">
+          <div className="container mx-auto max-w-7xl p-0 flex flex-col gap-[20px]">
             <h2 className="text-[24px] leading-[37px] font-semibold font-['Inter'] text-[#12141D] md:text-4xl lg:text-5xl md:font-bold mb-12">
               We build to rule , We build to perform
             </h2>
