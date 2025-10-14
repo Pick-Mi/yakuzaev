@@ -431,27 +431,28 @@ const OrderDetails = () => {
             <div className="bg-white border p-6">
               <h3 className="text-lg font-bold mb-6">Delivery details</h3>
               
-              <div className="space-y-4">
+              <div className="bg-gray-50 p-6 space-y-6">
                 <div className="flex items-start gap-3">
-                  <Home className="w-5 h-5 text-gray-600 mt-1" />
+                  <Home className="w-5 h-5 text-foreground mt-1" />
                   <div className="flex-1">
-                    <p className="font-medium">
-                      Home {deliveryAddress.locality || deliveryAddress.city || ''}
-                    </p>
-                    <p className="text-sm text-gray-600 mt-1">
-                      {deliveryAddress.street_address || deliveryAddress.address || 'Athiyandal SLR Camp Athiyandal 6379319293,Vembu..'}
-                    </p>
+                    <span className="font-semibold">Home </span>
+                    <span className="text-foreground">
+                      {deliveryAddress.street_address || deliveryAddress.address || 'Athiyandal SLR Camp Athiyandal'} {deliveryAddress.postal_code || ''},{deliveryAddress.city || 'Vembu'}..
+                    </span>
                   </div>
                 </div>
 
                 <div className="flex items-start gap-3">
-                  <User className="w-5 h-5 text-gray-600 mt-1" />
+                  <User className="w-5 h-5 text-foreground mt-1" />
                   <div className="flex-1">
-                    <p className="font-medium">
+                    <span className="font-semibold">
                       {order.customer_details?.first_name && order.customer_details?.last_name 
                         ? `${order.customer_details.first_name}.${order.customer_details.last_name.charAt(0)}`
-                        : 'Alex.D'} {order.customer_details?.phone || '6379319293'}
-                    </p>
+                        : 'Alex.D'} 
+                    </span>
+                    <span className="text-foreground ml-2">
+                      {order.customer_details?.phone || order.customer_details?.mobile || '6379319293'}
+                    </span>
                   </div>
                 </div>
               </div>
