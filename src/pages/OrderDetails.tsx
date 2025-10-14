@@ -500,11 +500,10 @@ const OrderDetails = () => {
                 </div>
 
                 <div className="mt-6 pt-4">
-                  <div className="flex items-center justify-between text-base mb-6">
-                    <span className="font-semibold">Paid by</span>
-                    <span className="font-medium">
+                  <div className="flex justify-center mb-6">
+                    <Badge variant="secondary" className="text-base px-4 py-2">
                       {order.payment_method === 'payu' ? 'PayU' : order.payment_method === 'cod' ? 'Cash On Delivery' : order.payment_method || 'Not specified'}
-                    </span>
+                    </Badge>
                   </div>
 
                   <Button variant="outline" className="w-full gap-2 rounded-none">
