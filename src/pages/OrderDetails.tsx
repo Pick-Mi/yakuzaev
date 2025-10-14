@@ -319,27 +319,41 @@ const OrderDetails = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Content */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="lg:col-span-2 space-y-8">
             <h1 className="text-3xl font-bold">Your Orders</h1>
 
             {/* Product Card */}
-            <div className="bg-white border rounded-lg p-6">
+            <div className="bg-card border rounded-lg p-6">
               <div className="flex gap-6">
-                <div className="w-40 h-40 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden flex-shrink-0">
+                <div className="w-52 h-52 bg-muted rounded-lg flex items-center justify-center overflow-hidden flex-shrink-0">
                   {firstItem.image_url ? (
                     <img src={firstItem.image_url} alt={firstItem.name} className="w-full h-full object-cover" />
                   ) : (
-                    <Package className="w-16 h-16 text-gray-400" />
+                    <Package className="w-20 h-20 text-muted-foreground" />
                   )}
                 </div>
-                <div className="flex-1">
-                  <h2 className="text-xl font-semibold mb-2">
-                    {firstItem.name || 'Product Name'}
+                <div className="flex-1 space-y-3">
+                  <h2 className="text-2xl font-semibold">
+                    {firstItem.name || 'Product'}
                   </h2>
-                  <p className="text-sm text-gray-600 mb-2">
-                    Seller : {firstItem.seller || 'PROWOXIPvtLtd'}
+                  <p className="text-sm text-muted-foreground">
+                    Return or Replace: Eligible through {order.estimated_delivery_date 
+                      ? format(new Date(new Date(order.estimated_delivery_date).getTime() + 7 * 24 * 60 * 60 * 1000), 'MMM dd, yyyy')
+                      : format(new Date(new Date(order.created_at).getTime() + 14 * 24 * 60 * 60 * 1000), 'MMM dd, yyyy')}
                   </p>
-                  <p className="text-2xl font-bold">
+                  <p className="text-sm">
+                    <span className="text-foreground">Variant : </span>
+                    <span className="font-medium">{firstItem.variant || 'YAKUZA NEU 43V'}</span>
+                  </p>
+                  <div className="flex items-center gap-2 text-sm">
+                    <span className="text-foreground">Colour :</span>
+                    <span className="font-medium">{firstItem.color || 'Blue'}</span>
+                    <div 
+                      className="w-5 h-5 rounded-full border-2 border-gray-300"
+                      style={{ backgroundColor: firstItem.color_hex || '#000000' }}
+                    />
+                  </div>
+                  <p className="text-3xl font-bold pt-2">
                     ₹{parseFloat(order.total_amount.toString()).toLocaleString('en-IN')}
                   </p>
                 </div>
@@ -352,25 +366,29 @@ const OrderDetails = () => {
                 <div key={index} className="flex items-start gap-4 relative">
                   {/* Vertical line */}
                   {index < timeline.length - 1 && (
-                    <div className="absolute left-3 top-8 w-0.5 h-12 bg-gray-200" />
+                    <div className={`absolute left-3 top-8 w-0.5 h-16 ${
+                      step.completed ? 'bg-foreground' : 'bg-border'
+                    }`} />
                   )}
                   
                   <div className="flex-shrink-0 z-10">
                     {step.completed ? (
-                      <div className="w-6 h-6 rounded-full bg-black flex items-center justify-center">
-                        <CheckCircle className="w-4 h-4 text-white" />
+                      <div className="w-7 h-7 rounded-full bg-foreground flex items-center justify-center">
+                        <CheckCircle className="w-5 h-5 text-background" />
                       </div>
                     ) : (
-                      <div className="w-6 h-6 rounded-full border-2 border-gray-300 bg-white" />
+                      <div className="w-7 h-7 rounded-full border-2 border-border bg-background" />
                     )}
                   </div>
                   
-                  <div className="flex-1 pb-12">
-                    <p className={`font-semibold ${step.completed ? 'text-black' : 'text-gray-400'}`}>
+                  <div className="flex-1 pb-16">
+                    <p className={`font-semibold text-base ${
+                      step.completed ? 'text-foreground' : 'text-muted-foreground'
+                    }`}>
                       {step.label}
                     </p>
                     {step.date && (
-                      <p className="text-sm text-gray-500">{step.date}</p>
+                      <p className="text-sm text-muted-foreground mt-1">{step.date}</p>
                     )}
                   </div>
                 </div>
@@ -378,10 +396,12 @@ const OrderDetails = () => {
             </div>
 
             {/* Chat Button */}
-            <Button variant="outline" className="w-full gap-2">
-              <MessageCircle className="w-5 h-5" />
-              Chat with us
-            </Button>
+            <div className="flex justify-center pt-4">
+              <Button variant="outline" className="gap-2 px-8">
+                <MessageCircle className="w-5 h-5" />
+                Chat with us
+              </Button>
+            </div>
           </div>
 
           {/* Right Sidebar */}
