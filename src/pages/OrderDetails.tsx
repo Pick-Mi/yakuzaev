@@ -356,7 +356,7 @@ const OrderDetails = () => {
                 </div>
                 <div className="flex-1 space-y-3">
                   <h2 className="text-2xl font-semibold">
-                    {firstItem.name || 'Product'}
+                    {firstItem.product_name || firstItem.name || 'Product'}
                   </h2>
                   <div className="inline-flex items-center px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium">
                     {order.order_type === 'test_ride' ? 'Book a Bike' : order.order_type === 'purchase' ? 'Book a Buy' : 'Order'}
