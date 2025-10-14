@@ -67,6 +67,11 @@ export const ProductBottomNav = ({
     };
   }) || [];
 
+  // Get price from selected variant's specifications
+  const variantPrice = selectedVariant?.specifications?.find(
+    (spec: any) => spec.label === 'Price'
+  )?.value || `₹${price.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
   return (
     <div 
       className={`fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg z-50 transition-transform duration-300 ${
@@ -133,7 +138,7 @@ export const ProductBottomNav = ({
 
           {/* Price */}
           <div className="font-['Poppins'] font-semibold text-[20px] text-gray-800 min-w-[140px] text-right">
-            ₹{price.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            {variantPrice}
           </div>
 
           {/* Book Now Button */}
