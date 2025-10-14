@@ -46,9 +46,9 @@ const VariantsPricingSection = ({ onVariantSelect, variants: propVariants, speci
           Variants with their prices
         </h2>
 
-        <div className="bg-white rounded-lg overflow-hidden">
+        <div className="bg-white rounded-lg overflow-x-auto">
           {/* Variant Names Header */}
-          <div className="grid grid-cols-4 border-b border-gray-200">
+          <div className="grid grid-cols-4 border-b border-gray-200 min-w-[800px]">
             <div className="p-6"></div>
             {actualVariants.map((variant, index) => (
               <div key={index} className="p-6 text-center border-l border-gray-200">
@@ -63,7 +63,7 @@ const VariantsPricingSection = ({ onVariantSelect, variants: propVariants, speci
           {specRows.map((spec, rowIndex) => (
             <div 
               key={rowIndex} 
-              className={`grid grid-cols-4 ${rowIndex !== specRows.length - 1 ? 'border-b border-gray-200' : ''}`}
+              className={`grid grid-cols-4 min-w-[800px] ${rowIndex !== specRows.length - 1 ? 'border-b border-gray-200' : ''}`}
             >
               <div className="p-6 font-inter font-medium text-[16px] text-[#000000]">
                 {spec.label}
@@ -109,7 +109,7 @@ const VariantsPricingSection = ({ onVariantSelect, variants: propVariants, speci
           ))}
 
           {/* Select Buttons Row */}
-          <div className="grid grid-cols-4 bg-white pt-6 pb-8">
+          <div className="grid grid-cols-4 bg-white pt-6 pb-8 min-w-[800px]">
             <div className="p-6"></div>
             {actualVariants.map((variant, index) => (
               <div key={index} className="p-6 flex items-center justify-center border-l border-gray-200">
