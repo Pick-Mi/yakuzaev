@@ -111,7 +111,7 @@ export const ProductBottomNav = ({
                       if (variant) onVariantChange(variant);
                     }}
                   >
-                    <SelectTrigger className="w-[180px] h-[40px] bg-white border-gray-300 font-['Inter'] text-[14px]">
+                    <SelectTrigger className="w-[150px] h-[36px] bg-white border-gray-300 font-['Inter'] text-[12px]">
                       <SelectValue placeholder="Pick your variant" />
                     </SelectTrigger>
                     <SelectContent className="bg-white z-[100]">
