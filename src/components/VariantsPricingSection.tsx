@@ -122,6 +122,9 @@ const VariantsPricingSection = ({ onVariantSelect, variants: propVariants, speci
                     onClick={() => {
                       setSelectedVariantIndex(index);
                       setSelectedColorIndex(0);
+                      if (onVariantSelect) {
+                        onVariantSelect(variant);
+                      }
                     }}
                     className={`w-full mt-6 h-10 font-inter font-medium text-[14px] transition-colors rounded-none ${
                       selectedVariantIndex === index 
@@ -219,6 +222,9 @@ const VariantsPricingSection = ({ onVariantSelect, variants: propVariants, speci
                   onClick={() => {
                     setSelectedVariantIndex(index);
                     setSelectedColorIndex(0);
+                    if (onVariantSelect) {
+                      onVariantSelect(variant);
+                    }
                   }}
                   className={`w-full max-w-[160px] h-12 font-inter font-medium text-[16px] transition-colors rounded-none ${
                     selectedVariantIndex === index 
