@@ -61,7 +61,7 @@ const AboutUs = () => {
                   <img 
                     src={teamMeeting} 
                     alt="Leadership team presenting to employees" 
-                    className="w-full h-[500px] object-cover"
+                  className="w-[362px] h-[500px] object-cover"
                   />
                 </div>
                 <div className="overflow-hidden flex-shrink-0 w-[20%] md:w-[20%]">
