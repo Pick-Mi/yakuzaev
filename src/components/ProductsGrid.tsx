@@ -96,7 +96,7 @@ const ProductsGrid = () => {
   };
 
   const handleExplore = (product: any) => {
-    navigate(`/product/${product.id}`);
+    navigate(`/products/${product.id}`);
   };
 
   // Filter products by search query

@@ -20,7 +20,7 @@ const ProductConfig = () => {
   const getBreadcrumbText = () => {
     if (from) return from;
     const referrer = document.referrer;
-    if (referrer.includes('/product/')) return 'Product Details';
+    if (referrer.includes('/products/')) return 'Product Details';
     if (referrer.includes('/products')) return 'Products';
     return 'Home';
   };

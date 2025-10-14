@@ -96,7 +96,7 @@ const ProductShowcase = () => {
   };
 
   const handleExplore = (product: any) => {
-    navigate(`/product/${product.id}`);
+    navigate(`/products/${product.id}`);
   };
 
   const scrollLeft = () => {
