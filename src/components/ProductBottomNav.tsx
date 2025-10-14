@@ -7,6 +7,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { ChevronDown, ChevronUp } from "lucide-react";
 
 interface ProductBottomNavProps {
   productName: string;
@@ -28,6 +29,7 @@ export const ProductBottomNav = ({
   const [selectedColor, setSelectedColor] = useState<string>("");
   const [isVisible, setIsVisible] = useState(false);
   const isMobile = useIsMobile();
+  const [isExpanded, setIsExpanded] = useState(false);
 
   useEffect(() => {
     let lastScrollY = window.scrollY;
@@ -89,13 +91,25 @@ export const ProductBottomNav = ({
               <div className="font-['Poppins'] font-medium text-[14px] text-gray-800">
                 {productName}
               </div>
-              <div className="font-['Poppins'] font-semibold text-[20px] text-gray-800">
-                {variantPrice}
+              <div className="flex items-center gap-2">
+                <div className="font-['Poppins'] font-semibold text-[20px] text-gray-800">
+                  {variantPrice}
+                </div>
+                <button
+                  onClick={() => setIsExpanded(!isExpanded)}
+                  className="p-1 hover:bg-gray-100 rounded"
+                >
+                  {isExpanded ? (
+                    <ChevronUp className="w-5 h-5 text-gray-800" />
+                  ) : (
+                    <ChevronDown className="w-5 h-5 text-gray-800" />
+                  )}
+                </button>
               </div>
             </div>
 
-            {/* Right Section */}
-            <div className="flex gap-4">
+            {/* Variant and Color Section - Conditionally Shown */}
+            {isExpanded && (
               <div className="flex gap-4">
                 {/* Variant Selector */}
                 <div>
@@ -153,7 +167,7 @@ export const ProductBottomNav = ({
                   </div>
                 </div>
               </div>
-            </div>
+            )}
           </div>
 
           {/* Book Now Button */}
