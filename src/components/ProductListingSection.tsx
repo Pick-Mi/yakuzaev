@@ -30,10 +30,11 @@ const ProductListingSection = () => {
         if (response.error) throw response.error;
 
         const formattedProducts = response.data?.map((product: any) => {
-          let imageUrl = product.image_url;
+          // Prioritize thumbnail, then image_url, then first image from images array
+          let imageUrl = product.thumbnail || product.image_url;
           
-          // Parse images JSON string and get first image
-          if (product.images) {
+          // Parse images JSON string and get first image if no thumbnail
+          if (!imageUrl && product.images) {
             try {
               const parsedImages = typeof product.images === 'string' 
                 ? JSON.parse(product.images) 
@@ -47,7 +48,7 @@ const ProductListingSection = () => {
           }
 
           return {
-            ...product, // Pass all product data
+            ...product, // Pass all product data including thumbnail
             image: imageUrl
           };
         }) || [];
