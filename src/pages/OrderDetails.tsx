@@ -85,13 +85,65 @@ const OrderDetails = () => {
       const orderItemsData = data.order_items_data as any[];
       if (orderItemsData && Array.isArray(orderItemsData) && orderItemsData.length > 0) {
         const productId = data.order_items_data[0].product_id;
+        const colorName = data.order_items_data[0].color;
+        const variantName = data.order_items_data[0].variant;
+        
         if (productId) {
           const {
             data: productData
-          } = await supabase.from('products').select('image_url, images, name, thumbnail').eq('id', productId).single();
+          } = await supabase.from('products').select('image_url, images, name, thumbnail, variants, color_variety').eq('id', productId).maybeSingle();
+          
           if (productData) {
             // Add product image to order_items_data - prioritize thumbnail, then image_url, then images array
             data.order_items_data[0].image_url = productData.thumbnail || productData.image_url || productData.images && productData.images[0]?.url;
+            
+            // Find color hex code from color_variety first (doesn't require variant match)
+            let colorHex = null;
+            if (productData.color_variety && colorName) {
+              const colorVariety = productData.color_variety as any;
+              if (colorVariety.colors && Array.isArray(colorVariety.colors)) {
+                const colorMatch = colorVariety.colors.find((c: any) => 
+                  c.name?.toLowerCase() === colorName.toLowerCase()
+                );
+                if (colorMatch && colorMatch.hex) {
+                  colorHex = colorMatch.hex;
+                  console.log('✓ Color found in color_variety:', colorName, '→', colorHex);
+                }
+              }
+            }
+            
+            // If not found in color_variety, try variants
+            if (!colorHex && productData.variants && Array.isArray(productData.variants) && colorName && variantName) {
+              const variant = (productData.variants as any[]).find((v: any) => v.name === variantName);
+              if (variant && variant.colors && Array.isArray(variant.colors)) {
+                const colorMatch = (variant.colors as any[]).find((c: any) => {
+                  // Color format is like "White (#FFFFFF)" or just "White"
+                  const colorNameInVariant = c.name?.split('(')[0].trim();
+                  return colorNameInVariant?.toLowerCase() === colorName.toLowerCase();
+                });
+                
+                if (colorMatch && colorMatch.name) {
+                  // Extract hex code from format like "White (#FFFFFF)"
+                  const hexMatch = colorMatch.name.match(/#([0-9A-Fa-f]{6})/);
+                  if (hexMatch) {
+                    colorHex = hexMatch[0];
+                    console.log('✓ Color found in variants:', colorName, '→', colorHex);
+                  }
+                }
+              }
+            }
+            
+            // Set the color hex if found
+            if (colorHex) {
+              data.order_items_data[0].color_hex = colorHex;
+            } else {
+              console.warn('✗ No color hex found for:', { 
+                orderId: data.id, 
+                color: colorName, 
+                variant: variantName,
+                productId: productId 
+              });
+            }
           }
         }
       }
