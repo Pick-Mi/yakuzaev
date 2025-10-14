@@ -485,7 +485,7 @@ const Auth = () => {
                 </div>
               )}
 
-              {/* Phone Form Only */}
+              {/* Phone Form */}
               {step === 'phone' && (
                 <div className="space-y-6">
                   <form onSubmit={handlePhoneSubmit} className="space-y-6">
@@ -539,6 +539,87 @@ const Auth = () => {
                     <Link to="/terms" className="underline hover:text-gray-800 font-medium">T&C</Link>
                     {' & '}
                     <Link to="/privacy" className="underline hover:text-gray-800 font-medium">Privacy Policy</Link>
+                  </div>
+                </div>
+              )}
+
+              {/* OTP Form */}
+              {step === 'otp' && (
+                <div className="space-y-6">
+                  <div className="space-y-3 pr-8">
+                    <h1 className="text-3xl font-bold text-gray-900">
+                      Verify Your Number
+                    </h1>
+                    <p className="text-gray-600 text-base leading-relaxed">
+                      Check Your SMS messages. We've sent you the PIN at {countryCode}{phoneNumber.substring(0, 3)}******{phoneNumber.substring(phoneNumber.length - 2)}
+                    </p>
+                    <button
+                      type="button"
+                      className="text-blue-600 text-sm font-medium hover:underline"
+                      onClick={() => {
+                        if (window.confirm('Are you sure you want to change your mobile number? You will need to enter a new number and verify it again.')) {
+                          setStep('phone');
+                          setOtp('');
+                        }
+                      }}
+                    >
+                      Change Mobile Number
+                    </button>
+                  </div>
+
+                  <form onSubmit={handleOTPSubmit} className="space-y-6">
+                    <div className="flex gap-3">
+                      {[0, 1, 2, 3, 4, 5].map((index) => (
+                        <div key={index} className="flex-1">
+                          <Input
+                            type="text"
+                            maxLength={1}
+                            value={otp[index] || ''}
+                            onChange={(e) => {
+                              const value = e.target.value;
+                              if (value.match(/^[0-9]$/)) {
+                                const newOtp = otp.split('');
+                                newOtp[index] = value;
+                                setOtp(newOtp.join(''));
+                                // Auto-focus next input
+                                if (index < 5 && e.target.parentElement?.parentElement) {
+                                  const nextInput = e.target.parentElement.parentElement.children[index + 1]?.querySelector('input') as HTMLInputElement;
+                                  nextInput?.focus();
+                                }
+                              }
+                            }}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Backspace' && !otp[index] && index > 0 && e.target instanceof HTMLInputElement) {
+                                const prevInput = (e.target.parentElement?.parentElement?.children[index - 1] as HTMLElement)?.querySelector('input') as HTMLInputElement;
+                                prevInput?.focus();
+                              }
+                            }}
+                            className="w-full h-14 text-center text-xl bg-white border-2 border-gray-300 focus-visible:border-gray-900"
+                            required={index === 0}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                    
+                    <Button 
+                      type="submit" 
+                      className="w-full h-14 bg-gray-900 hover:bg-gray-800 text-white text-base font-semibold rounded-none"
+                      disabled={loading || otp.length < 6}
+                    >
+                      {loading ? 'Verifying...' : 'Verify'}
+                    </Button>
+                  </form>
+
+                  <div className="text-center text-sm text-gray-600">
+                    Didn't receive SMS?{' '}
+                    <button
+                      type="button"
+                      className="text-blue-600 font-medium hover:underline"
+                      onClick={handlePhoneSubmit}
+                      disabled={otpCooldown > 0}
+                    >
+                      {otpCooldown > 0 ? `Wait ${otpCooldown}s` : 'Resend Code'}
+                    </button>
                   </div>
                 </div>
               )}
