@@ -614,7 +614,7 @@ const Profile = () => {
                   </button>
                 </div>
                 <h2 className="text-2xl font-bold">
-                  {profile.first_name} {profile.last_name ? profile.last_name.charAt(0) : ''}
+                  {profile.first_name} {profile.last_name || ''}
                 </h2>
               </div>
 
