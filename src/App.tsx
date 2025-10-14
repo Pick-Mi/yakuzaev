@@ -74,8 +74,8 @@ const App = () => (
                   <OrderDetails />
                 </ProtectedRoute>
               } />
-              <Route path="/payment/success" element={<PaymentSuccess />} />
-              <Route path="/payment/failure" element={<PaymentFailure />} />
+              <Route path="/payment-success" element={<PaymentSuccess />} />
+              <Route path="/payment-failure" element={<PaymentFailure />} />
               
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
