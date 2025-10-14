@@ -124,7 +124,7 @@ const Header = () => {
           <div className="relative h-8 w-full max-w-[1360px] mx-auto">
             {/* Logo */}
             <Link to="/" className="absolute left-0 top-0 px-4 py-2 h-8 flex items-center justify-center">
-              <img src={logo} alt="Logo" className="h-6 w-auto object-contain" />
+              <img src={logo} alt="Logo" className="h-8 w-auto object-contain" />
             </Link>
             
             {/* Navigation Menu - Desktop */}
