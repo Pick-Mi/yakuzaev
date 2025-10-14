@@ -94,10 +94,8 @@ export const ProductBottomNav = ({
               </div>
             </div>
 
-            {/* Vertical Divider and Right Section */}
+            {/* Right Section */}
             <div className="flex gap-4">
-              <div className="w-[1px] bg-gray-300 self-stretch"></div>
-              
               <div className="flex gap-4">
                 {/* Variant Selector */}
                 <div>
