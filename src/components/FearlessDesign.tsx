@@ -154,7 +154,7 @@ const FearlessDesign = () => {
   }, []);
 
   return (
-    <section className="w-full bg-white py-10 sm:py-16 md:py-20 px-4 sm:px-8 md:px-12 lg:px-[70px]">
+    <section className="w-full py-10 sm:py-16 md:py-20 px-4 sm:px-8 md:px-12 lg:px-[70px]">
       <div className="max-w-[1300px] mx-auto">
         <h2 className="font-medium text-[28px] sm:text-[36px] md:text-[48px] text-[#212121] mb-10 sm:mb-16 md:mb-20">
           Fearless by Design
