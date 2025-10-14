@@ -58,13 +58,13 @@ const ThrillsSection = ({ promoCard }: ThrillsSectionProps) => {
             {/* Buttons */}
             <div className="flex flex-col md:flex-row gap-4">
               <Button 
-                className="bg-white text-black hover:bg-gray-100 px-6 md:px-8 py-4 md:py-6 text-sm md:text-base font-medium w-full md:w-auto"
+                className="bg-white text-black hover:bg-gray-100 px-6 md:px-8 py-4 md:py-6 text-sm md:text-base font-medium w-full md:w-auto rounded-none"
               >
                 Book Now
               </Button>
               <Button 
                 variant="outline"
-                className="border-[#555555] text-white hover:bg-[#2a2a2a] px-6 md:px-8 py-4 md:py-6 text-sm md:text-base font-medium w-full md:w-auto"
+                className="border-[#555555] text-white hover:bg-[#2a2a2a] px-6 md:px-8 py-4 md:py-6 text-sm md:text-base font-medium w-full md:w-auto rounded-none"
               >
                 Explore Neu
               </Button>
