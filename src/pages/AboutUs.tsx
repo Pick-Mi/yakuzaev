@@ -160,7 +160,7 @@ const AboutUs = () => {
             
             <div className="grid md:grid-cols-2 gap-8">
               {/* Battery Innovation Center */}
-              <div className="flex flex-col bg-white p-6">
+              <div className="flex flex-col bg-white p-[20px]">
                 <div className="overflow-hidden mb-6">
                   <img 
                     src={batteryCenter} 
