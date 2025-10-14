@@ -113,14 +113,14 @@ const ProductShowcase = () => {
 
   return (
     <section className="relative bg-[#F8F9F9] py-10 sm:py-16 md:py-20">
-      <div className="mx-auto px-4 sm:px-8 md:px-12 lg:px-[70px]">
+      <div className="mx-auto px-0 sm:px-8 md:px-12 lg:px-[70px]">
         {/* Header */}
-        <h2 className="font-['Inter'] font-medium text-[28px] sm:text-[36px] md:text-[48px] text-[#12141d] mb-10 sm:mb-16 md:mb-20">
+        <h2 className="font-['Inter'] font-medium text-[28px] sm:text-[36px] md:text-[48px] text-[#12141d] mb-10 sm:mb-16 md:mb-20 px-4 sm:px-0">
           Experience the Next Generation of Riding
         </h2>
 
         {/* Tab Navigation */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-10 sm:mb-16 md:mb-20 gap-4">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-10 sm:mb-16 md:mb-20 gap-4 px-4 sm:px-0">
           <div className="flex gap-2 sm:gap-4 md:gap-5 overflow-x-auto pb-2 w-full sm:w-auto">
             <button
               onClick={() => setActiveCategory(null)}
@@ -166,8 +166,8 @@ const ProductShowcase = () => {
         </div>
 
         {/* Product Cards - Horizontal scroll */}
-        <div ref={scrollContainerRef} className="overflow-x-auto pb-4 scroll-smooth [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-          <div className="flex gap-4 sm:gap-6 md:gap-[35px] pb-4 min-w-max">
+        <div ref={scrollContainerRef} className="overflow-x-auto pb-4 scroll-smooth [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] pl-4 sm:pl-0">
+          <div className="flex gap-4 sm:gap-6 md:gap-[35px] pb-4 pr-4 sm:pr-0">
             {loading ? (
               <div className="w-full text-center py-8">
                 <p className="text-[#212121] opacity-80">Loading products...</p>
