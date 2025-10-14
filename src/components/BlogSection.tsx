@@ -41,9 +41,9 @@ const BlogSection = () => {
             Compelling reasons
           </h2>
           
-          <div className="flex flex-col sm:flex-row gap-6 sm:gap-8 md:gap-[40px] overflow-x-auto pb-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+          <div className="flex gap-6 sm:gap-8 md:gap-[40px] overflow-x-auto pb-4">
             {blogs.map((blog) => (
-              <div key={blog.id} className="bg-white w-full sm:w-[300px] md:w-[350px] lg:w-[407px] h-auto md:h-[388px] shrink-0 overflow-hidden">
+              <div key={blog.id} className="bg-white w-[280px] sm:w-[300px] md:w-[350px] lg:w-[407px] h-auto md:h-[388px] shrink-0 overflow-hidden">
                 <div className="relative w-full h-[180px] sm:h-[200px] md:h-[244px] bg-[#d9d9d9]">
                   <img 
                     src={blog.featured_image || "/placeholder.svg"} 
