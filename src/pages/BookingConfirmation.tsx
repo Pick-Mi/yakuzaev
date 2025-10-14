@@ -887,9 +887,8 @@ const BookingConfirmation = () => {
                 )}
               </div>
 
-              {/* Name and Address Form - Show after verification */}
-              {isVerified && (
-                <div className="space-y-6">
+              {/* Name and Address Form - Always visible, disabled until verified */}
+              <div className="space-y-6">
                   <h3 className="text-[18px] font-semibold">
                     Enter your name and address:
                   </h3>
@@ -1228,7 +1227,7 @@ const BookingConfirmation = () => {
 
                   </div>
                 </div>
-              )}
+              
 
               {/* Shipping Section */}
               <div className="space-y-6 pt-8 border-t">
