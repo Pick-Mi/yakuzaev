@@ -46,55 +46,55 @@ const PromoSection = () => {
   }, []);
 
   return (
-    <section className="w-full bg-[#f8f9f9] relative py-10 sm:py-12 md:py-0 min-h-[400px] sm:min-h-[500px] md:h-[612px] overflow-hidden">
-      <div className="relative bg-white mx-auto my-4 sm:my-6 md:my-0 md:h-[522px] overflow-hidden md:top-[45px] md:w-[1300px] max-w-[95%] p-6 sm:p-8 md:p-0 flex flex-col items-center md:items-start md:block">
+    <section className="w-full bg-[#f8f9f9] relative py-8 sm:py-10 lg:py-0 min-h-[500px] sm:min-h-[600px] lg:h-[612px] overflow-hidden">
+      <div className="relative bg-white mx-auto my-4 sm:my-6 lg:my-0 lg:h-[522px] overflow-hidden lg:top-[45px] lg:w-[1300px] max-w-[95%] p-6 sm:p-8 lg:p-0 flex flex-col items-center lg:items-start lg:block">
         {/* Main Title */}
-        <h2 className="font-['Inter'] font-medium leading-[1.4] sm:leading-[1.5] md:leading-[54px] md:absolute md:left-[40px] text-[#212121] text-[20px] sm:text-[24px] md:text-[28px] md:top-[51px] md:w-[267px] mb-6 md:mb-0">
+        <h2 className="font-['Inter'] font-medium leading-[1.4] sm:leading-[1.5] lg:leading-[54px] lg:absolute lg:left-[40px] text-[#212121] text-[18px] sm:text-[22px] md:text-[26px] lg:text-[28px] lg:top-[51px] lg:w-[267px] mb-4 sm:mb-6 lg:mb-0 text-center lg:text-left">
           {title}
         </h2>
         
         {/* Price */}
-        <div className="font-['Inter'] font-extrabold leading-[1.3] sm:leading-[1.4] md:leading-[54px] md:absolute md:left-[167.5px] md:-translate-x-1/2 text-[#212121] text-[32px] sm:text-[40px] md:text-[48px] text-center md:text-left md:whitespace-nowrap md:top-[217px] mb-6 md:mb-0">
+        <div className="font-['Inter'] font-extrabold leading-[1.3] sm:leading-[1.4] lg:leading-[54px] lg:absolute lg:left-[167.5px] lg:-translate-x-1/2 text-[#212121] text-[28px] sm:text-[36px] md:text-[44px] lg:text-[48px] text-center lg:text-left lg:whitespace-nowrap lg:top-[217px] mb-4 sm:mb-6 lg:mb-0">
           {subtitle}
         </div>
         
         {/* Features */}
-        <div className="flex flex-wrap sm:flex-nowrap gap-3 sm:gap-[20px] items-center justify-center md:justify-start md:absolute md:left-[40px] md:top-[337px] mb-6 md:mb-0">
-          <span className="font-['Poppins'] leading-normal text-[#4b4f54] opacity-50 text-[13px] sm:text-[14px] md:text-[15.932px] whitespace-nowrap">
+        <div className="flex flex-wrap sm:flex-nowrap gap-3 sm:gap-[20px] items-center justify-center lg:justify-start lg:absolute lg:left-[40px] lg:top-[337px] mb-4 sm:mb-6 lg:mb-0">
+          <span className="font-['Poppins'] leading-normal text-[#4b4f54] opacity-50 text-[12px] sm:text-[14px] md:text-[15px] lg:text-[15.932px] whitespace-nowrap">
             {feature1}
           </span>
           <div className="relative h-[14.936px] w-0">
             <div className="absolute bottom-0 left-[-0.5px] right-[-0.5px] top-0 w-[1px] bg-[#B5B5B4]"></div>
           </div>
-          <span className="font-['Poppins'] leading-normal text-[#212121] opacity-50 text-[13px] sm:text-[14px] md:text-[15.932px] whitespace-nowrap">
+          <span className="font-['Poppins'] leading-normal text-[#212121] opacity-50 text-[12px] sm:text-[14px] md:text-[15px] lg:text-[15.932px] whitespace-nowrap">
             {feature2}
           </span>
         </div>
         
         {/* Action Buttons */}
-        <div className="flex gap-3 sm:gap-[15px] items-center justify-center md:justify-start md:absolute md:left-[calc(50%-434.5px)] md:-translate-x-1/2 md:top-[415px] w-full sm:w-auto md:w-[351px] mb-6 md:mb-0">
+        <div className="flex gap-3 sm:gap-[15px] items-center justify-center lg:justify-start lg:absolute lg:left-[calc(50%-434.5px)] lg:-translate-x-1/2 lg:top-[415px] w-full sm:w-auto lg:w-[351px] mb-6 lg:mb-0">
           <Link
             to="/products"
-            className="flex-1 sm:flex-1 bg-black h-[45px] sm:h-[50px] md:h-[55px] flex items-center justify-center overflow-hidden transition-colors hover:bg-[#333]"
+            className="flex-1 sm:flex-1 bg-black h-[42px] sm:h-[48px] lg:h-[55px] flex items-center justify-center overflow-hidden transition-colors hover:bg-[#333]"
           >
-            <span className="font-['Poppins'] font-medium leading-normal text-white text-[14px] sm:text-[15px] md:text-[16px] whitespace-nowrap">
+            <span className="font-['Poppins'] font-medium leading-normal text-white text-[13px] sm:text-[15px] lg:text-[16px] whitespace-nowrap">
               Book Now
             </span>
           </Link>
           <Link
             to="/products"
-            className="flex-1 sm:flex-1 bg-[#f8f9f9] h-[45px] sm:h-[50px] md:h-[55px] flex items-center justify-center overflow-hidden transition-colors hover:bg-[#e8e9ea]"
+            className="flex-1 sm:flex-1 bg-[#f8f9f9] h-[42px] sm:h-[48px] lg:h-[55px] flex items-center justify-center overflow-hidden transition-colors hover:bg-[#e8e9ea]"
           >
-            <span className="font-['Inter'] font-medium leading-normal text-black text-[12px] sm:text-[13px] md:text-[14px] whitespace-nowrap">
+            <span className="font-['Inter'] font-medium leading-normal text-black text-[11px] sm:text-[13px] lg:text-[14px] whitespace-nowrap">
               Explore 
             </span>
           </Link>
         </div>
         
         {/* Product Images Grid */}
-        <div className="grid grid-cols-2 gap-2 sm:gap-3 w-full md:block md:absolute md:inset-0">
+        <div className="grid grid-cols-2 gap-2 sm:gap-3 md:gap-4 w-full lg:block lg:absolute lg:inset-0">
           {/* Main Image - Top Right */}
-          <div className="col-span-2 sm:col-span-1 md:absolute bg-[#d9d9d9] h-[200px] sm:h-[250px] md:h-[288px] md:right-0 md:top-0 sm:w-full md:w-[572px]">
+          <div className="col-span-2 sm:col-span-1 lg:absolute bg-[#d9d9d9] h-[180px] sm:h-[220px] md:h-[260px] lg:h-[288px] lg:right-0 lg:top-0 sm:w-full lg:w-[572px]">
             <img
               src={image2}
               alt="Main Scooter"
@@ -103,7 +103,7 @@ const PromoSection = () => {
           </div>
           
           {/* Top Center Image - Hidden on mobile, visible on tablet */}
-          <div className="hidden sm:block md:absolute bg-[#d9d9d9] h-[250px] md:h-[288px] sm:w-full md:left-[calc(50%-49.5px)] md:-translate-x-1/2 md:top-0 md:w-[215px] md:overflow-hidden">
+          <div className="hidden sm:block lg:absolute bg-[#d9d9d9] h-[220px] md:h-[260px] lg:h-[288px] sm:w-full lg:left-[calc(50%-49.5px)] lg:-translate-x-1/2 lg:top-0 lg:w-[215px] lg:overflow-hidden">
             <img
               src={image1}
               alt="Scooter Front"
@@ -112,7 +112,7 @@ const PromoSection = () => {
           </div>
           
           {/* Bottom Center Image */}
-          <div className="md:absolute bg-[#d9d9d9] h-[150px] sm:h-[180px] md:bottom-0 md:h-[214px] md:left-[calc(50%+39.5px)] md:-translate-x-1/2 md:w-[393px]">
+          <div className="lg:absolute bg-[#d9d9d9] h-[140px] sm:h-[170px] md:h-[190px] lg:bottom-0 lg:h-[214px] lg:left-[calc(50%+39.5px)] lg:-translate-x-1/2 lg:w-[393px]">
             <img
               src={image3}
               alt="Scooter Side View"
@@ -121,7 +121,7 @@ const PromoSection = () => {
           </div>
           
           {/* Bottom Right Image */}
-          <div className="md:absolute bg-[#d9d9d9] h-[150px] sm:h-[180px] md:bottom-0 md:h-[214px] md:right-0 md:w-[394px]">
+          <div className="lg:absolute bg-[#d9d9d9] h-[140px] sm:h-[170px] md:h-[190px] lg:bottom-0 lg:h-[214px] lg:right-0 lg:w-[394px]">
             <img
               src={image4}
               alt="Scooter Detail"
