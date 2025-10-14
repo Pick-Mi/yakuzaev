@@ -153,7 +153,7 @@ const BecomeDealer = () => {
 
         {/* Official Dealer Section */}
         <section className="p-[20px] md:py-16 md:px-4">
-          <div className="container mx-auto max-w-7xl">
+          <div className="container mx-auto max-w-7xl p-0">
             <h2 className="text-5xl md:text-6xl font-bold mb-16">Official dealer today!</h2>
             
             {/* Two Column Layout */}
