@@ -342,13 +342,13 @@ const OrderDetails = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Content */}
-          <div className="lg:col-span-2 space-y-8 bg-white rounded-lg p-6">
+          <div className="lg:col-span-2 space-y-8 bg-white p-6">
             <h1 className="text-3xl font-bold">Your Orders</h1>
 
             {/* Product Card */}
             <div className="bg-white border-b p-6">
               <div className="flex gap-6">
-                <div className="w-52 h-52 bg-muted rounded-lg flex items-center justify-center overflow-hidden flex-shrink-0">
+                <div className="w-52 h-52 bg-muted flex items-center justify-center overflow-hidden flex-shrink-0">
                   <img 
                     src={firstItem.image_url || heroScooter} 
                     alt={firstItem.name || 'Product'} 
@@ -428,7 +428,7 @@ const OrderDetails = () => {
           {/* Right Sidebar */}
           <div className="space-y-6">
             {/* Delivery Details */}
-            <div className="bg-white border rounded-lg p-6">
+            <div className="bg-white border p-6">
               <h3 className="text-lg font-bold mb-6">Delivery details</h3>
               
               <div className="space-y-4">
@@ -458,7 +458,7 @@ const OrderDetails = () => {
             </div>
 
             {/* Price Details */}
-            <div className="bg-white border rounded-lg p-6">
+            <div className="bg-white border p-6">
               <h3 className="text-lg font-bold mb-6">Delivery details</h3>
               
               <div className="space-y-3">
