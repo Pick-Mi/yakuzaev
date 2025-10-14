@@ -47,7 +47,7 @@ const ThrillsSection = ({ promoCard }: ThrillsSectionProps) => {
             {/* Features List */}
             <div className="flex flex-col md:flex-row gap-4 md:gap-12 mb-10">
               {features.map((feature, index) => (
-                <div key={index} className="text-center md:text-left">
+                <div key={index} className="text-left">
                   <p className="font-inter font-normal text-sm text-[#b0b0b0]">
                     {typeof feature === 'string' ? feature : feature.label || feature.text}
                   </p>
