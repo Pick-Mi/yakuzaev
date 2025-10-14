@@ -7,6 +7,7 @@ import NotificationBar from "./NotificationBar";
 import menuIcon from "@/assets/menu-icon.svg";
 import cartIcon from "@/assets/cart-icon.svg";
 import profileIcon from "@/assets/profile-icon.svg";
+import logo from "@/assets/logo.svg";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { removeBackground, loadImageFromUrl } from "@/utils/backgroundRemoval";
@@ -123,11 +124,7 @@ const Header = () => {
           <div className="relative h-8 w-full max-w-[1360px] mx-auto">
             {/* Logo */}
             <Link to="/" className="absolute left-0 top-0 px-4 py-2 h-8 flex items-center justify-center">
-              {logoUrl ? (
-                <img src={logoUrl} alt="Logo" className="h-8 w-auto object-contain" />
-              ) : (
-                <span className={`font-medium text-sm transition-colors ${shouldShowFixedHeader ? 'text-gray-900' : 'text-white'}`}>LOGO</span>
-              )}
+              <img src={logo} alt="Logo" className="h-6 w-auto object-contain" />
             </Link>
             
             {/* Navigation Menu - Desktop */}
