@@ -112,8 +112,8 @@ const ProductShowcase = () => {
   };
 
   return (
-    <section className="relative bg-[#F8F9F9] py-10 sm:py-16 md:py-20">
-      <div className="mx-auto px-0 sm:px-8 md:px-12 lg:px-[70px]">
+    <section className="relative bg-[#F8F9F9] py-10 sm:py-16 md:py-20 overflow-hidden">
+      <div className="mx-auto sm:px-8 md:px-12 lg:px-[70px]">
         {/* Header */}
         <h2 className="font-['Inter'] font-medium text-[28px] sm:text-[36px] md:text-[48px] text-[#12141d] mb-10 sm:mb-16 md:mb-20 px-4 sm:px-0">
           Experience the Next Generation of Riding
@@ -166,8 +166,8 @@ const ProductShowcase = () => {
         </div>
 
         {/* Product Cards - Horizontal scroll */}
-        <div ref={scrollContainerRef} className="overflow-x-auto pb-4 scroll-smooth [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] -mx-4 sm:mx-0 pl-4 sm:pl-0">
-          <div className="flex gap-4 sm:gap-6 md:gap-[35px] pb-4 pr-4 sm:pr-0">
+        <div ref={scrollContainerRef} className="overflow-x-auto pb-4 scroll-smooth [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] pl-4 sm:pl-0">
+          <div className="flex gap-4 sm:gap-6 md:gap-[35px] pb-4">
             {loading ? (
               <div className="w-full text-center py-8">
                 <p className="text-[#212121] opacity-80">Loading products...</p>
@@ -180,7 +180,7 @@ const ProductShowcase = () => {
               products.map((product: any) => (
                 <div
                   key={product.id}
-                  className="bg-white flex flex-col gap-4 sm:gap-[25px] pb-4 sm:pb-5 w-[calc(100vw-2rem)] sm:w-[350px] md:w-[420px] flex-shrink-0"
+                  className="bg-white flex flex-col gap-4 sm:gap-[25px] pb-4 sm:pb-5 w-[85vw] sm:w-[350px] md:w-[420px] flex-shrink-0 last:mr-4 sm:last:mr-0"
                 >
                   {/* Product Image */}
                   <div className="w-full h-[200px] sm:h-[220px] md:h-[270px] bg-[#b7b8b8] flex items-center justify-center overflow-hidden">
