@@ -313,33 +313,28 @@ const Orders = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gray-50">
       <Header />
       
-      <div className={`container mx-auto ${isMobile ? 'px-0 pt-[120px]' : 'px-4 pt-40'} pb-8`}>
+      <div className={`container mx-auto ${isMobile ? 'px-0 pt-[60px]' : 'px-4 pt-40'} pb-8`}>
         {isMobile ? (
           // Mobile Layout
           <div className="space-y-0">
             {/* Breadcrumb Header */}
-            <div className="fixed top-[60px] left-0 right-0 z-40 bg-white px-4 py-4 border-b border-gray-200">
+            <div className="fixed top-[60px] left-0 right-0 z-40 bg-white px-4 py-4">
               <div className="flex items-center gap-2 text-sm text-gray-600">
                 <button onClick={() => navigate('/profile')} className="hover:text-gray-900">
                   Profile
                 </button>
                 <ChevronRight className="w-4 h-4" />
-                <span className="text-gray-900 font-medium">Order</span>
+                <span className="text-gray-900 font-semibold">Order List</span>
               </div>
             </div>
 
-            {/* My Orders Title */}
-            <div className="bg-white px-4 py-6 mt-[52px]">
-              <h1 className="text-4xl font-bold text-gray-900">My Orders</h1>
-            </div>
-
             {/* Orders List */}
-            <div className="bg-white">
+            <div className="bg-gray-50 mt-[52px] px-4 py-6 space-y-6">
               {filteredOrders.length === 0 ? (
-                <div className="text-center py-12 px-4">
+                <div className="text-center py-12 px-4 bg-white rounded-lg">
                   <Package className="w-16 h-16 mx-auto text-gray-400 mb-4" />
                   <h2 className="text-xl font-semibold mb-2">
                     {orders.length === 0 ? "No orders yet" : "No orders found"}
@@ -356,17 +351,17 @@ const Orders = () => {
                   )}
                 </div>
               ) : (
-                <div className="space-y-0">
+                <>
                   {filteredOrders.map((order) => {
                     const orderItems = order.order_items_data || [];
                     const firstItem = orderItems[0];
                     const deliveryDate = order.estimated_delivery_date || order.created_at;
                     
                     return (
-                      <div key={order.id} className="border-b border-gray-200 last:border-0">
+                      <div key={order.id} className="bg-white rounded-lg p-4">
                         {/* Delivery Date Header */}
-                        <div className="px-4 pt-6 pb-4">
-                          <h3 className="font-bold text-lg text-gray-900">
+                        <div className="mb-4">
+                          <h3 className="font-bold text-xl text-gray-900">
                             Delivered on {format(new Date(deliveryDate), 'MMM dd, yyyy')}
                           </h3>
                         </div>
@@ -374,10 +369,10 @@ const Orders = () => {
                         {/* Product Card */}
                         <button
                           onClick={() => handleViewOrder(order.id)}
-                          className="w-full px-4 pb-6 flex gap-4 items-start text-left"
+                          className="w-full flex gap-4 items-start text-left"
                         >
                           {/* Product Image */}
-                          <div className="w-24 h-24 flex-shrink-0 bg-gray-100 overflow-hidden">
+                          <div className="w-[188px] h-[188px] flex-shrink-0 bg-gray-100 rounded-lg overflow-hidden">
                             {firstItem?.image_url ? (
                               <img 
                                 src={firstItem.image_url} 
@@ -392,15 +387,15 @@ const Orders = () => {
                           </div>
 
                           {/* Product Details */}
-                          <div className="flex-1">
-                            <h4 className="font-bold text-xl mb-2 text-gray-900">
+                          <div className="flex-1 min-w-0">
+                            <h4 className="font-bold text-2xl mb-3 text-gray-900">
                               {firstItem?.product_name || firstItem?.name || 'Product'}
                             </h4>
-                            <div className="inline-block px-3 py-1 bg-orange-100 text-orange-500 text-sm font-semibold mb-2">
+                            <div className="inline-block px-4 py-1.5 bg-orange-100 text-orange-500 text-base font-semibold mb-3 rounded">
                               {order.order_type === 'test_ride' ? 'Book a Bike' : order.order_type === 'purchase' ? 'Book a Buy' : 'Order'}
                             </div>
                             {firstItem?.variant && (
-                              <p className="text-base text-gray-700 mb-1">
+                              <p className="text-base text-gray-700 mb-2">
                                 Variant : <span className="font-semibold">{firstItem.variant}</span>
                               </p>
                             )}
@@ -408,7 +403,7 @@ const Orders = () => {
                               <span className="text-gray-700">Colour :</span>
                               <span className="font-semibold text-gray-900">{firstItem?.color || 'Black'}</span>
                               <div 
-                                className="w-5 h-5 border border-gray-300"
+                                className="w-8 h-8 border border-gray-300 rounded"
                                 style={{ backgroundColor: firstItem?.color_hex || '#000000' }}
                               ></div>
                             </div>
@@ -422,7 +417,7 @@ const Orders = () => {
                       </div>
                     );
                   })}
-                </div>
+                </>
               )}
             </div>
           </div>
