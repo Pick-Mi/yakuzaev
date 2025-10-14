@@ -121,12 +121,11 @@ const VariantsPricingSection = ({ onVariantSelect, variants: propVariants, speci
                   onClick={() => {
                     setSelectedVariantIndex(index);
                     setSelectedColorIndex(0);
-                    onVariantSelect?.(variant);
                   }}
-                  className={`w-full max-w-[160px] h-12 font-inter font-medium text-[16px] transition-colors ${
+                  className={`w-full max-w-[160px] h-12 font-inter font-medium text-[16px] transition-colors rounded-none ${
                     selectedVariantIndex === index 
                       ? 'bg-[#000000] text-white' 
-                      : 'bg-transparent text-[#000000] hover:bg-[#000000] hover:text-white'
+                      : 'bg-[#F8F9F9] text-[#000000] hover:bg-[#000000] hover:text-white'
                   }`}
                 >
                   {selectedVariantIndex === index ? 'Selected' : 'Select'}
@@ -180,7 +179,7 @@ const VariantsPricingSection = ({ onVariantSelect, variants: propVariants, speci
             
             <Button 
               onClick={() => onVariantSelect?.(selectedVariant)}
-              className="bg-[#000000] text-white hover:bg-gray-800 px-8 h-12 font-inter font-medium text-[16px]"
+              className="bg-[#000000] text-white hover:bg-gray-800 px-8 h-12 font-inter font-medium text-[16px] rounded-none"
             >
               Continue
             </Button>
