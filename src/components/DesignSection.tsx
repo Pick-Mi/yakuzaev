@@ -27,7 +27,7 @@ const DesignSection = ({ designFeatures = [] }: DesignSectionProps) => {
         
         <div className="flex flex-col gap-8">
           {/* First Row - Two Main Cards */}
-          <div className="flex gap-8">
+          <div className="flex flex-col md:flex-row gap-8">
             {/* First Design Card - Dynamic from Database */}
             <div 
               className="h-[460px] flex-[63] relative overflow-hidden"
@@ -64,7 +64,7 @@ const DesignSection = ({ designFeatures = [] }: DesignSectionProps) => {
           </div>
 
           {/* Second Row - Three Feature Cards */}
-          <div className="flex gap-8">
+          <div className="flex flex-col md:flex-row gap-8">
             {/* Third Design Card - Dynamic from Database */}
             <div className="bg-[#e8ebf0] h-[242px] flex-1 relative overflow-hidden p-8">
               <div className="flex flex-col gap-6">
