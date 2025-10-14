@@ -415,6 +415,30 @@ const OrderDetails = () => {
                   </Badge>
                 </div>
 
+                {/* PayU Transaction Status */}
+                {order.payment_method === 'payu' && (
+                  <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded">
+                    <div className="flex items-start gap-2">
+                      <Info className="w-4 h-4 text-yellow-600 mt-0.5" />
+                      <div className="text-sm">
+                        <p className="font-semibold text-yellow-800">PayU Transaction Status</p>
+                        {transaction ? (
+                          <div className="mt-2 space-y-1 text-yellow-700">
+                            <p>Transaction ID: {transaction.transaction_id}</p>
+                            <p>Payment ID: {transaction.payment_id}</p>
+                            <p>Status: {transaction.status}</p>
+                            <p>Amount: ₹{transaction.amount}</p>
+                          </div>
+                        ) : (
+                          <p className="mt-1 text-yellow-700">
+                            No PayU transaction found for this order. Payment may not have been completed or webhook not received.
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
                 <div className="mt-6 pt-4">
                   <div className="flex items-center justify-between text-base mb-6">
                     <span className="font-semibold">Paid by</span>
