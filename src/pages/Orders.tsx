@@ -92,7 +92,7 @@ const Orders = () => {
                 (productData.images && productData.images[0]?.url);
               order.order_items_data[0].product_name = order.order_items_data[0].product_name || productData.name;
               
-              // Find color hex code from color_variety first
+              // Find color hex code from color_variety first (doesn't require variant match)
               let colorHex = null;
               if (productData.color_variety && colorName) {
                 const colorVariety = productData.color_variety as any;
@@ -102,6 +102,7 @@ const Orders = () => {
                   );
                   if (colorMatch && colorMatch.hex) {
                     colorHex = colorMatch.hex;
+                    console.log('✓ Color found in color_variety:', colorName, '→', colorHex);
                   }
                 }
               }
@@ -121,6 +122,7 @@ const Orders = () => {
                     const hexMatch = colorMatch.name.match(/#([0-9A-Fa-f]{6})/);
                     if (hexMatch) {
                       colorHex = hexMatch[0];
+                      console.log('✓ Color found in variants:', colorName, '→', colorHex);
                     }
                   }
                 }
@@ -129,6 +131,13 @@ const Orders = () => {
               // Set the color hex if found
               if (colorHex) {
                 order.order_items_data[0].color_hex = colorHex;
+              } else {
+                console.warn('✗ No color hex found for:', { 
+                  orderId: order.id, 
+                  color: colorName, 
+                  variant: variantName,
+                  productId: productId 
+                });
               }
             }
           }
