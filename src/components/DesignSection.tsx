@@ -23,7 +23,7 @@ const DesignSection = ({ designFeatures = [] }: DesignSectionProps) => {
     <section className="bg-[#F8F9F9] w-full py-12 px-4">
       <div className="max-w-[1300px] mx-auto">
         {/* Heading */}
-        <h2 className="font-inter font-semibold text-[48px] text-[#000000] mb-8">Design</h2>
+        <h2 className="font-inter font-semibold text-2xl md:text-4xl lg:text-[48px] text-[#000000] mb-8">Design</h2>
         
         <div className="flex flex-col gap-8">
           {/* First Row - Two Main Cards */}
@@ -40,8 +40,8 @@ const DesignSection = ({ designFeatures = [] }: DesignSectionProps) => {
             >
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
               <div className="absolute left-8 top-8 flex flex-col gap-3 text-white z-10">
-                <p className="font-inter font-medium text-[28px]">{firstCard?.title || firstCard?.text || 'New Stylish Bike'}</p>
-                <p className="font-inter font-normal text-[22px] opacity-70">{firstCard?.subtitle || 'Elegance engineered for speed'}</p>
+                <p className="font-inter font-medium text-lg md:text-2xl lg:text-[28px]">{firstCard?.title || firstCard?.text || 'New Stylish Bike'}</p>
+                <p className="font-inter font-normal text-sm md:text-lg lg:text-[22px] opacity-70">{firstCard?.subtitle || 'Elegance engineered for speed'}</p>
               </div>
             </div>
             
@@ -57,8 +57,8 @@ const DesignSection = ({ designFeatures = [] }: DesignSectionProps) => {
             >
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
               <div className="absolute left-8 top-8 flex flex-col gap-3 text-white z-10">
-                <p className="font-inter font-medium text-[28px]">{secondCard?.title || secondCard?.text || 'Premium Seat'}</p>
-                <p className="font-inter font-normal text-[22px] opacity-70">{secondCard?.subtitle || 'Comfort engineered for long rides'}</p>
+                <p className="font-inter font-medium text-lg md:text-2xl lg:text-[28px]">{secondCard?.title || secondCard?.text || 'Premium Seat'}</p>
+                <p className="font-inter font-normal text-sm md:text-lg lg:text-[22px] opacity-70">{secondCard?.subtitle || 'Comfort engineered for long rides'}</p>
               </div>
             </div>
           </div>
@@ -74,10 +74,10 @@ const DesignSection = ({ designFeatures = [] }: DesignSectionProps) => {
                   <Box className="w-8 h-8 text-[#5d637d]" strokeWidth={1.5} />
                 )}
                 <div className="flex flex-col gap-3">
-                  <p className="font-inter font-medium text-[24px] text-[#5d637d]">
+                  <p className="font-inter font-medium text-lg md:text-xl lg:text-[24px] text-[#5d637d]">
                     {thirdCard?.title || thirdCard?.text || 'Fast-Charge Battery'}
                   </p>
-                  <p className="font-inter font-normal text-[20px] text-[#5d637d] opacity-60">
+                  <p className="font-inter font-normal text-sm md:text-base lg:text-[20px] text-[#5d637d] opacity-60">
                     {thirdCard?.subtitle || 'Get charged in minutes'}
                   </p>
                 </div>
@@ -96,8 +96,8 @@ const DesignSection = ({ designFeatures = [] }: DesignSectionProps) => {
             >
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
               <div className="flex flex-col gap-3 text-white relative z-10">
-                <p className="font-inter font-medium text-[24px]">{fourthCard?.title || fourthCard?.text || 'LED Matrix Headlight'}</p>
-                <p className="font-inter font-normal text-[20px] opacity-70">{fourthCard?.subtitle || 'Brightness that leads the way'}</p>
+                <p className="font-inter font-medium text-lg md:text-xl lg:text-[24px]">{fourthCard?.title || fourthCard?.text || 'LED Matrix Headlight'}</p>
+                <p className="font-inter font-normal text-sm md:text-base lg:text-[20px] opacity-70">{fourthCard?.subtitle || 'Brightness that leads the way'}</p>
               </div>
             </div>
 
@@ -110,10 +110,10 @@ const DesignSection = ({ designFeatures = [] }: DesignSectionProps) => {
                   <Box className="w-12 h-12 text-[#5d637d]" strokeWidth={1.5} />
                 )}
                 <div className="flex flex-col gap-3">
-                  <p className="font-inter font-medium text-[24px] text-[#5d637d]">
+                  <p className="font-inter font-medium text-lg md:text-xl lg:text-[24px] text-[#5d637d]">
                     {fifthCard?.title || fifthCard?.text || 'Smart Boot Space'}
                   </p>
-                  <p className="font-inter font-normal text-[20px] text-[#5d637d] opacity-60">
+                  <p className="font-inter font-normal text-sm md:text-base lg:text-[20px] text-[#5d637d] opacity-60">
                     {fifthCard?.subtitle || 'Compact design, ample room'}
                   </p>
                 </div>
