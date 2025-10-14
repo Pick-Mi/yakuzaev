@@ -639,49 +639,6 @@ const Profile = () => {
               <ChevronRight className="w-5 h-5 text-gray-400" />
             </button>
 
-            {/* Content Area */}
-            <div className="px-4 py-6 bg-white min-h-[300px]">
-              {activeSection === "address" && (
-                <div className="space-y-6">
-                  <h2 className="text-xl font-bold">Manage Addresses</h2>
-                  {addresses.map((address) => (
-                    <div key={address.id} className="bg-gray-50 p-4 relative">
-                      <div className="flex items-center justify-between mb-3">
-                        <span className="bg-gray-200 px-3 py-1 text-xs font-semibold text-gray-700 uppercase">{address.address_type}</span>
-                        <div className="flex gap-2">
-                          <button onClick={() => openAddressDialog(address)} className="text-blue-600 p-1">
-                            <Edit className="w-4 h-4" />
-                          </button>
-                          <button onClick={() => deleteAddress(address.id)} className="text-red-600 p-1">
-                            <Trash2 className="w-4 h-4" />
-                          </button>
-                        </div>
-                      </div>
-                      <div className="mb-2">
-                        <h3 className="font-bold text-gray-900">{address.name} {address.phone}</h3>
-                      </div>
-                      <div className="text-sm text-gray-700">
-                        <p>{address.address}, {address.locality}, {address.city}, {address.state} - {address.pincode}</p>
-                      </div>
-                    </div>
-                  ))}
-                  <button 
-                    className="flex items-center gap-2 text-orange-500 font-semibold"
-                    onClick={() => openAddressDialog()}
-                  >
-                    <span className="text-xl">+</span>
-                    <span>ADD A NEW ADDRESS</span>
-                  </button>
-                </div>
-              )}
-              
-              {activeSection === "pan" && (
-                <div>
-                  <h2 className="text-xl font-bold mb-4">ID Proof</h2>
-                  <p className="text-gray-600">PAN card information management coming soon.</p>
-                </div>
-              )}
-            </div>
 
             {/* Logout Button - Fixed at bottom */}
             <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200">
