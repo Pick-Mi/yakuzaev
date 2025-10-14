@@ -7,41 +7,13 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { format } from "date-fns";
-import { 
-  Package, 
-  CheckCircle, 
-  User,
-  ChevronRight,
-  Home,
-  MessageCircle,
-  XCircle,
-  ChevronDown,
-  Info,
-  Download
-} from "lucide-react";
+import { Package, CheckCircle, User, ChevronRight, Home, MessageCircle, XCircle, ChevronDown, Info, Download } from "lucide-react";
 import Header from "@/components/Header";
 import PayUPayment from "@/components/PayUPayment";
 import heroScooter from "@/assets/hero-scooter.png";
-
 interface Transaction {
   id: string;
   payment_id: string;
@@ -53,7 +25,6 @@ interface Transaction {
   customer_name: string;
   customer_email: string;
 }
-
 interface Order {
   id: string;
   created_at: string;
@@ -75,12 +46,19 @@ interface Order {
   customer_id?: string;
   customer_name?: string;
 }
-
 const OrderDetails = () => {
-  const { id } = useParams<{ id: string }>();
-  const { user } = useAuth();
+  const {
+    id
+  } = useParams<{
+    id: string;
+  }>();
+  const {
+    user
+  } = useAuth();
   const navigate = useNavigate();
-  const { toast } = useToast();
+  const {
+    toast
+  } = useToast();
   const [order, setOrder] = useState<Order | null>(null);
   const [transaction, setTransaction] = useState<Transaction | null>(null);
   const [loading, setLoading] = useState(true);
@@ -89,73 +67,54 @@ const OrderDetails = () => {
   const [showPriceBreakdown, setShowPriceBreakdown] = useState(false);
   const [showPaymentDialog, setShowPaymentDialog] = useState(false);
   const [showPaymentDetails, setShowPaymentDetails] = useState(false);
-
   useEffect(() => {
     if (user && id) {
       fetchOrder();
     }
   }, [user, id]);
-
   const fetchOrder = async () => {
     try {
-      const { data, error } = await supabase
-        .from('orders')
-        .select('*')
-        .eq('id', id)
-        .eq('customer_id', user?.id)
-        .single();
-
+      const {
+        data,
+        error
+      } = await supabase.from('orders').select('*').eq('id', id).eq('customer_id', user?.id).single();
       if (error) throw error;
-      
+
       // Fetch product details if order_items_data has product_id
       const orderItemsData = data.order_items_data as any[];
       if (orderItemsData && Array.isArray(orderItemsData) && orderItemsData.length > 0) {
         const productId = data.order_items_data[0].product_id;
         if (productId) {
-          const { data: productData } = await supabase
-            .from('products')
-            .select('image_url, images, name, thumbnail')
-            .eq('id', productId)
-            .single();
-          
+          const {
+            data: productData
+          } = await supabase.from('products').select('image_url, images, name, thumbnail').eq('id', productId).single();
           if (productData) {
             // Add product image to order_items_data - prioritize thumbnail, then image_url, then images array
-            data.order_items_data[0].image_url = productData.thumbnail || 
-              productData.image_url || 
-              (productData.images && productData.images[0]?.url);
+            data.order_items_data[0].image_url = productData.thumbnail || productData.image_url || productData.images && productData.images[0]?.url;
           }
         }
       }
-      
+
       // Fetch customer profile for name
-      const { data: customerProfile } = await supabase
-        .from('profiles')
-        .select('first_name, last_name')
-        .eq('user_id', data.customer_id)
-        .single();
-      
+      const {
+        data: customerProfile
+      } = await supabase.from('profiles').select('first_name, last_name').eq('user_id', data.customer_id).single();
       const orderWithName = {
         ...data,
-        customer_name: customerProfile 
-          ? `${customerProfile.first_name || ''} ${customerProfile.last_name || ''}`.trim()
-          : undefined
+        customer_name: customerProfile ? `${customerProfile.first_name || ''} ${customerProfile.last_name || ''}`.trim() : undefined
       };
-      
       setOrder(orderWithName);
 
       // Fetch transaction details for this order
       try {
-        const { data: transactionData } = await supabase
-          .from('transactions' as any)
-          .select('*')
-          .eq('user_id', user?.id)
-          .order('created_at', { ascending: false }) as any;
-
+        const {
+          data: transactionData
+        } = (await supabase.from('transactions' as any).select('*').eq('user_id', user?.id).order('created_at', {
+          ascending: false
+        })) as any;
         if (transactionData && transactionData.length > 0) {
           // Find transaction with order ID in payu_response
-          const orderTransaction = transactionData.find(
-            (t: any) => t.payu_response?.order_id === id
-          );
+          const orderTransaction = transactionData.find((t: any) => t.payu_response?.order_id === id);
           if (orderTransaction) {
             setTransaction({
               id: orderTransaction.id,
@@ -166,7 +125,7 @@ const OrderDetails = () => {
               payu_response: orderTransaction.payu_response,
               created_at: orderTransaction.created_at,
               customer_name: orderTransaction.customer_name,
-              customer_email: orderTransaction.customer_email,
+              customer_email: orderTransaction.customer_email
             });
           }
         }
@@ -180,18 +139,16 @@ const OrderDetails = () => {
       setLoading(false);
     }
   };
-
   const getOrderTimeline = () => {
     if (!order) return [];
-    
     const timeline = [];
     const orderDate = new Date(order.created_at);
-    
+
     // Order Placed
     timeline.push({
       label: 'Order Placed',
       date: format(orderDate, 'MM/dd/yyyy, h:mm:ss a'),
-      completed: true,
+      completed: true
     });
 
     // Order Confirmed
@@ -199,7 +156,7 @@ const OrderDetails = () => {
     timeline.push({
       label: 'Order Confirmed',
       date: format(confirmedDate, 'MM/dd/yyyy, h:mm:ss a'),
-      completed: order.status !== 'pending',
+      completed: order.status !== 'pending'
     });
 
     // Order Packed
@@ -207,54 +164,46 @@ const OrderDetails = () => {
     timeline.push({
       label: 'Order Packed',
       date: format(packedDate, 'MM/dd/yyyy, h:mm:ss a'),
-      completed: ['processing', 'shipped', 'delivered'].includes(order.status),
+      completed: ['processing', 'shipped', 'delivered'].includes(order.status)
     });
 
     // In Transit
     timeline.push({
       label: 'In Transit',
       date: order.status === 'shipped' ? format(new Date(), 'MM/dd/yyyy, h:mm:ss a') : '',
-      completed: false,
+      completed: false
     });
 
     // Out for Delivery
     timeline.push({
       label: 'Out for Delivery',
       date: '',
-      completed: false,
+      completed: false
     });
 
     // Delivered
     timeline.push({
       label: 'Delivered',
       date: '',
-      completed: order.status === 'delivered',
+      completed: order.status === 'delivered'
     });
-
     return timeline;
   };
-
   const handleCancelOrder = async () => {
     if (!order || !user) return;
-    
     setCancelling(true);
     try {
-      const { error: updateError } = await supabase
-        .from('orders')
-        .update({ 
-          status: 'cancelled',
-          payment_status: 'refunded'
-        })
-        .eq('id', order.id)
-        .eq('customer_id', user.id);
-
+      const {
+        error: updateError
+      } = await supabase.from('orders').update({
+        status: 'cancelled',
+        payment_status: 'refunded'
+      }).eq('id', order.id).eq('customer_id', user.id);
       if (updateError) throw updateError;
-
       toast({
         title: "Order Cancelled",
-        description: "Your order has been cancelled and refund will be processed within 5-7 business days.",
+        description: "Your order has been cancelled and refund will be processed within 5-7 business days."
       });
-
       await fetchOrder();
     } catch (error) {
       console.error('Error cancelling order:', error);
@@ -267,32 +216,27 @@ const OrderDetails = () => {
       setCancelling(false);
     }
   };
-
   const canCancelOrder = (status: string) => {
     return ['pending', 'confirmed', 'processing'].includes(status.toLowerCase());
   };
-
   const handlePaymentSuccess = async (paymentData: any) => {
     setShowPaymentDialog(false);
-    
-    // Update order payment status
-    const { error } = await supabase
-      .from('orders')
-      .update({ payment_status: 'completed' })
-      .eq('id', order?.id);
 
+    // Update order payment status
+    const {
+      error
+    } = await supabase.from('orders').update({
+      payment_status: 'completed'
+    }).eq('id', order?.id);
     if (error) {
       console.error('Error updating payment status:', error);
     }
-
     toast({
       title: "Payment Successful",
-      description: "Your payment has been processed successfully.",
+      description: "Your payment has been processed successfully."
     });
-
     await fetchOrder();
   };
-
   const handlePaymentFailure = (error: any) => {
     setShowPaymentDialog(false);
     toast({
@@ -301,21 +245,16 @@ const OrderDetails = () => {
       variant: "destructive"
     });
   };
-
   if (loading) {
-    return (
-      <div className="min-h-screen bg-background">
+    return <div className="min-h-screen bg-background">
         <Header />
         <div className="flex items-center justify-center h-64">
           <div className="text-lg">Loading order details...</div>
         </div>
-      </div>
-    );
+      </div>;
   }
-
   if (!order) {
-    return (
-      <div className="min-h-screen bg-background">
+    return <div className="min-h-screen bg-background">
         <Header />
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
@@ -325,15 +264,13 @@ const OrderDetails = () => {
             </Button>
           </div>
         </div>
-      </div>
-    );
+      </div>;
   }
-
   const orderItems = order.order_items_data || [];
   const firstItem = orderItems[0] || {};
   const timeline = getOrderTimeline();
   const deliveryAddress = order.delivery_address || order.customer_details?.address || {};
-  
+
   // Calculate price details from order_summary if available
   const orderSummary = order.order_summary || {};
   const listingPrice = orderSummary.listing_price || order.total_amount;
@@ -342,9 +279,7 @@ const OrderDetails = () => {
   const specialPrice = orderSummary.special_price || 299;
   const otherDiscount = orderSummary.other_discount || 22;
   const totalFees = orderSummary.total_fees || (order.shipping_charge || 0) + (order.tax_amount || 0) || 10;
-
-  return (
-    <div className="min-h-screen bg-background">
+  return <div className="min-h-screen bg-background">
       <Header />
       <div className="container mx-auto px-4 pt-32 pb-8 max-w-7xl">
         {/* Breadcrumb */}
@@ -365,11 +300,7 @@ const OrderDetails = () => {
             <div className="bg-white border-b p-6">
               <div className="flex gap-6">
                 <div className="w-52 h-52 bg-muted flex items-center justify-center overflow-hidden flex-shrink-0">
-                  <img 
-                    src={firstItem.image_url || heroScooter} 
-                    alt={firstItem.name || 'Product'} 
-                    className="w-full h-full object-cover" 
-                  />
+                  <img src={firstItem.image_url || heroScooter} alt={firstItem.name || 'Product'} className="w-full h-full object-cover" />
                 </div>
                 <div className="flex-1 space-y-3">
                   <h2 className="text-2xl font-semibold">
@@ -385,10 +316,9 @@ const OrderDetails = () => {
                   <div className="flex items-center gap-2 text-sm">
                     <span className="text-foreground">Colour :</span>
                     <span className="font-medium">{firstItem.color || 'Blue'}</span>
-                    <div 
-                      className="w-5 h-5 rounded-full border-2 border-gray-300"
-                      style={{ backgroundColor: firstItem.color_hex || '#000000' }}
-                    />
+                    <div className="w-5 h-5 rounded-full border-2 border-gray-300" style={{
+                    backgroundColor: firstItem.color_hex || '#000000'
+                  }} />
                   </div>
                   <p className="text-3xl font-bold pt-2">
                     ₹{parseFloat(order.total_amount.toString()).toLocaleString('en-IN')}
@@ -399,37 +329,23 @@ const OrderDetails = () => {
 
             {/* Order Timeline */}
             <div className="space-y-0">
-              {timeline.map((step, index) => (
-                <div key={index} className="flex items-start gap-4 relative">
+              {timeline.map((step, index) => <div key={index} className="flex items-start gap-4 relative">
                   {/* Vertical line */}
-                  {index < timeline.length - 1 && (
-                    <div className={`absolute left-3 top-8 w-0.5 h-16 ${
-                      step.completed ? 'bg-foreground' : 'bg-border'
-                    }`} />
-                  )}
+                  {index < timeline.length - 1 && <div className={`absolute left-3 top-8 w-0.5 h-16 ${step.completed ? 'bg-foreground' : 'bg-border'}`} />}
                   
                   <div className="flex-shrink-0 z-10">
-                    {step.completed ? (
-                      <div className="w-7 h-7 rounded-full bg-foreground flex items-center justify-center">
+                    {step.completed ? <div className="w-7 h-7 rounded-full bg-foreground flex items-center justify-center">
                         <CheckCircle className="w-5 h-5 text-background" />
-                      </div>
-                    ) : (
-                      <div className="w-7 h-7 rounded-full border-2 border-border bg-background" />
-                    )}
+                      </div> : <div className="w-7 h-7 rounded-full border-2 border-border bg-background" />}
                   </div>
                   
                   <div className="flex-1 pb-16">
-                    <p className={`font-semibold text-base ${
-                      step.completed ? 'text-foreground' : 'text-muted-foreground'
-                    }`}>
+                    <p className={`font-semibold text-base ${step.completed ? 'text-foreground' : 'text-muted-foreground'}`}>
                       {step.label}
                     </p>
-                    {step.date && (
-                      <p className="text-sm text-muted-foreground mt-1">{step.date}</p>
-                    )}
+                    {step.date && <p className="text-sm text-muted-foreground mt-1">{step.date}</p>}
                   </div>
-                </div>
-              ))}
+                </div>)}
             </div>
 
             {/* Chat Button */}
@@ -478,7 +394,7 @@ const OrderDetails = () => {
               
               <div className="bg-gray-50 p-6 space-y-4">
                 <div className="flex justify-between items-center mb-4">
-                  <span className="text-sm font-semibold">Payment Status</span>
+                  
                   <Badge variant={order.payment_status === 'completed' ? 'default' : order.payment_status === 'pending' ? 'secondary' : 'destructive'}>
                     {order.payment_status === 'completed' ? 'Payment Done' : order.payment_status === 'pending' ? 'Payment Pending' : 'Payment Failed'}
                   </Badge>
@@ -524,8 +440,6 @@ const OrderDetails = () => {
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default OrderDetails;
