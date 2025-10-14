@@ -112,19 +112,19 @@ const ProductShowcase = () => {
   };
 
   return (
-    <section className="relative bg-[#F8F9F9] py-20">
-      <div className="mx-auto px-[70px]">
+    <section className="relative bg-[#F8F9F9] py-10 sm:py-16 md:py-20">
+      <div className="mx-auto px-4 sm:px-8 md:px-12 lg:px-[70px]">
         {/* Header */}
-        <h2 className="font-['Inter'] font-medium text-[48px] text-[#12141d] mb-20">
+        <h2 className="font-['Inter'] font-medium text-[28px] sm:text-[36px] md:text-[48px] text-[#12141d] mb-10 sm:mb-16 md:mb-20">
           Experience the Next Generation of Riding
         </h2>
 
         {/* Tab Navigation */}
-        <div className="flex items-center justify-between mb-20">
-          <div className="flex gap-5">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-10 sm:mb-16 md:mb-20 gap-4">
+          <div className="flex gap-2 sm:gap-4 md:gap-5 overflow-x-auto pb-2 w-full sm:w-auto">
             <button
               onClick={() => setActiveCategory(null)}
-              className={`px-5 py-[13px] font-['Poppins'] text-[16px] transition-colors ${
+              className={`px-3 sm:px-4 md:px-5 py-2 sm:py-[13px] font-['Poppins'] text-[12px] sm:text-[14px] md:text-[16px] transition-colors whitespace-nowrap ${
                 activeCategory === null
                   ? "bg-[#12141d] text-white opacity-90 shadow-[3px_4px_16px_0px_rgba(0,0,0,0.1)]"
                   : "bg-white text-[#12141d] opacity-90"
@@ -136,7 +136,7 @@ const ProductShowcase = () => {
               <button
                 key={category.id}
                 onClick={() => setActiveCategory(category.id)}
-                className={`px-5 py-[13px] font-['Poppins'] text-[16px] transition-colors ${
+                className={`px-3 sm:px-4 md:px-5 py-2 sm:py-[13px] font-['Poppins'] text-[12px] sm:text-[14px] md:text-[16px] transition-colors whitespace-nowrap ${
                   activeCategory === category.id
                     ? "bg-[#12141d] text-white opacity-90 shadow-[3px_4px_16px_0px_rgba(0,0,0,0.1)]"
                     : "bg-white text-[#12141d] opacity-90"
@@ -147,27 +147,27 @@ const ProductShowcase = () => {
             ))}
           </div>
 
-          <div className="flex gap-3">
+          <div className="hidden sm:flex gap-3">
             <button
               onClick={scrollLeft}
-              className="w-12 h-12 bg-white flex items-center justify-center hover:bg-[#e8e9e9] transition-colors"
+              className="w-10 h-10 sm:w-12 sm:h-12 bg-white flex items-center justify-center hover:bg-[#e8e9e9] transition-colors"
               aria-label="Scroll left"
             >
-              <ChevronLeft className="w-6 h-6 text-[#12141d]" />
+              <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 text-[#12141d]" />
             </button>
             <button
               onClick={scrollRight}
-              className="w-12 h-12 bg-white flex items-center justify-center hover:bg-[#e8e9e9] transition-colors"
+              className="w-10 h-10 sm:w-12 sm:h-12 bg-white flex items-center justify-center hover:bg-[#e8e9e9] transition-colors"
               aria-label="Scroll right"
             >
-              <ChevronRight className="w-6 h-6 text-[#12141d]" />
+              <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 text-[#12141d]" />
             </button>
           </div>
         </div>
 
-        {/* Product Cards Horizontal Scroll */}
-        <div ref={scrollContainerRef} className="overflow-x-auto pb-4 scroll-smooth [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-          <div className="flex gap-[35px] pb-4 min-w-max">
+        {/* Product Cards - Horizontal scroll on desktop, vertical stack on mobile */}
+        <div ref={scrollContainerRef} className="sm:overflow-x-auto pb-4 scroll-smooth [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+          <div className="flex flex-col sm:flex-row gap-6 sm:gap-[35px] pb-4 sm:min-w-max">
             {loading ? (
               <div className="w-full text-center py-8">
                 <p className="text-[#212121] opacity-80">Loading products...</p>
@@ -180,10 +180,10 @@ const ProductShowcase = () => {
               products.map((product: any) => (
                 <div
                   key={product.id}
-                  className="bg-white flex flex-col gap-[25px] pb-5 w-[420px] flex-shrink-0"
+                  className="bg-white flex flex-col gap-4 sm:gap-[25px] pb-4 sm:pb-5 w-full sm:w-[350px] md:w-[420px] sm:flex-shrink-0"
                 >
                   {/* Product Image */}
-                  <div className="w-full h-[270px] bg-[#b7b8b8] flex items-center justify-center overflow-hidden">
+                  <div className="w-full h-[200px] sm:h-[220px] md:h-[270px] bg-[#b7b8b8] flex items-center justify-center overflow-hidden">
                     {product.image && (
                       <img
                         src={product.image}
@@ -194,24 +194,24 @@ const ProductShowcase = () => {
                   </div>
 
                   {/* Product Details */}
-                  <div className="px-[26px] flex flex-col gap-[24.621px]">
-                    <div className="flex flex-col gap-[25px]">
+                  <div className="px-4 sm:px-[26px] flex flex-col gap-4 sm:gap-[24.621px]">
+                    <div className="flex flex-col gap-4 sm:gap-[25px]">
                       {/* Title & Specs */}
-                      <div className="flex flex-col gap-[13.688px]">
-                        <h3 className="font-['Poppins'] font-semibold text-[24px] text-[#212121]">
+                      <div className="flex flex-col gap-2 sm:gap-[13.688px]">
+                        <h3 className="font-['Poppins'] font-semibold text-[18px] sm:text-[20px] md:text-[24px] text-[#212121]">
                           {product.name}
                         </h3>
-                        <div className="flex gap-[13.688px] items-center">
+                        <div className="flex gap-2 sm:gap-[13.688px] items-center flex-wrap">
                           {product.feature1 && (
-                            <p className="font-['Poppins'] text-[15.758px] text-[#212121] opacity-80">
+                            <p className="font-['Poppins'] text-[12px] sm:text-[14px] md:text-[15.758px] text-[#212121] opacity-80">
                               {product.feature1}
                             </p>
                           )}
                           {product.feature1 && product.feature2 && (
-                            <div className="w-[1.24px] h-[19.288px] bg-[#212121] opacity-80" />
+                            <div className="w-[1.24px] h-[15px] sm:h-[19.288px] bg-[#212121] opacity-80" />
                           )}
                           {product.feature2 && (
-                            <p className="font-['Poppins'] text-[15.758px] text-[#212121] opacity-80">
+                            <p className="font-['Poppins'] text-[12px] sm:text-[14px] md:text-[15.758px] text-[#212121] opacity-80">
                               {product.feature2}
                             </p>
                           )}
@@ -222,15 +222,15 @@ const ProductShowcase = () => {
                       <div className="w-full h-[1.24px] bg-black opacity-10" />
 
                       {/* Price */}
-                      <div className="flex flex-col gap-[8.891px]">
-                        <p className="font-['Poppins'] text-[15.758px] text-[#212121] opacity-80">
+                      <div className="flex flex-col gap-1 sm:gap-[8.891px]">
+                        <p className="font-['Poppins'] text-[12px] sm:text-[14px] md:text-[15.758px] text-[#212121] opacity-80">
                           Starting Price
                         </p>
                         <p className="font-['Poppins']">
-                          <span className="text-[23.636px] font-semibold text-[#212121]">
+                          <span className="text-[18px] sm:text-[20px] md:text-[23.636px] font-semibold text-[#212121]">
                             ₹{product.price.toLocaleString('en-IN')}
                           </span>
-                          <span className="text-[17.727px] text-[rgba(33,33,33,0.75)]">
+                          <span className="text-[14px] sm:text-[16px] md:text-[17.727px] text-[rgba(33,33,33,0.75)]">
                             {" "}/ showroom price
                           </span>
                         </p>
@@ -238,16 +238,16 @@ const ProductShowcase = () => {
                     </div>
 
                     {/* Action Buttons */}
-                    <div className="flex flex-col gap-[15px] w-full">
+                    <div className="flex flex-col gap-3 sm:gap-[15px] w-full">
                       <button
                         onClick={() => handleBookNow(product)}
-                        className="bg-black text-white h-[55px] px-[23px] py-[13px] font-['Poppins'] font-medium text-[16px] w-full hover:bg-black/90 transition-colors"
+                        className="bg-black text-white h-[45px] sm:h-[50px] md:h-[55px] px-4 sm:px-[23px] py-[13px] font-['Poppins'] font-medium text-[14px] sm:text-[15px] md:text-[16px] w-full hover:bg-black/90 transition-colors"
                       >
                         Book Now
                       </button>
                       <button
                         onClick={() => handleExplore(product)}
-                        className="bg-[#f8f9f9] text-black h-[55px] px-[50px] py-[13px] font-['Inter'] font-medium text-[14px] w-full hover:bg-[#e8e9e9] transition-colors"
+                        className="bg-[#f8f9f9] text-black h-[45px] sm:h-[50px] md:h-[55px] px-4 sm:px-[50px] py-[13px] font-['Inter'] font-medium text-[12px] sm:text-[13px] md:text-[14px] w-full hover:bg-[#e8e9e9] transition-colors"
                       >
                         Explore {product.name}
                       </button>
