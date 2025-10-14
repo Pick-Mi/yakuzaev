@@ -871,39 +871,40 @@ const BookingConfirmation = () => {
                 )}
               </div>
 
-              {/* Name and Address Form - Show always */}
-              <div className="space-y-6">
-                <h3 className="text-[18px] font-semibold">
-                  Enter your name and address:
-                </h3>
+              {/* Name and Address Form - Show only if user is NOT logged in */}
+              {!user && (
+                <div className="space-y-6">
+                  <h3 className="text-[18px] font-semibold">
+                    Enter your name and address:
+                  </h3>
 
-                {/* First Name */}
-                <div className="space-y-2">
-                  <Label htmlFor="firstName" className="text-sm text-muted-foreground">First Name*</Label>
-                  <Input
-                    id="firstName"
-                    type="text"
-                    value={firstName}
-                    onChange={(e) => setFirstName(e.target.value)}
-                    className="h-12 border border-border rounded"
-                    required
-                    disabled={!isVerified}
-                  />
-                </div>
+                  {/* First Name */}
+                  <div className="space-y-2">
+                    <Label htmlFor="firstName" className="text-sm text-muted-foreground">First Name*</Label>
+                    <Input
+                      id="firstName"
+                      type="text"
+                      value={firstName}
+                      onChange={(e) => setFirstName(e.target.value)}
+                      className="h-12 border border-border rounded"
+                      required
+                      disabled={!isVerified}
+                    />
+                  </div>
 
-                {/* Last Name */}
-                <div className="space-y-2">
-                  <Label htmlFor="lastName" className="text-sm text-muted-foreground">Last Name*</Label>
-                  <Input
-                    id="lastName"
-                    type="text"
-                    value={lastName}
-                    onChange={(e) => setLastName(e.target.value)}
-                    className="h-12 border border-border rounded"
-                    required
-                    disabled={!isVerified}
-                  />
-                </div>
+                  {/* Last Name */}
+                  <div className="space-y-2">
+                    <Label htmlFor="lastName" className="text-sm text-muted-foreground">Last Name*</Label>
+                    <Input
+                      id="lastName"
+                      type="text"
+                      value={lastName}
+                      onChange={(e) => setLastName(e.target.value)}
+                      className="h-12 border border-border rounded"
+                      required
+                      disabled={!isVerified}
+                    />
+                  </div>
 
                 {/* Address */}
                 <div className="space-y-2">
@@ -1084,135 +1085,137 @@ const BookingConfirmation = () => {
                   </p>
                 </div>
 
-                {/* Email */}
-                <div className="space-y-2">
-                  <Label htmlFor="email" className="text-sm text-muted-foreground">Email*</Label>
-                  <div className="relative">
-                    <Input
-                      id="email"
-                      type="email"
-                      placeholder="alex@gmail.com"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="h-12 border border-border rounded"
-                      required
-                      disabled={!isVerified}
-                    />
-                    {email && email.includes('@') && (
-                      <span className="absolute right-3 top-4 w-2 h-2 bg-green-500 rounded-full"></span>
-                    )}
-                  </div>
-                  <p className="text-xs text-muted-foreground">
-                    A confirmation email will be sent after checkout.
-                  </p>
-                </div>
-
-                {/* ID Verification Section */}
-                <div className="space-y-6 pt-8 border-t">
-                  <div>
-                    <h3 className="text-[18px] font-semibold mb-2">
-                      ID Verification for Registration
-                    </h3>
-                    <p className="text-sm text-muted-foreground">
-                      Provide your valid ID information to verify your booking and enable vehicle registration. Your details help us ensure a secure and compliant delivery experience.
-                    </p>
-                  </div>
-
-
-                  {/* Document Type Dropdown */}
+                  {/* Email */}
                   <div className="space-y-2">
-                    <Label htmlFor="documentType" className="text-sm text-muted-foreground">Document Type</Label>
-                    <Select value={documentType} onValueChange={setDocumentType} disabled={!isVerified}>
-                      <SelectTrigger className="h-12 border border-border rounded">
-                        <SelectValue placeholder="Select document type" />
-                      </SelectTrigger>
-                      <SelectContent className="z-50 bg-white">
-                        <SelectItem value="aadhaar">Aadhaar Card</SelectItem>
-                        <SelectItem value="pan">PAN Card</SelectItem>
-                        <SelectItem value="passport">Passport</SelectItem>
-                        <SelectItem value="driving_license">Driving License</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  {/* Aadhaar Number */}
-                  <div className="space-y-2">
-                    <Label htmlFor="aadhaarNumber" className="text-sm text-muted-foreground">Aadhaar Number</Label>
-                    <Input
-                      id="aadhaarNumber"
-                      type="text"
-                      placeholder="Enter Aadhaar number"
-                      value={aadhaarNumber}
-                      onChange={(e) => setAadhaarNumber(e.target.value)}
-                      className="h-12 border border-border rounded"
-                      disabled={!isVerified}
-                      maxLength={12}
-                    />
-                  </div>
-
-                  {/* Consent Checkbox */}
-                  <div className="flex items-start gap-3">
-                    <Checkbox
-                      id="consent"
-                      checked={consentChecked}
-                      onCheckedChange={(checked) => setConsentChecked(checked as boolean)}
-                      disabled={!isVerified}
-                      className="mt-1"
-                    />
-                    <label htmlFor="consent" className="text-sm text-muted-foreground leading-relaxed cursor-pointer">
-                      I have read and consent to Yakuza EV and its authorized logistics partners processing my information in accordance with the [Privacy Policy] and [Terms of Use].
-                    </label>
-                  </div>
-                </div>
-
-                {/* Upload ID Section */}
-                <div className="space-y-6 pt-6">
-                  <div>
-                    <h3 className="text-[18px] font-semibold mb-2">
-                      Upload ID
-                    </h3>
-                    <p className="text-sm text-muted-foreground">
-                      Ensure that your name, photograph, and ID number are clearly visible on the uploaded image to avoid processing delays.
-                    </p>
-                  </div>
-
-                  {/* Upload Area */}
-                  <div className={`border-2 border-dashed border-border rounded-lg p-8 ${!isVerified ? 'opacity-50 cursor-not-allowed' : ''}`}>
-                    <label 
-                      htmlFor="document-upload" 
-                      className={`flex flex-col items-center justify-center ${isVerified ? 'cursor-pointer' : 'cursor-not-allowed'}`}
-                    >
-                      <Upload className="w-8 h-8 text-muted-foreground mb-3" />
-                      <span className="text-sm font-medium text-foreground">
-                        {uploadedDocument ? uploadedDocument.name : 'Click to Upload Document'}
-                      </span>
-                      <span className="text-xs text-muted-foreground mt-1">
-                        JPG or PNG format
-                      </span>
-                      <input
-                        id="document-upload"
-                        type="file"
-                        accept=".jpg,.jpeg,.png,.pdf"
-                        onChange={(e) => {
-                          const file = e.target.files?.[0];
-                          if (file) {
-                            setUploadedDocument(file);
-                            toast.success('Document uploaded successfully');
-                          }
-                        }}
-                        className="hidden"
+                    <Label htmlFor="email" className="text-sm text-muted-foreground">Email*</Label>
+                    <div className="relative">
+                      <Input
+                        id="email"
+                        type="email"
+                        placeholder="alex@gmail.com"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="h-12 border border-border rounded"
+                        required
                         disabled={!isVerified}
                       />
-                    </label>
+                      {email && email.includes('@') && (
+                        <span className="absolute right-3 top-4 w-2 h-2 bg-green-500 rounded-full"></span>
+                      )}
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      A confirmation email will be sent after checkout.
+                    </p>
                   </div>
-                  <p className="text-xs text-muted-foreground">
-                    Only .jpg and .jpeg files are allowed.
-                  </p>
 
+                  {/* ID Verification Section */}
+                  <div className="space-y-6 pt-8 border-t">
+                    <div>
+                      <h3 className="text-[18px] font-semibold mb-2">
+                        ID Verification for Registration
+                      </h3>
+                      <p className="text-sm text-muted-foreground">
+                        Provide your valid ID information to verify your booking and enable vehicle registration. Your details help us ensure a secure and compliant delivery experience.
+                      </p>
+                    </div>
+
+
+                    {/* Document Type Dropdown */}
+                    <div className="space-y-2">
+                      <Label htmlFor="documentType" className="text-sm text-muted-foreground">Document Type</Label>
+                      <Select value={documentType} onValueChange={setDocumentType} disabled={!isVerified}>
+                        <SelectTrigger className="h-12 border border-border rounded">
+                          <SelectValue placeholder="Select document type" />
+                        </SelectTrigger>
+                        <SelectContent className="z-50 bg-white">
+                          <SelectItem value="aadhaar">Aadhaar Card</SelectItem>
+                          <SelectItem value="pan">PAN Card</SelectItem>
+                          <SelectItem value="passport">Passport</SelectItem>
+                          <SelectItem value="driving_license">Driving License</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    {/* Aadhaar Number */}
+                    <div className="space-y-2">
+                      <Label htmlFor="aadhaarNumber" className="text-sm text-muted-foreground">Aadhaar Number</Label>
+                      <Input
+                        id="aadhaarNumber"
+                        type="text"
+                        placeholder="Enter Aadhaar number"
+                        value={aadhaarNumber}
+                        onChange={(e) => setAadhaarNumber(e.target.value)}
+                        className="h-12 border border-border rounded"
+                        disabled={!isVerified}
+                        maxLength={12}
+                      />
+                    </div>
+
+                    {/* Consent Checkbox */}
+                    <div className="flex items-start gap-3">
+                      <Checkbox
+                        id="consent"
+                        checked={consentChecked}
+                        onCheckedChange={(checked) => setConsentChecked(checked as boolean)}
+                        disabled={!isVerified}
+                        className="mt-1"
+                      />
+                      <label htmlFor="consent" className="text-sm text-muted-foreground leading-relaxed cursor-pointer">
+                        I have read and consent to Yakuza EV and its authorized logistics partners processing my information in accordance with the [Privacy Policy] and [Terms of Use].
+                      </label>
+                    </div>
+                  </div>
+
+                  {/* Upload ID Section */}
+                  <div className="space-y-6 pt-6">
+                    <div>
+                      <h3 className="text-[18px] font-semibold mb-2">
+                        Upload ID
+                      </h3>
+                      <p className="text-sm text-muted-foreground">
+                        Ensure that your name, photograph, and ID number are clearly visible on the uploaded image to avoid processing delays.
+                      </p>
+                    </div>
+
+                    {/* Upload Area */}
+                    <div className={`border-2 border-dashed border-border rounded-lg p-8 ${!isVerified ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                      <label 
+                        htmlFor="document-upload" 
+                        className={`flex flex-col items-center justify-center ${isVerified ? 'cursor-pointer' : 'cursor-not-allowed'}`}
+                      >
+                        <Upload className="w-8 h-8 text-muted-foreground mb-3" />
+                        <span className="text-sm font-medium text-foreground">
+                          {uploadedDocument ? uploadedDocument.name : 'Click to Upload Document'}
+                        </span>
+                        <span className="text-xs text-muted-foreground mt-1">
+                          JPG or PNG format
+                        </span>
+                        <input
+                          id="document-upload"
+                          type="file"
+                          accept=".jpg,.jpeg,.png,.pdf"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                              setUploadedDocument(file);
+                              toast.success('Document uploaded successfully');
+                            }
+                          }}
+                          className="hidden"
+                          disabled={!isVerified}
+                        />
+                      </label>
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      Only .jpg and .jpeg files are allowed.
+                    </p>
+
+                  </div>
                 </div>
+              )}
 
-                {/* Shipping Section */}
-                <div className="space-y-6 pt-8 border-t">
+              {/* Shipping Section */}
+              <div className="space-y-6 pt-8 border-t">
                   <h3 className="text-[24px] font-semibold">
                     Shipping
                   </h3>
