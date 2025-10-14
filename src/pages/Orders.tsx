@@ -321,7 +321,7 @@ const Orders = () => {
           // Mobile Layout
           <div className="space-y-0">
             {/* Breadcrumb Header */}
-            <div className="fixed top-[60px] left-0 right-0 z-40 bg-white px-4 py-4">
+            <div className="fixed top-[60px] left-0 right-0 z-50 bg-white px-4 py-4 shadow-sm">
               <div className="flex items-center gap-2 text-sm text-gray-600">
                 <button onClick={() => navigate('/profile')} className="hover:text-gray-900">
                   Profile
