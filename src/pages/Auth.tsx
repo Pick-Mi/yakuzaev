@@ -19,7 +19,7 @@ import {
 } from '@/components/ui/select';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
-import { Chrome, Eye, EyeOff, CheckCircle2 } from 'lucide-react';
+import { Chrome, Eye, EyeOff, CheckCircle2, X } from 'lucide-react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
@@ -447,29 +447,39 @@ const Auth = () => {
       
       {/* Mobile View - Bottom Sheet Style */}
       {isMobile ? (
-        <div className="fixed inset-0 flex flex-col bg-background">
+        <div className="fixed inset-0 flex flex-col">
           {/* Header spacer */}
           <div className="h-[120px]" />
           
-          {/* Content area with background image */}
-          <div className="flex-1 relative bg-black/5">
+          {/* Backdrop overlay */}
+          <div className="flex-1 relative bg-black/40 backdrop-blur-sm">
+            {/* Background image */}
             <img 
               src={authScooterImage} 
               alt="Scooter" 
-              className="w-full h-full object-cover opacity-10"
+              className="w-full h-full object-cover opacity-20"
             />
           </div>
           
-          {/* Bottom Sheet */}
-          <div className="bg-white rounded-t-3xl shadow-2xl">
-            <div className="p-6 space-y-6">
+          {/* Bottom Sheet Popup */}
+          <div className="bg-white rounded-t-[32px] shadow-2xl animate-slide-in-bottom relative">
+            {/* Close button */}
+            <button
+              onClick={() => navigate(-1)}
+              className="absolute right-6 top-6 p-2 hover:bg-gray-100 rounded-full transition-colors"
+              aria-label="Close"
+            >
+              <X className="w-5 h-5 text-gray-500" />
+            </button>
+
+            <div className="p-8 pb-12 space-y-6">
               {/* Title and Description - Only for phone step */}
               {step === 'phone' && (
-                <div className="space-y-2">
-                  <h1 className="text-2xl font-semibold text-gray-900">
+                <div className="space-y-3 pr-8">
+                  <h1 className="text-3xl font-bold text-gray-900">
                     Create a Quick Note
                   </h1>
-                  <p className="text-gray-600 text-sm leading-relaxed">
+                  <p className="text-gray-600 text-base leading-relaxed">
                     You don't have an account yet. Create one to save your notes securely across devices.
                   </p>
                 </div>
@@ -480,13 +490,13 @@ const Auth = () => {
                 <div className="space-y-6">
                   <form onSubmit={handlePhoneSubmit} className="space-y-6">
                     <div className="space-y-2">
-                      <div className="flex gap-3 items-center bg-gray-50 border border-gray-200 rounded-lg px-4 py-3">
+                      <div className="flex gap-3 items-center bg-white border-2 border-gray-300 rounded-xl px-4 py-4 hover:border-gray-400 focus-within:border-gray-900 transition-colors">
                         <Select value={countryCode} onValueChange={setCountryCode}>
-                          <SelectTrigger className="w-[100px] border-0 bg-transparent p-0 h-auto gap-2 focus:ring-0 focus:ring-offset-0">
+                          <SelectTrigger className="w-[90px] border-0 bg-transparent p-0 h-auto gap-1 focus:ring-0 focus:ring-offset-0">
                             <SelectValue>
-                              <div className="flex items-center gap-2 text-gray-900">
-                                <span className="text-xl">{COUNTRIES.find(c => c.code === countryCode)?.flag || '🇮🇳'}</span>
-                                <span className="font-medium">{countryCode}</span>
+                              <div className="flex items-center gap-1 text-gray-900">
+                                <span className="text-2xl">{COUNTRIES.find(c => c.code === countryCode)?.flag || '🇮🇳'}</span>
+                                <span className="font-semibold text-base">{countryCode}</span>
                               </div>
                             </SelectValue>
                           </SelectTrigger>
@@ -509,7 +519,7 @@ const Auth = () => {
                           placeholder="Enter Phone Number"
                           value={phoneNumber}
                           onChange={(e) => setPhoneNumber(e.target.value)}
-                          className="border-0 bg-transparent p-0 h-auto text-base focus-visible:ring-0 focus-visible:ring-offset-0 placeholder:text-gray-400"
+                          className="border-0 bg-transparent p-0 h-auto text-base font-normal focus-visible:ring-0 focus-visible:ring-offset-0 placeholder:text-gray-400"
                           required
                         />
                       </div>
@@ -517,18 +527,18 @@ const Auth = () => {
                     
                     <Button 
                       type="submit" 
-                      className="w-full h-12 bg-gray-900 hover:bg-gray-800 text-white text-base font-medium rounded-lg"
+                      className="w-full h-14 bg-gray-900 hover:bg-gray-800 text-white text-base font-semibold rounded-xl"
                       disabled={loading || otpCooldown > 0}
                     >
                       {loading ? 'Sending...' : otpCooldown > 0 ? `Wait ${otpCooldown}s` : 'Next'}
                     </Button>
                   </form>
 
-                  <div className="text-center text-xs text-gray-500">
+                  <div className="text-center text-sm text-gray-600 pt-2">
                     By continuing, you agree to{' '}
-                    <Link to="/terms" className="underline hover:text-gray-700">T&C</Link>
+                    <Link to="/terms" className="underline hover:text-gray-800 font-medium">T&C</Link>
                     {' & '}
-                    <Link to="/privacy" className="underline hover:text-gray-700">Privacy Policy</Link>
+                    <Link to="/privacy" className="underline hover:text-gray-800 font-medium">Privacy Policy</Link>
                   </div>
                 </div>
               )}
