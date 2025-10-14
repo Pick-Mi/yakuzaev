@@ -418,7 +418,7 @@ const OrderDetails = () => {
 
             {/* Chat Button */}
             <div className="flex justify-center pt-4">
-              <Button variant="outline" className="gap-2 px-8">
+              <Button variant="outline" className="gap-2 px-8 rounded-none">
                 <MessageCircle className="w-5 h-5" />
                 Chat with us
               </Button>
