@@ -525,7 +525,21 @@ const Auth = () => {
                       </div>
                     </div>
                     
+                    <Button 
+                      type="submit" 
+                      className="w-full h-14 bg-gray-900 hover:bg-gray-800 text-white text-base font-semibold rounded-xl"
+                      disabled={loading || otpCooldown > 0}
+                    >
+                      {loading ? 'Sending...' : otpCooldown > 0 ? `Wait ${otpCooldown}s` : 'Next'}
+                    </Button>
                   </form>
+
+                  <div className="text-center text-sm text-gray-600 pt-2">
+                    By continuing, you agree to{' '}
+                    <Link to="/terms" className="underline hover:text-gray-800 font-medium">T&C</Link>
+                    {' & '}
+                    <Link to="/privacy" className="underline hover:text-gray-800 font-medium">Privacy Policy</Link>
+                  </div>
                 </div>
               )}
             </div>
