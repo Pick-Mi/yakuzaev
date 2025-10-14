@@ -321,7 +321,7 @@ const Orders = () => {
           // Mobile Layout
           <div className="space-y-0">
             {/* Breadcrumb Header */}
-            <div className="bg-white px-4 py-4 border-b border-gray-200">
+            <div className="fixed top-[60px] left-0 right-0 z-40 bg-white px-4 py-4 border-b border-gray-200">
               <div className="flex items-center gap-2 text-sm text-gray-600">
                 <button onClick={() => navigate('/profile')} className="hover:text-gray-900">
                   Profile
@@ -332,7 +332,7 @@ const Orders = () => {
             </div>
 
             {/* My Orders Title */}
-            <div className="bg-white px-4 py-6">
+            <div className="bg-white px-4 py-6 mt-[52px]">
               <h1 className="text-4xl font-bold text-gray-900">My Orders</h1>
             </div>
 
