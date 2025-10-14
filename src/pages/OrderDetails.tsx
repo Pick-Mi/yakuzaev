@@ -168,7 +168,7 @@ const OrderDetails = () => {
       
       return {
         label: step.label,
-        date: historyEntry?.timestamp ? format(new Date(historyEntry.timestamp), 'MM/dd/yyyy, h:mm:ss a') : '',
+        date: isCompleted && historyEntry?.timestamp ? format(new Date(historyEntry.timestamp), 'MM/dd/yyyy, h:mm:ss a') : '',
         completed: isCompleted
       };
     });
