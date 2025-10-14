@@ -303,7 +303,7 @@ const ProductConfig = () => {
 
       <div className="container mx-auto px-4 py-8 max-w-7xl pt-32">{/* Added pt-32 for header spacing */}
         {/* Breadcrumb */}
-        <div className="mb-6 flex items-center gap-2 text-[14px]">
+        <div className="fixed top-24 left-0 right-0 z-40 bg-white px-4 py-3 shadow-sm mb-6 flex items-center gap-2 text-[14px]">
           <button 
             onClick={handleBreadcrumbClick}
             className="text-gray-400 hover:text-gray-600 transition-colors font-['Inter']"
