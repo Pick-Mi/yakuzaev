@@ -45,6 +45,7 @@ interface Order {
   order_type?: string;
   customer_id?: string;
   customer_name?: string;
+  status_history?: any[];
 }
 const OrderDetails = () => {
   const {
@@ -101,9 +102,10 @@ const OrderDetails = () => {
       } = await supabase.from('profiles').select('first_name, last_name').eq('user_id', data.customer_id).single();
       const orderWithName = {
         ...data,
-        customer_name: customerProfile ? `${customerProfile.first_name || ''} ${customerProfile.last_name || ''}`.trim() : undefined
+        customer_name: customerProfile ? `${customerProfile.first_name || ''} ${customerProfile.last_name || ''}`.trim() : undefined,
+        status_history: data.status_history as any[] || []
       };
-      setOrder(orderWithName);
+      setOrder(orderWithName as Order);
 
       // Fetch transaction details for this order
       try {
@@ -141,52 +143,36 @@ const OrderDetails = () => {
   };
   const getOrderTimeline = () => {
     if (!order) return [];
-    const timeline = [];
-    const orderDate = new Date(order.created_at);
-
-    // Order Placed
-    timeline.push({
-      label: 'Order Placed',
-      date: format(orderDate, 'MM/dd/yyyy, h:mm:ss a'),
-      completed: true
+    
+    const statusHistory = (order.status_history as any[]) || [];
+    const currentStatus = order.status.toLowerCase();
+    
+    // Define the order flow steps
+    const steps = [
+      { key: 'placed', label: 'Order Placed' },
+      { key: 'confirmed', label: 'Order Confirmed' },
+      { key: 'processing', label: 'Order Packed' },
+      { key: 'shipped', label: 'In Transit' },
+      { key: 'out_for_delivery', label: 'Out for Delivery' },
+      { key: 'delivered', label: 'Delivered' }
+    ];
+    
+    const timeline = steps.map(step => {
+      // Find the status history entry for this step
+      const historyEntry = statusHistory.find((h: any) => h.status?.toLowerCase() === step.key);
+      
+      // Determine if step is completed
+      const stepIndex = steps.findIndex(s => s.key === step.key);
+      const currentIndex = steps.findIndex(s => s.key === currentStatus);
+      const isCompleted = stepIndex <= currentIndex;
+      
+      return {
+        label: step.label,
+        date: historyEntry?.timestamp ? format(new Date(historyEntry.timestamp), 'MM/dd/yyyy, h:mm:ss a') : '',
+        completed: isCompleted
+      };
     });
-
-    // Order Confirmed
-    const confirmedDate = new Date(orderDate.getTime() + 60000); // 1 minute later
-    timeline.push({
-      label: 'Order Confirmed',
-      date: format(confirmedDate, 'MM/dd/yyyy, h:mm:ss a'),
-      completed: order.status !== 'pending'
-    });
-
-    // Order Packed
-    const packedDate = new Date(confirmedDate.getTime() + 5000); // 5 seconds later
-    timeline.push({
-      label: 'Order Packed',
-      date: format(packedDate, 'MM/dd/yyyy, h:mm:ss a'),
-      completed: ['processing', 'shipped', 'delivered'].includes(order.status)
-    });
-
-    // In Transit
-    timeline.push({
-      label: 'In Transit',
-      date: order.status === 'shipped' ? format(new Date(), 'MM/dd/yyyy, h:mm:ss a') : '',
-      completed: false
-    });
-
-    // Out for Delivery
-    timeline.push({
-      label: 'Out for Delivery',
-      date: '',
-      completed: false
-    });
-
-    // Delivered
-    timeline.push({
-      label: 'Delivered',
-      date: '',
-      completed: order.status === 'delivered'
-    });
+    
     return timeline;
   };
   const handleCancelOrder = async () => {
