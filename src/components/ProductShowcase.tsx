@@ -46,6 +46,13 @@ const ProductShowcase = () => {
         if (response.error) throw response.error;
 
         const formattedProducts = response.data?.map((product: any) => {
+          console.log('📦 Raw product from database:', {
+            name: product.name,
+            thumbnail: product.thumbnail,
+            image_url: product.image_url,
+            images: product.images
+          });
+          
           let imageUrl = product.thumbnail || product.image_url;
           
           // Parse images JSON string and get first image if no thumbnail
@@ -62,9 +69,10 @@ const ProductShowcase = () => {
             }
           }
 
+          // Return ALL product fields including thumbnail
           return {
-            ...product, // Pass all product data
-            image: imageUrl
+            ...product, // This includes thumbnail, image_url, images, etc.
+            image: imageUrl // Used for display in ProductShowcase
           };
         }) || [];
 
