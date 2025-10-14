@@ -561,7 +561,7 @@ const BookingConfirmation = () => {
               {/* Selection Summary - Show for both booking and buy */}
               {(purchaseType === 'book' || purchaseType === 'buy') && (
                 <div className="space-y-3">
-                  <Card className="border-0 bg-[#F8F9F9]">
+                  <Card className="border-0 bg-[#F8F9F9] rounded-none">
                     <CardContent className="p-4">
                       <div className="flex items-center justify-between">
                         <Badge 
