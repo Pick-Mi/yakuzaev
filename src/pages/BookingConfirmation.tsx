@@ -931,7 +931,7 @@ const BookingConfirmation = () => {
                       variant={!useLocationDetection ? "default" : "outline"}
                       onClick={() => setUseLocationDetection(false)}
                       disabled={!isVerified}
-                      className="flex-1"
+                      className="flex-1 rounded-none"
                     >
                       Enter Manually
                     </Button>
