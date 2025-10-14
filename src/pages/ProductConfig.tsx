@@ -248,12 +248,12 @@ const ProductConfig = () => {
             </h2>
 
             {/* Tabs */}
-            <div className="flex gap-0 border-b border-gray-200">
+            <div className="flex gap-0">
               <button
                 onClick={() => setActiveTab("book")}
                 className={`flex-1 py-3 font-['Inter'] font-medium text-[16px] transition-colors ${
                   activeTab === "book"
-                    ? "bg-black text-white"
+                    ? "bg-black text-white border-2 border-black"
                     : "bg-white text-black hover:bg-gray-50"
                 }`}
               >
@@ -263,7 +263,7 @@ const ProductConfig = () => {
                 onClick={() => setActiveTab("buy")}
                 className={`flex-1 py-3 font-['Inter'] font-medium text-[16px] transition-colors ${
                   activeTab === "buy"
-                    ? "bg-black text-white"
+                    ? "bg-black text-white border-2 border-black"
                     : "bg-white text-black hover:bg-gray-50"
                 }`}
               >
