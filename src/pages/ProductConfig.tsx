@@ -307,14 +307,24 @@ const ProductConfig = () => {
                     </button>
                   ))
                 ) : (
-                  <div className="border-2 border-gray-300 rounded-lg p-4">
+                <div className="border-2 border-black bg-gray-50 rounded-lg p-4 flex items-center justify-between">
+                  <div className="text-left">
                     <p className="font-['Poppins'] font-semibold text-[20px]">
                       Standard
                     </p>
                     <p className="font-['Inter'] text-[14px] text-gray-600">
+                      IDC Range
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <p className="font-['Inter'] text-[12px] text-gray-500">
+                      Starts at
+                    </p>
+                    <p className="font-['Poppins'] font-semibold text-[18px]">
                       ₹{currentPrice?.toLocaleString('en-IN')}
                     </p>
                   </div>
+                </div>
                 )}
               </div>
             </div>
