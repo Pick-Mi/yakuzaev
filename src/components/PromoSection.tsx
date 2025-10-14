@@ -75,7 +75,7 @@ const PromoSection = () => {
         <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 md:gap-[15px] items-stretch sm:items-center justify-center lg:justify-start lg:absolute lg:left-[calc(50%-434.5px)] lg:-translate-x-1/2 lg:top-[415px] w-full max-w-[400px] sm:max-w-none sm:w-auto lg:w-[351px] mb-6 lg:mb-0 px-4 sm:px-0">
           <Link
             to="/products"
-            className="w-full sm:flex-1 bg-black h-[48px] sm:h-[50px] md:h-[52px] lg:h-[55px] flex items-center justify-center overflow-hidden transition-all hover:bg-[#333] hover:scale-[1.02] active:scale-[0.98]"
+            className="w-full sm:flex-1 bg-black h-[48px] sm:h-[50px] md:h-[52px] lg:h-[55px] flex items-center justify-center overflow-hidden transition-all hover:bg-[#333] hover:scale-[1.02] active:scale-[0.98] px-[25px]"
           >
             <span className="font-['Poppins'] font-medium leading-normal text-white text-[14px] sm:text-[15px] lg:text-[16px] whitespace-nowrap">
               Book Now
@@ -83,7 +83,7 @@ const PromoSection = () => {
           </Link>
           <Link
             to="/products"
-            className="w-full sm:flex-1 bg-[#f8f9f9] border border-transparent h-[48px] sm:h-[50px] md:h-[52px] lg:h-[55px] flex items-center justify-center overflow-hidden transition-all hover:bg-[#e8e9ea] hover:border-[#d0d0d0] hover:scale-[1.02] active:scale-[0.98]"
+            className="w-full sm:flex-1 bg-[#f8f9f9] border border-transparent h-[48px] sm:h-[50px] md:h-[52px] lg:h-[55px] flex items-center justify-center overflow-hidden transition-all hover:bg-[#e8e9ea] hover:border-[#d0d0d0] hover:scale-[1.02] active:scale-[0.98] px-[25px]"
           >
             <span className="font-['Inter'] font-medium leading-normal text-black text-[13px] sm:text-[14px] lg:text-[14px] whitespace-nowrap">
               Explore 
