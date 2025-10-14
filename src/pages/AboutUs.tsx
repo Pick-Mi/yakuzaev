@@ -18,29 +18,29 @@ const AboutUs = () => {
       <main>
         {/* Hero Section */}
         <section 
-          className="relative w-full min-h-screen h-[829px] bg-black overflow-hidden"
+          className="relative w-full min-h-screen h-[600px] sm:h-[700px] md:h-[829px] bg-black overflow-hidden"
           style={{
             backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("/placeholder.svg")',
             backgroundSize: 'cover',
             backgroundPosition: 'center',
           }}
         >
-          <div className="absolute left-10 top-[520px] w-[601px] max-w-[90%] flex flex-col gap-6 items-start">
-            <h1 className="font-sans font-normal text-[52px] leading-[73px] text-white m-0">
+          <div className="absolute bottom-8 sm:bottom-16 md:bottom-24 left-4 sm:left-6 md:left-10 right-4 sm:right-auto w-auto sm:w-[601px] max-w-[calc(100%-2rem)] sm:max-w-[90%] flex flex-col gap-4 sm:gap-6 items-start px-2 sm:px-0 animate-fade-in">
+            <h1 className="font-sans font-normal text-[32px] sm:text-[42px] md:text-[52px] leading-[1.3] sm:leading-[1.4] md:leading-[73px] text-white m-0">
               About <span className="text-orange-300">YakuzaEV</span>
             </h1>
-            <p className="text-xl text-white/90 mb-4">
+            <p className="text-base sm:text-lg md:text-xl text-white/90 mb-2 sm:mb-4">
               Driving India towards a sustainable, electric future with innovative mobility solutions
             </p>
             
-            <div className="flex gap-6 items-center flex-wrap">
-              <a href="/products">
-                <button className="flex justify-center items-center gap-[10px] bg-white text-black hover:bg-gray-100 px-[35px] h-[50px] text-[14px] font-medium font-sans rounded-none transition-colors">
+            <div className="flex gap-4 sm:gap-6 items-center flex-wrap w-full sm:w-auto">
+              <a href="/products" className="w-full sm:w-auto">
+                <button className="w-full sm:w-auto flex justify-center items-center gap-[10px] bg-white text-black hover:bg-gray-100 px-[35px] h-[50px] text-[14px] font-medium font-sans rounded-none transition-colors">
                   Explore Products
                 </button>
               </a>
-              <a href="/become-dealer">
-                <button className="bg-white/15 text-white hover:bg-white hover:text-black px-12 h-[50px] text-[14px] font-medium font-sans rounded-none transition-colors">
+              <a href="/become-dealer" className="w-full sm:w-auto">
+                <button className="w-full sm:w-auto bg-white/15 text-white hover:bg-white hover:text-black px-12 h-[50px] text-[14px] font-medium font-sans rounded-none transition-colors">
                   Become a Dealer
                 </button>
               </a>
