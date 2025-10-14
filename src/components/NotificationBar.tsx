@@ -31,7 +31,7 @@ const NotificationBar = () => {
   return (
     <div className="w-full bg-[#0C121C] text-white flex flex-col justify-end items-center gap-2.5 py-[15px] px-4 sm:px-[493px]">
       <div className="container mx-auto flex items-center justify-center gap-2 sm:gap-4 flex-wrap" style={{ fontFamily: 'Poppins, sans-serif' }}>
-        <span className="text-[10px] sm:text-xs md:text-sm text-center">{notificationMessage}</span>
+        <span className="text-white font-['Inter'] text-[10px] font-normal leading-normal text-center sm:text-xs md:text-sm">{notificationMessage}</span>
         <Link 
           to={notificationCtaUrl} 
           className="font-medium hover:underline underline-offset-4 transition-all text-[10px] sm:text-xs md:text-sm whitespace-nowrap"
