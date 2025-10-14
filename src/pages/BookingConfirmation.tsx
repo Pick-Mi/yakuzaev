@@ -550,7 +550,7 @@ const BookingConfirmation = () => {
             {/* Left Side - Product Summary */}
             <div className="space-y-6 lg:sticky lg:top-28 lg:self-start">
               {/* Product Image and Details */}
-              <div className="bg-[#F8F9F9] rounded-lg p-8 h-[400px] flex items-center justify-center">
+              <div className="bg-[#F8F9F9] rounded-lg p-8 flex items-center justify-center">
                 <img 
                   src={product.image || product.images?.[0]} 
                   alt={product.name}
