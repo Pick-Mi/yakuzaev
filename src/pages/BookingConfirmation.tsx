@@ -524,7 +524,7 @@ const BookingConfirmation = () => {
 
       <main className="flex-1 container mx-auto px-4 py-8 max-w-4xl pt-32">
         {/* Breadcrumb */}
-        <div className="mb-6 flex items-center gap-2 text-[14px] flex-wrap">
+        <div className="fixed top-24 left-0 right-0 z-40 bg-white px-4 py-3 mb-6 flex items-center gap-2 text-[14px] flex-wrap">
           {breadcrumbs.map((crumb: any, index: number) => (
             <div key={index} className="flex items-center gap-2">
               <button 
