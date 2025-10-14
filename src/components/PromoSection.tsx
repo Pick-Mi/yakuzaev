@@ -92,9 +92,9 @@ const PromoSection = () => {
         </div>
         
         {/* Product Images Grid */}
-        <div className="grid grid-cols-2 gap-2 w-full md:block md:absolute md:inset-0">
+        <div className="grid grid-cols-2 gap-2 sm:gap-3 w-full md:block md:absolute md:inset-0">
           {/* Main Image - Top Right */}
-          <div className="col-span-2 md:absolute bg-[#d9d9d9] h-[200px] md:h-[288px] md:right-0 md:top-0 md:w-[572px]">
+          <div className="col-span-2 sm:col-span-1 md:absolute bg-[#d9d9d9] h-[200px] sm:h-[250px] md:h-[288px] md:right-0 md:top-0 sm:w-full md:w-[572px]">
             <img
               src={image2}
               alt="Main Scooter"
@@ -102,17 +102,17 @@ const PromoSection = () => {
             />
           </div>
           
-          {/* Bottom Right Image */}
-          <div className="md:absolute bg-[#d9d9d9] h-[150px] md:bottom-0 md:h-[214px] md:right-0 md:w-[394px]">
+          {/* Top Center Image - Hidden on mobile, visible on tablet */}
+          <div className="hidden sm:block md:absolute bg-[#d9d9d9] h-[250px] md:h-[288px] sm:w-full md:left-[calc(50%-49.5px)] md:-translate-x-1/2 md:top-0 md:w-[215px] md:overflow-hidden">
             <img
-              src={image4}
-              alt="Scooter Detail"
+              src={image1}
+              alt="Scooter Front"
               className="w-full h-full object-cover"
             />
           </div>
           
           {/* Bottom Center Image */}
-          <div className="md:absolute bg-[#d9d9d9] h-[150px] md:bottom-0 md:h-[214px] md:left-[calc(50%+39.5px)] md:-translate-x-1/2 md:w-[393px]">
+          <div className="md:absolute bg-[#d9d9d9] h-[150px] sm:h-[180px] md:bottom-0 md:h-[214px] md:left-[calc(50%+39.5px)] md:-translate-x-1/2 md:w-[393px]">
             <img
               src={image3}
               alt="Scooter Side View"
@@ -120,11 +120,11 @@ const PromoSection = () => {
             />
           </div>
           
-          {/* Top Center Image */}
-          <div className="hidden md:block md:absolute bg-[#d9d9d9] md:h-[288px] md:left-[calc(50%-49.5px)] md:-translate-x-1/2 md:top-0 md:w-[215px] md:overflow-hidden">
+          {/* Bottom Right Image */}
+          <div className="md:absolute bg-[#d9d9d9] h-[150px] sm:h-[180px] md:bottom-0 md:h-[214px] md:right-0 md:w-[394px]">
             <img
-              src={image1}
-              alt="Scooter Front"
+              src={image4}
+              alt="Scooter Detail"
               className="w-full h-full object-cover"
             />
           </div>
