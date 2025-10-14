@@ -447,17 +447,17 @@ const Auth = () => {
       
       {/* Mobile View - Bottom Sheet Style */}
       {isMobile ? (
-        <div className="fixed inset-0 flex flex-col">
+        <div className="fixed inset-0 flex flex-col z-50">
           {/* Header spacer */}
-          <div className="h-[120px]" />
+          <div className="h-[120px] flex-shrink-0" />
           
           {/* Backdrop overlay */}
-          <div className="flex-1 relative bg-black/40 backdrop-blur-sm">
+          <div className="flex-1 relative bg-black/50 backdrop-blur-sm overflow-hidden">
             {/* Background image */}
             <img 
               src={authScooterImage} 
               alt="Scooter" 
-              className="w-full h-full object-cover opacity-20"
+              className="w-full h-full object-cover opacity-30"
             />
           </div>
           
