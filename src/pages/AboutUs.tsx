@@ -152,7 +152,7 @@ const AboutUs = () => {
         </section>
 
         {/* Future Ready Section */}
-        <section className="py-[70px] px-4 bg-background">
+        <section className="py-[25px] px-4 bg-background">
           <div className="container mx-auto max-w-7xl p-0">
             <h2 className="text-4xl md:text-5xl font-bold mb-12">
               Future Ready. Already
