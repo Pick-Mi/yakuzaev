@@ -23,7 +23,7 @@ const ColorVarietySection = () => {
         </div>
 
         {/* Right side - White background with Text and Color Swatches */}
-        <div className="flex-1 w-full lg:w-1/2 bg-white h-[400px] md:h-[500px] lg:h-[600px] flex items-center justify-center px-6 md:px-8 lg:px-16">
+        <div className="flex-1 w-full lg:w-1/2 bg-white h-[400px] md:h-[500px] lg:h-[600px] flex items-center justify-center px-6 md:px-8 lg:px-16 pb-[25px]">
           <div className="flex flex-col gap-6 md:gap-8 items-center lg:items-start text-center lg:text-left">
             <h2 className="font-inter font-medium text-2xl md:text-4xl lg:text-[48px] leading-tight text-[#000000]">
               Express Yourself<br />
