@@ -103,6 +103,26 @@ const OrderDetails = () => {
         .single();
 
       if (error) throw error;
+      
+      // Fetch product details if order_items_data has product_id
+      const orderItemsData = data.order_items_data as any[];
+      if (orderItemsData && Array.isArray(orderItemsData) && orderItemsData.length > 0) {
+        const productId = data.order_items_data[0].product_id;
+        if (productId) {
+          const { data: productData } = await supabase
+            .from('products')
+            .select('image_url, images')
+            .eq('id', productId)
+            .single();
+          
+          if (productData) {
+            // Add product image to order_items_data
+            data.order_items_data[0].image_url = productData.image_url || 
+              (productData.images && productData.images[0]?.url);
+          }
+        }
+      }
+      
       setOrder(data);
 
       // Fetch transaction details for this order
