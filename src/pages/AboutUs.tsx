@@ -90,7 +90,7 @@ const AboutUs = () => {
               We build to rule , We build to perform
             </h2>
             
-            <div className="grid lg:grid-cols-2 gap-12 items-center bg-white p-8">
+            <div className="grid lg:grid-cols-2 gap-12 items-center bg-white p-[10px]">
               {/* Left - Image */}
               <div className="overflow-hidden">
                 <img 
