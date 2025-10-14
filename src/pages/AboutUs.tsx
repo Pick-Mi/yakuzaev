@@ -50,32 +50,34 @@ const AboutUs = () => {
 
         {/* Build to Rule Section */}
         <section className="py-[70px] px-4">
-          <div className="container mx-auto max-w-7xl">
+          <div className="container mx-auto max-w-7xl p-0">
             <h2 className="text-4xl md:text-5xl font-bold mb-12">
               We build to rule, We build to perform
             </h2>
             
-            <div className="flex flex-col md:flex-row gap-6">
-              <div className="overflow-hidden md:w-[60%]">
-                <img 
-                  src={teamMeeting} 
-                  alt="Leadership team presenting to employees" 
-                  className="w-full h-[500px] object-cover"
-                />
-              </div>
-              <div className="overflow-hidden md:w-[20%]">
-                <img 
-                  src={manufacturing} 
-                  alt="Manufacturing facility with EV production" 
-                  className="w-full h-[500px] object-cover"
-                />
-              </div>
-              <div className="overflow-hidden md:w-[20%]">
-                <img 
-                  src={teamCollaboration} 
-                  alt="Team collaboration at office campus" 
-                  className="w-full h-[500px] object-cover"
-                />
+            <div className="overflow-x-auto pb-4 scroll-smooth [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+              <div className="flex gap-6 pb-4">
+                <div className="overflow-hidden flex-shrink-0 w-[60%] md:w-[60%]">
+                  <img 
+                    src={teamMeeting} 
+                    alt="Leadership team presenting to employees" 
+                    className="w-full h-[500px] object-cover"
+                  />
+                </div>
+                <div className="overflow-hidden flex-shrink-0 w-[20%] md:w-[20%]">
+                  <img 
+                    src={manufacturing} 
+                    alt="Manufacturing facility with EV production" 
+                    className="w-full h-[500px] object-cover"
+                  />
+                </div>
+                <div className="overflow-hidden flex-shrink-0 w-[20%] md:w-[20%]">
+                  <img 
+                    src={teamCollaboration} 
+                    alt="Team collaboration at office campus" 
+                    className="w-full h-[500px] object-cover"
+                  />
+                </div>
               </div>
             </div>
           </div>
