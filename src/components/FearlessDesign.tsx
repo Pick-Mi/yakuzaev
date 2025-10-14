@@ -20,7 +20,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
 
   return (
     <div
-      className="relative bg-white border border-gray-200 h-auto sm:h-[500px] md:h-[629px] w-full max-w-[630px] overflow-hidden cursor-pointer transition-all duration-500 ease-in-out hover:shadow-xl hover:scale-[1.02]"
+      className="relative bg-white border border-gray-200 min-h-[450px] sm:h-[500px] md:h-[629px] w-full max-w-[630px] overflow-hidden cursor-pointer transition-all duration-500 ease-in-out hover:shadow-xl hover:scale-[1.02]"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -30,14 +30,14 @@ const ProductCard = ({ product }: ProductCardProps) => {
           isHovered ? "opacity-0" : "opacity-100"
         }`}
       >
-        <div className="absolute top-0 left-0 w-full h-[300px] sm:h-[400px] md:h-[503px] bg-gray-200 overflow-hidden">
+        <div className="w-full h-[250px] sm:h-[400px] md:h-[503px] bg-gray-200 overflow-hidden">
           <img
             src={thumbnail}
             alt={name}
             className="w-full h-full object-cover"
           />
         </div>
-        <div className="absolute bottom-0 left-0 right-0 px-4 sm:px-[25px] pb-4 sm:pb-[25px]">
+        <div className="px-4 sm:px-[25px] pb-4 sm:pb-[25px] pt-4">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-3 sm:mb-[15px] gap-3 sm:gap-0">
             <div>
               <h3 className="font-medium text-[18px] sm:text-[20px] md:text-[24px] text-[#212121] mb-1 sm:mb-2">{name}</h3>
@@ -154,7 +154,7 @@ const FearlessDesign = () => {
   }, []);
 
   return (
-    <section className="relative w-full min-h-[700px] bg-white py-10 sm:py-16 md:py-20 px-4 sm:px-8 md:px-12 lg:px-[70px] overflow-hidden">
+    <section className="w-full bg-white py-10 sm:py-16 md:py-20 px-4 sm:px-8 md:px-12 lg:px-[70px]">
       <div className="max-w-[1300px] mx-auto">
         <h2 className="font-medium text-[28px] sm:text-[36px] md:text-[48px] text-[#212121] mb-10 sm:mb-16 md:mb-20">
           Fearless by Design
