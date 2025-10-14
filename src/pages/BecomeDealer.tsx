@@ -76,7 +76,7 @@ const BecomeDealer = () => {
         <section 
           className="relative w-full min-h-screen h-[600px] sm:h-[700px] md:h-[829px] bg-black overflow-hidden"
           style={{
-            backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("/placeholder.svg")',
+            backgroundImage: 'url("/dealer-hero-bg.svg")',
             backgroundSize: 'cover',
             backgroundPosition: 'center',
           }}
