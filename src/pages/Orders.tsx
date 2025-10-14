@@ -447,7 +447,7 @@ const Orders = () => {
                             <span className="text-gray-700">Colour :</span>
                             <span className="font-medium">{firstItem?.color || 'Black'}</span>
                             <div 
-                              className="w-4 h-4 rounded-full border border-gray-300"
+                              className="w-4 h-4"
                               style={{ backgroundColor: firstItem?.color_hex || '#000000' }}
                             ></div>
                           </div>
