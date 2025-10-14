@@ -135,7 +135,7 @@ export const ProductBottomNav = ({
                         <button
                           key={index}
                           onClick={() => setSelectedColor(color.name)}
-                          className={`w-[40px] h-[40px] border-2 ${
+                          className={`w-[32px] h-[32px] border-2 ${
                             selectedColor === color.name
                               ? "border-black"
                               : "border-gray-300"
