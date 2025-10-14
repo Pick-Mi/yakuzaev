@@ -154,13 +154,13 @@ const FearlessDesign = () => {
   }, []);
 
   return (
-    <section className="relative w-full min-h-[700px] bg-background py-10 sm:py-16 md:py-20 px-4 sm:px-8 md:px-12 lg:px-[70px] overflow-hidden">
+    <section className="relative w-full min-h-[700px] bg-white py-10 sm:py-16 md:py-20 px-4 sm:px-8 md:px-12 lg:px-[70px] overflow-hidden">
       <div className="max-w-[1300px] mx-auto">
-        <h2 className="font-medium text-[28px] sm:text-[36px] md:text-[48px] text-foreground mb-10 sm:mb-16 md:mb-20">
+        <h2 className="font-medium text-[28px] sm:text-[36px] md:text-[48px] text-[#212121] mb-10 sm:mb-16 md:mb-20">
           Fearless by Design
         </h2>
         {loading ? (
-          <div className="text-center text-muted-foreground">Loading products...</div>
+          <div className="text-center text-[#4b4f54] py-20">Loading products...</div>
         ) : products.length > 0 ? (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 md:gap-10">
             {products.map((product) => (
@@ -168,7 +168,7 @@ const FearlessDesign = () => {
             ))}
           </div>
         ) : (
-          <div className="text-center text-muted-foreground">No sports products available</div>
+          <div className="text-center text-[#4b4f54] py-20">No sports products available</div>
         )}
       </div>
     </section>
