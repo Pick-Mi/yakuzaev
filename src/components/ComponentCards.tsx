@@ -14,7 +14,7 @@ const ComponentCards = ({ visualFeatures = [] }: ComponentCardsProps) => {
   const thirdCard = visualFeatures[2];
   
   return (
-    <section className="bg-[#f5f5f5] w-full px-5 py-[30px] md:p-[70px]">
+    <section className="bg-[#f5f5f5] w-full px-5 py-[30px] md:p-[75px]">
         <div className="max-w-[1400px] mx-auto flex flex-col md:flex-row gap-5
                       md:gap-4
                       sm:gap-3">
