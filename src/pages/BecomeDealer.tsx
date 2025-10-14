@@ -83,7 +83,7 @@ const BecomeDealer = () => {
         >
           <div className="absolute bottom-8 sm:bottom-16 md:bottom-24 left-4 sm:left-6 md:left-10 right-4 sm:right-auto w-auto sm:w-[601px] max-w-[calc(100%-2rem)] sm:max-w-[90%] flex flex-col gap-4 sm:gap-6 items-start px-2 sm:px-0 animate-fade-in">
             <h1 className="font-sans font-normal text-[32px] sm:text-[42px] md:text-[52px] leading-[1.3] sm:leading-[1.4] md:leading-[73px] text-white m-0">
-              Become a <span className="text-orange-300">Dealer</span>
+              Become a <span className="text-[#FFFFFF]">Dealer</span>
             </h1>
             <p className="text-base sm:text-lg md:text-xl text-white/90 mb-2 sm:mb-4">
               Partner with India's fastest-growing EV brand and drive the future of electric mobility
