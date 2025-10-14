@@ -49,7 +49,7 @@ const VariantsPricingSection = ({ onVariantSelect, variants: propVariants, speci
         <div className="bg-white rounded-lg overflow-x-auto">
           {/* Variant Names Header */}
           <div className="grid grid-cols-4 border-b border-gray-200 min-w-[800px]">
-            <div className="p-6"></div>
+            <div className="p-6 sticky left-0 bg-white z-10"></div>
             {actualVariants.map((variant, index) => (
               <div key={index} className="p-6 text-center border-l border-gray-200">
                 <h3 className="font-inter font-semibold text-[18px] text-[#000000]">
@@ -65,7 +65,7 @@ const VariantsPricingSection = ({ onVariantSelect, variants: propVariants, speci
               key={rowIndex} 
               className={`grid grid-cols-4 min-w-[800px] ${rowIndex !== specRows.length - 1 ? 'border-b border-gray-200' : ''}`}
             >
-              <div className="p-6 font-inter font-medium text-[16px] text-[#000000]">
+              <div className="p-6 font-inter font-medium text-[16px] text-[#000000] sticky left-0 bg-white z-10">
                 {spec.label}
               </div>
               {actualVariants.map((variant, colIndex) => {
@@ -110,7 +110,7 @@ const VariantsPricingSection = ({ onVariantSelect, variants: propVariants, speci
 
           {/* Select Buttons Row */}
           <div className="grid grid-cols-4 bg-white pt-6 pb-8 min-w-[800px]">
-            <div className="p-6"></div>
+            <div className="p-6 sticky left-0 bg-white z-10"></div>
             {actualVariants.map((variant, index) => (
               <div key={index} className="p-6 flex items-center justify-center border-l border-gray-200">
                 <Button 
