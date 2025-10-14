@@ -63,8 +63,8 @@ const ThrillsSection = ({ promoCard }: ThrillsSectionProps) => {
                 Book Now
               </Button>
               <Button 
-                variant="outline"
-                className="border-[#555555] text-white hover:bg-[#2a2a2a] px-6 md:px-8 py-4 md:py-6 text-sm md:text-base font-medium w-full md:w-auto rounded-none"
+                variant="secondary"
+                className="px-6 md:px-8 py-4 md:py-6 text-sm md:text-base font-medium w-full md:w-auto rounded-none"
               >
                 Explore Neu
               </Button>
