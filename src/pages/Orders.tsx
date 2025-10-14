@@ -318,7 +318,7 @@ const Orders = () => {
         <div className="flex gap-6">
           {/* Sidebar - Same as Profile page */}
           <aside className="w-80 flex-shrink-0">
-            <nav className="flex flex-col gap-[15px]">
+            <nav className="flex flex-col gap-[15px] sticky top-32">
               {/* Account Settings Section */}
               <div className="bg-white">
                 <div className="flex items-center gap-3 px-6 py-4 border-b">
