@@ -86,10 +86,10 @@ export const ProductBottomNav = ({
           {/* Product Name and Price */}
           <div className="flex items-start gap-4 mb-4">
             <div className="flex-1">
-              <div className="font-['Poppins'] font-medium text-[18px] text-gray-800 mb-2">
+              <div className="font-['Poppins'] font-medium text-[14px] text-gray-800 mb-2">
                 {productName}
               </div>
-              <div className="font-['Poppins'] font-semibold text-[24px] text-gray-800">
+              <div className="font-['Poppins'] font-semibold text-[20px] text-gray-800">
                 {variantPrice}
               </div>
             </div>
@@ -101,7 +101,7 @@ export const ProductBottomNav = ({
               <div className="flex flex-col gap-4">
                 {/* Variant Selector */}
                 <div>
-                  <div className="font-['Inter'] text-[14px] text-gray-800 font-medium mb-2">
+                  <div className="font-['Inter'] text-[12px] text-gray-800 font-medium mb-2">
                     Pick your variant
                   </div>
                   <Select
@@ -126,7 +126,7 @@ export const ProductBottomNav = ({
 
                 {/* Color Selector */}
                 <div>
-                  <div className="font-['Inter'] text-[14px] text-gray-800 font-medium mb-2">
+                  <div className="font-['Inter'] text-[12px] text-gray-800 font-medium mb-2">
                     Colour
                   </div>
                   <div className="flex gap-2">
