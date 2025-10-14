@@ -457,7 +457,7 @@ const Auth = () => {
             <img 
               src={authScooterImage} 
               alt="Scooter" 
-              className="w-full h-full object-cover opacity-30"
+              className="w-full h-full object-fill opacity-30"
             />
           </div>
           
