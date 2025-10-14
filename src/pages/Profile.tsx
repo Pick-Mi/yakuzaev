@@ -52,6 +52,11 @@ const Profile = () => {
     verifying: false
   });
   const [addresses, setAddresses] = useState<Address[]>([]);
+  const [nameDialog, setNameDialog] = useState({
+    open: false,
+    first_name: "",
+    last_name: ""
+  });
   const [addressDialog, setAddressDialog] = useState({
     open: false,
     editId: null as string | null,
@@ -236,6 +241,56 @@ const Profile = () => {
   const handleLogout = async () => {
     await signOut();
     navigate("/");
+  };
+
+  const handleSaveName = async () => {
+    if (!user) return;
+
+    if (!nameDialog.first_name.trim()) {
+      toast({
+        title: "Validation Error",
+        description: "First name is required",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setSaving(true);
+    try {
+      const { error } = await supabase
+        .from('profiles')
+        .update({
+          first_name: nameDialog.first_name.trim(),
+          last_name: nameDialog.last_name.trim()
+        })
+        .eq('user_id', user.id);
+
+      if (error) throw error;
+
+      setProfile(prev => ({
+        ...prev,
+        first_name: nameDialog.first_name.trim(),
+        last_name: nameDialog.last_name.trim()
+      }));
+
+      setNameDialog({ open: false, first_name: "", last_name: "" });
+
+      toast({
+        title: "Success",
+        description: "Name updated successfully",
+      });
+
+      await refreshProfile();
+    } catch (error) {
+      console.error('Error updating name:', error);
+      toast({
+        title: "Error",
+        description: "Failed to update name",
+        variant: "destructive"
+      });
+    } finally {
+      setSaving(false);
+    }
   };
 
   const openEditDialog = (field: string, value: string) => {
@@ -618,7 +673,11 @@ const Profile = () => {
                     {profile.first_name} {profile.last_name || ''}
                   </h2>
                   <button 
-                    onClick={() => {/* Add edit name functionality */}}
+                    onClick={() => setNameDialog({
+                      open: true,
+                      first_name: profile.first_name,
+                      last_name: profile.last_name
+                    })}
                     className="p-2 hover:bg-gray-100 rounded-full transition-colors"
                   >
                     <Edit className="w-5 h-5 text-gray-600" />
@@ -961,6 +1020,48 @@ const Profile = () => {
                 className="flex-1 rounded-none"
               >
                 CANCEL
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* Edit Name Dialog */}
+        <Dialog open={nameDialog.open} onOpenChange={(open) => !open && setNameDialog({ open: false, first_name: "", last_name: "" })}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Edit Name</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4 py-4">
+              <div className="space-y-2">
+                <Label htmlFor="first_name">First Name *</Label>
+                <Input
+                  id="first_name"
+                  value={nameDialog.first_name}
+                  onChange={(e) => setNameDialog(prev => ({ ...prev, first_name: e.target.value }))}
+                  placeholder="Enter first name"
+                  maxLength={50}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="last_name">Last Name</Label>
+                <Input
+                  id="last_name"
+                  value={nameDialog.last_name}
+                  onChange={(e) => setNameDialog(prev => ({ ...prev, last_name: e.target.value }))}
+                  placeholder="Enter last name"
+                  maxLength={50}
+                />
+              </div>
+            </div>
+            <DialogFooter>
+              <Button 
+                variant="outline" 
+                onClick={() => setNameDialog({ open: false, first_name: "", last_name: "" })}
+              >
+                Cancel
+              </Button>
+              <Button onClick={handleSaveName} disabled={saving}>
+                {saving ? "Saving..." : "Save"}
               </Button>
             </DialogFooter>
           </DialogContent>
