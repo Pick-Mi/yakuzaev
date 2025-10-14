@@ -57,12 +57,15 @@ export const ProductBottomNav = ({
     };
   }, []);
 
-  // Sample colors - you can customize these
-  const colors = [
-    { name: "White", value: "#FFFFFF" },
-    { name: "Beige", value: "#F5DEB3" },
-    { name: "Blue", value: "#A7C7E7" },
-  ];
+  // Get colors from selected variant
+  const colors = selectedVariant?.colors?.map((color: any) => {
+    const hexMatch = color.name?.match(/#[0-9A-Fa-f]{6}/);
+    const hexColor = hexMatch ? hexMatch[0] : '#000000';
+    return {
+      name: color.name,
+      value: hexColor
+    };
+  }) || [];
 
   return (
     <div 
@@ -105,19 +108,26 @@ export const ProductBottomNav = ({
               Colour
             </span>
             <div className="flex gap-2">
-              {colors.map((color) => (
-                <button
-                  key={color.name}
-                  onClick={() => setSelectedColor(color.name)}
-                  className={`w-[28px] h-[28px] rounded border-2 ${
-                    selectedColor === color.name
-                      ? "border-black"
-                      : "border-gray-300"
-                  }`}
-                  style={{ backgroundColor: color.value }}
-                  title={color.name}
-                />
-              ))}
+              {colors.length > 0 ? (
+                colors.map((color, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setSelectedColor(color.name)}
+                    className={`w-[28px] h-[28px] rounded border-2 ${
+                      selectedColor === color.name
+                        ? "border-black"
+                        : "border-gray-300"
+                    }`}
+                    style={{ 
+                      backgroundColor: color.value,
+                      border: color.value.toLowerCase() === '#ffffff' ? '2px solid #E0E0E0' : undefined
+                    }}
+                    title={color.name}
+                  />
+                ))
+              ) : (
+                <span className="text-gray-400 text-sm">No colors available</span>
+              )}
             </div>
           </div>
 
