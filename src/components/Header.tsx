@@ -117,7 +117,7 @@ const Header = () => {
 
   return (
     <>
-      <div className="fixed top-0 left-0 w-full z-50">
+      <div className={`${isScrolled ? 'fixed' : 'absolute'} top-0 left-0 w-full z-50 transition-all duration-300`}>
         <NotificationBar />
         <nav className={`w-full p-[13px] transition-all duration-300 ${shouldShowFixedHeader ? 'bg-white shadow-sm' : 'bg-transparent'} ${isMenuOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
           <div className="relative h-8 w-full max-w-[1360px] mx-auto">
