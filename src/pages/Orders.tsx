@@ -316,9 +316,9 @@ const Orders = () => {
     <div className="min-h-screen bg-background">
       <Header />
       
-      {isMobile && (
-        // Fixed Breadcrumb Header for Mobile
-        <div className="fixed top-[60px] left-0 right-0 z-40 bg-white px-4 py-4 border-b border-gray-200">
+      {/* Fixed Breadcrumb Header */}
+      <div className="fixed top-[60px] left-0 right-0 z-40 bg-white px-4 py-4 border-b border-gray-200">
+        <div className="container mx-auto">
           <div className="flex items-center gap-2 text-sm text-gray-600">
             <button onClick={() => navigate('/profile')} className="hover:text-gray-900">
               Profile
@@ -327,9 +327,9 @@ const Orders = () => {
             <span className="text-gray-900 font-medium">Order</span>
           </div>
         </div>
-      )}
+      </div>
       
-      <div className={`container mx-auto ${isMobile ? 'px-0 pt-[120px]' : 'px-4 pt-40'} pb-8`}>
+      <div className={`container mx-auto ${isMobile ? 'px-0 pt-[120px]' : 'px-4 pt-[120px]'} pb-8`}>
         {isMobile ? (
           // Mobile Layout
           <div className="space-y-0">
