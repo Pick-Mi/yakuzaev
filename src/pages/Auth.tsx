@@ -490,7 +490,7 @@ const Auth = () => {
                 <div className="space-y-6">
                   <form onSubmit={handlePhoneSubmit} className="space-y-6">
                     <div className="space-y-2">
-                      <div className="flex gap-3 items-center bg-white border-2 border-gray-300 rounded-xl px-4 py-4 hover:border-gray-400 focus-within:border-gray-900 transition-colors">
+                      <div className="flex gap-3 items-center bg-white border-2 border-gray-300 px-4 py-4 hover:border-gray-400 focus-within:border-gray-900 transition-colors">
                         <Select value={countryCode} onValueChange={setCountryCode}>
                           <SelectTrigger className="w-[90px] border-0 bg-transparent p-0 h-auto gap-1 focus:ring-0 focus:ring-offset-0">
                             <SelectValue>
