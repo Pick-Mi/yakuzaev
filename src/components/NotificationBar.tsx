@@ -29,7 +29,7 @@ const NotificationBar = () => {
   if (!isEnabled || !notificationMessage) return null;
 
   return (
-    <div className="w-full bg-[#0C121C] text-white h-10 sm:h-12 px-2 sm:px-4 flex items-center">
+    <div className="w-full bg-[#0C121C] text-white flex flex-col justify-end items-center gap-2.5 py-[15px] px-4 sm:px-[493px]">
       <div className="container mx-auto flex items-center justify-center gap-2 sm:gap-4 flex-wrap" style={{ fontFamily: 'Poppins, sans-serif' }}>
         <span className="text-[10px] sm:text-xs md:text-sm text-center">{notificationMessage}</span>
         <Link 
