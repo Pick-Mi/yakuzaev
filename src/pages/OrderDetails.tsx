@@ -393,13 +393,6 @@ const OrderDetails = () => {
               <h3 className="text-lg font-bold mb-6">Delivery details</h3>
               
               <div className="bg-gray-50 p-6 space-y-4">
-                <div className="flex justify-between items-center mb-4">
-                  
-                  <Badge variant={order.payment_status === 'completed' ? 'default' : order.payment_status === 'pending' ? 'secondary' : 'destructive'}>
-                    {order.payment_status === 'completed' ? 'Payment Done' : order.payment_status === 'pending' ? 'Payment Pending' : 'Payment Failed'}
-                  </Badge>
-                </div>
-
                 <div className="flex justify-between text-base">
                   <span className="text-foreground">Product price</span>
                   <span className="font-medium">₹{parseFloat(order.total_amount.toString()).toLocaleString('en-IN')}</span>
@@ -420,6 +413,12 @@ const OrderDetails = () => {
                 <div className="flex justify-between text-base font-bold">
                   <span>Total amount</span>
                   <span>₹{parseFloat(order.total_amount.toString()).toLocaleString('en-IN')}</span>
+                </div>
+
+                <div className="flex justify-center mt-4">
+                  <Badge variant={order.payment_status === 'completed' ? 'default' : order.payment_status === 'pending' ? 'secondary' : 'destructive'}>
+                    {order.payment_status === 'completed' ? 'Payment Done' : order.payment_status === 'pending' ? 'Payment Pending' : 'Payment Failed'}
+                  </Badge>
                 </div>
 
                 <div className="mt-6 pt-4">
