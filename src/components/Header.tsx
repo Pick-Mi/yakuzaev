@@ -205,7 +205,7 @@ const Header = () => {
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {/* Featured Product Card */}
                 {featuredProduct && (
-                  <div className="relative bg-gradient-to-br from-gray-900 via-orange-900 to-orange-700 rounded-3xl p-6 overflow-hidden h-[400px]">
+                  <div className="relative bg-gradient-to-br from-gray-900 via-orange-900 to-orange-700 rounded-3xl p-6 overflow-hidden h-[400px] hidden lg:block">
                     <div className="relative z-10">
                       <h3 className="text-white text-3xl font-bold mb-3">{featuredProduct.name}</h3>
                       <p className="text-white/90 text-base mb-4">
