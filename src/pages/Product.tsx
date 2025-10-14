@@ -180,8 +180,10 @@ const Product = () => {
             id: response.data.id,
             name: response.data.name,
             price: response.data.price,
+            thumbnail: response.data.thumbnail, // Add thumbnail from database
+            image_url: response.data.image_url, // Add image_url from database
             images: parsedImages,
-            image: parsedImages.length > 0 ? parsedImages[0] : response.data.image_url,
+            image: response.data.thumbnail || (parsedImages.length > 0 ? parsedImages[0] : response.data.image_url), // Prioritize thumbnail
             rating: 5, // Default rating
             reviewCount: Math.floor(Math.random() * 200) + 10,
             recommended: true,
