@@ -57,25 +57,15 @@ export const ProductBottomNav = ({
     };
   }, []);
 
-  // Get all unique colors from all variants
-  const allColors = variants.reduce((acc: any[], variant: any) => {
-    if (variant.colors && Array.isArray(variant.colors)) {
-      variant.colors.forEach((color: any) => {
-        const hexMatch = color.name?.match(/#[0-9A-Fa-f]{6}/);
-        const hexColor = hexMatch ? hexMatch[0] : '#000000';
-        // Check if this color is already in the accumulator
-        if (!acc.find(c => c.value === hexColor)) {
-          acc.push({
-            name: color.name,
-            value: hexColor
-          });
-        }
-      });
-    }
-    return acc;
-  }, []);
-
-  const colors = allColors;
+  // Get colors from the selected variant only
+  const colors = selectedVariant?.colors?.map((color: any) => {
+    const hexMatch = color.name?.match(/#[0-9A-Fa-f]{6}/);
+    const hexColor = hexMatch ? hexMatch[0] : '#000000';
+    return {
+      name: color.name,
+      value: hexColor
+    };
+  }) || [];
 
   return (
     <div 
