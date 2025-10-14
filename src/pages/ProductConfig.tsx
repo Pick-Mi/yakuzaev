@@ -115,8 +115,12 @@ const ProductConfig = () => {
   }, []);
 
   useEffect(() => {
-    console.log('🔍 Raw product received in ProductConfig:', rawProduct);
-    console.log('📸 Thumbnail field:', rawProduct?.thumbnail);
+    console.log('🔍 ===== ProductConfig Loaded =====');
+    console.log('📦 Raw product received in ProductConfig:', rawProduct);
+    console.log('🖼️ Thumbnail field value:', rawProduct?.thumbnail);
+    console.log('🎨 Image field value:', rawProduct?.image);
+    console.log('📸 Image URL field value:', rawProduct?.image_url);
+    console.log('🗂️ Images array:', rawProduct?.images);
     
     if (!rawProduct) {
       navigate('/');
