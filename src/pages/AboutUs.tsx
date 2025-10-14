@@ -26,21 +26,21 @@ const AboutUs = () => {
           }}
         >
           <div className="absolute bottom-8 sm:bottom-16 md:bottom-24 left-4 sm:left-6 md:left-10 right-4 sm:right-auto w-auto sm:w-[601px] max-w-[calc(100%-2rem)] sm:max-w-[90%] flex flex-col gap-4 sm:gap-6 items-start px-2 sm:px-0 animate-fade-in">
-            <h1 className="font-sans font-normal text-[32px] sm:text-[42px] md:text-[52px] leading-[1.3] sm:leading-[1.4] md:leading-[73px] text-white m-0">
+            <h1 className="font-sans font-normal text-[28px] sm:text-[42px] md:text-[52px] leading-[1.2] sm:leading-[1.4] md:leading-[73px] text-white m-0">
               About <span className="text-orange-300">YakuzaEV</span>
             </h1>
-            <p className="text-base sm:text-lg md:text-xl text-white/90 mb-2 sm:mb-4">
+            <p className="text-sm sm:text-lg md:text-xl text-white/90 mb-2 sm:mb-4">
               Driving India towards a sustainable, electric future with innovative mobility solutions
             </p>
             
             <div className="flex gap-4 sm:gap-6 items-center flex-wrap w-full sm:w-auto">
               <a href="/products" className="w-full sm:w-auto">
-                <button className="w-full sm:w-auto flex justify-center items-center gap-[10px] bg-white text-black hover:bg-gray-100 px-[35px] h-[50px] text-[14px] font-medium font-sans rounded-none transition-colors">
+                <button className="w-full sm:w-auto flex justify-center items-center gap-[10px] bg-white text-black hover:bg-gray-100 px-[35px] h-[50px] text-[13px] sm:text-[14px] font-medium font-sans rounded-none transition-colors">
                   Explore Products
                 </button>
               </a>
               <a href="/become-dealer" className="w-full sm:w-auto">
-                <button className="w-full sm:w-auto bg-white/15 text-white hover:bg-white hover:text-black px-12 h-[50px] text-[14px] font-medium font-sans rounded-none transition-colors">
+                <button className="w-full sm:w-auto bg-white/15 text-white hover:bg-white hover:text-black px-12 h-[50px] text-[13px] sm:text-[14px] font-medium font-sans rounded-none transition-colors">
                   Become a Dealer
                 </button>
               </a>
@@ -102,10 +102,10 @@ const AboutUs = () => {
 
               {/* Right - Content */}
               <div className="flex flex-col justify-center">
-                <h3 className="text-3xl md:text-4xl font-bold mb-6">
+                <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-6">
                   From India. For The World.
                 </h3>
-                <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
+                <p className="text-base sm:text-lg text-muted-foreground mb-8 leading-relaxed">
                   Yakuza, as a brand, embodies resilience and hard work. We are a pioneering electric vehicle 
                   company with manufacturing facilities in Haryana, Madhya Pradesh, and West Bengal. 
                   As a rapidly evolving startup led by industry veterans, we offer a diverse range of electric 
@@ -127,24 +127,24 @@ const AboutUs = () => {
               <Card className="bg-gray-800 border-none rounded-none">
                 <CardContent className="p-8">
                   <Users className="w-12 h-12 text-white mb-6" strokeWidth={1.5} />
-                  <div className="text-5xl font-bold text-white mb-2">959</div>
-                  <div className="text-lg text-gray-300">Employees in R&D</div>
+                  <div className="text-4xl sm:text-5xl font-bold text-white mb-2">959</div>
+                  <div className="text-base sm:text-lg text-gray-300">Employees in R&D</div>
                 </CardContent>
               </Card>
 
               <Card className="bg-gray-800 border-none rounded-none">
                 <CardContent className="p-8">
                   <BadgeCheck className="w-12 h-12 text-white mb-6" strokeWidth={1.5} />
-                  <div className="text-5xl font-bold text-white mb-2">569</div>
-                  <div className="text-lg text-gray-300">Patents in India</div>
+                  <div className="text-4xl sm:text-5xl font-bold text-white mb-2">569</div>
+                  <div className="text-base sm:text-lg text-gray-300">Patents in India</div>
                 </CardContent>
               </Card>
 
               <Card className="bg-gray-800 border-none rounded-none">
                 <CardContent className="p-8">
                   <Copyright className="w-12 h-12 text-white mb-6" strokeWidth={1.5} />
-                  <div className="text-5xl font-bold text-white mb-2">959</div>
-                  <div className="text-lg text-gray-300">Registered design</div>
+                  <div className="text-4xl sm:text-5xl font-bold text-white mb-2">959</div>
+                  <div className="text-base sm:text-lg text-gray-300">Registered design</div>
                 </CardContent>
               </Card>
             </div>
@@ -154,7 +154,7 @@ const AboutUs = () => {
         {/* Future Ready Section */}
         <section className="py-[25px] px-4 bg-background">
           <div className="container mx-auto max-w-7xl p-0">
-            <h2 className="text-4xl md:text-5xl font-bold mb-12">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-12">
               Future Ready. Already
             </h2>
             
@@ -168,8 +168,8 @@ const AboutUs = () => {
                     className="w-full h-[400px] object-cover"
                   />
                 </div>
-                <h3 className="text-2xl font-bold mb-4">Battery Innovation Center</h3>
-                <p className="text-lg text-muted-foreground">
+                <h3 className="text-xl sm:text-2xl font-bold mb-4">Battery Innovation Center</h3>
+                <p className="text-base sm:text-lg text-muted-foreground">
                   An R&D facility dedicated entirely to battery innovation, housing some of the brightest minds from around the world.
                 </p>
               </div>
@@ -183,8 +183,8 @@ const AboutUs = () => {
                     className="w-full h-[400px] object-cover"
                   />
                 </div>
-                <h3 className="text-2xl font-bold mb-4">Future Factory,</h3>
-                <p className="text-lg text-muted-foreground">
+                <h3 className="text-xl sm:text-2xl font-bold mb-4">Future Factory,</h3>
+                <p className="text-base sm:text-lg text-muted-foreground">
                   We have largest integrated and automated Electric 2 Wheeler manufacturing plant in India, spread across 400+ acres* in Krishanagiri, Tamil Nadu
                 </p>
               </div>
