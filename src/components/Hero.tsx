@@ -56,14 +56,14 @@ const Hero = () => {
 
   return (
     <section 
-      className="relative w-full min-h-screen h-[500px] sm:h-[700px] md:h-[829px] bg-black overflow-hidden transition-all duration-1000 ease-in-out"
+      className="relative w-full min-h-screen h-[829px] bg-black overflow-hidden transition-all duration-1000 ease-in-out"
       style={{
         backgroundImage: currentHero.image_url ? `url(${currentHero.image_url})` : 'none',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       }}
     >
-      <div className="absolute left-1/2 -translate-x-1/2 top-[300px] sm:top-[400px] md:top-[520px] w-[601px] max-w-[90%] flex flex-col gap-4 sm:gap-6 items-start px-4 sm:px-0">
+      <div className="absolute left-1/2 -translate-x-1/2 top-[520px] w-[601px] max-w-[90%] flex flex-col gap-6 items-start">
         <h1 className="text-white font-['Inter'] text-[25.655px] font-normal leading-normal self-stretch m-0 transition-opacity duration-700 sm:text-[52px] sm:leading-[73px]">
           {currentHero.title}
         </h1>
