@@ -37,12 +37,12 @@ const ProductConfig = () => {
     }
   };
 
-  // Get available colors based on selected variant or from color_variety
+  // Get available colors based on selected variant
   const getAvailableColors = () => {
-    // First, try to get colors from the selected variant
-    if (selectedVariant && selectedVariant.colors && Array.isArray(selectedVariant.colors) && selectedVariant.colors.length > 0) {
-      console.log('Loading colors from variant:', selectedVariant.name, selectedVariant.colors);
-      return selectedVariant.colors.map((c: any) => {
+    // Priority 1: Get colors from the selected variant's colors array
+    if (selectedVariant?.colors && Array.isArray(selectedVariant.colors) && selectedVariant.colors.length > 0) {
+      console.log('✓ Loading colors from variant:', selectedVariant.name, selectedVariant.colors);
+      const variantColors = selectedVariant.colors.map((c: any) => {
         // Extract color name and hex from format like "White (#FFFFFF)" or "1 (#0A4886)"
         const match = c.name?.match(/^(.+?)\s*\(#([0-9A-Fa-f]{6})\)/);
         if (match) {
@@ -54,11 +54,13 @@ const ProductConfig = () => {
         }
         return null;
       }).filter(Boolean);
+      
+      if (variantColors.length > 0) return variantColors;
     }
     
-    // If not in variant, try color_variety
-    if (product?.color_variety?.colors && Array.isArray(product.color_variety.colors)) {
-      console.log('Loading colors from color_variety:', product.color_variety.colors);
+    // Priority 2: If variant has no colors, try color_variety from product
+    if (product?.color_variety?.colors && Array.isArray(product.color_variety.colors) && product.color_variety.colors.length > 0) {
+      console.log('✓ Loading colors from color_variety:', product.color_variety.colors);
       return product.color_variety.colors.map((c: any) => ({
         name: c.name,
         value: c.hex,
@@ -67,11 +69,19 @@ const ProductConfig = () => {
     }
     
     // Return empty array if no colors found in database
-    console.warn('No colors found in database for product:', product?.name);
+    console.warn('⚠ No colors found in database for variant:', selectedVariant?.name || 'None');
     return [];
   };
 
   const colors = getAvailableColors();
+  
+  // Reset selected color when variant changes
+  useEffect(() => {
+    const availableColors = getAvailableColors();
+    if (availableColors.length > 0 && !availableColors.find(c => c.name === selectedColor)) {
+      setSelectedColor(''); // Reset if current color not available in new variant
+    }
+  }, [selectedVariant]);
 
   // Scroll detection for header
   useEffect(() => {
