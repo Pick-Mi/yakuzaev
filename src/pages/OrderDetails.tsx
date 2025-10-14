@@ -501,8 +501,11 @@ const OrderDetails = () => {
 
                 <div className="mt-6 pt-4">
                   <div className="flex justify-center mb-6">
-                    <Badge variant="secondary" className="text-base px-4 py-2">
-                      {order.payment_method === 'payu' ? 'PayU' : order.payment_method === 'cod' ? 'Cash On Delivery' : order.payment_method || 'Not specified'}
+                    <Badge 
+                      variant={order.payment_status === 'completed' || order.payment_status === 'success' ? 'default' : order.payment_status === 'pending' ? 'secondary' : 'destructive'} 
+                      className="text-base px-4 py-2"
+                    >
+                      {order.payment_status === 'completed' || order.payment_status === 'success' ? 'Payment Done' : order.payment_status === 'pending' ? 'Payment Pending' : 'Payment Failed'}
                     </Badge>
                   </div>
 
