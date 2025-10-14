@@ -392,24 +392,11 @@ const ProductConfig = () => {
                     );
                   })
                 ) : (
-                <div className="border-2 border-black bg-gray-50 p-4 flex items-center justify-between">
-                  <div className="text-left">
-                    <p className="font-['Poppins'] font-semibold text-[20px]">
-                      Standard
-                    </p>
-                    <p className="font-['Inter'] text-[14px] text-gray-600">
-                      IDC Range
+                  <div className="border-2 border-gray-300 rounded-lg p-4 text-center">
+                    <p className="font-['Inter'] text-[14px] text-gray-500">
+                      No variants available
                     </p>
                   </div>
-                  <div className="text-right">
-                    <p className="font-['Inter'] text-[12px] text-gray-500">
-                      Starts at
-                    </p>
-                    <p className="font-['Poppins'] font-semibold text-[18px]">
-                      ₹{currentPrice?.toLocaleString('en-IN')}
-                    </p>
-                  </div>
-                </div>
                 )}
               </div>
             </div>
@@ -419,24 +406,32 @@ const ProductConfig = () => {
               <h3 className="font-['Inter'] font-medium text-[16px] mb-4">
                 Colour
               </h3>
-              <div className="flex gap-3">
-                {colors.map((color) => (
-                  <button
-                    key={color.name}
-                    onClick={() => setSelectedColor(color.name)}
-                    className={`w-12 h-12 border-2 transition-all ${
-                      selectedColor === color.name
-                        ? "border-black scale-110"
-                        : color.border ? `border-[${color.border}]` : "border-gray-300"
-                    }`}
-                    style={{ 
-                      backgroundColor: color.value,
-                      borderColor: selectedColor === color.name ? '#000' : (color.border || '#D1D5DB')
-                    }}
-                    title={color.name}
-                  />
-                ))}
-              </div>
+              {colors.length > 0 ? (
+                <div className="flex gap-3">
+                  {colors.map((color) => (
+                    <button
+                      key={color.name}
+                      onClick={() => setSelectedColor(color.name)}
+                      className={`w-12 h-12 border-2 transition-all ${
+                        selectedColor === color.name
+                          ? "border-black scale-110"
+                          : color.border ? `border-[${color.border}]` : "border-gray-300"
+                      }`}
+                      style={{ 
+                        backgroundColor: color.value,
+                        borderColor: selectedColor === color.name ? '#000' : (color.border || '#D1D5DB')
+                      }}
+                      title={color.name}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <div className="border-2 border-gray-300 rounded-lg p-4 text-center">
+                  <p className="font-['Inter'] text-[14px] text-gray-500">
+                    No colors available
+                  </p>
+                </div>
+              )}
             </div>
 
             {/* Payment Summary */}
