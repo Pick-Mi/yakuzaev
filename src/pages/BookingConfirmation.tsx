@@ -757,20 +757,6 @@ const BookingConfirmation = () => {
                             Change
                           </button>
                         </div>
-
-                        {/* User Details Input - Always visible after verification */}
-                        <div className="space-y-2 mt-4">
-                          <Label htmlFor="userDetails" className="text-sm text-muted-foreground">
-                            Additional Details
-                          </Label>
-                          <Textarea
-                            id="userDetails"
-                            placeholder="Enter any additional details you'd like to share..."
-                            value={userDetails}
-                            onChange={(e) => setUserDetails(e.target.value)}
-                            className="min-h-[100px] border border-border rounded"
-                          />
-                        </div>
                       </div>
                     ) : (
                       /* Phone Number Form */
