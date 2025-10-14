@@ -66,12 +66,12 @@ const ProductHero = ({
       {/* Main Content Section */}
       <div className="absolute flex flex-col gap-[35px] items-start left-[70px] top-[460px] w-[635px] max-lg:left-5 max-lg:right-5 max-lg:w-auto max-md:top-auto max-md:bottom-[200px]">
         {/* Main Title */}
-        <h1 className="font-['Inter'] font-normal leading-[73px] text-white text-[48px] min-w-full w-min max-md:text-[32px] max-md:leading-tight max-md:text-center">
+        <h1 className="font-['Inter'] font-normal leading-[73px] text-white text-[48px] min-w-full w-min max-md:text-[32px] max-md:leading-tight">
           {previewTitle || productName}
         </h1>
         
         {/* Specifications */}
-        <div className="flex gap-[50px] items-center max-md:gap-[30px] max-md:justify-center max-md:flex-wrap">
+        <div className="flex gap-[50px] items-center max-md:gap-[30px] max-md:flex-wrap">
           <div className="flex flex-col gap-[13px] items-start font-['Inter'] font-medium leading-[0] text-white whitespace-nowrap">
             <div className="flex flex-col justify-center opacity-80 text-2xl">
               <p className="leading-normal whitespace-nowrap">{firstSpec?.value || topSpeed}</p>
