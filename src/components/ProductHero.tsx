@@ -43,10 +43,10 @@ const ProductHero = ({
         <p className="font-['Inter'] font-semibold leading-normal text-white text-sm w-full">
           Starting at just ₹{price} -/
         </p>
-        <div className="flex gap-[25px] items-center w-full max-md:flex-col max-md:gap-4">
+        <div className="flex gap-5 items-center w-full max-md:flex-col max-md:gap-5 max-md:pr-5">
           <button
             onClick={onBookNow}
-            className="bg-white flex gap-2.5 items-center justify-center overflow-hidden px-[23px] py-[13px] transition-all hover:bg-gray-100 active:scale-95 max-md:w-full"
+            className="bg-white flex gap-2.5 items-center justify-center overflow-hidden px-[23px] py-[13px] transition-all hover:bg-gray-100 active:scale-95"
           >
             <span className="font-['Poppins'] font-medium leading-normal text-black text-base whitespace-nowrap">
               Book Now
@@ -54,7 +54,7 @@ const ProductHero = ({
           </button>
           <button
             onClick={onAddToCart}
-            className="bg-white/5 flex gap-2.5 items-center justify-center overflow-hidden px-[23px] py-[13px] transition-all hover:bg-white/10 active:scale-95 max-md:w-full"
+            className="bg-white/5 flex gap-2.5 items-center justify-center overflow-hidden px-[23px] py-[13px] transition-all hover:bg-white/10 active:scale-95"
           >
             <span className="font-['Poppins'] font-medium leading-normal text-white text-base whitespace-nowrap">
               Add to Cart
