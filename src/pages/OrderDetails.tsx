@@ -446,12 +446,12 @@ const OrderDetails = () => {
                   <User className="w-5 h-5 text-foreground mt-1" />
                   <div className="flex-1">
                     <span className="font-semibold">
-                      {order.customer_details?.first_name && order.customer_details?.last_name 
-                        ? `${order.customer_details.first_name}.${order.customer_details.last_name.charAt(0)}`
-                        : 'Alex.D'} 
+                      {order.customer_details?.first_name 
+                        ? `${order.customer_details.first_name}.${order.customer_details?.last_name?.charAt(0) || ''}`
+                        : order.customer_details?.name || 'Customer'} 
                     </span>
                     <span className="text-foreground ml-2">
-                      {order.customer_details?.phone || order.customer_details?.mobile || '6379319293'}
+                      {order.customer_details?.phone || order.customer_details?.mobile || ''}
                     </span>
                   </div>
                 </div>
