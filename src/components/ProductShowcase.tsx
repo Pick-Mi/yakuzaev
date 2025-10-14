@@ -165,9 +165,9 @@ const ProductShowcase = () => {
           </div>
         </div>
 
-        {/* Product Cards - Horizontal scroll on desktop, vertical stack on mobile */}
-        <div ref={scrollContainerRef} className="sm:overflow-x-auto pb-4 scroll-smooth [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-          <div className="flex flex-col sm:flex-row gap-6 sm:gap-[35px] pb-4 sm:min-w-max">
+        {/* Product Cards - Horizontal scroll */}
+        <div ref={scrollContainerRef} className="overflow-x-auto pb-4 scroll-smooth [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+          <div className="flex gap-4 sm:gap-6 md:gap-[35px] pb-4 min-w-max">
             {loading ? (
               <div className="w-full text-center py-8">
                 <p className="text-[#212121] opacity-80">Loading products...</p>
@@ -180,7 +180,7 @@ const ProductShowcase = () => {
               products.map((product: any) => (
                 <div
                   key={product.id}
-                  className="bg-white flex flex-col gap-4 sm:gap-[25px] pb-4 sm:pb-5 w-full sm:w-[350px] md:w-[420px] sm:flex-shrink-0"
+                  className="bg-white flex flex-col gap-4 sm:gap-[25px] pb-4 sm:pb-5 w-[280px] sm:w-[350px] md:w-[420px] flex-shrink-0"
                 >
                   {/* Product Image */}
                   <div className="w-full h-[200px] sm:h-[220px] md:h-[270px] bg-[#b7b8b8] flex items-center justify-center overflow-hidden">
