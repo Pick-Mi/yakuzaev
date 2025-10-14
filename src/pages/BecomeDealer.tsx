@@ -110,7 +110,7 @@ const BecomeDealer = () => {
 
         {/* Benefits Section */}
         <section className="">
-          <div className="container mx-auto max-w-6xl p-[20px] md:px-0 md:py-[70px]">
+          <div className="container mx-auto max-w-6xl py-[20px] md:py-[70px]">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               <div className="bg-white p-6">
                 <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4">
