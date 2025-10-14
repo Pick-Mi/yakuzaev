@@ -175,7 +175,7 @@ const AboutUs = () => {
               </div>
 
               {/* Future Factory */}
-              <div className="flex flex-col bg-white p-6">
+              <div className="flex flex-col bg-white p-[20px]">
                 <div className="overflow-hidden mb-6">
                   <img 
                     src={futureFactory} 
