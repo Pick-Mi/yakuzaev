@@ -187,7 +187,26 @@ const ProductConfig = () => {
     ? product.images 
     : [product.image];
 
-  const currentPrice = selectedVariant ? selectedVariant.price : product.price;
+  // Get current price based on selected variant
+  const getCurrentPrice = () => {
+    if (!selectedVariant) return product.price;
+    
+    // Try direct price property first
+    if (selectedVariant.price) return Number(selectedVariant.price);
+    
+    // Try to get from specifications
+    if (selectedVariant.specifications && Array.isArray(selectedVariant.specifications)) {
+      const priceSpec = selectedVariant.specifications.find((s: any) => 
+        s.label?.toLowerCase() === 'price'
+      );
+      if (priceSpec?.value) return Number(priceSpec.value);
+    }
+    
+    // Fallback to product price
+    return product.price;
+  };
+  
+  const currentPrice = getCurrentPrice();
   const bookingAmount = 999;
   const emiPerMonth = 999;
 
