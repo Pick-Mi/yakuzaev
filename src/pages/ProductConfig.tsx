@@ -184,46 +184,51 @@ const ProductConfig = () => {
     return null;
   }
 
-  // Determine which images to show - prioritize thumbnail
+  // Determine which images to show - prioritize thumbnail from database
   const getProductImages = () => {
-    console.log('🖼️ Product image data:', {
-      thumbnail: product.thumbnail,
-      images: product.images,
-      image_url: product.image_url,
-      image: product.image
+    const images = [];
+    
+    console.log('🖼️ Checking product image sources:', {
+      thumbnail: rawProduct?.thumbnail,
+      image: rawProduct?.image,
+      images: rawProduct?.images,
+      image_url: rawProduct?.image_url
     });
-
-    // Priority 1: Use thumbnail if available
-    if (product.thumbnail) {
-      const images = [product.thumbnail];
-      // Add additional images if available
-      if (product.images && Array.isArray(product.images) && product.images.length > 0) {
-        images.push(...product.images);
+    
+    // Priority 1: Thumbnail from database (direct from rawProduct)
+    if (rawProduct?.thumbnail) {
+      console.log('✓ Using thumbnail from database:', rawProduct.thumbnail);
+      images.push(rawProduct.thumbnail);
+    }
+    
+    // Priority 2: Image property (set by ProductShowcase)
+    if (rawProduct?.image && !images.includes(rawProduct.image)) {
+      console.log('✓ Adding image property:', rawProduct.image);
+      images.push(rawProduct.image);
+    }
+    
+    // Priority 3: Images array from database
+    if (rawProduct?.images) {
+      const parsedImages = typeof rawProduct.images === 'string' 
+        ? JSON.parse(rawProduct.images) 
+        : rawProduct.images;
+      
+      if (Array.isArray(parsedImages) && parsedImages.length > 0) {
+        console.log('✓ Adding images array:', parsedImages);
+        parsedImages.forEach(img => {
+          if (!images.includes(img)) images.push(img);
+        });
       }
-      console.log('✓ Using thumbnail + images:', images);
-      return images;
     }
-
-    // Priority 2: Use images array
-    if (product.images && Array.isArray(product.images) && product.images.length > 0) {
-      console.log('✓ Using images array:', product.images);
-      return product.images;
+    
+    // Priority 4: image_url fallback
+    if (rawProduct?.image_url && !images.includes(rawProduct.image_url)) {
+      console.log('✓ Adding image_url:', rawProduct.image_url);
+      images.push(rawProduct.image_url);
     }
-
-    // Priority 3: Use image property (from ProductShowcase formatting)
-    if (product.image) {
-      console.log('✓ Using product.image:', product.image);
-      return [product.image];
-    }
-
-    // Priority 4: Use image_url as fallback
-    if (product.image_url) {
-      console.log('✓ Using image_url:', product.image_url);
-      return [product.image_url];
-    }
-
-    console.warn('⚠️ No images found for product');
-    return [];
+    
+    console.log('📸 Final images array:', images);
+    return images.length > 0 ? images : [];
   };
 
   const productImages = getProductImages();
