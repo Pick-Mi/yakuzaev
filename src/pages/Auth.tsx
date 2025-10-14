@@ -527,7 +527,7 @@ const Auth = () => {
                     
                     <Button 
                       type="submit" 
-                      className="w-full h-14 bg-gray-900 hover:bg-gray-800 text-white text-base font-semibold"
+                      className="w-full h-14 bg-gray-900 hover:bg-gray-800 text-white text-base font-semibold rounded-none"
                       disabled={loading || otpCooldown > 0}
                     >
                       {loading ? 'Sending...' : otpCooldown > 0 ? `Wait ${otpCooldown}s` : 'Next'}
