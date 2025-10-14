@@ -70,6 +70,7 @@ interface Order {
   discount_amount?: number;
   order_summary?: any;
   order_number?: number;
+  order_type?: string;
 }
 
 const OrderDetails = () => {
@@ -337,9 +338,7 @@ const OrderDetails = () => {
                     {firstItem.name || 'Product'}
                   </h2>
                   <p className="text-sm text-muted-foreground">
-                    Return or Replace: Eligible through {order.estimated_delivery_date 
-                      ? format(new Date(new Date(order.estimated_delivery_date).getTime() + 7 * 24 * 60 * 60 * 1000), 'MMM dd, yyyy')
-                      : format(new Date(new Date(order.created_at).getTime() + 14 * 24 * 60 * 60 * 1000), 'MMM dd, yyyy')}
+                    {order.order_type === 'test_ride' ? 'Book a Bike' : order.order_type === 'purchase' ? 'Book a Buy' : 'Order'}
                   </p>
                   <p className="text-sm">
                     <span className="text-foreground">Variant : </span>
