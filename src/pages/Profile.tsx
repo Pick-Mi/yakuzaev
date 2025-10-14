@@ -613,9 +613,17 @@ const Profile = () => {
                     <Save className="w-5 h-5 text-gray-700" />
                   </button>
                 </div>
-                <h2 className="text-2xl font-bold">
-                  {profile.first_name} {profile.last_name || ''}
-                </h2>
+                <div className="flex items-center gap-3">
+                  <h2 className="text-2xl font-bold">
+                    {profile.first_name} {profile.last_name || ''}
+                  </h2>
+                  <button 
+                    onClick={() => {/* Add edit name functionality */}}
+                    className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                  >
+                    <Edit className="w-5 h-5 text-gray-600" />
+                  </button>
+                </div>
               </div>
 
               {/* Information Grid */}
