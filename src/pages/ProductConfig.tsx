@@ -209,10 +209,20 @@ const ProductConfig = () => {
       return product.images;
     }
 
-    // Priority 3: Use image_url or image as fallback
-    const fallback = product.image_url || product.image;
-    console.log('✓ Using fallback image:', fallback);
-    return fallback ? [fallback] : [];
+    // Priority 3: Use image property (from ProductShowcase formatting)
+    if (product.image) {
+      console.log('✓ Using product.image:', product.image);
+      return [product.image];
+    }
+
+    // Priority 4: Use image_url as fallback
+    if (product.image_url) {
+      console.log('✓ Using image_url:', product.image_url);
+      return [product.image_url];
+    }
+
+    console.warn('⚠️ No images found for product');
+    return [];
   };
 
   const productImages = getProductImages();
