@@ -84,7 +84,7 @@ export const ProductBottomNav = ({
       >
         <div className="px-4 py-4">
           {/* Product Name and Price */}
-          <div className="flex items-start gap-4 mb-4">
+          <div className="flex flex-col gap-4 mb-4">
             <div className="flex-1">
               <div className="font-['Poppins'] font-medium text-[14px] text-gray-800 mb-2">
                 {productName}
