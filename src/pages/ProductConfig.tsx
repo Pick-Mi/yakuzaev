@@ -183,9 +183,9 @@ const ProductConfig = () => {
     return null;
   }
 
-  const productImages = product.images && product.images.length > 0 
-    ? product.images 
-    : [product.image];
+  const productImages = product.thumbnail 
+    ? [product.thumbnail, ...(product.images && product.images.length > 0 ? product.images : [])]
+    : (product.images && product.images.length > 0 ? product.images : [product.image_url || product.image]);
 
   // Get current price based on selected variant
   const getCurrentPrice = () => {
