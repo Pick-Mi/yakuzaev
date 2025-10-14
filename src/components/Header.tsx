@@ -132,13 +132,34 @@ const Header = () => {
             
             {/* Navigation Menu - Desktop */}
             <div className="absolute left-1/2 top-2 -translate-x-1/2 hidden md:flex gap-9 items-center">
-              <Link to="/products" className={`text-[14px] font-sans leading-normal hover:opacity-80 transition-all whitespace-nowrap font-medium ${shouldShowFixedHeader ? 'text-gray-900' : 'text-white'}`}>
+              <Link 
+                to="/products" 
+                className={`text-[14px] font-sans leading-normal hover:opacity-80 transition-all whitespace-nowrap ${
+                  location.pathname === '/products' || location.pathname.startsWith('/products/') 
+                    ? 'font-medium' 
+                    : 'font-normal'
+                } ${shouldShowFixedHeader ? 'text-gray-900' : 'text-white'}`}
+              >
                 Products
               </Link>
-              <Link to="/become-dealer" className={`text-[14px] font-sans leading-normal hover:opacity-80 transition-all whitespace-nowrap font-normal ${shouldShowFixedHeader ? 'text-gray-700' : 'text-white'}`}>
+              <Link 
+                to="/become-dealer" 
+                className={`text-[14px] font-sans leading-normal hover:opacity-80 transition-all whitespace-nowrap ${
+                  location.pathname === '/become-dealer' 
+                    ? 'font-medium' 
+                    : 'font-normal'
+                } ${shouldShowFixedHeader ? 'text-gray-900' : 'text-white'}`}
+              >
                 Become a Dealer
               </Link>
-              <Link to="/about-us" className={`text-[14px] font-sans leading-normal hover:opacity-80 transition-all whitespace-nowrap font-normal ${shouldShowFixedHeader ? 'text-gray-700' : 'text-white'}`}>
+              <Link 
+                to="/about-us" 
+                className={`text-[14px] font-sans leading-normal hover:opacity-80 transition-all whitespace-nowrap ${
+                  location.pathname === '/about-us' 
+                    ? 'font-medium' 
+                    : 'font-normal'
+                } ${shouldShowFixedHeader ? 'text-gray-900' : 'text-white'}`}
+              >
                 About Us
               </Link>
             </div>
