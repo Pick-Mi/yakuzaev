@@ -49,7 +49,7 @@ const AboutUs = () => {
         </section>
 
         {/* Build to Rule Section */}
-        <section className="py-[25px] px-4">
+        <section className="p-[20px] md:px-0 md:py-[70px]">
           <div className="container mx-auto max-w-7xl p-0">
             <h2 className="text-[24px] leading-[37px] font-semibold font-['Inter'] text-[#12141D] md:text-4xl lg:text-5xl md:font-bold mb-12">
               We build to rule, We build to perform
@@ -84,7 +84,7 @@ const AboutUs = () => {
         </section>
 
         {/* From India Section */}
-        <section className="py-[25px] px-4">
+        <section className="p-[20px] md:px-0 md:py-[70px]">
           <div className="container mx-auto max-w-7xl p-0">
             <h2 className="text-[24px] leading-[37px] font-semibold font-['Inter'] text-[#12141D] md:text-4xl lg:text-5xl md:font-bold mb-12">
               We build to rule , We build to perform
@@ -117,7 +117,7 @@ const AboutUs = () => {
 
 
         {/* Stats Section */}
-        <section className="py-[70px] px-4 bg-gray-900">
+        <section className="p-[20px] md:px-0 md:py-[70px] bg-gray-900">
           <div className="container mx-auto max-w-7xl p-0 md:p-4">
             <h2 className="text-[24px] leading-[37px] font-semibold font-['Inter'] text-white md:text-5xl md:font-bold mb-[100px]">
               We build to rule , We build to perform
@@ -152,7 +152,7 @@ const AboutUs = () => {
         </section>
 
         {/* Future Ready Section */}
-        <section className="py-[25px] px-4 bg-background">
+        <section className="p-[20px] md:px-0 md:py-[70px] bg-background">
           <div className="container mx-auto max-w-7xl p-0">
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-12">
               Future Ready. Already
