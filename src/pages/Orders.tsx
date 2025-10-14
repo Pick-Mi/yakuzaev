@@ -75,10 +75,13 @@ const Orders = () => {
         const orderItemsData = order.order_items_data as any[];
         if (orderItemsData && Array.isArray(orderItemsData) && orderItemsData.length > 0) {
           const productId = orderItemsData[0].product_id;
+          const colorName = orderItemsData[0].color;
+          const variantName = orderItemsData[0].variant;
+          
           if (productId) {
             const { data: productData } = await supabase
               .from('products')
-              .select('thumbnail, image_url, images, name')
+              .select('thumbnail, image_url, images, name, variants')
               .eq('id', productId)
               .single();
             
@@ -88,6 +91,26 @@ const Orders = () => {
                 productData.image_url || 
                 (productData.images && productData.images[0]?.url);
               order.order_items_data[0].product_name = order.order_items_data[0].product_name || productData.name;
+              
+              // Find color hex from product variants
+              if (productData.variants && Array.isArray(productData.variants) && colorName && variantName) {
+                const variant = (productData.variants as any[]).find((v: any) => v.name === variantName);
+                if (variant && variant.colors && Array.isArray(variant.colors)) {
+                  const colorMatch = (variant.colors as any[]).find((c: any) => {
+                    // Color format is like "White (#FFFFFF)" or just "White"
+                    const colorNameInVariant = c.name?.split('(')[0].trim();
+                    return colorNameInVariant?.toLowerCase() === colorName.toLowerCase();
+                  });
+                  
+                  if (colorMatch && colorMatch.name) {
+                    // Extract hex code from format like "White (#FFFFFF)"
+                    const hexMatch = colorMatch.name.match(/#([0-9A-Fa-f]{6})/);
+                    if (hexMatch) {
+                      order.order_items_data[0].color_hex = hexMatch[0];
+                    }
+                  }
+                }
+              }
             }
           }
         }
