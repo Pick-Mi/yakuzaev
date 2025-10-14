@@ -2,6 +2,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { ChevronRight, Gift, Phone, MessageSquare, Search, Upload, MapPin } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -86,6 +87,7 @@ const BookingConfirmation = () => {
   const [promoCode, setPromoCode] = useState('');
   const [promoDiscount, setPromoDiscount] = useState(0);
   const [promoApplied, setPromoApplied] = useState(false);
+  const [userDetails, setUserDetails] = useState('');
   
   const { signInWithPhone, verifyOTP, user } = useAuth();
 
@@ -754,6 +756,20 @@ const BookingConfirmation = () => {
                           >
                             Change
                           </button>
+                        </div>
+
+                        {/* User Details Input - Always visible after verification */}
+                        <div className="space-y-2 mt-4">
+                          <Label htmlFor="userDetails" className="text-sm text-muted-foreground">
+                            Additional Details
+                          </Label>
+                          <Textarea
+                            id="userDetails"
+                            placeholder="Enter any additional details you'd like to share..."
+                            value={userDetails}
+                            onChange={(e) => setUserDetails(e.target.value)}
+                            className="min-h-[100px] border border-border rounded"
+                          />
                         </div>
                       </div>
                     ) : (
