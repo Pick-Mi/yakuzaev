@@ -98,7 +98,7 @@ export const ProductBottomNav = ({
             <div className="flex gap-4">
               <div className="w-[1px] bg-gray-300 self-stretch"></div>
               
-              <div className="flex flex-col gap-4">
+              <div className="flex gap-4">
                 {/* Variant Selector */}
                 <div>
                   <div className="font-['Inter'] text-[12px] text-gray-800 font-medium mb-2">
