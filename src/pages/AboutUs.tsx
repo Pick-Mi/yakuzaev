@@ -118,7 +118,7 @@ const AboutUs = () => {
 
         {/* Stats Section */}
         <section className="py-[70px] px-4 bg-gray-900">
-          <div className="container mx-auto max-w-7xl p-0 md:p-4 flex flex-col gap-[20px]">
+          <div className="container mx-auto max-w-7xl p-0 md:p-4">
             <h2 className="text-[24px] leading-[37px] font-semibold font-['Inter'] text-white md:text-5xl md:font-bold mb-[100px]">
               We build to rule , We build to perform
             </h2>
