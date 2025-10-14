@@ -85,7 +85,7 @@ const Hero = () => {
 
   return (
     <section 
-      className="relative w-full min-h-screen h-[600px] sm:h-[700px] md:h-[829px] bg-black overflow-hidden transition-all duration-1000 ease-in-out bg-center bg-cover"
+      className="relative w-full min-h-screen h-[600px] sm:h-[700px] md:h-[829px] bg-black overflow-hidden bg-center bg-cover"
       style={{
         backgroundImage: backgroundImage ? `url(${backgroundImage})` : 'none',
       }}
