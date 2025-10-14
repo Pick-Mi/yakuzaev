@@ -198,7 +198,7 @@ const ProductConfig = () => {
         <div className="grid lg:grid-cols-2 gap-12">
           {/* Left Side - Product Image - Sticky */}
           <div className="sticky top-32 self-start h-fit">
-            <div className="relative aspect-square flex items-center justify-center">
+            <div className="relative w-full h-[500px] flex items-center justify-center">
               <img 
                 src={productImages[currentImageIndex]} 
                 alt={product.name}
