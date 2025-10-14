@@ -554,7 +554,7 @@ const BookingConfirmation = () => {
                 <img 
                   src={product.image || product.images?.[0]} 
                   alt={product.name}
-                  className="w-full max-w-[300px] h-auto object-contain"
+                  className="w-full h-full object-fill"
                 />
               </div>
 
