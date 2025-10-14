@@ -24,9 +24,9 @@ const ProductCard = ({ product }: ProductCardProps) => {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* Default State */}
+      {/* Default State - Hidden on mobile, visible on hover for larger screens */}
       <div
-        className={`absolute inset-0 transition-opacity duration-500 ${
+        className={`absolute inset-0 transition-opacity duration-500 hidden sm:block ${
           isHovered ? "opacity-0" : "opacity-100"
         }`}
       >
@@ -61,9 +61,9 @@ const ProductCard = ({ product }: ProductCardProps) => {
         </div>
       </div>
 
-      {/* Hover State */}
+      {/* Hover State - Always visible on mobile, visible on hover for larger screens */}
       <div
-        className={`absolute inset-0 bg-white transition-opacity duration-500 ${
+        className={`absolute inset-0 bg-white transition-opacity duration-500 sm:${
           isHovered ? "opacity-100" : "opacity-0"
         }`}
       >
