@@ -115,7 +115,8 @@ const ProductConfig = () => {
   }, []);
 
   useEffect(() => {
-    console.log('🔍 Raw product received:', rawProduct);
+    console.log('🔍 Raw product received in ProductConfig:', rawProduct);
+    console.log('📸 Thumbnail field:', rawProduct?.thumbnail);
     
     if (!rawProduct) {
       navigate('/');
