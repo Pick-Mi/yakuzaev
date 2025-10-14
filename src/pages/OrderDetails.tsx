@@ -151,24 +151,32 @@ const OrderDetails = () => {
     const steps = [
       { key: 'placed', label: 'Order Placed' },
       { key: 'confirmed', label: 'Order Confirmed' },
-      { key: 'processing', label: 'Order Packed' },
+      { key: 'packed', label: 'Order Packed' },
       { key: 'shipped', label: 'In Transit' },
       { key: 'out_for_delivery', label: 'Out for Delivery' },
       { key: 'delivered', label: 'Delivered' }
     ];
     
     const timeline = steps.map(step => {
-      // Find the status history entry for this step
+      // Check if this status exists in history
       const historyEntry = statusHistory.find((h: any) => h.status?.toLowerCase() === step.key);
       
-      // Determine if step is completed
-      const stepIndex = steps.findIndex(s => s.key === step.key);
-      const currentIndex = steps.findIndex(s => s.key === currentStatus);
-      const isCompleted = stepIndex <= currentIndex;
+      // For 'placed', use created_at if not in history
+      let timestamp = '';
+      if (step.key === 'placed') {
+        timestamp = order.created_at;
+      } else if (historyEntry?.timestamp) {
+        timestamp = historyEntry.timestamp;
+      }
+      
+      // A step is completed if:
+      // 1. It has a timestamp in history, OR
+      // 2. It's 'placed' (always completed as it's the start)
+      const isCompleted = (step.key === 'placed') || !!historyEntry;
       
       return {
         label: step.label,
-        date: isCompleted && historyEntry?.timestamp ? format(new Date(historyEntry.timestamp), 'MM/dd/yyyy, h:mm:ss a') : '',
+        date: isCompleted && timestamp ? format(new Date(timestamp), 'MM/dd/yyyy, h:mm:ss a') : '',
         completed: isCompleted
       };
     });
