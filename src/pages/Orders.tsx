@@ -8,8 +8,9 @@ import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useNavigate } from "react-router-dom";
 import { format } from "date-fns";
-import { Package, Search, Star, CheckCircle, Clock, User, ChevronRight, LogOut } from "lucide-react";
+import { Package, Search, Star, CheckCircle, Clock, User, ChevronRight, LogOut, ChevronLeft } from "lucide-react";
 import Header from "@/components/Header";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface Order {
   id: string;
@@ -27,6 +28,7 @@ interface Order {
 const Orders = () => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
   const [orders, setOrders] = useState<Order[]>([]);
   const [filteredOrders, setFilteredOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
@@ -314,180 +316,292 @@ const Orders = () => {
     <div className="min-h-screen bg-background">
       <Header />
       
-      <div className="container mx-auto px-4 pt-40 pb-8">
-        <div className="flex gap-6">
-          {/* Sidebar - Same as Profile page */}
-          <aside className="w-80 flex-shrink-0">
-            <nav className="flex flex-col gap-[15px] sticky top-32">
-              {/* Account Settings Section */}
-              <div className="bg-white">
-                <div className="flex items-center gap-3 px-6 py-4 border-b">
-                  <div className="w-10 h-10 rounded-full bg-orange-500 flex items-center justify-center">
-                    <User className="w-6 h-6 text-white" />
-                  </div>
-                  <span className="font-semibold text-lg text-gray-700">ACCOUNT SETTINGS</span>
+      <div className={`container mx-auto ${isMobile ? 'px-0 pt-[120px]' : 'px-4 pt-40'} pb-8`}>
+        {isMobile ? (
+          // Mobile Layout
+          <div className="space-y-0">
+            {/* Breadcrumb Header */}
+            <div className="bg-white px-4 py-4 border-b border-gray-200">
+              <div className="flex items-center gap-2 text-sm text-gray-600">
+                <button onClick={() => navigate('/profile')} className="hover:text-gray-900">
+                  Profile
+                </button>
+                <ChevronRight className="w-4 h-4" />
+                <span className="text-gray-900 font-medium">Order</span>
+              </div>
+            </div>
+
+            {/* My Orders Title */}
+            <div className="bg-white px-4 py-6">
+              <h1 className="text-4xl font-bold text-gray-900">My Orders</h1>
+            </div>
+
+            {/* Orders List */}
+            <div className="bg-white">
+              {filteredOrders.length === 0 ? (
+                <div className="text-center py-12 px-4">
+                  <Package className="w-16 h-16 mx-auto text-gray-400 mb-4" />
+                  <h2 className="text-xl font-semibold mb-2">
+                    {orders.length === 0 ? "No orders yet" : "No orders found"}
+                  </h2>
+                  <p className="text-gray-600 mb-4">
+                    {orders.length === 0 
+                      ? "You haven't placed any orders yet." 
+                      : "Try adjusting your filters or search query."}
+                  </p>
+                  {orders.length === 0 && (
+                    <Button onClick={() => navigate('/')} className="bg-orange-500 hover:bg-orange-600">
+                      Start Shopping
+                    </Button>
+                  )}
                 </div>
-                
+              ) : (
                 <div className="space-y-0">
-                  <button
-                    onClick={() => navigate("/profile?section=profile")}
-                    className="w-full text-left px-6 py-4 text-gray-900 hover:bg-gray-50 transition-colors"
-                  >
-                    Profile information
-                  </button>
-                  <button
-                    onClick={() => navigate("/profile?section=address")}
-                    className="w-full text-left px-6 py-4 text-gray-900 hover:bg-gray-50 transition-colors"
-                  >
-                    Manage Addresses
-                  </button>
-                  <button
-                    onClick={() => navigate("/profile?section=pan")}
-                    className="w-full text-left px-6 py-4 text-gray-900 hover:bg-gray-50 transition-colors"
-                  >
-                    ID Proof
-                  </button>
-                </div>
-              </div>
+                  {filteredOrders.map((order) => {
+                    const orderItems = order.order_items_data || [];
+                    const firstItem = orderItems[0];
+                    const deliveryDate = order.estimated_delivery_date || order.created_at;
+                    
+                    return (
+                      <div key={order.id} className="border-b border-gray-200 last:border-0">
+                        {/* Delivery Date Header */}
+                        <div className="px-4 pt-6 pb-4">
+                          <h3 className="font-bold text-lg text-gray-900">
+                            Delivered on {format(new Date(deliveryDate), 'MMM dd, yyyy')}
+                          </h3>
+                        </div>
 
-              {/* My Orders */}
-              <button
-                className="w-full flex items-center justify-between px-6 py-4 text-left bg-orange-50 transition-colors"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 flex items-center justify-center">
-                    <Package className="w-6 h-6 text-orange-500" />
-                  </div>
-                  <span className="font-semibold text-lg text-orange-500">MY ORDERS</span>
-                </div>
-                <ChevronRight className="w-5 h-5 text-orange-500" />
-              </button>
+                        {/* Product Card */}
+                        <button
+                          onClick={() => handleViewOrder(order.id)}
+                          className="w-full px-4 pb-6 flex gap-4 items-start text-left"
+                        >
+                          {/* Product Image */}
+                          <div className="w-24 h-24 flex-shrink-0 bg-gray-100 overflow-hidden">
+                            {firstItem?.image_url ? (
+                              <img 
+                                src={firstItem.image_url} 
+                                alt={firstItem.name || "Product"} 
+                                className="w-full h-full object-cover"
+                              />
+                            ) : (
+                              <div className="w-full h-full flex items-center justify-center">
+                                <Package className="w-12 h-12 text-gray-400" />
+                              </div>
+                            )}
+                          </div>
 
-              {/* Logout */}
-              <button
-                onClick={handleLogout}
-                className="w-full flex items-center gap-3 px-6 py-4 text-left bg-white hover:bg-gray-50 transition-colors"
-              >
-                <div className="w-10 h-10 flex items-center justify-center">
-                  <LogOut className="w-6 h-6 text-orange-500" />
-                </div>
-                <span className="font-semibold text-lg text-gray-700">Logout</span>
-              </button>
-            </nav>
-          </aside>
-
-          {/* Main Content */}
-          <main className="flex-1 bg-white p-8 rounded-none">
-            <h1 className="text-3xl font-bold mb-8">My Orders</h1>
-            
-            {filteredOrders.length === 0 ? (
-              <div className="text-center py-12">
-                <Package className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
-                <h2 className="text-xl font-semibold mb-2">
-                  {orders.length === 0 ? "No orders yet" : "No orders found"}
-                </h2>
-                <p className="text-muted-foreground mb-4">
-                  {orders.length === 0 
-                    ? "You haven't placed any orders yet." 
-                    : "Try adjusting your filters or search query."}
-                </p>
-                {orders.length === 0 && (
-                  <Button onClick={() => navigate('/')}>
-                    Start Shopping
-                  </Button>
-                )}
-              </div>
-            ) : (
-              <div className="space-y-6">
-                {filteredOrders.map((order) => {
-                  const orderItems = order.order_items_data || [];
-                  const firstItem = orderItems[0];
-                  const deliveryDate = order.estimated_delivery_date || order.created_at;
-                  
-                  return (
-                    <div key={order.id} className="border-b pb-6 last:border-0">
-                      {/* Delivery Date Header */}
-                      <div className="mb-4">
-                        <h3 className="font-bold text-base">
-                          Delivered on {format(new Date(deliveryDate), 'MMM dd, yyyy')}
-                        </h3>
-                      </div>
-
-                      {/* Product Card */}
-                      <div className="flex gap-6 items-start">
-                        {/* Product Image */}
-                        <div className="w-28 h-28 flex-shrink-0 bg-gray-100 overflow-hidden">
-                          {firstItem?.image_url ? (
-                            <img 
-                              src={firstItem.image_url} 
-                              alt={firstItem.name || "Product"} 
-                              className="w-full h-full object-cover"
-                            />
-                          ) : (
-                            <div className="w-full h-full flex items-center justify-center">
-                              <Package className="w-12 h-12 text-gray-400" />
+                          {/* Product Details */}
+                          <div className="flex-1">
+                            <h4 className="font-bold text-xl mb-2 text-gray-900">
+                              {firstItem?.product_name || firstItem?.name || 'Product'}
+                            </h4>
+                            <div className="inline-block px-3 py-1 bg-orange-100 text-orange-500 text-sm font-semibold mb-2">
+                              {order.order_type === 'test_ride' ? 'Book a Bike' : order.order_type === 'purchase' ? 'Book a Buy' : 'Order'}
                             </div>
-                          )}
+                            {firstItem?.variant && (
+                              <p className="text-base text-gray-700 mb-1">
+                                Variant : <span className="font-semibold">{firstItem.variant}</span>
+                              </p>
+                            )}
+                            <div className="flex items-center gap-2 text-base">
+                              <span className="text-gray-700">Colour :</span>
+                              <span className="font-semibold text-gray-900">{firstItem?.color || 'Black'}</span>
+                              <div 
+                                className="w-5 h-5 border border-gray-300"
+                                style={{ backgroundColor: firstItem?.color_hex || '#000000' }}
+                              ></div>
+                            </div>
+                          </div>
+
+                          {/* Chevron */}
+                          <div className="flex-shrink-0 pt-2">
+                            <ChevronRight className="w-6 h-6 text-gray-400" />
+                          </div>
+                        </button>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          </div>
+        ) : (
+          // Desktop Layout
+          <div className="flex gap-6">
+            {/* Sidebar - Same as Profile page */}
+            <aside className="w-80 flex-shrink-0">
+              <nav className="flex flex-col gap-[15px] sticky top-32">
+                {/* Account Settings Section */}
+                <div className="bg-white">
+                  <div className="flex items-center gap-3 px-6 py-4 border-b">
+                    <div className="w-10 h-10 rounded-full bg-orange-500 flex items-center justify-center">
+                      <User className="w-6 h-6 text-white" />
+                    </div>
+                    <span className="font-semibold text-lg text-gray-700">ACCOUNT SETTINGS</span>
+                  </div>
+                  
+                  <div className="space-y-0">
+                    <button
+                      onClick={() => navigate("/profile?section=profile")}
+                      className="w-full text-left px-6 py-4 text-gray-900 hover:bg-gray-50 transition-colors"
+                    >
+                      Profile information
+                    </button>
+                    <button
+                      onClick={() => navigate("/profile?section=address")}
+                      className="w-full text-left px-6 py-4 text-gray-900 hover:bg-gray-50 transition-colors"
+                    >
+                      Manage Addresses
+                    </button>
+                    <button
+                      onClick={() => navigate("/profile?section=pan")}
+                      className="w-full text-left px-6 py-4 text-gray-900 hover:bg-gray-50 transition-colors"
+                    >
+                      ID Proof
+                    </button>
+                  </div>
+                </div>
+
+                {/* My Orders */}
+                <button
+                  className="w-full flex items-center justify-between px-6 py-4 text-left bg-orange-50 transition-colors"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 flex items-center justify-center">
+                      <Package className="w-6 h-6 text-orange-500" />
+                    </div>
+                    <span className="font-semibold text-lg text-orange-500">MY ORDERS</span>
+                  </div>
+                  <ChevronRight className="w-5 h-5 text-orange-500" />
+                </button>
+
+                {/* Logout */}
+                <button
+                  onClick={handleLogout}
+                  className="w-full flex items-center gap-3 px-6 py-4 text-left bg-white hover:bg-gray-50 transition-colors"
+                >
+                  <div className="w-10 h-10 flex items-center justify-center">
+                    <LogOut className="w-6 h-6 text-orange-500" />
+                  </div>
+                  <span className="font-semibold text-lg text-gray-700">Logout</span>
+                </button>
+              </nav>
+            </aside>
+
+            {/* Main Content */}
+            <main className="flex-1 bg-white p-8 rounded-none">
+              <h1 className="text-3xl font-bold mb-8">My Orders</h1>
+              
+              {filteredOrders.length === 0 ? (
+                <div className="text-center py-12">
+                  <Package className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
+                  <h2 className="text-xl font-semibold mb-2">
+                    {orders.length === 0 ? "No orders yet" : "No orders found"}
+                  </h2>
+                  <p className="text-muted-foreground mb-4">
+                    {orders.length === 0 
+                      ? "You haven't placed any orders yet." 
+                      : "Try adjusting your filters or search query."}
+                  </p>
+                  {orders.length === 0 && (
+                    <Button onClick={() => navigate('/')}>
+                      Start Shopping
+                    </Button>
+                  )}
+                </div>
+              ) : (
+                <div className="space-y-6">
+                  {filteredOrders.map((order) => {
+                    const orderItems = order.order_items_data || [];
+                    const firstItem = orderItems[0];
+                    const deliveryDate = order.estimated_delivery_date || order.created_at;
+                    
+                    return (
+                      <div key={order.id} className="border-b pb-6 last:border-0">
+                        {/* Delivery Date Header */}
+                        <div className="mb-4">
+                          <h3 className="font-bold text-base">
+                            Delivered on {format(new Date(deliveryDate), 'MMM dd, yyyy')}
+                          </h3>
                         </div>
 
-                        {/* Product Details */}
-                        <div className="flex-1">
-                          <h4 className="font-bold text-lg mb-2">
-                            {firstItem?.product_name || firstItem?.name || 'Product'}
-                          </h4>
-                          <div className="inline-flex items-center px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium mb-2">
-                            {order.order_type === 'test_ride' ? 'Book a Bike' : order.order_type === 'purchase' ? 'Book a Buy' : 'Order'}
+                        {/* Product Card */}
+                        <div className="flex gap-6 items-start">
+                          {/* Product Image */}
+                          <div className="w-28 h-28 flex-shrink-0 bg-gray-100 overflow-hidden">
+                            {firstItem?.image_url ? (
+                              <img 
+                                src={firstItem.image_url} 
+                                alt={firstItem.name || "Product"} 
+                                className="w-full h-full object-cover"
+                              />
+                            ) : (
+                              <div className="w-full h-full flex items-center justify-center">
+                                <Package className="w-12 h-12 text-gray-400" />
+                              </div>
+                            )}
                           </div>
-                          {firstItem?.variant && (
-                            <p className="text-sm text-gray-700 mb-1">
-                              Variant : <span className="font-medium">{firstItem.variant}</span>
-                            </p>
-                          )}
-                          <div className="flex items-center gap-2 text-sm">
-                            <span className="text-gray-700">Colour :</span>
-                            <span className="font-medium">{firstItem?.color || 'Black'}</span>
-                            <div 
-                              className="w-4 h-4"
-                              style={{ backgroundColor: firstItem?.color_hex || '#000000' }}
-                            ></div>
-                          </div>
-                        </div>
 
-                        {/* Price and Actions */}
-                        <div className="text-right">
-                          <div className="text-2xl font-bold mb-4">
-                            ₹{parseFloat(order.total_amount.toString()).toLocaleString('en-IN')}
+                          {/* Product Details */}
+                          <div className="flex-1">
+                            <h4 className="font-bold text-lg mb-2">
+                              {firstItem?.product_name || firstItem?.name || 'Product'}
+                            </h4>
+                            <div className="inline-flex items-center px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium mb-2">
+                              {order.order_type === 'test_ride' ? 'Book a Bike' : order.order_type === 'purchase' ? 'Book a Buy' : 'Order'}
+                            </div>
+                            {firstItem?.variant && (
+                              <p className="text-sm text-gray-700 mb-1">
+                                Variant : <span className="font-medium">{firstItem.variant}</span>
+                              </p>
+                            )}
+                            <div className="flex items-center gap-2 text-sm">
+                              <span className="text-gray-700">Colour :</span>
+                              <span className="font-medium">{firstItem?.color || 'Black'}</span>
+                              <div 
+                                className="w-4 h-4"
+                                style={{ backgroundColor: firstItem?.color_hex || '#000000' }}
+                              ></div>
+                            </div>
                           </div>
-                          <div className="flex gap-2">
-                            <Button 
-                              variant="outline" 
-                              className="rounded-none"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                // Handle view invoice
-                              }}
-                            >
-                              View Invoice
-                            </Button>
-                            <Button 
-                              className="bg-orange-500 hover:bg-orange-600 rounded-none"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleViewOrder(order.id);
-                              }}
-                            >
-                              View Order
-                            </Button>
+
+                          {/* Price and Actions */}
+                          <div className="text-right">
+                            <div className="text-2xl font-bold mb-4">
+                              ₹{parseFloat(order.total_amount.toString()).toLocaleString('en-IN')}
+                            </div>
+                            <div className="flex gap-2">
+                              <Button 
+                                variant="outline" 
+                                className="rounded-none"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  // Handle view invoice
+                                }}
+                              >
+                                View Invoice
+                              </Button>
+                              <Button 
+                                className="bg-orange-500 hover:bg-orange-600 rounded-none"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleViewOrder(order.id);
+                                }}
+                              >
+                                View Order
+                              </Button>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </main>
-        </div>
+                    );
+                  })}
+                </div>
+              )}
+            </main>
+          </div>
+        )}
       </div>
     </div>
   );
