@@ -863,7 +863,7 @@ const Auth = () => {
           </div>
         </div>
       )}
-      <Footer />
+      {!isMobile && <Footer />}
     </div>
     </>
   );
