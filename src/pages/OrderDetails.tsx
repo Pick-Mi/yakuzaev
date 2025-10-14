@@ -362,7 +362,7 @@ const OrderDetails = () => {
                   <div className="flex items-center gap-2 text-sm">
                     <span className="text-foreground">Colour :</span>
                     <span className="font-medium">{firstItem.color || 'Blue'}</span>
-                    <div className="w-5 h-5 rounded-full border-2 border-gray-300" style={{
+                    <div className="w-5 h-5" style={{
                     backgroundColor: firstItem.color_hex || '#000000'
                   }} />
                   </div>
