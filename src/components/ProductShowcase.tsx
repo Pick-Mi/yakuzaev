@@ -257,16 +257,16 @@ const ProductShowcase = () => {
               ))
             )}
           </div>
-          
-          {/* Explore All Bikes CTA */}
-          <div className="flex justify-center mt-8 sm:mt-10 md:mt-12">
-            <Link
-              to="/products"
-              className="bg-black text-white h-[45px] sm:h-[50px] md:h-[55px] px-6 sm:px-8 md:px-10 py-[13px] font-['Poppins'] font-medium text-[14px] sm:text-[15px] md:text-[16px] hover:bg-black/90 transition-colors flex items-center justify-center"
-            >
-              Explore All Bike
-            </Link>
-          </div>
+        </div>
+        
+        {/* Explore All Bikes CTA - Outside scroll container */}
+        <div className="flex justify-center mt-8 sm:mt-10 md:mt-12 px-4 sm:px-0">
+          <Link
+            to="/products"
+            className="bg-black text-white h-[45px] sm:h-[50px] md:h-[55px] px-6 sm:px-8 md:px-10 py-[13px] font-['Poppins'] font-medium text-[14px] sm:text-[15px] md:text-[16px] hover:bg-black/90 transition-colors flex items-center justify-center"
+          >
+            Explore All Bike
+          </Link>
         </div>
 
       </div>
