@@ -1216,68 +1216,67 @@ const BookingConfirmation = () => {
 
               {/* Shipping Section */}
               <div className="space-y-6 pt-8 border-t">
-                  <h3 className="text-[24px] font-semibold">
-                    Shipping
-                  </h3>
+                <h3 className="text-[24px] font-semibold">
+                  Shipping
+                </h3>
 
-                  {/* Selected Address Display */}
-                  {(address || city || state) && (
-                    <div className="p-4 bg-accent/30 rounded-lg border border-border">
-                      <p className="text-sm font-medium mb-2">Delivery Address:</p>
-                      <p className="text-sm text-muted-foreground">
-                        {firstName} {lastName}
-                      </p>
-                      <p className="text-sm text-muted-foreground">
-                        {address}
-                        {city && `, ${city}`}
-                        {state && `, ${state}`}
-                        {pincode && ` - ${pincode}`}
-                      </p>
-                      {phoneNumber && (
-                        <p className="text-sm text-muted-foreground">
-                          Phone: {countryCode} {phoneNumber}
-                        </p>
-                      )}
-                    </div>
-                  )}
-
-                  <div className="space-y-4">
-                    <p className="text-[18px] text-muted-foreground">
-                      ₹ 1,250.00 Delivery Fee
+                {/* Selected Address Display */}
+                {(address || city || state) && (
+                  <div className="p-4 bg-accent/30 rounded-lg border border-border">
+                    <p className="text-sm font-medium mb-2">Delivery Address:</p>
+                    <p className="text-sm text-muted-foreground">
+                      {firstName} {lastName}
                     </p>
-
-                    <div className="space-y-2">
-                      <p className="text-base font-medium">Yakuza Shipment #1</p>
+                    <p className="text-sm text-muted-foreground">
+                      {address}
+                      {city && `, ${city}`}
+                      {state && `, ${state}`}
+                      {pincode && ` - ${pincode}`}
+                    </p>
+                    {phoneNumber && (
                       <p className="text-sm text-muted-foreground">
-                        Expected Arrival: Tue, 14 Oct – Tue, 21 Oct
+                        Phone: {countryCode} {phoneNumber}
                       </p>
-                    </div>
+                    )}
+                  </div>
+                )}
 
-                    <p className="text-sm text-muted-foreground leading-relaxed">
-                      This is a verified domestic shipment handled by Yakuza's certified logistics partner.
+                <div className="space-y-4">
+                  <p className="text-[18px] text-muted-foreground">
+                    ₹ 1,250.00 Delivery Fee
+                  </p>
+
+                  <div className="space-y-2">
+                    <p className="text-base font-medium">Yakuza Shipment #1</p>
+                    <p className="text-sm text-muted-foreground">
+                      Expected Arrival: Tue, 14 Oct – Tue, 21 Oct
                     </p>
                   </div>
 
-                  <div className="pt-4 border-t">
-                    <p className="text-sm text-muted-foreground text-center">
-                      By clicking Place Order, you agree to the Yakuza EV{' '}
-                      <a href="/terms" className="underline hover:no-underline">
-                        Terms & Conditions
-                      </a>
-                    </p>
-                  </div>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    This is a verified domestic shipment handled by Yakuza's certified logistics partner.
+                  </p>
                 </div>
 
-                {/* Place Order Button */}
-                <div className="pt-6">
-                  <Button
-                    onClick={handleSaveDetails}
-                    disabled={!isFormValid() || saving}
-                    className="w-full h-14 bg-black text-white hover:bg-black/90 rounded font-medium text-[18px] disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {saving ? 'Processing...' : 'Pay with PayU'}
-                  </Button>
+                <div className="pt-4 border-t">
+                  <p className="text-sm text-muted-foreground text-center">
+                    By clicking Place Order, you agree to the Yakuza EV{' '}
+                    <a href="/terms" className="underline hover:no-underline">
+                      Terms & Conditions
+                    </a>
+                  </p>
                 </div>
+              </div>
+
+              {/* Place Order Button */}
+              <div className="pt-6">
+                <Button
+                  onClick={handleSaveDetails}
+                  disabled={!isFormValid() || saving}
+                  className="w-full h-14 bg-black text-white hover:bg-black/90 rounded font-medium text-[18px] disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {saving ? 'Processing...' : 'Pay with PayU'}
+                </Button>
               </div>
             </div>
           </div>
