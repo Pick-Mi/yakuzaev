@@ -370,7 +370,7 @@ const Orders = () => {
                             <img 
                               src={firstItem.image_url} 
                               alt={firstItem.name || "Product"} 
-                              className="w-full h-full object-cover"
+                              className="w-full h-full object-cover rounded-lg"
                             />
                           ) : (
                             <div className="w-full h-full flex items-center justify-center">
