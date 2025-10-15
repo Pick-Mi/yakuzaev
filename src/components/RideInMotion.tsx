@@ -41,8 +41,8 @@ const RideInMotion = ({ videos = [] }: RideInMotionProps) => {
           </button>
         </div>
 
-        {/* Video Grid */}
-        <div className="flex gap-6 overflow-x-auto">
+        {/* Video Grid - Desktop */}
+        <div className="hidden md:flex gap-6 overflow-x-auto">
           {/* Large Video Card */}
           <div 
             className="relative w-[60%] min-w-[500px] h-[440px] bg-[#0a0a0a] overflow-hidden cursor-pointer group"
@@ -93,6 +93,60 @@ const RideInMotion = ({ videos = [] }: RideInMotionProps) => {
                 <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
                   <Play className="w-6 h-6 text-black ml-0.5" fill="black" />
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Video Grid - Mobile (Equal Width Cards) */}
+        <div className="md:hidden flex flex-col gap-5">
+          {/* Video Card 1 */}
+          <div 
+            className="relative w-full h-[300px] bg-[#0a0a0a] overflow-hidden cursor-pointer group"
+            onClick={() => handleVideoClick(firstVideo?.url)}
+            style={{
+              backgroundImage: firstVideo?.thumbnail ? `url(${firstVideo.thumbnail})` : undefined,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center'
+            }}
+          >
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+                <Play className="w-6 h-6 text-black ml-0.5" fill="black" />
+              </div>
+            </div>
+          </div>
+
+          {/* Video Card 2 */}
+          <div 
+            className="relative w-full h-[300px] bg-[#888888] overflow-hidden cursor-pointer group"
+            onClick={() => handleVideoClick(secondVideo?.url)}
+            style={{
+              backgroundImage: secondVideo?.thumbnail ? `url(${secondVideo.thumbnail})` : undefined,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center'
+            }}
+          >
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+                <Play className="w-6 h-6 text-black ml-0.5" fill="black" />
+              </div>
+            </div>
+          </div>
+
+          {/* Video Card 3 */}
+          <div 
+            className="relative w-full h-[300px] bg-[#888888] overflow-hidden cursor-pointer group"
+            onClick={() => handleVideoClick(thirdVideo?.url)}
+            style={{
+              backgroundImage: thirdVideo?.thumbnail ? `url(${thirdVideo.thumbnail})` : undefined,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center'
+            }}
+          >
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+                <Play className="w-6 h-6 text-black ml-0.5" fill="black" />
               </div>
             </div>
           </div>
