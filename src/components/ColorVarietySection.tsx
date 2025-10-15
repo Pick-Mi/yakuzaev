@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 
 interface ColorVariant {
-  color: string;
+  id?: string;
   name: string;
+  hex: string;
   image?: string;
 }
 
@@ -11,27 +12,36 @@ interface ColorVarietySectionProps {
     colors?: ColorVariant[];
     title?: string;
     subtitle?: string;
-  };
+    backgroundColor?: string;
+  } | string;
 }
 
 const ColorVarietySection = ({ colorVariety }: ColorVarietySectionProps) => {
   const [selectedColor, setSelectedColor] = useState(0);
 
+  // Parse color_variety if it's a string (from database)
+  let parsedColorVariety;
+  try {
+    parsedColorVariety = typeof colorVariety === 'string' 
+      ? JSON.parse(colorVariety) 
+      : colorVariety;
+  } catch (e) {
+    parsedColorVariety = null;
+  }
+
   // Default colors if no data from database
   const defaultColors = [
-    { id: 0, name: 'Gray', bgColor: 'bg-[#888888]', borderColor: 'border-[#888888]', color: '#888888', image: undefined as string | undefined },
-    { id: 1, name: 'Blue', bgColor: 'bg-[#2B4C7E]', borderColor: 'border-[#2B4C7E]', color: '#2B4C7E', image: undefined as string | undefined },
-    { id: 2, name: 'Light Blue', bgColor: 'bg-[#A8C5DD]', borderColor: 'border-[#A8C5DD]', color: '#A8C5DD', image: undefined as string | undefined },
+    { id: 0, name: 'Gray', hex: '#888888', image: undefined as string | undefined },
+    { id: 1, name: 'Blue', hex: '#2B4C7E', image: undefined as string | undefined },
+    { id: 2, name: 'Light Blue', hex: '#A8C5DD', image: undefined as string | undefined },
   ];
 
   // Map database colors to component format
-  const colors = colorVariety?.colors && colorVariety.colors.length > 0
-    ? colorVariety.colors.map((color, index) => ({
+  const colors = parsedColorVariety?.colors && parsedColorVariety.colors.length > 0
+    ? parsedColorVariety.colors.map((color: ColorVariant, index: number) => ({
         id: index,
         name: color.name || `Color ${index + 1}`,
-        bgColor: `bg-[${color.color}]`,
-        borderColor: `border-[${color.color}]`,
-        color: color.color,
+        hex: color.hex,
         image: color.image
       }))
     : defaultColors;
@@ -51,7 +61,7 @@ const ColorVarietySection = ({ colorVariety }: ColorVarietySectionProps) => {
         {/* Left side - Dynamic background with Scooter Image */}
         <div 
           className={`relative flex-1 w-full lg:w-1/2 h-[400px] md:h-[500px] lg:h-[600px] flex items-center justify-center transition-colors duration-500`}
-          style={{ backgroundColor: selectedColorData?.color || '#2B4C7E' }}
+          style={{ backgroundColor: selectedColorData?.hex || '#2B4C7E' }}
         >
           {/* Scooter Image */}
           <div className="w-full h-full flex items-center justify-center px-4 md:px-8">
@@ -60,6 +70,7 @@ const ColorVarietySection = ({ colorVariety }: ColorVarietySectionProps) => {
                 src={selectedColorData.image} 
                 alt={`${selectedColorData.name} Scooter`}
                 className="w-full max-w-[300px] md:max-w-[400px] lg:max-w-[500px] h-auto object-contain transition-opacity duration-500"
+                key={selectedColorData.image}
               />
             ) : (
               <div className={`w-full max-w-[300px] md:max-w-[400px] lg:max-w-[500px] h-[300px] md:h-[400px] lg:h-[450px] bg-white bg-opacity-20 flex items-center justify-center transition-colors duration-300`}>
@@ -73,7 +84,7 @@ const ColorVarietySection = ({ colorVariety }: ColorVarietySectionProps) => {
         <div className="flex-1 w-full lg:w-1/2 bg-white h-[400px] md:h-[500px] lg:h-[600px] flex items-center justify-center px-6 md:px-8 lg:px-16 py-[35px]">
           <div className="flex flex-col gap-6 md:gap-8 items-center lg:items-start text-center lg:text-left">
             <h2 className="font-inter font-medium text-2xl md:text-4xl lg:text-[48px] leading-tight text-[#000000]">
-              {colorVariety?.title || (
+              {parsedColorVariety?.title || (
                 <>
                   Express Yourself<br />
                   with Color<br />
@@ -82,15 +93,15 @@ const ColorVarietySection = ({ colorVariety }: ColorVarietySectionProps) => {
               )}
             </h2>
 
-            {colorVariety?.subtitle && (
+            {parsedColorVariety?.subtitle && (
               <p className="font-inter text-base md:text-lg text-gray-600">
-                {colorVariety.subtitle}
+                {parsedColorVariety.subtitle}
               </p>
             )}
 
             {/* Color Swatches */}
-            <div className="flex gap-4">
-              {colors.map((color) => (
+            <div className="flex gap-4 flex-wrap justify-center lg:justify-start">
+              {colors.map((color: any) => (
                 <button
                   key={color.id}
                   onClick={() => setSelectedColor(color.id)}
@@ -100,8 +111,8 @@ const ColorVarietySection = ({ colorVariety }: ColorVarietySectionProps) => {
                       : 'border-transparent'
                   }`}
                   style={{
-                    backgroundColor: color.color,
-                    borderColor: selectedColor === color.id ? color.color : 'transparent'
+                    backgroundColor: color.hex,
+                    borderColor: selectedColor === color.id ? color.hex : 'transparent'
                   }}
                   aria-label={`Select ${color.name} color`}
                   title={color.name}
