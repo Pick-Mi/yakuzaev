@@ -29,7 +29,7 @@ const ComponentCards = ({ visualFeatures = [] }: ComponentCardsProps) => {
             backgroundColor: firstCard?.image ? 'transparent' : '#888888'
           }}
         >
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+          <div className="absolute bottom-0 left-0 right-0 h-2/3 bg-gradient-to-t from-black/60 to-transparent" />
           <p className="absolute bottom-5 left-6 font-inter font-medium text-xl sm:text-base sm:bottom-4 sm:left-4 text-white z-10">
             {firstCard?.text || 'Hub Motor'}
           </p>
@@ -47,7 +47,7 @@ const ComponentCards = ({ visualFeatures = [] }: ComponentCardsProps) => {
             backgroundColor: secondCard?.image ? 'transparent' : '#888888'
           }}
         >
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+          <div className="absolute bottom-0 left-0 right-0 h-2/3 bg-gradient-to-t from-black/60 to-transparent" />
           <p className="absolute bottom-5 left-6 font-inter font-medium text-xl sm:text-base sm:bottom-4 sm:left-4 text-white z-10">
             {secondCard?.text || 'Head Light'}
           </p>
@@ -65,7 +65,7 @@ const ComponentCards = ({ visualFeatures = [] }: ComponentCardsProps) => {
             backgroundColor: thirdCard?.image ? 'transparent' : '#888888'
           }}
         >
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+          <div className="absolute bottom-0 left-0 right-0 h-2/3 bg-gradient-to-t from-black/60 to-transparent" />
           <p className="absolute bottom-5 left-6 font-inter font-medium text-xl sm:text-base sm:bottom-4 sm:left-4 text-white z-10">
             {thirdCard?.text || 'Disc Brake'}
           </p>
@@ -86,7 +86,7 @@ const ComponentCards = ({ visualFeatures = [] }: ComponentCardsProps) => {
             backgroundColor: thirdCard?.image ? 'transparent' : '#888888'
           }}
         >
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+          <div className="absolute bottom-0 left-0 right-0 h-2/3 bg-gradient-to-t from-black/60 to-transparent" />
           <p className="absolute bottom-8 left-10 font-inter font-medium text-3xl text-white z-10">
             {thirdCard?.text || 'Hub Motor'}
           </p>
@@ -106,7 +106,7 @@ const ComponentCards = ({ visualFeatures = [] }: ComponentCardsProps) => {
               backgroundColor: firstCard?.image ? 'transparent' : '#888888'
             }}
           >
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+            <div className="absolute bottom-0 left-0 right-0 h-2/3 bg-gradient-to-t from-black/60 to-transparent" />
             <p className="absolute bottom-6 left-6 font-inter font-medium text-xl text-white z-10">
               {firstCard?.text || 'Head Light'}
             </p>
@@ -124,7 +124,7 @@ const ComponentCards = ({ visualFeatures = [] }: ComponentCardsProps) => {
               backgroundColor: secondCard?.image ? 'transparent' : '#888888'
             }}
           >
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+            <div className="absolute bottom-0 left-0 right-0 h-2/3 bg-gradient-to-t from-black/60 to-transparent" />
             <p className="absolute bottom-6 left-6 font-inter font-medium text-xl text-white z-10">
               {secondCard?.text || 'Disc Brake'}
             </p>
