@@ -12,8 +12,8 @@ const ColorVarietySection = () => {
   return (
     <section className="bg-[#F8F9F9] w-full py-0 overflow-hidden mt-12 md:mt-[80px]">
       <div className="max-w-[1400px] mx-auto flex flex-col lg:flex-row items-center">
-        {/* Left side - Blue background with Scooter Image */}
-        <div className="relative flex-1 w-full lg:w-1/2 bg-[#2B4C7E] h-[400px] md:h-[500px] lg:h-[600px] flex items-center justify-center">
+        {/* Left side - Dynamic background with Scooter Image */}
+        <div className={`relative flex-1 w-full lg:w-1/2 ${colors[selectedColor].bgColor} h-[400px] md:h-[500px] lg:h-[600px] flex items-center justify-center transition-colors duration-500`}>
           {/* Scooter Image Placeholder */}
           <div className="w-full h-full flex items-center justify-center px-4 md:px-8">
             <div className={`w-full max-w-[300px] md:max-w-[400px] lg:max-w-[500px] h-[300px] md:h-[400px] lg:h-[450px] ${colors[selectedColor].bgColor} bg-opacity-20 flex items-center justify-center transition-colors duration-300`}>
