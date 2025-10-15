@@ -63,18 +63,22 @@ const ColorVarietySection = ({ colorVariety }: ColorVarietySectionProps) => {
           className={`relative flex-1 w-full lg:w-1/2 h-[400px] md:h-[500px] lg:h-[600px] flex items-center justify-center transition-colors duration-500`}
           style={{ backgroundColor: selectedColorData?.hex || '#2B4C7E' }}
         >
-          {/* Scooter Image */}
+          {/* Scooter Image from Database */}
           <div className="w-full h-full flex items-center justify-center px-4 md:px-8">
             {selectedColorData?.image ? (
               <img 
                 src={selectedColorData.image} 
                 alt={`${selectedColorData.name} Scooter`}
-                className="w-full max-w-[300px] md:max-w-[400px] lg:max-w-[500px] h-auto object-contain transition-opacity duration-500"
+                className="w-full max-w-[300px] md:max-w-[400px] lg:max-w-[500px] h-auto object-contain transition-all duration-500"
                 key={selectedColorData.image}
+                onError={(e) => {
+                  console.error('Failed to load image:', selectedColorData.image);
+                  e.currentTarget.style.display = 'none';
+                }}
               />
             ) : (
-              <div className={`w-full max-w-[300px] md:max-w-[400px] lg:max-w-[500px] h-[300px] md:h-[400px] lg:h-[450px] bg-white bg-opacity-20 flex items-center justify-center transition-colors duration-300`}>
-                <span className="text-white text-sm md:text-base lg:text-lg">Scooter Image ({selectedColorData?.name})</span>
+              <div className="text-white text-center">
+                <p className="text-lg">No image available for {selectedColorData?.name}</p>
               </div>
             )}
           </div>
