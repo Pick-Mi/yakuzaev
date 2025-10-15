@@ -350,7 +350,7 @@ const Product = () => {
       <RideInMotion videos={product.videos} />
       
       {/* Color Variety Section */}
-      <ColorVarietySection />
+      <ColorVarietySection colorVariety={product.color_variety} />
       
       {/* Variants Pricing Section */}
       <VariantsPricingSection 
