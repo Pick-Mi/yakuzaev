@@ -98,11 +98,11 @@ const RideInMotion = ({ videos = [] }: RideInMotionProps) => {
           </div>
         </div>
 
-        {/* Video Grid - Mobile (Equal Width Cards) */}
-        <div className="md:hidden flex flex-col gap-5">
+        {/* Video Grid - Mobile (Horizontal Scroll) */}
+        <div className="md:hidden flex gap-5 overflow-x-auto pb-4 scrollbar-hide">
           {/* Video Card 1 */}
           <div 
-            className="relative w-full h-[300px] bg-[#0a0a0a] overflow-hidden cursor-pointer group"
+            className="relative min-w-[280px] w-[280px] h-[300px] bg-[#0a0a0a] overflow-hidden cursor-pointer group flex-shrink-0"
             onClick={() => handleVideoClick(firstVideo?.url)}
             style={{
               backgroundImage: firstVideo?.thumbnail ? `url(${firstVideo.thumbnail})` : undefined,
@@ -119,7 +119,7 @@ const RideInMotion = ({ videos = [] }: RideInMotionProps) => {
 
           {/* Video Card 2 */}
           <div 
-            className="relative w-full h-[300px] bg-[#888888] overflow-hidden cursor-pointer group"
+            className="relative min-w-[280px] w-[280px] h-[300px] bg-[#888888] overflow-hidden cursor-pointer group flex-shrink-0"
             onClick={() => handleVideoClick(secondVideo?.url)}
             style={{
               backgroundImage: secondVideo?.thumbnail ? `url(${secondVideo.thumbnail})` : undefined,
@@ -136,7 +136,7 @@ const RideInMotion = ({ videos = [] }: RideInMotionProps) => {
 
           {/* Video Card 3 */}
           <div 
-            className="relative w-full h-[300px] bg-[#888888] overflow-hidden cursor-pointer group"
+            className="relative min-w-[280px] w-[280px] h-[300px] bg-[#888888] overflow-hidden cursor-pointer group flex-shrink-0"
             onClick={() => handleVideoClick(thirdVideo?.url)}
             style={{
               backgroundImage: thirdVideo?.thumbnail ? `url(${thirdVideo.thumbnail})` : undefined,
