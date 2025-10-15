@@ -176,6 +176,19 @@ const Product = () => {
             parsedQASection = [];
           }
 
+          // Parse color_variety if it's a JSON string
+          let parsedColorVariety = null;
+          try {
+            parsedColorVariety = typeof response.data.color_variety === 'string' 
+              ? JSON.parse(response.data.color_variety) 
+              : response.data.color_variety || null;
+            console.log('Color Variety from DB:', response.data.color_variety);
+            console.log('Parsed Color Variety:', parsedColorVariety);
+          } catch (e) {
+            console.error('Error parsing color_variety:', e);
+            parsedColorVariety = null;
+          }
+
           const fetchedProduct = {
             id: response.data.id,
             name: response.data.name,
@@ -198,7 +211,8 @@ const Product = () => {
             promo_card: parsedPromoCard,
             videos: parsedVideos,
             accessories: parsedAccessories,
-            qa_section: parsedQASection
+            qa_section: parsedQASection,
+            color_variety: parsedColorVariety
           };
           setProduct(fetchedProduct);
           
