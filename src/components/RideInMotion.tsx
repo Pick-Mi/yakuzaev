@@ -99,7 +99,7 @@ const RideInMotion = ({ videos = [] }: RideInMotionProps) => {
         </div>
 
         {/* Video Grid - Mobile (Horizontal Scroll) */}
-        <div className="md:hidden flex gap-5 overflow-x-auto pb-4 scrollbar-hide">
+        <div className="md:hidden flex gap-5 overflow-x-auto pb-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
           {/* Video Card 1 */}
           <div 
             className="relative min-w-[280px] w-[280px] h-[300px] bg-[#0a0a0a] overflow-hidden cursor-pointer group flex-shrink-0"
