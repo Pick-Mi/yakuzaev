@@ -591,86 +591,154 @@ const BookingConfirmation = () => {
                   </div>
                 </div>}
 
-              {/* Order Summary - Collapsible */}
-              <Collapsible open={isSummaryOpen} onOpenChange={setIsSummaryOpen} className="border-t pt-6">
-                <CollapsibleTrigger className="w-full flex items-center justify-between hover:opacity-80 transition-opacity">
-                  <div className="flex items-center gap-3">
-                    <h3 className="font-['Poppins'] font-semibold text-[18px] md:text-[24px]">
-                      Summary
-                    </h3>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <span className="font-['Poppins'] font-semibold text-[18px] md:text-[20px]">
-                      ₹{totalAmount.toLocaleString('en-IN')}
-                    </span>
-                    {isSummaryOpen ? (
-                      <ChevronUp className="w-6 h-6" />
-                    ) : (
-                      <ChevronDown className="w-6 h-6" />
-                    )}
-                  </div>
-                </CollapsibleTrigger>
-
-                <CollapsibleContent className="pt-6">
-                  <div className="space-y-3">
-                    {/* Product Price */}
-                    <div className="flex justify-between items-center">
-                      <span className="font-['Inter'] text-[14px] md:text-[16px] text-muted-foreground">
-                        {purchaseType === 'book' ? 'Booking Amount' : 'Product Price'}
+              {/* Order Summary - Collapsible for Mobile, Expanded for Desktop */}
+              
+              {/* Mobile View - Collapsible */}
+              <div className="md:hidden border-t pt-4">
+                <Collapsible open={isSummaryOpen} onOpenChange={setIsSummaryOpen}>
+                  <CollapsibleTrigger className="w-full flex items-center justify-between hover:opacity-80 transition-opacity">
+                    <div className="flex items-center gap-3">
+                      <h3 className="font-['Poppins'] font-semibold text-[18px]">
+                        Summary
+                      </h3>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <span className="font-['Poppins'] font-semibold text-[18px]">
+                        ₹{totalAmount.toLocaleString('en-IN')}
                       </span>
-                      <span className="font-['Inter'] text-[14px] md:text-[16px]">₹{productPrice.toLocaleString('en-IN')}</span>
+                      {isSummaryOpen ? (
+                        <ChevronUp className="w-5 h-5" />
+                      ) : (
+                        <ChevronDown className="w-5 h-5" />
+                      )}
                     </div>
+                  </CollapsibleTrigger>
 
-                    {/* Delivery Fee */}
-                    <div className="flex justify-between items-center">
-                      <span className="font-['Inter'] text-[14px] md:text-[16px] text-muted-foreground">Delivery Fee</span>
-                      <span className="font-['Inter'] text-[14px] md:text-[16px]">₹{deliveryFee.toLocaleString('en-IN')}</span>
-                    </div>
-
-                    {/* Promo Code Section */}
-                    <div className="py-3 border-t border-b">
-                      <div className="space-y-2">
-                        <Label htmlFor="promoCode" className="text-sm font-medium">Have a Promo Code?</Label>
-                        <div className="flex gap-2">
-                          <Input id="promoCode" type="text" placeholder="Enter promo code" value={promoCode} onChange={e => setPromoCode(e.target.value.toUpperCase())} className="h-10 flex-1" disabled={promoApplied} />
-                          {!promoApplied ? <Button type="button" onClick={applyPromoCode} disabled={!promoCode.trim()} variant="outline" className="h-10 px-4">
-                              Apply
-                            </Button> : <Button type="button" onClick={removePromoCode} variant="outline" className="h-10 px-4">
-                              Remove
-                            </Button>}
-                        </div>
-                        {promoApplied && <p className="text-sm text-green-600 font-medium">
-                            ✓ Promo code applied: {promoCode}
-                          </p>}
-                      </div>
-                    </div>
-
-                    {/* Discount */}
-                    {discountAmount > 0 && <div className="flex justify-between items-center text-green-600">
-                        <span className="font-['Inter'] text-[14px] md:text-[16px]">Discount</span>
-                        <span className="font-['Inter'] text-[14px] md:text-[16px]">-₹{discountAmount.toLocaleString('en-IN')}</span>
-                      </div>}
-
-                    {/* Total */}
-                    <div className="border-t pt-3 mt-3">
-                      <div className="flex justify-between items-center font-semibold">
-                        <span className="font-['Poppins'] text-[18px] md:text-[20px]">
-                          {purchaseType === 'book' ? 'Booking Total' : 'Total Amount'}
+                  <CollapsibleContent className="pt-4">
+                    <div className="space-y-3">
+                      {/* Product Price */}
+                      <div className="flex justify-between items-center">
+                        <span className="font-['Inter'] text-[14px] text-muted-foreground">
+                          {purchaseType === 'book' ? 'Booking Amount' : 'Product Price'}
                         </span>
-                        <span className="font-['Poppins'] text-[18px] md:text-[20px] text-primary">₹{totalAmount.toLocaleString('en-IN')}</span>
+                        <span className="font-['Inter'] text-[14px]">₹{productPrice.toLocaleString('en-IN')}</span>
                       </div>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        {purchaseType === 'book' ? 'Booking amount to be paid via PayU • Remaining at delivery' : 'Full amount to be paid via PayU'}
-                      </p>
-                    </div>
 
-                    {discountAmount > 0 && <div className="flex items-center gap-2 text-green-600 mt-4">
-                        <Gift className="w-5 h-5" />
-                        <span className="font-['Inter'] text-[14px]">You are saving ₹{discountAmount.toLocaleString('en-IN')}</span>
-                      </div>}
+                      {/* Delivery Fee */}
+                      <div className="flex justify-between items-center">
+                        <span className="font-['Inter'] text-[14px] text-muted-foreground">Delivery Fee</span>
+                        <span className="font-['Inter'] text-[14px]">₹{deliveryFee.toLocaleString('en-IN')}</span>
+                      </div>
+
+                      {/* Promo Code Section */}
+                      <div className="py-3 border-t border-b">
+                        <div className="space-y-2">
+                          <Label htmlFor="promoCode-mobile" className="text-sm font-medium">Have a Promo Code?</Label>
+                          <div className="flex gap-2">
+                            <Input id="promoCode-mobile" type="text" placeholder="Enter promo code" value={promoCode} onChange={e => setPromoCode(e.target.value.toUpperCase())} className="h-10 flex-1 text-sm" disabled={promoApplied} />
+                            {!promoApplied ? <Button type="button" onClick={applyPromoCode} disabled={!promoCode.trim()} variant="outline" className="h-10 px-3 text-sm">
+                                Apply
+                              </Button> : <Button type="button" onClick={removePromoCode} variant="outline" className="h-10 px-3 text-sm">
+                                Remove
+                              </Button>}
+                          </div>
+                          {promoApplied && <p className="text-xs text-green-600 font-medium">
+                              ✓ Promo code applied: {promoCode}
+                            </p>}
+                        </div>
+                      </div>
+
+                      {/* Discount */}
+                      {discountAmount > 0 && <div className="flex justify-between items-center text-green-600">
+                          <span className="font-['Inter'] text-[14px]">Discount</span>
+                          <span className="font-['Inter'] text-[14px]">-₹{discountAmount.toLocaleString('en-IN')}</span>
+                        </div>}
+
+                      {/* Total */}
+                      <div className="border-t pt-3 mt-3">
+                        <div className="flex justify-between items-center font-semibold">
+                          <span className="font-['Poppins'] text-[16px]">
+                            {purchaseType === 'book' ? 'Booking Total' : 'Total Amount'}
+                          </span>
+                          <span className="font-['Poppins'] text-[16px] text-primary">₹{totalAmount.toLocaleString('en-IN')}</span>
+                        </div>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          {purchaseType === 'book' ? 'Booking amount to be paid via PayU • Remaining at delivery' : 'Full amount to be paid via PayU'}
+                        </p>
+                      </div>
+
+                      {discountAmount > 0 && <div className="flex items-center gap-2 text-green-600 mt-3">
+                          <Gift className="w-4 h-4" />
+                          <span className="font-['Inter'] text-[12px]">You are saving ₹{discountAmount.toLocaleString('en-IN')}</span>
+                        </div>}
+                    </div>
+                  </CollapsibleContent>
+                </Collapsible>
+              </div>
+
+              {/* Desktop & Tablet View - Always Expanded */}
+              <div className="hidden md:block border-t pt-6">
+                <h3 className="font-['Poppins'] font-semibold text-[24px] mb-6">
+                  Order Summary
+                </h3>
+                <div className="space-y-3">
+                  {/* Product Price */}
+                  <div className="flex justify-between items-center">
+                    <span className="font-['Inter'] text-[16px] text-muted-foreground">
+                      {purchaseType === 'book' ? 'Booking Amount' : 'Product Price'}
+                    </span>
+                    <span className="font-['Inter'] text-[16px]">₹{productPrice.toLocaleString('en-IN')}</span>
                   </div>
-                </CollapsibleContent>
-              </Collapsible>
+
+                  {/* Delivery Fee */}
+                  <div className="flex justify-between items-center">
+                    <span className="font-['Inter'] text-[16px] text-muted-foreground">Delivery Fee</span>
+                    <span className="font-['Inter'] text-[16px]">₹{deliveryFee.toLocaleString('en-IN')}</span>
+                  </div>
+
+                  {/* Promo Code Section */}
+                  <div className="py-3 border-t border-b">
+                    <div className="space-y-2">
+                      <Label htmlFor="promoCode-desktop" className="text-sm font-medium">Have a Promo Code?</Label>
+                      <div className="flex gap-2">
+                        <Input id="promoCode-desktop" type="text" placeholder="Enter promo code" value={promoCode} onChange={e => setPromoCode(e.target.value.toUpperCase())} className="h-10 flex-1" disabled={promoApplied} />
+                        {!promoApplied ? <Button type="button" onClick={applyPromoCode} disabled={!promoCode.trim()} variant="outline" className="h-10 px-4">
+                            Apply
+                          </Button> : <Button type="button" onClick={removePromoCode} variant="outline" className="h-10 px-4">
+                            Remove
+                          </Button>}
+                      </div>
+                      {promoApplied && <p className="text-sm text-green-600 font-medium">
+                          ✓ Promo code applied: {promoCode}
+                        </p>}
+                    </div>
+                  </div>
+
+                  {/* Discount */}
+                  {discountAmount > 0 && <div className="flex justify-between items-center text-green-600">
+                      <span className="font-['Inter'] text-[16px]">Discount</span>
+                      <span className="font-['Inter'] text-[16px]">-₹{discountAmount.toLocaleString('en-IN')}</span>
+                    </div>}
+
+                  {/* Total */}
+                  <div className="border-t pt-3 mt-3">
+                    <div className="flex justify-between items-center font-semibold">
+                      <span className="font-['Poppins'] text-[20px]">
+                        {purchaseType === 'book' ? 'Booking Total' : 'Total Amount'}
+                      </span>
+                      <span className="font-['Poppins'] text-[20px] text-primary">₹{totalAmount.toLocaleString('en-IN')}</span>
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      {purchaseType === 'book' ? 'Booking amount to be paid via PayU • Remaining at delivery' : 'Full amount to be paid via PayU'}
+                    </p>
+                  </div>
+
+                  {discountAmount > 0 && <div className="flex items-center gap-2 text-green-600 mt-4">
+                      <Gift className="w-5 h-5" />
+                      <span className="font-['Inter'] text-[14px]">You are saving ₹{discountAmount.toLocaleString('en-IN')}</span>
+                    </div>}
+                </div>
+              </div>
             </div>
 
             {/* Right Side - Delivery Details Form */}
