@@ -301,27 +301,13 @@ const ProductConfig = () => {
         <Header />
       </div>
 
-      <div className="container mx-auto px-4 py-8 max-w-7xl pt-32">{/* Added pt-32 for header spacing */}
-        {/* Breadcrumb */}
-        <div className="md:px-4 md:py-3 md:mb-6 flex items-center gap-2 text-[14px] fixed md:relative top-24 md:top-0 left-0 md:left-auto right-0 md:right-auto z-40 md:z-auto bg-white px-4 py-3">
-          <button 
-            onClick={handleBreadcrumbClick}
-            className="text-gray-400 hover:text-gray-600 transition-colors font-['Inter']"
-          >
-            {getBreadcrumbText()}
-          </button>
-          <ChevronRightIcon className="w-4 h-4 text-gray-400" />
-          <span className="text-black font-semibold font-['Inter']">
-            Product Config
-          </span>
-        </div>
-
+      <div className="container mx-auto px-4 py-8 max-w-7xl pt-32">
         {/* Title Section */}
         <div className="mb-8">
-          <h1 className="font-['Poppins'] font-semibold text-[40px] mb-2">
+          <h1 className="font-['Poppins'] font-semibold text-[28px] md:text-[40px] mb-2">
             Buy {product.name}
           </h1>
-          <p className="font-['Inter'] text-[16px] text-gray-600">
+          <p className="font-['Inter'] text-[14px] md:text-[16px] text-gray-600">
             From ₹{currentPrice?.toLocaleString('en-IN')} or ₹{emiPerMonth}/per month for 24 months 
             <span className="ml-1">Footnote *</span>
           </p>
