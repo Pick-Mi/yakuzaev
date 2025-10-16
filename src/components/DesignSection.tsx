@@ -183,23 +183,6 @@ const DesignSection = ({ designFeatures = [] }: DesignSectionProps) => {
 
           {/* Third Row - Two Cards */}
           <div className="grid grid-cols-2 gap-5">
-            {/* Fourth Card */}
-            <div 
-              className="h-[250px] w-full relative overflow-hidden p-4"
-              style={{
-                backgroundImage: fourthCard?.image ? `url(${fourthCard.image})` : undefined,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                backgroundColor: fourthCard?.image ? 'transparent' : '#8a8a8a'
-              }}
-            >
-              <div className="absolute bottom-0 left-0 right-0 h-2/3 bg-gradient-to-t from-black/60 to-transparent" />
-              <div className="flex flex-col gap-2 text-white relative z-10">
-                <p className="font-inter font-medium text-base">{fourthCard?.title || fourthCard?.text || 'LED Headlight'}</p>
-                <p className="font-inter font-normal text-sm opacity-70">{fourthCard?.subtitle || 'Brightness ahead'}</p>
-              </div>
-            </div>
-
             {/* Fifth Card */}
             <div className="bg-[#e8ebf0] h-[250px] w-full relative overflow-hidden p-4">
               <div className="flex flex-col gap-4">
@@ -216,6 +199,23 @@ const DesignSection = ({ designFeatures = [] }: DesignSectionProps) => {
                     {fifthCard?.subtitle || 'Compact design'}
                   </p>
                 </div>
+              </div>
+            </div>
+
+            {/* Fourth Card */}
+            <div 
+              className="h-[250px] w-full relative overflow-hidden p-4"
+              style={{
+                backgroundImage: fourthCard?.image ? `url(${fourthCard.image})` : undefined,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundColor: fourthCard?.image ? 'transparent' : '#8a8a8a'
+              }}
+            >
+              <div className="absolute bottom-0 left-0 right-0 h-2/3 bg-gradient-to-t from-black/60 to-transparent" />
+              <div className="flex flex-col gap-2 text-white relative z-10">
+                <p className="font-inter font-medium text-base">{fourthCard?.title || fourthCard?.text || 'LED Headlight'}</p>
+                <p className="font-inter font-normal text-sm opacity-70">{fourthCard?.subtitle || 'Brightness ahead'}</p>
               </div>
             </div>
           </div>
