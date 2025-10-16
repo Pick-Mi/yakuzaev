@@ -367,7 +367,7 @@ const ProductConfig = () => {
           {/* Right Side - Configuration */}
           <div className="space-y-8">
             {/* Heading */}
-            <h2 className="font-['Poppins'] font-semibold text-[28px]">
+            <h2 className="font-['Poppins'] font-semibold text-[20px] md:text-[28px]">
               Book your {product.name}
             </h2>
 
@@ -375,7 +375,7 @@ const ProductConfig = () => {
             <div className="flex gap-0">
               <button
                 onClick={() => setActiveTab("book")}
-                className={`flex-1 py-3 font-['Inter'] font-medium text-[16px] transition-colors ${
+                className={`flex-1 py-3 font-['Inter'] font-medium text-[14px] md:text-[16px] transition-colors ${
                   activeTab === "book"
                     ? "bg-black text-white border-2 border-black"
                     : "bg-white text-black hover:bg-gray-50"
@@ -385,7 +385,7 @@ const ProductConfig = () => {
               </button>
               <button
                 onClick={() => setActiveTab("buy")}
-                className={`flex-1 py-3 font-['Inter'] font-medium text-[16px] transition-colors ${
+                className={`flex-1 py-3 font-['Inter'] font-medium text-[14px] md:text-[16px] transition-colors ${
                   activeTab === "buy"
                     ? "bg-black text-white border-2 border-black"
                     : "bg-white text-black hover:bg-gray-50"
@@ -397,7 +397,7 @@ const ProductConfig = () => {
 
             {/* Pick your variant */}
             <div>
-              <h3 className="font-['Inter'] font-medium text-[16px] mb-4">
+              <h3 className="font-['Inter'] font-medium text-[14px] md:text-[16px] mb-4">
                 Pick your variant
               </h3>
               <div className="space-y-3">
@@ -442,7 +442,7 @@ const ProductConfig = () => {
                         }`}
                       >
                         <div className="text-left">
-                          <p className="font-['Poppins'] font-semibold text-[20px]">
+                          <p className="font-['Poppins'] font-semibold text-[16px] md:text-[20px]">
                             {variant.name}
                           </p>
                           <p className="font-['Inter'] text-[14px] text-gray-600">
@@ -453,7 +453,7 @@ const ProductConfig = () => {
                           <p className="font-['Inter'] text-[12px] text-gray-500">
                             Starts at
                           </p>
-                          <p className="font-['Poppins'] font-semibold text-[18px]">
+                          <p className="font-['Poppins'] font-semibold text-[16px] md:text-[18px]">
                             ₹{Number(getVariantPrice()).toLocaleString('en-IN')}
                           </p>
                         </div>
@@ -472,7 +472,7 @@ const ProductConfig = () => {
 
             {/* Colour Selection */}
             <div>
-              <h3 className="font-['Inter'] font-medium text-[16px] mb-4">
+              <h3 className="font-['Inter'] font-medium text-[14px] md:text-[16px] mb-4">
                 Colour
               </h3>
               {colors.length > 0 ? (
@@ -512,7 +512,7 @@ const ProductConfig = () => {
                     <span className="font-['Inter'] text-[14px] text-gray-600">
                       {selectedVariant?.name || 'Standard'} variant price
                     </span>
-                    <span className="font-['Inter'] text-[16px] font-medium">
+                    <span className="font-['Inter'] text-[14px] md:text-[16px] font-medium">
                       ₹{currentPrice?.toLocaleString('en-IN')}
                     </span>
                   </div>
@@ -521,12 +521,12 @@ const ProductConfig = () => {
                   <div className="bg-[#F8F9F9] p-4">
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-2">
-                        <span className="font-['Inter'] font-medium text-[16px]">
+                        <span className="font-['Inter'] font-medium text-[14px] md:text-[16px]">
                           Pay now for booking
                         </span>
                         <Info className="w-4 h-4 text-gray-400" />
                       </div>
-                      <span className="font-['Poppins'] font-bold text-[24px] text-green-700">
+                      <span className="font-['Poppins'] font-bold text-[20px] md:text-[24px] text-green-700">
                         ₹{bookingAmount}
                       </span>
                     </div>
@@ -540,10 +540,10 @@ const ProductConfig = () => {
                   {/* Full payment for Buy a Bike */}
                   <div className="bg-[#F8F9F9] p-4">
                     <div className="flex items-center justify-between">
-                      <span className="font-['Inter'] font-medium text-[16px]">
+                      <span className="font-['Inter'] font-medium text-[14px] md:text-[16px]">
                         Total amount
                       </span>
-                      <span className="font-['Poppins'] font-bold text-[24px]">
+                      <span className="font-['Poppins'] font-bold text-[20px] md:text-[24px]">
                         ₹{currentPrice?.toLocaleString('en-IN')}
                       </span>
                     </div>
