@@ -525,9 +525,9 @@ const BookingConfirmation = () => {
         <Header />
       </div>
 
-      <main className="flex-1 container mx-auto px-4 py-8 max-w-4xl pt-32">
-        {/* Breadcrumb */}
-        <div className="md:px-4 md:py-3 md:mb-6 flex items-center gap-2 text-[14px] overflow-x-auto fixed md:relative top-24 md:top-0 left-0 md:left-auto right-0 md:right-auto z-40 md:z-auto bg-white px-4 py-3">
+      <main className="flex-1 container mx-auto px-4 py-6 md:py-8 max-w-4xl pt-28 md:pt-32">
+        {/* Breadcrumb - Hidden on mobile */}
+        <div className="hidden md:flex md:px-4 md:py-3 md:mb-6 items-center gap-2 text-[14px]">
           {breadcrumbs.map((crumb: any, index: number) => <div key={index} className="flex items-center gap-2">
               <button onClick={() => typeof crumb.path === 'number' ? navigate(crumb.path) : navigate(crumb.path)} className="text-gray-400 hover:text-gray-600 transition-colors font-['Inter']">
                 {crumb.label}
@@ -541,10 +541,10 @@ const BookingConfirmation = () => {
 
 
         {/* Main Content - Two Column Layout */}
-        <div className="mb-12">
-          <div className="grid lg:grid-cols-2 gap-12">
+        <div className="mb-8 md:mb-12">
+          <div className="grid lg:grid-cols-2 gap-8 md:gap-12">
             {/* Left Side - Product Summary */}
-            <div className="space-y-6 lg:sticky lg:top-28 lg:self-start">
+            <div className="space-y-4 md:space-y-6 lg:sticky lg:top-28 lg:self-start">
               {/* Product Image and Details */}
               <div className="bg-[#F8F9F9] rounded-2xl flex items-center justify-center">
                 <img src={product.image || product.images?.[0]} alt={product.name} className="w-full h-full object-fill" />
@@ -591,23 +591,23 @@ const BookingConfirmation = () => {
 
               {/* Order Summary */}
               <div className="border-t pt-6">
-                <h3 className="font-['Poppins'] font-semibold text-[24px] mb-6">
+                <h3 className="font-['Poppins'] font-semibold text-[18px] md:text-[24px] mb-4 md:mb-6">
                   Order Summary
                 </h3>
 
                 <div className="space-y-3">
                   {/* Product Price */}
                   <div className="flex justify-between items-center">
-                    <span className="font-['Inter'] text-[16px] text-muted-foreground">
+                    <span className="font-['Inter'] text-[14px] md:text-[16px] text-muted-foreground">
                       {purchaseType === 'book' ? 'Booking Amount' : 'Product Price'}
                     </span>
-                    <span className="font-['Inter'] text-[16px]">₹{productPrice.toLocaleString('en-IN')}</span>
+                    <span className="font-['Inter'] text-[14px] md:text-[16px]">₹{productPrice.toLocaleString('en-IN')}</span>
                   </div>
 
                   {/* Delivery Fee */}
                   <div className="flex justify-between items-center">
-                    <span className="font-['Inter'] text-[16px] text-muted-foreground">Delivery Fee</span>
-                    <span className="font-['Inter'] text-[16px]">₹{deliveryFee.toLocaleString('en-IN')}</span>
+                    <span className="font-['Inter'] text-[14px] md:text-[16px] text-muted-foreground">Delivery Fee</span>
+                    <span className="font-['Inter'] text-[14px] md:text-[16px]">₹{deliveryFee.toLocaleString('en-IN')}</span>
                   </div>
 
                   {/* Promo Code Section */}
@@ -630,17 +630,17 @@ const BookingConfirmation = () => {
 
                   {/* Discount */}
                   {discountAmount > 0 && <div className="flex justify-between items-center text-green-600">
-                      <span className="font-['Inter'] text-[16px]">Discount</span>
-                      <span className="font-['Inter'] text-[16px]">-₹{discountAmount.toLocaleString('en-IN')}</span>
+                      <span className="font-['Inter'] text-[14px] md:text-[16px]">Discount</span>
+                      <span className="font-['Inter'] text-[14px] md:text-[16px]">-₹{discountAmount.toLocaleString('en-IN')}</span>
                     </div>}
 
                   {/* Total */}
                   <div className="border-t pt-3 mt-3">
                     <div className="flex justify-between items-center font-semibold">
-                      <span className="font-['Poppins'] text-[20px]">
+                      <span className="font-['Poppins'] text-[18px] md:text-[20px]">
                         {purchaseType === 'book' ? 'Booking Total' : 'Total Amount'}
                       </span>
-                      <span className="font-['Poppins'] text-[20px] text-primary">₹{totalAmount.toLocaleString('en-IN')}</span>
+                      <span className="font-['Poppins'] text-[18px] md:text-[20px] text-primary">₹{totalAmount.toLocaleString('en-IN')}</span>
                     </div>
                     <p className="text-xs text-muted-foreground mt-1">
                       {purchaseType === 'book' ? 'Booking amount to be paid via PayU • Remaining at delivery' : 'Full amount to be paid via PayU'}
@@ -656,8 +656,8 @@ const BookingConfirmation = () => {
             </div>
 
             {/* Right Side - Delivery Details Form */}
-            <div className="space-y-6">
-              <h2 className="font-['Poppins'] font-semibold text-[32px] text-left">
+            <div className="space-y-4 md:space-y-6">
+              <h2 className="font-['Poppins'] font-semibold text-[24px] md:text-[32px] text-left">
                 Delivery Details
               </h2>
 
@@ -770,8 +770,8 @@ const BookingConfirmation = () => {
               </div>
 
               {/* Name and Address Form - Always visible, disabled until verified */}
-              <div className="space-y-6">
-                  <h3 className="text-[18px] font-semibold">
+              <div className="space-y-4 md:space-y-6">
+                  <h3 className="text-[16px] md:text-[18px] font-semibold">
                     Enter your name and address:
                   </h3>
 
