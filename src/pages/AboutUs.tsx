@@ -56,22 +56,22 @@ const AboutUs = () => {
             </h2>
             
             <div className="overflow-x-auto pb-4 scroll-smooth [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-            <div className="flex gap-6 pb-4">
-                <div className="overflow-hidden flex-shrink-0 w-[60%]">
+              <div className="flex gap-6 pb-4">
+                <div className="overflow-hidden flex-shrink-0 w-[280px] md:w-[60%]">
                   <img 
                     src={teamMeeting} 
                     alt="Leadership team presenting to employees" 
                     className="w-full h-[320px] object-cover"
                   />
                 </div>
-                <div className="overflow-hidden flex-shrink-0 w-[20%]">
+                <div className="overflow-hidden flex-shrink-0 w-[280px] md:w-[20%]">
                   <img 
                     src={manufacturing} 
                     alt="Manufacturing facility with EV production" 
                     className="w-full h-[320px] object-cover"
                   />
                 </div>
-                <div className="overflow-hidden flex-shrink-0 w-[20%]">
+                <div className="overflow-hidden flex-shrink-0 w-[280px] md:w-[20%]">
                   <img 
                     src={teamCollaboration} 
                     alt="Team collaboration at office campus" 
