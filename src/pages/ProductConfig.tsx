@@ -476,12 +476,12 @@ const ProductConfig = () => {
                 Colour
               </h3>
               {colors.length > 0 ? (
-                <div className="flex gap-3">
+                <div className="flex gap-2 md:gap-3">
                   {colors.map((color) => (
                     <button
                       key={color.name}
                       onClick={() => setSelectedColor(color.name)}
-                      className={`w-12 h-12 border-2 transition-all ${
+                      className={`w-10 h-10 md:w-12 md:h-12 border-2 transition-all ${
                         selectedColor === color.name
                           ? "border-black scale-110"
                           : color.border ? `border-[${color.border}]` : "border-gray-300"
