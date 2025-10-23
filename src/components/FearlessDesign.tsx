@@ -18,12 +18,12 @@ const ProductCard = ({ product }: ProductCardProps) => {
   const { name, thumbnail, feature1, feature2, price } = product;
 
   return (
-    <div className="bg-white min-h-[450px] sm:h-[500px] md:h-[629px] w-full max-w-[630px] overflow-hidden">
+    <div className="group bg-white min-h-[450px] sm:h-[500px] md:h-[629px] w-full max-w-[630px] overflow-hidden transition-shadow duration-300 hover:shadow-xl cursor-pointer">
       <div className="w-full h-[200px] sm:h-[250px] md:h-[329px] bg-gray-200 overflow-hidden">
         <img
           src={thumbnail}
           alt={name}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
         />
       </div>
       <div className="px-4 sm:px-[25px] pb-4 sm:pb-[25px] pt-4">
@@ -48,7 +48,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
           </div>
         </div>
         <div className="w-full h-[1px] bg-gray-300 mb-3 sm:mb-[15px]" />
-        <div className="flex flex-col gap-3 sm:gap-[15px]">
+        <div className="flex flex-col gap-3 sm:gap-[15px] opacity-0 translate-y-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
           <Link to={`/products/${product.id}`} className="w-full">
             <Button className="w-full h-[45px] sm:h-[50px] md:h-[55px] bg-primary text-primary-foreground hover:bg-primary/90 rounded-none text-[14px] sm:text-[15px] md:text-[16px] font-medium">
               Book Now
