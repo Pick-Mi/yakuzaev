@@ -27,7 +27,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
         />
       </div>
       <div className="px-4 sm:px-[25px] pb-4 sm:pb-[25px] pt-4">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-[25px] gap-3 sm:gap-0">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0">
           <div>
             <h3 className="font-medium text-[18px] sm:text-[20px] md:text-[24px] text-[#212121] mb-1 sm:mb-2">{name}</h3>
             <p className="text-[14px] sm:text-[15px] md:text-[16px] text-[#4b4f54]">{feature1} {feature2}</p>
@@ -47,8 +47,8 @@ const ProductCard = ({ product }: ProductCardProps) => {
             </p>
           </div>
         </div>
-        <div className="w-full h-[1px] bg-gray-300 mb-3 sm:mb-[15px]" />
-        <div className="flex flex-col gap-3 sm:gap-[15px] opacity-0 translate-y-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
+        <div className="w-full h-[1px] bg-gray-300 mt-4 sm:mt-[25px] mb-3 sm:mb-[15px] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+        <div className="flex flex-col gap-3 sm:gap-[15px] max-h-0 opacity-0 overflow-hidden transition-all duration-300 group-hover:max-h-[200px] group-hover:opacity-100">
           <Link to={`/products/${product.id}`} className="w-full">
             <Button className="w-full h-[45px] sm:h-[50px] md:h-[55px] bg-primary text-primary-foreground hover:bg-primary/90 rounded-none text-[14px] sm:text-[15px] md:text-[16px] font-medium">
               Book Now
