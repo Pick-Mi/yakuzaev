@@ -31,7 +31,19 @@ const Index = () => {
         const parsedVideos = typeof data.videos === 'string' 
           ? JSON.parse(data.videos) 
           : data.videos;
-        setVideos(Array.isArray(parsedVideos) ? parsedVideos : []);
+        
+        // Filter out videos with empty URLs
+        const validVideos = Array.isArray(parsedVideos) 
+          ? parsedVideos
+              .filter((v: any) => v.videoUrl && v.videoUrl.trim() !== '')
+              .map((v: any) => ({
+                thumbnail: v.thumbnail,
+                url: v.videoUrl,
+                title: v.title
+              }))
+          : [];
+        
+        setVideos(validVideos);
       }
     };
 
