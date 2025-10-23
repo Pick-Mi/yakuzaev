@@ -72,9 +72,14 @@ export const ProductBottomNav = ({
   }) || [];
 
   // Get price from selected variant's specifications
-  const variantPrice = selectedVariant?.specifications?.find(
+  const rawVariantPrice = selectedVariant?.specifications?.find(
     (spec: any) => spec.label === 'Price'
-  )?.value || `₹${price.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  )?.value || price.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  
+  // Ensure rupee symbol is always present
+  const variantPrice = rawVariantPrice.toString().startsWith('₹') 
+    ? rawVariantPrice 
+    : `₹${rawVariantPrice}`;
 
   // Mobile Layout
   if (isMobile) {
