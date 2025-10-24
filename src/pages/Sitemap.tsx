@@ -36,7 +36,7 @@ const Sitemap = () => {
     <div className="min-h-screen bg-background">
       <Header />
       
-      <main className="container mx-auto px-4 py-16 md:py-24 max-w-[1200px]">
+      <main className="container mx-auto px-4 pt-32 pb-16 md:pt-40 md:pb-24 max-w-[1200px]">
         <div className="mb-12">
           <h1 className="text-4xl md:text-5xl font-semibold mb-4">Sitemap</h1>
           <p className="text-lg text-muted-foreground">
