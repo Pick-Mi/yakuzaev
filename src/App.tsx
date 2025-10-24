@@ -24,6 +24,7 @@ import PaymentSuccess from "./pages/PaymentSuccess";
 import PaymentFailure from "./pages/PaymentFailure";
 import BecomeDealer from "./pages/BecomeDealer";
 import AboutUs from "./pages/AboutUs";
+import Sitemap from "./pages/Sitemap";
 import ProductRedirect from "./components/ProductRedirect";
 
 import NotFound from "./pages/NotFound";
@@ -47,6 +48,7 @@ const App = () => (
               <Route path="/blogs" element={<Blogs />} />
               <Route path="/become-dealer" element={<BecomeDealer />} />
               <Route path="/about-us" element={<AboutUs />} />
+              <Route path="/sitemap" element={<Sitemap />} />
               <Route path="/products/:id" element={<Product />} />
               <Route path="/profile" element={
                 <ProtectedRoute>

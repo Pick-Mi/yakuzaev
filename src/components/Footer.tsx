@@ -110,6 +110,7 @@ const Footer = () => {
           <div className="flex gap-4 text-xs" style={{ fontFamily: 'Poppins, sans-serif' }}>
             <Link to="/privacy" className="hover:underline">Privacy Policy</Link>
             <Link to="/disclaimer" className="hover:underline">Site Disclaimer</Link>
+            <Link to="/sitemap" className="hover:underline">Sitemap</Link>
           </div>
         </div>
       </div>
