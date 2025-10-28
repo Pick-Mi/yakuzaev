@@ -27,6 +27,7 @@ import Footer from "@/components/Footer";
 import { ArrowLeft, Star, Heart, Shield, Truck, RotateCcw, Minus, Plus } from "lucide-react";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { Helmet } from "react-helmet";
 
 const Product = () => {
   const { id } = useParams();
@@ -45,7 +46,7 @@ const Product = () => {
         // Using any type to bypass the current type limitations
         const response = await (supabase as any)
           .from('products')
-          .select('id, name, price, image_url, thumbnail, images, description, is_active, preview_section, features, visual_features, design_features, benefits, promo_card, videos, accessories, qa_section, variants, specification_titles, color_variety')
+          .select('id, name, price, image_url, thumbnail, images, description, is_active, preview_section, features, visual_features, design_features, benefits, promo_card, videos, accessories, qa_section, variants, specification_titles, color_variety, meta_title, meta_description, meta_keywords')
           .eq('id', id)
           .eq('is_active', true)
           .single();
@@ -212,7 +213,10 @@ const Product = () => {
             videos: parsedVideos,
             accessories: parsedAccessories,
             qa_section: parsedQASection,
-            color_variety: parsedColorVariety
+            color_variety: parsedColorVariety,
+            meta_title: response.data.meta_title,
+            meta_description: response.data.meta_description,
+            meta_keywords: response.data.meta_keywords
           };
           setProduct(fetchedProduct);
           
@@ -327,6 +331,21 @@ const Product = () => {
 
   return (
     <div className="min-h-screen bg-[#F8F9F9]">
+      <Helmet>
+        <title>{product.meta_title || `${product.name} - Product Details`}</title>
+        <meta name="description" content={product.meta_description || product.description} />
+        {product.meta_keywords && Array.isArray(product.meta_keywords) && (
+          <meta name="keywords" content={product.meta_keywords.join(', ')} />
+        )}
+        <meta property="og:title" content={product.meta_title || product.name} />
+        <meta property="og:description" content={product.meta_description || product.description} />
+        <meta property="og:image" content={product.image_url || product.thumbnail} />
+        <meta property="og:type" content="product" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={product.meta_title || product.name} />
+        <meta name="twitter:description" content={product.meta_description || product.description} />
+        <meta name="twitter:image" content={product.image_url || product.thumbnail} />
+      </Helmet>
       <Header />
       
       {/* Hero Section */}
