@@ -46,7 +46,7 @@ const Product = () => {
         // Using any type to bypass the current type limitations
         const response = await (supabase as any)
           .from('products')
-          .select('id, name, price, image_url, thumbnail, images, description, is_active, preview_section, features, visual_features, design_features, benefits, promo_card, videos, accessories, qa_section, variants, specification_titles, color_variety, meta_title, meta_description, meta_keywords')
+          .select('id, name, price, image_url, thumbnail, images, description, is_active, preview_section, features, visual_features, design_features, benefits, promo_card, videos, accessories, qa_section, variants, specification_titles, color_variety, meta_title, meta_description, meta_keywords, scheme_name, scheme_description, scheme_discount_percentage, scheme_start_date, scheme_end_date, scheme_active, custom_metadata, sku, cost_price')
           .eq('id', id)
           .eq('is_active', true)
           .single();
@@ -190,15 +190,27 @@ const Product = () => {
             parsedColorVariety = null;
           }
 
+          // Parse custom_metadata if it's a JSON string
+          let parsedCustomMetadata = {};
+          try {
+            parsedCustomMetadata = typeof response.data.custom_metadata === 'string' 
+              ? JSON.parse(response.data.custom_metadata) 
+              : response.data.custom_metadata || {};
+          } catch (e) {
+            parsedCustomMetadata = {};
+          }
+
           const fetchedProduct = {
             id: response.data.id,
             name: response.data.name,
             price: response.data.price,
-            thumbnail: response.data.thumbnail, // Add thumbnail from database
-            image_url: response.data.image_url, // Add image_url from database
+            sku: response.data.sku,
+            cost_price: response.data.cost_price,
+            thumbnail: response.data.thumbnail,
+            image_url: response.data.image_url,
             images: parsedImages,
-            image: response.data.thumbnail || (parsedImages.length > 0 ? parsedImages[0] : response.data.image_url), // Prioritize thumbnail
-            rating: 5, // Default rating
+            image: response.data.thumbnail || (parsedImages.length > 0 ? parsedImages[0] : response.data.image_url),
+            rating: 5,
             reviewCount: Math.floor(Math.random() * 200) + 10,
             recommended: true,
             description: response.data.description || "High-quality product for your needs.",
@@ -214,9 +226,19 @@ const Product = () => {
             accessories: parsedAccessories,
             qa_section: parsedQASection,
             color_variety: parsedColorVariety,
+            // SEO Fields
             meta_title: response.data.meta_title,
             meta_description: response.data.meta_description,
-            meta_keywords: response.data.meta_keywords
+            meta_keywords: response.data.meta_keywords,
+            // Promotional Scheme Fields
+            scheme_name: response.data.scheme_name,
+            scheme_description: response.data.scheme_description,
+            scheme_discount_percentage: response.data.scheme_discount_percentage,
+            scheme_start_date: response.data.scheme_start_date,
+            scheme_end_date: response.data.scheme_end_date,
+            scheme_active: response.data.scheme_active,
+            // Custom Metadata
+            custom_metadata: parsedCustomMetadata
           };
           setProduct(fetchedProduct);
           
