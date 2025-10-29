@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, Upload } from "lucide-react";
 
 const steps = [
   "Basic Info",
@@ -31,6 +31,8 @@ const DealerApplication = () => {
     pincode: "",
     areaType: "",
     preferredLocation: "",
+    spaceOwnership: "",
+    sitePhotos: [] as File[],
     investmentCapacity: "",
     spaceAvailable: "",
     businessName: "",
@@ -274,22 +276,73 @@ const DealerApplication = () => {
           {/* Step 2: Investment & Space */}
           {currentStep === 2 && (
             <div className="space-y-6">
+              <p className="text-center text-muted-foreground mb-6">
+                Share your available space and investment capability. This helps us match you with the right dealership model.
+              </p>
+              
               <div>
-                <label className="block text-sm font-medium mb-2">Investment Capacity (INR)</label>
-                <Input
-                  placeholder="Enter investment amount"
-                  value={formData.investmentCapacity}
-                  onChange={(e) => updateFormData("investmentCapacity", e.target.value)}
-                />
+                <label className="block text-sm font-medium mb-2">Do you own or rent the proposed space</label>
+                <Select value={formData.spaceOwnership} onValueChange={(value) => updateFormData("spaceOwnership", value)}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select ownership type" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-background z-50">
+                    <SelectItem value="owned">Owned</SelectItem>
+                    <SelectItem value="rented">Rented</SelectItem>
+                    <SelectItem value="leased">Leased</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2">Space Available (sq. ft.)</label>
+                <label className="block text-sm font-medium mb-2">Upload Site Photos</label>
+                <div 
+                  className="border-2 border-dashed border-border rounded-lg p-12 flex flex-col items-center justify-center cursor-pointer hover:border-primary/50 transition-colors"
+                  onClick={() => document.getElementById('site-photos')?.click()}
+                >
+                  <Upload className="w-12 h-12 text-muted-foreground mb-3" strokeWidth={1.5} />
+                  <span className="text-muted-foreground">Upload a Document</span>
+                  <input
+                    id="site-photos"
+                    type="file"
+                    multiple
+                    accept="image/*"
+                    className="hidden"
+                    onChange={(e) => {
+                      const files = e.target.files;
+                      if (files) {
+                        updateFormData("sitePhotos", Array.from(files));
+                      }
+                    }}
+                  />
+                </div>
+                {formData.sitePhotos.length > 0 && (
+                  <p className="text-sm text-muted-foreground mt-2">
+                    {formData.sitePhotos.length} photo(s) selected
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">Available Space (sq. ft.)</label>
                 <Input
                   placeholder="Enter available space"
                   value={formData.spaceAvailable}
                   onChange={(e) => updateFormData("spaceAvailable", e.target.value)}
                 />
+              </div>
+
+              <div className="flex items-start gap-2 pt-4">
+                <Checkbox
+                  checked={formData.agreeToTerms}
+                  onCheckedChange={(checked) => updateFormData("agreeToTerms", checked)}
+                />
+                <label className="text-sm text-muted-foreground">
+                  I agree to the{" "}
+                  <a href="#" className="text-primary underline">Terms of Service</a>
+                  {" "}and{" "}
+                  <a href="#" className="text-primary underline">Privacy Policy</a>.
+                </label>
               </div>
             </div>
           )}
