@@ -22,7 +22,7 @@ export type Database = {
           admin_user_id: string
           created_at: string
           id: string
-          ip_address: unknown | null
+          ip_address: unknown
           target_table: string
           target_user_id: string | null
           user_agent: string | null
@@ -34,7 +34,7 @@ export type Database = {
           admin_user_id: string
           created_at?: string
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           target_table: string
           target_user_id?: string | null
           user_agent?: string | null
@@ -46,7 +46,7 @@ export type Database = {
           admin_user_id?: string
           created_at?: string
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           target_table?: string
           target_user_id?: string | null
           user_agent?: string | null
@@ -135,46 +135,88 @@ export type Database = {
       }
       dealer_enquiries: {
         Row: {
+          area_type: string | null
           business_name: string | null
+          business_type: string | null
           city: string | null
           created_at: string
+          documents: Json | null
           email: string
+          first_name: string | null
+          gst_number: string | null
+          has_existing_business: string | null
           id: string
+          investment_capacity: string | null
+          last_name: string | null
           location: string | null
           message: string | null
-          name: string
+          name: string | null
           phone: string | null
+          pincode: string | null
+          preferred_location: string | null
+          site_photos: Json | null
+          space_available: string | null
+          space_ownership: string | null
           state: string | null
           status: string
           updated_at: string
+          years_in_business: string | null
         }
         Insert: {
+          area_type?: string | null
           business_name?: string | null
+          business_type?: string | null
           city?: string | null
           created_at?: string
+          documents?: Json | null
           email: string
+          first_name?: string | null
+          gst_number?: string | null
+          has_existing_business?: string | null
           id?: string
+          investment_capacity?: string | null
+          last_name?: string | null
           location?: string | null
           message?: string | null
-          name: string
+          name?: string | null
           phone?: string | null
+          pincode?: string | null
+          preferred_location?: string | null
+          site_photos?: Json | null
+          space_available?: string | null
+          space_ownership?: string | null
           state?: string | null
           status?: string
           updated_at?: string
+          years_in_business?: string | null
         }
         Update: {
+          area_type?: string | null
           business_name?: string | null
+          business_type?: string | null
           city?: string | null
           created_at?: string
+          documents?: Json | null
           email?: string
+          first_name?: string | null
+          gst_number?: string | null
+          has_existing_business?: string | null
           id?: string
+          investment_capacity?: string | null
+          last_name?: string | null
           location?: string | null
           message?: string | null
-          name?: string
+          name?: string | null
           phone?: string | null
+          pincode?: string | null
+          preferred_location?: string | null
+          site_photos?: Json | null
+          space_available?: string | null
+          space_ownership?: string | null
           state?: string | null
           status?: string
           updated_at?: string
+          years_in_business?: string | null
         }
         Relationships: []
       }
@@ -435,6 +477,7 @@ export type Database = {
           color_variety: Json | null
           cost_price: number | null
           created_at: string
+          custom_metadata: Json | null
           description: string | null
           design_features: Json | null
           feature1: string | null
@@ -444,11 +487,20 @@ export type Database = {
           image_url: string | null
           images: Json | null
           is_active: boolean
+          meta_description: string | null
+          meta_keywords: string[] | null
+          meta_title: string | null
           name: string
           preview_section: Json | null
           price: number
           promo_card: Json | null
           qa_section: Json | null
+          scheme_active: boolean | null
+          scheme_description: string | null
+          scheme_discount_percentage: number | null
+          scheme_end_date: string | null
+          scheme_name: string | null
+          scheme_start_date: string | null
           sku: string | null
           slug: string
           specification_titles: Json | null
@@ -466,6 +518,7 @@ export type Database = {
           color_variety?: Json | null
           cost_price?: number | null
           created_at?: string
+          custom_metadata?: Json | null
           description?: string | null
           design_features?: Json | null
           feature1?: string | null
@@ -475,11 +528,20 @@ export type Database = {
           image_url?: string | null
           images?: Json | null
           is_active?: boolean
+          meta_description?: string | null
+          meta_keywords?: string[] | null
+          meta_title?: string | null
           name: string
           preview_section?: Json | null
           price?: number
           promo_card?: Json | null
           qa_section?: Json | null
+          scheme_active?: boolean | null
+          scheme_description?: string | null
+          scheme_discount_percentage?: number | null
+          scheme_end_date?: string | null
+          scheme_name?: string | null
+          scheme_start_date?: string | null
           sku?: string | null
           slug: string
           specification_titles?: Json | null
@@ -497,6 +559,7 @@ export type Database = {
           color_variety?: Json | null
           cost_price?: number | null
           created_at?: string
+          custom_metadata?: Json | null
           description?: string | null
           design_features?: Json | null
           feature1?: string | null
@@ -506,11 +569,20 @@ export type Database = {
           image_url?: string | null
           images?: Json | null
           is_active?: boolean
+          meta_description?: string | null
+          meta_keywords?: string[] | null
+          meta_title?: string | null
           name?: string
           preview_section?: Json | null
           price?: number
           promo_card?: Json | null
           qa_section?: Json | null
+          scheme_active?: boolean | null
+          scheme_description?: string | null
+          scheme_discount_percentage?: number | null
+          scheme_end_date?: string | null
+          scheme_name?: string | null
+          scheme_start_date?: string | null
           sku?: string | null
           slug?: string
           specification_titles?: Json | null
@@ -851,10 +923,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      create_default_admin: {
-        Args: Record<PropertyKey, never>
-        Returns: undefined
-      }
+      create_default_admin: { Args: never; Returns: undefined }
       get_customer_profile_admin: {
         Args: { p_customer_id: string }
         Returns: {
@@ -881,7 +950,7 @@ export type Database = {
         Returns: Json
       }
       get_customers_for_admin: {
-        Args: Record<PropertyKey, never>
+        Args: never
         Returns: {
           city: string
           country: string
@@ -898,7 +967,7 @@ export type Database = {
         }[]
       }
       get_public_products: {
-        Args: Record<PropertyKey, never>
+        Args: never
         Returns: {
           category_id: string
           created_at: string

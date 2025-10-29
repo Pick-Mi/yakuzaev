@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useToast } from "@/hooks/use-toast";
 import { Upload } from "lucide-react";
 import logo from "@/assets/logo.svg";
+import { supabase } from "@/integrations/supabase/client";
 
 const steps = [
   "Basic Info",
@@ -60,12 +61,52 @@ const DealerApplication = () => {
     }
   };
 
-  const handleSubmit = () => {
-    toast({
-      title: "Application Submitted!",
-      description: "We'll review your application and get back to you soon.",
-    });
-    navigate("/become-dealer");
+  const handleSubmit = async () => {
+    try {
+      // Prepare data for submission
+      const submissionData = {
+        first_name: formData.firstName,
+        last_name: formData.lastName,
+        email: formData.email,
+        phone: formData.mobile,
+        city: formData.city,
+        state: formData.state,
+        pincode: formData.pincode,
+        area_type: formData.areaType,
+        preferred_location: formData.preferredLocation,
+        space_ownership: formData.spaceOwnership,
+        space_available: formData.spaceAvailable,
+        investment_capacity: formData.investmentCapacity,
+        has_existing_business: formData.hasExistingBusiness,
+        business_name: formData.businessName,
+        years_in_business: formData.yearsInBusiness,
+        business_type: formData.businessType,
+        gst_number: formData.gstNumber,
+        status: 'pending',
+        // Store file names for now (in production, upload to storage first)
+        site_photos: formData.sitePhotos.map(f => f.name),
+        documents: formData.documents.map(f => f.name)
+      };
+
+      const { error } = await supabase
+        .from('dealer_enquiries')
+        .insert([submissionData]);
+
+      if (error) throw error;
+
+      toast({
+        title: "Application Submitted Successfully!",
+        description: "We'll review your application and get back to you soon.",
+      });
+      navigate("/become-dealer");
+    } catch (error) {
+      console.error('Error submitting application:', error);
+      toast({
+        title: "Submission Failed",
+        description: "There was an error submitting your application. Please try again.",
+        variant: "destructive"
+      });
+    }
   };
 
   const updateFormData = (field: string, value: any) => {
@@ -482,7 +523,7 @@ const DealerApplication = () => {
           {currentStep === 5 && (
             <div className="space-y-8">
               <p className="text-center text-muted-foreground mb-6">
-                Your dealership application has been submitted successfully
+                Please review your application details before submitting
               </p>
               
               {/* Personal Details */}
@@ -502,29 +543,6 @@ const DealerApplication = () => {
                   <fieldset className="border border-border rounded-md p-3">
                     <legend className="text-xs text-muted-foreground px-2">Mobile No</legend>
                     <div className="text-sm">{formData.mobile}</div>
-                  </fieldset>
-                </div>
-              </div>
-
-              {/* Document */}
-              <div>
-                <h3 className="font-semibold text-lg mb-4">Document</h3>
-                <div className="space-y-4">
-                  <fieldset className="border border-border rounded-md p-3">
-                    <legend className="text-xs text-muted-foreground px-2">Document</legend>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm">
-                        {formData.documents.length > 0 ? formData.documents[0].name : "No document uploaded"}
-                      </span>
-                      {formData.documents.length > 0 && (
-                        <a href="#" className="text-primary text-sm">view</a>
-                      )}
-                    </div>
-                  </fieldset>
-
-                  <fieldset className="border border-border rounded-md p-3">
-                    <legend className="text-xs text-muted-foreground px-2">GST Number</legend>
-                    <div className="text-sm">{formData.gstNumber || "Not provided"}</div>
                   </fieldset>
                 </div>
               </div>
@@ -551,6 +569,77 @@ const DealerApplication = () => {
                   <fieldset className="border border-border rounded-md p-3">
                     <legend className="text-xs text-muted-foreground px-2">Area Type</legend>
                     <div className="text-sm">{formData.areaType || "Not selected"}</div>
+                  </fieldset>
+                </div>
+              </div>
+
+              {/* Investment & Space */}
+              <div>
+                <h3 className="font-semibold text-lg mb-4">Investment & Space</h3>
+                <div className="space-y-4">
+                  <fieldset className="border border-border rounded-md p-3">
+                    <legend className="text-xs text-muted-foreground px-2">Space Ownership</legend>
+                    <div className="text-sm">{formData.spaceOwnership || "Not selected"}</div>
+                  </fieldset>
+
+                  <fieldset className="border border-border rounded-md p-3">
+                    <legend className="text-xs text-muted-foreground px-2">Available Space</legend>
+                    <div className="text-sm">{formData.spaceAvailable ? `${formData.spaceAvailable} sq. ft.` : "Not provided"}</div>
+                  </fieldset>
+
+                  <fieldset className="border border-border rounded-md p-3">
+                    <legend className="text-xs text-muted-foreground px-2">Site Photos</legend>
+                    <div className="text-sm">
+                      {formData.sitePhotos.length > 0 
+                        ? `${formData.sitePhotos.length} photo(s) uploaded` 
+                        : "No photos uploaded"}
+                    </div>
+                  </fieldset>
+                </div>
+              </div>
+
+              {/* Business Background */}
+              <div>
+                <h3 className="font-semibold text-lg mb-4">Business Background</h3>
+                <div className="space-y-4">
+                  <fieldset className="border border-border rounded-md p-3">
+                    <legend className="text-xs text-muted-foreground px-2">Current Business</legend>
+                    <div className="text-sm">{formData.hasExistingBusiness || "Not selected"}</div>
+                  </fieldset>
+
+                  <fieldset className="border border-border rounded-md p-3">
+                    <legend className="text-xs text-muted-foreground px-2">Business Type</legend>
+                    <div className="text-sm">{formData.businessType || "Not selected"}</div>
+                  </fieldset>
+
+                  <fieldset className="border border-border rounded-md p-3">
+                    <legend className="text-xs text-muted-foreground px-2">Business Name</legend>
+                    <div className="text-sm">{formData.businessName || "Not provided"}</div>
+                  </fieldset>
+
+                  <fieldset className="border border-border rounded-md p-3">
+                    <legend className="text-xs text-muted-foreground px-2">Years in Business</legend>
+                    <div className="text-sm">{formData.yearsInBusiness || "Not provided"}</div>
+                  </fieldset>
+                </div>
+              </div>
+
+              {/* Documents */}
+              <div>
+                <h3 className="font-semibold text-lg mb-4">Documents</h3>
+                <div className="space-y-4">
+                  <fieldset className="border border-border rounded-md p-3">
+                    <legend className="text-xs text-muted-foreground px-2">Identity Documents</legend>
+                    <div className="text-sm">
+                      {formData.documents.length > 0 
+                        ? `${formData.documents.length} document(s) uploaded`
+                        : "No documents uploaded"}
+                    </div>
+                  </fieldset>
+
+                  <fieldset className="border border-border rounded-md p-3">
+                    <legend className="text-xs text-muted-foreground px-2">GST Number</legend>
+                    <div className="text-sm">{formData.gstNumber || "Not provided"}</div>
                   </fieldset>
                 </div>
               </div>
