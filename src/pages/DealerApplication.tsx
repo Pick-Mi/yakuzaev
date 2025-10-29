@@ -35,6 +35,7 @@ const DealerApplication = () => {
     sitePhotos: [] as File[],
     investmentCapacity: "",
     spaceAvailable: "",
+    hasExistingBusiness: "",
     businessName: "",
     yearsInBusiness: "",
     businessType: "",
@@ -350,6 +351,40 @@ const DealerApplication = () => {
           {/* Step 3: Business Background */}
           {currentStep === 3 && (
             <div className="space-y-6">
+              <p className="text-muted-foreground mb-6">
+                Tell us a bit about your business experience and industry exposure. This helps us understand your readiness for managing an EV dealership.
+              </p>
+              
+              <div>
+                <label className="block text-sm font-medium mb-2">Do you currently run a business</label>
+                <Select value={formData.hasExistingBusiness} onValueChange={(value) => updateFormData("hasExistingBusiness", value)}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-background z-50">
+                    <SelectItem value="yes">Yes</SelectItem>
+                    <SelectItem value="no">No</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">Type of Business</label>
+                <Select value={formData.businessType} onValueChange={(value) => updateFormData("businessType", value)}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select business type" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-background z-50">
+                    <SelectItem value="automobile-dealership">Automobile Dealership</SelectItem>
+                    <SelectItem value="automobile-service">Automobile Service Center</SelectItem>
+                    <SelectItem value="retail">Retail Business</SelectItem>
+                    <SelectItem value="manufacturing">Manufacturing</SelectItem>
+                    <SelectItem value="distribution">Distribution</SelectItem>
+                    <SelectItem value="other">Other</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
               <div>
                 <label className="block text-sm font-medium mb-2">Business Name</label>
                 <Input
@@ -360,31 +395,25 @@ const DealerApplication = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2">Years in Business</label>
+                <label className="block text-sm font-medium mb-2">Years of Business Experience</label>
                 <Input
-                  placeholder="Enter years"
+                  placeholder="e.g., 5 years"
                   value={formData.yearsInBusiness}
                   onChange={(e) => updateFormData("yearsInBusiness", e.target.value)}
                 />
               </div>
 
-              <div>
-                <label className="block text-sm font-medium mb-2">Business Type</label>
-                <Input
-                  placeholder="e.g., Automotive, Retail"
-                  value={formData.businessType}
-                  onChange={(e) => updateFormData("businessType", e.target.value)}
+              <div className="flex items-start gap-2 pt-4">
+                <Checkbox
+                  checked={formData.agreeToTerms}
+                  onCheckedChange={(checked) => updateFormData("agreeToTerms", checked)}
                 />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-2">Relevant Experience</label>
-                <Textarea
-                  placeholder="Describe your relevant experience"
-                  value={formData.experience}
-                  onChange={(e) => updateFormData("experience", e.target.value)}
-                  rows={4}
-                />
+                <label className="text-sm text-muted-foreground">
+                  I agree to the{" "}
+                  <a href="#" className="text-primary underline">Terms of Service</a>
+                  {" "}and{" "}
+                  <a href="#" className="text-primary underline">Privacy Policy</a>.
+                </label>
               </div>
             </div>
           )}
