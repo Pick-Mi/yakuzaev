@@ -14,7 +14,7 @@ const steps = [
   "Investment & Space",
   "Business Background",
   "Upload Docs",
-  "Confirm & Submit"
+  "Review"
 ];
 
 const DealerApplication = () => {
@@ -480,42 +480,80 @@ const DealerApplication = () => {
             </div>
           )}
 
-          {/* Step 5: Confirm & Submit */}
+          {/* Step 5: Review */}
           {currentStep === 5 && (
-            <div className="space-y-6">
-              <h3 className="text-xl font-semibold mb-4">Review Your Application</h3>
+            <div className="space-y-8">
+              <p className="text-center text-muted-foreground mb-6">
+                Your dealership application has been submitted successfully
+              </p>
               
-              <div className="bg-muted/50 p-6 rounded-lg space-y-4">
-                <div>
-                  <h4 className="font-medium mb-2">Basic Information</h4>
-                  <p className="text-sm text-muted-foreground">
-                    {formData.firstName} {formData.lastName}<br />
-                    {formData.email}<br />
-                    {formData.mobile}
-                  </p>
-                </div>
+              {/* Personal Details */}
+              <div>
+                <h3 className="font-semibold text-lg mb-4">Personal Details</h3>
+                <div className="space-y-4">
+                  <fieldset className="border border-border rounded-md p-3">
+                    <legend className="text-xs text-muted-foreground px-2">Name</legend>
+                    <div className="text-sm">{formData.firstName} {formData.lastName}</div>
+                  </fieldset>
 
-                <div>
-                  <h4 className="font-medium mb-2">Location</h4>
-                  <p className="text-sm text-muted-foreground">
-                    {formData.city}, {formData.state}
-                  </p>
-                </div>
+                  <fieldset className="border border-border rounded-md p-3">
+                    <legend className="text-xs text-muted-foreground px-2">Email</legend>
+                    <div className="text-sm">{formData.email}</div>
+                  </fieldset>
 
-                <div>
-                  <h4 className="font-medium mb-2">Investment & Space</h4>
-                  <p className="text-sm text-muted-foreground">
-                    Investment: ₹{formData.investmentCapacity}<br />
-                    Space: {formData.spaceAvailable} sq. ft.
-                  </p>
+                  <fieldset className="border border-border rounded-md p-3">
+                    <legend className="text-xs text-muted-foreground px-2">Mobile No</legend>
+                    <div className="text-sm">{formData.mobile}</div>
+                  </fieldset>
                 </div>
+              </div>
 
-                <div>
-                  <h4 className="font-medium mb-2">Business Background</h4>
-                  <p className="text-sm text-muted-foreground">
-                    {formData.businessName}<br />
-                    {formData.yearsInBusiness} years in {formData.businessType}
-                  </p>
+              {/* Document */}
+              <div>
+                <h3 className="font-semibold text-lg mb-4">Document</h3>
+                <div className="space-y-4">
+                  <fieldset className="border border-border rounded-md p-3">
+                    <legend className="text-xs text-muted-foreground px-2">Document</legend>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm">
+                        {formData.documents.length > 0 ? formData.documents[0].name : "No document uploaded"}
+                      </span>
+                      {formData.documents.length > 0 && (
+                        <a href="#" className="text-primary text-sm">view</a>
+                      )}
+                    </div>
+                  </fieldset>
+
+                  <fieldset className="border border-border rounded-md p-3">
+                    <legend className="text-xs text-muted-foreground px-2">GST Number</legend>
+                    <div className="text-sm">{formData.gstNumber || "Not provided"}</div>
+                  </fieldset>
+                </div>
+              </div>
+
+              {/* Dealer Location */}
+              <div>
+                <h3 className="font-semibold text-lg mb-4">Dealer Location</h3>
+                <div className="space-y-4">
+                  <fieldset className="border border-border rounded-md p-3">
+                    <legend className="text-xs text-muted-foreground px-2">State</legend>
+                    <div className="text-sm">{formData.state || "Not selected"}</div>
+                  </fieldset>
+
+                  <fieldset className="border border-border rounded-md p-3">
+                    <legend className="text-xs text-muted-foreground px-2">City / Town</legend>
+                    <div className="text-sm">{formData.city || "Not provided"}</div>
+                  </fieldset>
+
+                  <fieldset className="border border-border rounded-md p-3 max-w-[200px]">
+                    <legend className="text-xs text-muted-foreground px-2">Pincode</legend>
+                    <div className="text-sm">{formData.pincode || "Not provided"}</div>
+                  </fieldset>
+
+                  <fieldset className="border border-border rounded-md p-3">
+                    <legend className="text-xs text-muted-foreground px-2">Area Type</legend>
+                    <div className="text-sm">{formData.areaType || "Not selected"}</div>
+                  </fieldset>
                 </div>
               </div>
             </div>
