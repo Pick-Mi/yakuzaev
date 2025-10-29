@@ -23,6 +23,7 @@ import OrderDetails from "./pages/OrderDetails";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import PaymentFailure from "./pages/PaymentFailure";
 import BecomeDealer from "./pages/BecomeDealer";
+import DealerApplication from "./pages/DealerApplication";
 import AboutUs from "./pages/AboutUs";
 import Sitemap from "./pages/Sitemap";
 import ProductRedirect from "./components/ProductRedirect";
@@ -47,6 +48,7 @@ const App = () => (
               <Route path="/products" element={<Products />} />
               <Route path="/blogs" element={<Blogs />} />
               <Route path="/become-dealer" element={<BecomeDealer />} />
+              <Route path="/dealer-application" element={<DealerApplication />} />
               <Route path="/about-us" element={<AboutUs />} />
               <Route path="/sitemap" element={<Sitemap />} />
               <Route path="/products/:id" element={<Product />} />

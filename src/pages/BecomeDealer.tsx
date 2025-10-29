@@ -1,22 +1,17 @@
-import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import DealerApplicationFlow from "@/components/DealerApplicationFlow";
 import { Button } from "@/components/ui/button";
 import { DollarSign, MapPin } from "lucide-react";
 import dealerMeetingImage from "@/assets/dealer-meeting.jpg";
 
 const BecomeDealer = () => {
-  const [showApplicationFlow, setShowApplicationFlow] = useState(false);
+  const navigate = useNavigate();
 
 
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      
-      {showApplicationFlow && (
-        <DealerApplicationFlow onClose={() => setShowApplicationFlow(false)} />
-      )}
       
       <main>
         {/* Hero Section */}
@@ -38,7 +33,7 @@ const BecomeDealer = () => {
             
             <div className="flex gap-4 sm:gap-6 items-center flex-wrap w-full sm:w-auto">
               <button 
-                onClick={() => setShowApplicationFlow(true)}
+                onClick={() => navigate("/dealer-application")}
                 className="w-full sm:w-auto flex justify-center items-center gap-[10px] bg-white text-black hover:bg-gray-100 px-[35px] h-[50px] text-[14px] font-medium font-sans rounded-none transition-colors"
               >
                 Apply Now
@@ -122,9 +117,7 @@ const BecomeDealer = () => {
                 </p>
                 <div>
                   <Button 
-                    onClick={() => {
-                      window.scrollTo({ top: 0, behavior: 'smooth' });
-                    }}
+                    onClick={() => navigate("/dealer-application")}
                     className="px-12 h-12 text-base font-medium rounded-none"
                   >
                     Request
