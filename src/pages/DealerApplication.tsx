@@ -41,6 +41,7 @@ const DealerApplication = () => {
     businessType: "",
     experience: "",
     documents: [] as File[],
+    gstNumber: "",
     agreeToTerms: false,
   });
 
@@ -421,26 +422,60 @@ const DealerApplication = () => {
           {/* Step 4: Upload Docs */}
           {currentStep === 4 && (
             <div className="space-y-6">
+              <p className="text-muted-foreground mb-6">
+                Please upload valid identification and business-related documents to help us verify your application. All uploads are securely stored and reviewed by our dealership team.
+              </p>
+              
               <div>
-                <label className="block text-sm font-medium mb-2">Upload Documents</label>
-                <p className="text-sm text-muted-foreground mb-4">
-                  Please upload relevant business documents, licenses, and certifications
-                </p>
-                <Input
-                  type="file"
-                  multiple
-                  onChange={(e) => {
-                    const files = e.target.files;
-                    if (files) {
-                      updateFormData("documents", Array.from(files));
-                    }
-                  }}
-                />
+                <label className="block text-sm font-medium mb-2">Upload Document Photos</label>
+                <p className="text-sm text-muted-foreground mb-3">Aadhar Card / PAN Card / Driving License</p>
+                <div 
+                  className="border-2 border-dashed border-border rounded-lg p-12 flex flex-col items-center justify-center cursor-pointer hover:border-primary/50 transition-colors"
+                  onClick={() => document.getElementById('identity-docs')?.click()}
+                >
+                  <Upload className="w-12 h-12 text-muted-foreground mb-3" strokeWidth={1.5} />
+                  <span className="text-muted-foreground">Upload a Document</span>
+                  <input
+                    id="identity-docs"
+                    type="file"
+                    multiple
+                    accept="image/*,.pdf"
+                    className="hidden"
+                    onChange={(e) => {
+                      const files = e.target.files;
+                      if (files) {
+                        updateFormData("documents", Array.from(files));
+                      }
+                    }}
+                  />
+                </div>
                 {formData.documents.length > 0 && (
                   <p className="text-sm text-muted-foreground mt-2">
-                    {formData.documents.length} file(s) selected
+                    {formData.documents.length} document(s) selected
                   </p>
                 )}
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">GST Number</label>
+                <Input
+                  placeholder="1234567890"
+                  value={formData.gstNumber}
+                  onChange={(e) => updateFormData("gstNumber", e.target.value)}
+                />
+              </div>
+
+              <div className="flex items-start gap-2 pt-4">
+                <Checkbox
+                  checked={formData.agreeToTerms}
+                  onCheckedChange={(checked) => updateFormData("agreeToTerms", checked)}
+                />
+                <label className="text-sm text-muted-foreground">
+                  I agree to the{" "}
+                  <a href="#" className="text-primary underline">Terms of Service</a>
+                  {" "}and{" "}
+                  <a href="#" className="text-primary underline">Privacy Policy</a>.
+                </label>
               </div>
             </div>
           )}
