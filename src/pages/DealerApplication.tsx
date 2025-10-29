@@ -118,7 +118,9 @@ const DealerApplication = () => {
       <main className="container mx-auto max-w-6xl px-4 py-8">
         {/* Header with Logo and Copyright */}
         <div className="flex justify-between items-center mb-8 pb-6 border-b border-border">
-          <img src={logo} alt="Yakuza EV" className="h-8" />
+          <button onClick={() => navigate('/')} className="cursor-pointer">
+            <img src={logo} alt="Yakuza EV" className="h-8" />
+          </button>
           <p className="text-sm text-muted-foreground">Copyright © 2024 Yakuza</p>
         </div>
 
