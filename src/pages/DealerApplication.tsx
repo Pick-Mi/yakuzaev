@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { ChevronLeft } from "lucide-react";
 
@@ -27,6 +28,8 @@ const DealerApplication = () => {
     mobile: "",
     city: "",
     state: "",
+    pincode: "",
+    areaType: "",
     preferredLocation: "",
     investmentCapacity: "",
     spaceAvailable: "",
@@ -178,32 +181,92 @@ const DealerApplication = () => {
           {/* Step 1: Choose Location */}
           {currentStep === 1 && (
             <div className="space-y-6">
+              <p className="text-center text-muted-foreground mb-6">Choose Your Dealership Location</p>
+              
               <div>
-                <label className="block text-sm font-medium mb-2">City</label>
+                <label className="block text-sm font-medium mb-2">State</label>
+                <Select value={formData.state} onValueChange={(value) => updateFormData("state", value)}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select your State" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-background z-50">
+                    <SelectItem value="andhra-pradesh">Andhra Pradesh</SelectItem>
+                    <SelectItem value="arunachal-pradesh">Arunachal Pradesh</SelectItem>
+                    <SelectItem value="assam">Assam</SelectItem>
+                    <SelectItem value="bihar">Bihar</SelectItem>
+                    <SelectItem value="chhattisgarh">Chhattisgarh</SelectItem>
+                    <SelectItem value="goa">Goa</SelectItem>
+                    <SelectItem value="gujarat">Gujarat</SelectItem>
+                    <SelectItem value="haryana">Haryana</SelectItem>
+                    <SelectItem value="himachal-pradesh">Himachal Pradesh</SelectItem>
+                    <SelectItem value="jharkhand">Jharkhand</SelectItem>
+                    <SelectItem value="karnataka">Karnataka</SelectItem>
+                    <SelectItem value="kerala">Kerala</SelectItem>
+                    <SelectItem value="madhya-pradesh">Madhya Pradesh</SelectItem>
+                    <SelectItem value="maharashtra">Maharashtra</SelectItem>
+                    <SelectItem value="manipur">Manipur</SelectItem>
+                    <SelectItem value="meghalaya">Meghalaya</SelectItem>
+                    <SelectItem value="mizoram">Mizoram</SelectItem>
+                    <SelectItem value="nagaland">Nagaland</SelectItem>
+                    <SelectItem value="odisha">Odisha</SelectItem>
+                    <SelectItem value="punjab">Punjab</SelectItem>
+                    <SelectItem value="rajasthan">Rajasthan</SelectItem>
+                    <SelectItem value="sikkim">Sikkim</SelectItem>
+                    <SelectItem value="tamil-nadu">Tamil Nadu</SelectItem>
+                    <SelectItem value="telangana">Telangana</SelectItem>
+                    <SelectItem value="tripura">Tripura</SelectItem>
+                    <SelectItem value="uttar-pradesh">Uttar Pradesh</SelectItem>
+                    <SelectItem value="uttarakhand">Uttarakhand</SelectItem>
+                    <SelectItem value="west-bengal">West Bengal</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">City / Town</label>
                 <Input
-                  placeholder="Enter city"
+                  placeholder="Enter your perferred city or town"
                   value={formData.city}
                   onChange={(e) => updateFormData("city", e.target.value)}
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2">State</label>
+                <label className="block text-sm font-medium mb-2">Pincode</label>
                 <Input
-                  placeholder="Enter state"
-                  value={formData.state}
-                  onChange={(e) => updateFormData("state", e.target.value)}
+                  placeholder="123456"
+                  value={formData.pincode}
+                  onChange={(e) => updateFormData("pincode", e.target.value)}
+                  maxLength={6}
+                  className="max-w-[200px]"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2">Preferred Location Details</label>
-                <Textarea
-                  placeholder="Describe your preferred location (area, landmarks, etc.)"
-                  value={formData.preferredLocation}
-                  onChange={(e) => updateFormData("preferredLocation", e.target.value)}
-                  rows={4}
+                <label className="block text-sm font-medium mb-2">Area Type</label>
+                <Select value={formData.areaType} onValueChange={(value) => updateFormData("areaType", value)}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select area type" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-background z-50">
+                    <SelectItem value="urban">Urban</SelectItem>
+                    <SelectItem value="semi-urban">Semi-Urban</SelectItem>
+                    <SelectItem value="rural">Rural</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="flex items-start gap-2 pt-4">
+                <Checkbox
+                  checked={formData.agreeToTerms}
+                  onCheckedChange={(checked) => updateFormData("agreeToTerms", checked)}
                 />
+                <label className="text-sm text-muted-foreground">
+                  I agree to the{" "}
+                  <a href="#" className="text-primary underline">Terms of Service</a>
+                  {" "}and{" "}
+                  <a href="#" className="text-primary underline">Privacy Policy</a>.
+                </label>
               </div>
             </div>
           )}
@@ -345,11 +408,10 @@ const DealerApplication = () => {
           <div className="flex justify-between mt-8 pt-6 border-t border-border">
             {currentStep > 0 && (
               <Button
-                variant="outline"
                 onClick={handlePrevious}
-                className="px-8"
+                className="px-8 bg-black text-white hover:bg-black/90"
               >
-                Previous
+                Pervious
               </Button>
             )}
             <Button
