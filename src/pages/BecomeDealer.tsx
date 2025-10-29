@@ -1,75 +1,22 @@
 import { useState } from "react";
 import Header from "@/components/Header";
-import DealerHero from "@/components/DealerHero";
 import Footer from "@/components/Footer";
+import DealerApplicationFlow from "@/components/DealerApplicationFlow";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/hooks/use-toast";
 import { DollarSign, MapPin } from "lucide-react";
 import dealerMeetingImage from "@/assets/dealer-meeting.jpg";
 
 const BecomeDealer = () => {
-  const { toast } = useToast();
-  const [formData, setFormData] = useState({
-    businessName: "",
-    contactPerson: "",
-    email: "",
-    phone: "",
-    city: "",
-    state: "",
-    experience: "",
-    message: "",
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showApplicationFlow, setShowApplicationFlow] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
-    try {
-      // Here you would typically send this to your database
-      console.log("Dealer application:", formData);
-      
-      toast({
-        title: "Application Submitted!",
-        description: "We'll review your application and get back to you soon.",
-      });
-
-      // Reset form
-      setFormData({
-        businessName: "",
-        contactPerson: "",
-        email: "",
-        phone: "",
-        city: "",
-        state: "",
-        experience: "",
-        message: "",
-      });
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to submit application. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
 
   return (
     <div className="min-h-screen bg-background">
       <Header />
+      
+      {showApplicationFlow && (
+        <DealerApplicationFlow onClose={() => setShowApplicationFlow(false)} />
+      )}
       
       <main>
         {/* Hero Section */}
@@ -91,10 +38,7 @@ const BecomeDealer = () => {
             
             <div className="flex gap-4 sm:gap-6 items-center flex-wrap w-full sm:w-auto">
               <button 
-                onClick={() => {
-                  const formSection = document.querySelector('form');
-                  formSection?.scrollIntoView({ behavior: 'smooth' });
-                }}
+                onClick={() => setShowApplicationFlow(true)}
                 className="w-full sm:w-auto flex justify-center items-center gap-[10px] bg-white text-black hover:bg-gray-100 px-[35px] h-[50px] text-[14px] font-medium font-sans rounded-none transition-colors"
               >
                 Apply Now
