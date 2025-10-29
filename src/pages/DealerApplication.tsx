@@ -6,7 +6,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { ChevronLeft, Upload } from "lucide-react";
+import { Upload } from "lucide-react";
+import logo from "@/assets/logo.svg";
 
 const steps = [
   "Basic Info",
@@ -72,16 +73,12 @@ const DealerApplication = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-white">
       <main className="container mx-auto max-w-6xl px-4 py-8">
-        {/* Back Button */}
-        <button
-          onClick={() => navigate("/become-dealer")}
-          className="flex items-center gap-2 text-muted-foreground hover:text-foreground mb-6"
-        >
-          <ChevronLeft className="w-5 h-5" />
-          Back to Dealer Info
-        </button>
+        {/* Logo */}
+        <div className="flex justify-center mb-8">
+          <img src={logo} alt="Yakuza EV" className="h-8" />
+        </div>
 
         {/* Progress Stepper */}
         <div className="mb-12">
