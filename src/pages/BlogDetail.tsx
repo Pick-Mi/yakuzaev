@@ -108,7 +108,7 @@ const BlogDetail = () => {
       <main className="w-full py-8 sm:py-10 md:py-[42px] px-4 sm:px-8 md:px-12 lg:px-[70px]" style={{ backgroundColor: '#F8F9F9' }}>
         <article className="max-w-[900px] mx-auto">
           {/* Blog Title */}
-          <h1 className="font-['Inter',sans-serif] font-medium text-[28px] sm:text-[36px] md:text-[48px] text-[#12141d] mb-8 sm:mb-10 md:mb-12">
+          <h1 className="font-['Inter',sans-serif] font-bold text-[28px] sm:text-[36px] md:text-[48px] text-[#12141d] mb-8 sm:mb-10 md:mb-12">
             {blog.title}
           </h1>
 
