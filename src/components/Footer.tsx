@@ -35,6 +35,9 @@ const Footer = () => {
                 <Link to="/about-us" className="text-base opacity-70 hover:opacity-100 transition-opacity" style={{ fontFamily: 'Poppins, sans-serif' }}>
                   About Us
                 </Link>
+                <Link to="/careers" className="text-base opacity-70 hover:opacity-100 transition-opacity" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                  Careers
+                </Link>
                 <Link to="/blogs" className="text-base opacity-70 hover:opacity-100 transition-opacity" style={{ fontFamily: 'Poppins, sans-serif' }}>
                   Blogs
                 </Link>
