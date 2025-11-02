@@ -84,7 +84,7 @@ const Careers = () => {
                 </div>
 
                 {/* Bottom Info Section */}
-                <div className="absolute bottom-6 left-6 right-6 flex items-center justify-between text-sm transition-all duration-300 group-hover:bottom-[70px]">
+                <div className="absolute bottom-6 left-6 right-6 flex items-center justify-between text-sm transition-all duration-300 group-hover:bottom-[90px]">
                   <span className="text-green-600 font-medium">{job.type}</span>
                   <div className="flex items-center gap-3 text-muted-foreground">
                     <div className="flex items-center gap-1">
