@@ -83,7 +83,7 @@ const Careers = () => {
                   </p>
                 </div>
 
-                <div className="flex items-center justify-between text-sm">
+                <div className="flex items-center justify-between text-sm transition-transform group-hover:-translate-y-2">
                   <span className="text-green-600 font-medium">{job.type}</span>
                   <div className="flex items-center gap-3 text-muted-foreground">
                     <div className="flex items-center gap-1">
@@ -98,8 +98,8 @@ const Careers = () => {
                 </div>
 
                 {/* Apply Now Button - Shows on Hover */}
-                <div className="opacity-0 group-hover:opacity-100 transition-opacity mt-4">
-                  <Button className="w-full rounded-none bg-black text-white hover:bg-black/90 dark:bg-white dark:text-black dark:hover:bg-white/90">
+                <div className="h-0 opacity-0 group-hover:h-auto group-hover:opacity-100 transition-all duration-300 overflow-hidden">
+                  <Button className="w-full rounded-none bg-black text-white hover:bg-black/90 dark:bg-white dark:text-black dark:hover:bg-white/90 mt-4">
                     Apply Now
                   </Button>
                 </div>
