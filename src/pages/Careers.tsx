@@ -2,6 +2,7 @@ import { Briefcase, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import CareersHero from "@/components/CareersHero";
 
 const jobOpportunities = [
   {
@@ -58,8 +59,9 @@ const Careers = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
+      <CareersHero />
       <main className="flex-1 bg-background">
-        <div className="container mx-auto px-4 py-16 md:px-20 max-w-[1280px]">
+        <div id="opportunities" className="container mx-auto px-4 py-16 md:px-20 max-w-[1280px]">
           {/* Header */}
           <h1 className="text-4xl md:text-5xl font-semibold mb-16 text-foreground">
             Some opportunities for you to explore
