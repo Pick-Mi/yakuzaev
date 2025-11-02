@@ -29,6 +29,7 @@ import AboutUs from "./pages/AboutUs";
 import Sitemap from "./pages/Sitemap";
 import ContactUs from "./pages/ContactUs";
 import Careers from "./pages/Careers";
+import JobDetail from "./pages/JobDetail";
 import ProductRedirect from "./components/ProductRedirect";
 
 import NotFound from "./pages/NotFound";
@@ -57,6 +58,7 @@ const App = () => (
               <Route path="/sitemap" element={<Sitemap />} />
               <Route path="/contact-us" element={<ContactUs />} />
               <Route path="/careers" element={<Careers />} />
+              <Route path="/careers/:id" element={<JobDetail />} />
               <Route path="/products/:id" element={<Product />} />
               <Route path="/profile" element={
                 <ProtectedRoute>

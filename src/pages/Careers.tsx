@@ -102,7 +102,10 @@ const Careers = () => {
 
                 {/* Apply Now Button - Shows on Hover */}
                 <div className="absolute bottom-6 left-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <Button className="w-full rounded-none bg-black text-white hover:bg-black/90 dark:bg-white dark:text-black dark:hover:bg-white/90">
+                  <Button 
+                    onClick={() => window.location.href = `/careers/${job.id}`}
+                    className="w-full rounded-none bg-black text-white hover:bg-black/90 dark:bg-white dark:text-black dark:hover:bg-white/90"
+                  >
                     Apply Now
                   </Button>
                 </div>
