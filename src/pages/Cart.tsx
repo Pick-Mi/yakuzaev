@@ -38,23 +38,23 @@ const Cart = () => {
   const totalAmount = subtotal - discount;
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen" style={{ backgroundColor: '#F8F9F9' }}>
       <Header />
       <div className="pt-24 pb-12">
-        <div className="container mx-auto px-4 max-w-7xl">
+        <div className="container mx-auto px-4 md:px-8 lg:px-12 max-w-7xl">
           {/* Title */}
-          <h1 className="text-4xl font-bold text-gray-900 mb-8" style={{ fontFamily: 'Poppins, sans-serif' }}>
+          <h1 className="text-[40px] md:text-[48px] font-bold text-black mb-10" style={{ fontFamily: 'Poppins, sans-serif' }}>
             My Card
           </h1>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
             {/* Cart Items */}
-            <div className="lg:col-span-2 space-y-6">
+            <div className="lg:col-span-2 space-y-4">
               {items.map((item) => (
-                <div key={item.id} className="bg-white rounded-lg p-6 shadow-sm">
+                <div key={item.id} className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
                   <div className="flex gap-6">
                     {/* Product Image */}
-                    <div className="w-40 h-40 flex-shrink-0">
+                    <div className="w-36 h-36 md:w-44 md:h-44 flex-shrink-0 bg-gray-50 rounded-lg flex items-center justify-center p-4">
                       <img 
                         src={item.image} 
                         alt={item.name}
@@ -63,52 +63,52 @@ const Cart = () => {
                     </div>
                     
                     {/* Product Details */}
-                    <div className="flex-1 space-y-3">
-                      <h3 className="text-lg font-semibold text-gray-900" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                    <div className="flex-1 space-y-2.5">
+                      <h3 className="text-[17px] md:text-[18px] font-semibold text-black" style={{ fontFamily: 'Poppins, sans-serif' }}>
                         {item.name}
                       </h3>
                       
-                      <p className="text-sm text-gray-400" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                      <p className="text-[13px] md:text-[14px] text-gray-400" style={{ fontFamily: 'Poppins, sans-serif' }}>
                         Return or Replace: Eligible through Oct 20, 2025
                       </p>
                       
-                      <div className="text-sm text-gray-600" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                      <div className="text-[13px] md:text-[14px]" style={{ fontFamily: 'Poppins, sans-serif' }}>
                         <span className="text-gray-400">Variant : </span>
-                        <span className="font-medium text-gray-900">(43V, 60km Range, Matte Black)</span>
+                        <span className="font-medium text-black">(43V, 60km Range, Matte Black)</span>
                       </div>
                       
-                      <div className="flex items-center gap-2 text-sm" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                      <div className="flex items-center gap-2 text-[13px] md:text-[14px]" style={{ fontFamily: 'Poppins, sans-serif' }}>
                         <span className="text-gray-400">Colour :</span>
-                        <span className="font-medium text-gray-900">Black</span>
-                        <div className="w-4 h-4 bg-black rounded-sm border border-gray-300"></div>
+                        <span className="font-semibold text-black">Black</span>
+                        <div className="w-4 h-4 bg-black rounded-sm"></div>
                       </div>
                       
-                      <p className="text-lg font-semibold text-gray-900" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                      <p className="text-[17px] md:text-[18px] font-semibold text-black pt-1" style={{ fontFamily: 'Poppins, sans-serif' }}>
                         ₹{parseFloat(item.price.toString().replace(/[^0-9.]/g, '')).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                       </p>
                       
                       {/* Quantity Controls */}
-                      <div className="flex items-center gap-4 pt-2">
+                      <div className="flex items-center gap-3 pt-2">
                         <button
                           onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                          className="w-8 h-8 rounded border border-gray-300 flex items-center justify-center hover:bg-gray-50"
+                          className="w-9 h-9 rounded border border-gray-300 flex items-center justify-center hover:bg-gray-50 transition-colors"
                         >
-                          <Minus className="w-4 h-4 text-gray-600" />
+                          <Minus className="w-4 h-4 text-gray-700" />
                         </button>
-                        <span className="text-base font-medium text-gray-900 min-w-[20px] text-center" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                        <span className="text-[15px] font-medium text-black min-w-[24px] text-center" style={{ fontFamily: 'Poppins, sans-serif' }}>
                           {item.quantity}
                         </span>
                         <button
                           onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                          className="w-8 h-8 rounded border border-gray-300 flex items-center justify-center hover:bg-gray-50"
+                          className="w-9 h-9 rounded border border-gray-300 flex items-center justify-center hover:bg-gray-50 transition-colors"
                         >
-                          <Plus className="w-4 h-4 text-gray-600" />
+                          <Plus className="w-4 h-4 text-gray-700" />
                         </button>
                         <button
                           onClick={() => removeFromCart(item.id)}
-                          className="w-8 h-8 rounded border border-gray-300 flex items-center justify-center hover:bg-gray-50 ml-2"
+                          className="w-9 h-9 rounded border border-gray-300 flex items-center justify-center hover:bg-gray-50 hover:border-red-300 transition-colors ml-1"
                         >
-                          <Trash2 className="w-4 h-4 text-gray-600" />
+                          <Trash2 className="w-4 h-4 text-gray-700" />
                         </button>
                       </div>
                     </div>
@@ -119,48 +119,48 @@ const Cart = () => {
 
             {/* Price Details */}
             <div className="lg:col-span-1">
-              <div className="bg-white rounded-lg p-6 shadow-sm sticky top-24">
-                <h2 className="text-xl font-semibold text-gray-900 mb-6" style={{ fontFamily: 'Poppins, sans-serif' }}>
+              <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 sticky top-24">
+                <h2 className="text-[18px] font-semibold text-black mb-6" style={{ fontFamily: 'Poppins, sans-serif', letterSpacing: '0.5px' }}>
                   PRICE DETAILS
                 </h2>
                 
                 <div className="space-y-4 mb-6">
                   <div className="flex justify-between items-center">
-                    <span className="text-base text-gray-900" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                    <span className="text-[15px] text-black" style={{ fontFamily: 'Poppins, sans-serif' }}>
                       Price ({itemCount} items)
                     </span>
-                    <span className="text-base font-medium text-gray-900" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                    <span className="text-[15px] font-medium text-black" style={{ fontFamily: 'Poppins, sans-serif' }}>
                       ₹ {subtotal.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                     </span>
                   </div>
                   
                   <div className="flex justify-between items-center">
-                    <span className="text-base text-gray-900" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                    <span className="text-[15px] text-black" style={{ fontFamily: 'Poppins, sans-serif' }}>
                       Discount
                     </span>
-                    <span className="text-base font-medium text-orange-500" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                    <span className="text-[15px] font-medium" style={{ fontFamily: 'Poppins, sans-serif', color: '#FF8C42' }}>
                       -₹ {discount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                     </span>
                   </div>
                   
-                  <div className="border-t border-gray-200 pt-4">
+                  <div className="border-t border-gray-200 pt-4 mt-4">
                     <div className="flex justify-between items-center">
-                      <span className="text-lg font-semibold text-gray-900" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                      <span className="text-[16px] font-semibold text-black" style={{ fontFamily: 'Poppins, sans-serif' }}>
                         Total Amount
                       </span>
-                      <span className="text-lg font-semibold text-gray-900" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                      <span className="text-[16px] font-semibold text-black" style={{ fontFamily: 'Poppins, sans-serif' }}>
                         ₹{totalAmount.toLocaleString('en-IN')} -/
                       </span>
                     </div>
                   </div>
                 </div>
                 
-                <p className="text-sm text-orange-500 mb-6" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                <p className="text-[14px] mb-6" style={{ fontFamily: 'Poppins, sans-serif', color: '#FF8C42' }}>
                   You will save ₹{discount.toLocaleString('en-IN')} on this order
                 </p>
                 
                 <Link to="/checkout">
-                  <button className="w-full bg-black text-white py-3 rounded-md font-medium hover:bg-gray-900 transition-colors" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                  <button className="w-full bg-black text-white py-3.5 rounded-lg font-medium hover:bg-gray-900 transition-colors text-[15px]" style={{ fontFamily: 'Poppins, sans-serif' }}>
                     Book Now
                   </button>
                 </Link>
