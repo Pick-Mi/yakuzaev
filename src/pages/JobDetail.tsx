@@ -42,16 +42,6 @@ const JobDetail = () => {
       <Header />
       <main className="flex-1">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-12">
-          {/* Back Button */}
-          <Button
-            variant="ghost"
-            onClick={() => navigate('/careers')}
-            className="mb-6 -ml-2"
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Careers
-          </Button>
-
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Main Content */}
             <div className="lg:col-span-2 space-y-8">
