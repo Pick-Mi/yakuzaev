@@ -14,6 +14,7 @@ interface BlogPost {
   featured_image: string;
   published_at: string;
   slug: string;
+  style: string | null;
 }
 
 const BlogDetail = () => {
@@ -47,7 +48,7 @@ const BlogDetail = () => {
           return;
         }
 
-        setBlog(data);
+        setBlog(data as unknown as BlogPost);
 
         // Fetch related blogs (other published blogs)
         const { data: relatedData } = await supabase
@@ -104,10 +105,10 @@ const BlogDetail = () => {
 
       <Header />
       
-      <main className="w-full py-12 px-4 sm:px-8 md:px-12 lg:px-[70px]">
+      <main className="w-full py-8 sm:py-10 md:py-[42px] px-4 sm:px-8 md:px-12 lg:px-[70px]" style={{ backgroundColor: '#F8F9F9' }}>
         <article className="max-w-[900px] mx-auto">
           {/* Blog Title */}
-          <h1 className="font-['Inter',sans-serif] font-medium text-3xl sm:text-4xl md:text-[48px] text-foreground mb-8 sm:mb-10 md:mb-12">
+          <h1 className="font-['Inter',sans-serif] font-medium text-[28px] sm:text-[36px] md:text-[48px] text-[#12141d] mb-8 sm:mb-10 md:mb-12">
             {blog.title}
           </h1>
 
@@ -115,23 +116,24 @@ const BlogDetail = () => {
           {/* Blog Content */}
           <div 
             className="prose prose-lg max-w-none
-              prose-headings:font-['Inter',sans-serif] prose-headings:font-semibold prose-headings:text-foreground
+              prose-headings:font-['Inter',sans-serif] prose-headings:font-semibold prose-headings:text-[#12141d]
               prose-h2:text-2xl sm:prose-h2:text-3xl prose-h2:mt-8 prose-h2:mb-4
               prose-h3:text-xl sm:prose-h3:text-2xl prose-h3:mt-6 prose-h3:mb-3
-              prose-p:font-['Inter',sans-serif] prose-p:text-base prose-p:text-foreground prose-p:leading-relaxed prose-p:mb-6
+              prose-p:font-['Inter',sans-serif] prose-p:text-base prose-p:text-black prose-p:opacity-80 prose-p:leading-relaxed prose-p:mb-6
               prose-ul:my-6 prose-ul:list-disc prose-ul:pl-6
               prose-ol:my-6 prose-ol:list-decimal prose-ol:pl-6
-              prose-li:font-['Inter',sans-serif] prose-li:text-base prose-li:text-foreground prose-li:mb-2
-              prose-strong:font-semibold prose-strong:text-foreground
+              prose-li:font-['Inter',sans-serif] prose-li:text-base prose-li:text-black prose-li:opacity-80 prose-li:mb-2
+              prose-strong:font-semibold prose-strong:text-[#12141d]
               prose-a:text-primary prose-a:underline hover:prose-a:text-primary/80
               prose-img:rounded-lg prose-img:my-8"
             dangerouslySetInnerHTML={{ __html: blog.content }}
+            style={blog.style ? JSON.parse(blog.style) : undefined}
           />
 
           {/* Published Date */}
           {blog.published_at && (
-            <div className="mt-12 pt-8 border-t border-border">
-              <p className="text-sm text-muted-foreground">
+            <div className="mt-12 pt-8 border-t border-black/10">
+              <p className="text-sm text-black opacity-60">
                 Published on {new Date(blog.published_at).toLocaleDateString('en-US', {
                   year: 'numeric',
                   month: 'long',
@@ -144,19 +146,19 @@ const BlogDetail = () => {
 
         {/* Related Blogs Section */}
         {relatedBlogs.length > 0 && (
-          <section className="max-w-[1300px] mx-auto mt-16 pt-12 border-t border-border">
-            <h2 className="font-['Inter',sans-serif] font-medium text-2xl sm:text-3xl md:text-[36px] text-foreground mb-8 sm:mb-10 md:mb-12">
+          <section className="max-w-[1300px] mx-auto mt-10 sm:mt-14 md:mt-[70px] pt-10 sm:pt-14 md:pt-[70px] border-t border-black/10">
+            <h2 className="font-['Inter',sans-serif] font-medium text-[28px] sm:text-[36px] md:text-[48px] text-[#12141d] mb-8 sm:mb-10 md:mb-12">
               More Articles
             </h2>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 md:gap-[40px]">
+            <div className="flex gap-6 sm:gap-8 md:gap-[40px] overflow-x-auto pb-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
               {relatedBlogs.map((relatedBlog) => (
                 <Link 
                   key={relatedBlog.id} 
                   to={`/blogs/${relatedBlog.slug}`}
-                  className="bg-white w-full overflow-hidden shadow-sm hover:shadow-md transition-shadow block"
+                  className="block bg-white w-[280px] sm:w-[300px] md:w-[350px] lg:w-[407px] h-auto md:h-[388px] shrink-0 overflow-hidden hover:shadow-lg transition-shadow"
                 >
-                  <div className="relative w-full h-[200px] sm:h-[220px] md:h-[244px] bg-muted">
+                  <div className="relative w-full h-[180px] sm:h-[200px] md:h-[244px] bg-[#d9d9d9]">
                     <img 
                       src={relatedBlog.featured_image || "/placeholder.svg"} 
                       alt={relatedBlog.title}
@@ -164,10 +166,10 @@ const BlogDetail = () => {
                     />
                   </div>
                   <div className="p-4 sm:p-[18px] md:p-[20px] flex flex-col gap-2 md:gap-[9.403px]">
-                    <h3 className="font-['Inter',sans-serif] font-semibold text-lg sm:text-xl md:text-[22px] text-foreground capitalize leading-tight sm:leading-normal">
+                    <h3 className="font-['Inter',sans-serif] font-semibold text-[18px] sm:text-[20px] md:text-[22px] text-black capitalize leading-[1.4] sm:leading-[1.5] md:leading-[39px]">
                       {relatedBlog.title}
                     </h3>
-                    <p className="font-['Inter',sans-serif] font-normal text-sm sm:text-[15px] md:text-[15.386px] text-muted-foreground line-clamp-3">
+                    <p className="font-['Inter',sans-serif] font-normal text-[13px] sm:text-[14px] md:text-[15.386px] text-black opacity-80">
                       {relatedBlog.excerpt}
                     </p>
                   </div>
