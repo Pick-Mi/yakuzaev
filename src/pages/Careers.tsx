@@ -90,10 +90,12 @@ const Careers = () => {
                     <div className="flex items-center gap-1">
                       <Briefcase className="w-4 h-4" />
                       <span>{job.openings}</span>
+                      <p className="text-sm">openings</p>
                     </div>
                     <div className="flex items-center gap-1">
                       <MapPin className="w-4 h-4" />
                       <span>{String(job.locations).padStart(2, '0')}</span>
+                      <p className="text-sm">location</p>
                     </div>
                   </div>
                 </div>
