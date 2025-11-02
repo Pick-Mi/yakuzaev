@@ -75,10 +75,10 @@ const Careers = () => {
                 className="bg-card rounded-lg p-6 flex flex-col justify-between border border-border hover:shadow-lg transition-shadow"
               >
                 <div>
-                  <h2 className="text-lg font-semibold text-primary mb-4">
+                  <h2 className="text-base font-semibold text-primary uppercase mb-4 tracking-wide">
                     {job.title}
                   </h2>
-                  <p className="text-sm text-muted-foreground mb-6 line-clamp-4">
+                  <p className="text-sm text-muted-foreground mb-6">
                     {job.description}
                   </p>
                 </div>
@@ -86,19 +86,19 @@ const Careers = () => {
                 <div className="space-y-4">
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-green-600 font-medium">{job.type}</span>
-                    <div className="flex items-center gap-4 text-muted-foreground">
+                    <div className="flex items-center gap-3 text-muted-foreground">
                       <div className="flex items-center gap-1">
                         <Briefcase className="w-4 h-4" />
                         <span>{job.openings}</span>
                       </div>
                       <div className="flex items-center gap-1">
                         <MapPin className="w-4 h-4" />
-                        <span>{job.locations}</span>
+                        <span>{String(job.locations).padStart(2, '0')}</span>
                       </div>
                     </div>
                   </div>
 
-                  <Button className="w-full bg-black text-white hover:bg-black/90">
+                  <Button className="w-full bg-black text-white hover:bg-black/90 dark:bg-white dark:text-black dark:hover:bg-white/90">
                     Book Now
                   </Button>
                 </div>
