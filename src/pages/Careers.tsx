@@ -75,7 +75,7 @@ const Careers = () => {
                 className="group bg-white p-6 flex flex-col relative h-[280px] hover:shadow-lg transition-shadow overflow-hidden"
               >
                 <div>
-                  <h2 className="text-base font-semibold text-primary uppercase mb-4 tracking-wide">
+                  <h2 className="text-base font-semibold uppercase mb-4 tracking-wide" style={{ color: '#1571BA' }}>
                     {job.title}
                   </h2>
                   <p className="text-sm text-muted-foreground mb-6">
