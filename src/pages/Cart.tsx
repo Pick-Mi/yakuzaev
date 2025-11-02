@@ -33,7 +33,10 @@ const Cart = () => {
     );
   }
 
-  const subtotal = items.reduce((sum, item) => sum + (parseFloat(item.price.toString().replace(/[^0-9.]/g, '')) * item.quantity), 0);
+  const subtotal = items.reduce((sum, item) => {
+    const price = item.price ? parseFloat(item.price.toString().replace(/[^0-9.]/g, '')) : 0;
+    return sum + (price * item.quantity);
+  }, 0);
   const discount = 1250; // Fixed discount from reference
   const totalAmount = subtotal - discount;
 
@@ -84,7 +87,7 @@ const Cart = () => {
                       </div>
                       
                       <p className="text-[17px] md:text-[18px] font-semibold text-black pt-1" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                        ₹{parseFloat(item.price.toString().replace(/[^0-9.]/g, '')).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                        ₹{item.price ? parseFloat(item.price.toString().replace(/[^0-9.]/g, '')).toLocaleString('en-IN', { minimumFractionDigits: 2 }) : '0.00'}
                       </p>
                       
                       {/* Quantity Controls */}
