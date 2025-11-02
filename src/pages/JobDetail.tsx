@@ -88,7 +88,7 @@ const JobDetail = () => {
 
             {/* Sidebar */}
             <div className="lg:col-span-1">
-              <div className="bg-card border rounded-lg p-6 sticky top-24 space-y-6">
+              <div className="bg-card p-6 sticky top-24 space-y-6">
                 {/* Openings Info */}
                 <div className="flex items-center justify-between pb-4 border-b">
                   <div className="flex items-center gap-2">
@@ -143,10 +143,10 @@ const JobDetail = () => {
 
                 {/* Action Buttons */}
                 <div className="space-y-3 pt-4">
-                  <Button variant="outline" className="w-full">
+                  <Button variant="outline" className="w-full rounded-none">
                     Refer a Friend
                   </Button>
-                  <Button className="w-full bg-black text-white hover:bg-black/90 dark:bg-white dark:text-black dark:hover:bg-white/90">
+                  <Button className="w-full rounded-none bg-black text-white hover:bg-black/90 dark:bg-white dark:text-black dark:hover:bg-white/90">
                     Apply
                   </Button>
                 </div>
