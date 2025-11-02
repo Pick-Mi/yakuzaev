@@ -72,7 +72,7 @@ const Careers = () => {
             {jobOpportunities.map((job) => (
               <div
                 key={job.id}
-                className="bg-white p-6 flex flex-col justify-between hover:shadow-lg transition-shadow"
+                className="group bg-white p-6 flex flex-col justify-between hover:shadow-lg transition-shadow relative"
               >
                 <div>
                   <h2 className="text-base font-semibold text-primary uppercase mb-4 tracking-wide">
@@ -95,6 +95,13 @@ const Careers = () => {
                       <span>{String(job.locations).padStart(2, '0')}</span>
                     </div>
                   </div>
+                </div>
+
+                {/* Apply Now Button - Shows on Hover */}
+                <div className="opacity-0 group-hover:opacity-100 transition-opacity mt-4">
+                  <Button className="w-full bg-black text-white hover:bg-black/90 dark:bg-white dark:text-black dark:hover:bg-white/90">
+                    Apply Now
+                  </Button>
                 </div>
               </div>
             ))}
