@@ -27,6 +27,7 @@ import BecomeDealer from "./pages/BecomeDealer";
 import DealerApplication from "./pages/DealerApplication";
 import AboutUs from "./pages/AboutUs";
 import Sitemap from "./pages/Sitemap";
+import ContactUs from "./pages/ContactUs";
 import ProductRedirect from "./components/ProductRedirect";
 
 import NotFound from "./pages/NotFound";
@@ -53,6 +54,7 @@ const App = () => (
               <Route path="/dealer-application" element={<DealerApplication />} />
               <Route path="/about-us" element={<AboutUs />} />
               <Route path="/sitemap" element={<Sitemap />} />
+              <Route path="/contact-us" element={<ContactUs />} />
               <Route path="/products/:id" element={<Product />} />
               <Route path="/profile" element={
                 <ProtectedRoute>
