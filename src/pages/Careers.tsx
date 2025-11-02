@@ -61,7 +61,7 @@ const Careers = () => {
       <Header />
       <CareersHero />
       <main className="flex-1 bg-background">
-        <div id="opportunities" className="container mx-auto max-w-[1280px]">
+        <div id="opportunities" className="max-w-[1280px]">
           {/* Header */}
           <h1 className="text-4xl md:text-5xl font-semibold mb-16 text-foreground">
             Some opportunities for you to explore
