@@ -72,7 +72,7 @@ const Careers = () => {
             {jobOpportunities.map((job) => (
               <div
                 key={job.id}
-                className="group bg-white p-6 flex flex-col justify-between hover:shadow-lg transition-shadow relative h-[280px]"
+                className="group bg-white p-6 flex flex-col relative h-[280px] hover:shadow-lg transition-shadow overflow-hidden"
               >
                 <div>
                   <h2 className="text-base font-semibold text-primary uppercase mb-4 tracking-wide">
@@ -83,7 +83,8 @@ const Careers = () => {
                   </p>
                 </div>
 
-                <div className="flex items-center justify-between text-sm transition-transform group-hover:-translate-y-2">
+                {/* Bottom Info Section */}
+                <div className="absolute bottom-6 left-6 right-6 flex items-center justify-between text-sm transition-all duration-300 group-hover:bottom-[70px]">
                   <span className="text-green-600 font-medium">{job.type}</span>
                   <div className="flex items-center gap-3 text-muted-foreground">
                     <div className="flex items-center gap-1">
@@ -98,8 +99,8 @@ const Careers = () => {
                 </div>
 
                 {/* Apply Now Button - Shows on Hover */}
-                <div className="h-0 opacity-0 group-hover:h-auto group-hover:opacity-100 transition-all duration-300 overflow-hidden">
-                  <Button className="w-full rounded-none bg-black text-white hover:bg-black/90 dark:bg-white dark:text-black dark:hover:bg-white/90 mt-4">
+                <div className="absolute bottom-6 left-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <Button className="w-full rounded-none bg-black text-white hover:bg-black/90 dark:bg-white dark:text-black dark:hover:bg-white/90">
                     Apply Now
                   </Button>
                 </div>
