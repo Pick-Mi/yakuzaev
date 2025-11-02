@@ -72,7 +72,7 @@ const Careers = () => {
             {jobOpportunities.map((job) => (
               <div
                 key={job.id}
-                className="group bg-white p-6 flex flex-col justify-between hover:shadow-lg transition-shadow relative"
+                className="group bg-white p-6 flex flex-col justify-between hover:shadow-lg transition-shadow relative h-[280px]"
               >
                 <div>
                   <h2 className="text-base font-semibold text-primary uppercase mb-4 tracking-wide">
