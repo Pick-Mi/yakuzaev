@@ -94,16 +94,6 @@ const BlogDetail = () => {
             {blog.title}
           </h1>
 
-          {/* Featured Image */}
-          {blog.featured_image && (
-            <div className="relative w-full h-[300px] sm:h-[400px] md:h-[500px] mb-8 sm:mb-10 md:mb-12 overflow-hidden rounded-lg">
-              <img
-                src={blog.featured_image}
-                alt={blog.title}
-                className="w-full h-full object-cover"
-              />
-            </div>
-          )}
 
           {/* Blog Content */}
           <div 
