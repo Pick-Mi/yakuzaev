@@ -20,8 +20,8 @@ const Footer = () => {
                 Yakuza Stores
               </h3>
               <div className="flex flex-col gap-5">
-                <Link to="/dealers" className="text-base opacity-70 hover:opacity-100 transition-opacity" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                  Become a Dealers
+                <Link to="/become-dealer" className="text-base opacity-70 hover:opacity-100 transition-opacity" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                  Become a Dealer
                 </Link>
               </div>
             </div>
@@ -32,11 +32,8 @@ const Footer = () => {
                 Product
               </h3>
               <div className="flex flex-col gap-5">
-                <Link to="/about" className="text-base opacity-70 hover:opacity-100 transition-opacity" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                <Link to="/about-us" className="text-base opacity-70 hover:opacity-100 transition-opacity" style={{ fontFamily: 'Poppins, sans-serif' }}>
                   About Us
-                </Link>
-                <Link to="/careers" className="text-base opacity-70 hover:opacity-100 transition-opacity" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                  Careers
                 </Link>
                 <Link to="/blogs" className="text-base opacity-70 hover:opacity-100 transition-opacity" style={{ fontFamily: 'Poppins, sans-serif' }}>
                   Blogs
@@ -53,7 +50,7 @@ const Footer = () => {
                 <Link to="/cart" className="text-base opacity-70 hover:opacity-100 transition-opacity" style={{ fontFamily: 'Poppins, sans-serif' }}>
                   Cart
                 </Link>
-                <Link to="/contact" className="text-base opacity-70 hover:opacity-100 transition-opacity" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                <Link to="/contact-us" className="text-base opacity-70 hover:opacity-100 transition-opacity" style={{ fontFamily: 'Poppins, sans-serif' }}>
                   Contact Us
                 </Link>
               </div>
@@ -108,8 +105,6 @@ const Footer = () => {
 
           {/* Privacy Links */}
           <div className="flex gap-4 text-xs" style={{ fontFamily: 'Poppins, sans-serif' }}>
-            <Link to="/privacy" className="hover:underline">Privacy Policy</Link>
-            <Link to="/disclaimer" className="hover:underline">Site Disclaimer</Link>
             <Link to="/sitemap" className="hover:underline">Sitemap</Link>
           </div>
         </div>
