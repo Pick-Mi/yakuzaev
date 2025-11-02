@@ -88,7 +88,7 @@ const JobDetail = () => {
 
             {/* Sidebar */}
             <div className="lg:col-span-1">
-              <div className="bg-card p-6 sticky top-24 space-y-6">
+              <div className="bg-white dark:bg-neutral-950 p-6 sticky top-24 space-y-6">
                 {/* Openings Info */}
                 <div className="flex items-center justify-between pb-4 border-b">
                   <div className="flex items-center gap-2">
