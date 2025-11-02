@@ -61,7 +61,7 @@ const Careers = () => {
       <Header />
       <CareersHero />
       <main className="flex-1 bg-background">
-        <div id="opportunities" className="max-w-[1280px]" style={{ padding: '70px' }}>
+        <div id="opportunities" className="w-full" style={{ padding: '70px' }}>
           {/* Header */}
           <h1 className="text-4xl md:text-5xl font-semibold mb-16 text-foreground">
             Some opportunities for you to explore
