@@ -14,20 +14,6 @@ const CareersHero = () => {
       {/* Dark Overlay */}
       <div className="absolute inset-0 bg-black/50" />
 
-      {/* Action Button Section */}
-      <div className="absolute z-10 flex flex-col gap-5 items-center right-[70px] top-[610px] w-[289px] max-lg:left-5 max-lg:top-auto max-lg:bottom-10">
-        <div className="flex gap-5 items-center w-full max-md:flex-col max-md:gap-4 max-md:w-full">
-          <a
-            href="#opportunities"
-            className="bg-white flex gap-2.5 items-center justify-center overflow-hidden px-[23px] py-[13px] transition-all hover:bg-gray-100 active:scale-95 max-md:w-full max-md:h-[50px]"
-          >
-            <span className="font-['Poppins'] font-medium leading-normal text-black text-base whitespace-nowrap">
-              Explore All Jobs
-            </span>
-          </a>
-        </div>
-      </div>
-
       {/* Main Content Section */}
       <div className="absolute z-10 flex flex-col gap-[35px] items-start left-[70px] top-[460px] w-[635px] max-lg:left-5 max-lg:right-5 max-lg:w-auto max-md:top-auto max-md:bottom-[200px]">
         {/* Main Title */}
