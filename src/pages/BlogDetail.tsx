@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -20,6 +20,13 @@ const BlogDetail = () => {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
   const [blog, setBlog] = useState<BlogPost | null>(null);
+  const [relatedBlogs, setRelatedBlogs] = useState<Array<{
+    id: string;
+    title: string;
+    excerpt: string;
+    featured_image: string;
+    slug: string;
+  }>>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -32,15 +39,25 @@ const BlogDetail = () => {
           .select("*")
           .eq("slug", slug)
           .eq("status", "published")
-          .single();
+          .maybeSingle();
 
-        if (error) {
+        if (error || !data) {
           console.error("Error fetching blog:", error);
           navigate("/blogs");
           return;
         }
 
         setBlog(data);
+
+        // Fetch related blogs (other published blogs)
+        const { data: relatedData } = await supabase
+          .from("blog_posts")
+          .select("id, title, excerpt, featured_image, slug")
+          .eq("status", "published")
+          .neq("id", data.id)
+          .limit(3);
+
+        setRelatedBlogs(relatedData || []);
       } catch (error) {
         console.error("Error fetching blog:", error);
         navigate("/blogs");
@@ -124,6 +141,41 @@ const BlogDetail = () => {
             </div>
           )}
         </article>
+
+        {/* Related Blogs Section */}
+        {relatedBlogs.length > 0 && (
+          <section className="max-w-[1300px] mx-auto mt-16 pt-12 border-t border-border">
+            <h2 className="font-['Inter',sans-serif] font-medium text-2xl sm:text-3xl md:text-[36px] text-foreground mb-8 sm:mb-10 md:mb-12">
+              More Articles
+            </h2>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 md:gap-[40px]">
+              {relatedBlogs.map((relatedBlog) => (
+                <Link 
+                  key={relatedBlog.id} 
+                  to={`/blogs/${relatedBlog.slug}`}
+                  className="bg-white w-full overflow-hidden shadow-sm hover:shadow-md transition-shadow block"
+                >
+                  <div className="relative w-full h-[200px] sm:h-[220px] md:h-[244px] bg-muted">
+                    <img 
+                      src={relatedBlog.featured_image || "/placeholder.svg"} 
+                      alt={relatedBlog.title}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="p-4 sm:p-[18px] md:p-[20px] flex flex-col gap-2 md:gap-[9.403px]">
+                    <h3 className="font-['Inter',sans-serif] font-semibold text-lg sm:text-xl md:text-[22px] text-foreground capitalize leading-tight sm:leading-normal">
+                      {relatedBlog.title}
+                    </h3>
+                    <p className="font-['Inter',sans-serif] font-normal text-sm sm:text-[15px] md:text-[15.386px] text-muted-foreground line-clamp-3">
+                      {relatedBlog.excerpt}
+                    </p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
       </main>
 
       <Footer />
