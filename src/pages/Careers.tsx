@@ -118,7 +118,7 @@ const Careers = () => {
             <h2 className="text-4xl md:text-5xl font-semibold mb-8 text-foreground">
               Join Our Team
             </h2>
-            <div className="space-y-6 text-foreground/80 max-w-4xl">
+            <div className="space-y-6 text-foreground/80 w-full">
               <p className="text-base leading-relaxed">
                 we're always looking for passionate, creative, and dedicated professionals to join our growing family. Whether you're a designer, developer, marketer, or strategist — your next career move could start here.
               </p>
