@@ -99,7 +99,7 @@ const Careers = () => {
 
                 {/* Apply Now Button - Shows on Hover */}
                 <div className="opacity-0 group-hover:opacity-100 transition-opacity mt-4">
-                  <Button className="w-full bg-black text-white hover:bg-black/90 dark:bg-white dark:text-black dark:hover:bg-white/90">
+                  <Button className="w-full rounded-none bg-black text-white hover:bg-black/90 dark:bg-white dark:text-black dark:hover:bg-white/90">
                     Apply Now
                   </Button>
                 </div>
