@@ -8,6 +8,7 @@ const BlogSection = () => {
     title: string;
     excerpt: string;
     featured_image: string;
+    slug: string;
   }>>([]);
 
   useEffect(() => {
@@ -15,7 +16,7 @@ const BlogSection = () => {
       try {
         const { data, error } = await supabase
           .from("blog_posts")
-          .select("id, title, excerpt, featured_image")
+          .select("id, title, excerpt, featured_image, slug")
           .eq("status", "published")
           .limit(3);
 
@@ -43,7 +44,7 @@ const BlogSection = () => {
           
           <div className="flex gap-6 sm:gap-8 md:gap-[40px] overflow-x-auto pb-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
             {blogs.map((blog) => (
-              <div key={blog.id} className="bg-white w-[280px] sm:w-[300px] md:w-[350px] lg:w-[407px] h-auto md:h-[388px] shrink-0 overflow-hidden">
+              <Link key={blog.id} to={`/blogs/${blog.slug}`} className="block bg-white w-[280px] sm:w-[300px] md:w-[350px] lg:w-[407px] h-auto md:h-[388px] shrink-0 overflow-hidden hover:shadow-lg transition-shadow">
                 <div className="relative w-full h-[180px] sm:h-[200px] md:h-[244px] bg-[#d9d9d9]">
                   <img 
                     src={blog.featured_image || "/placeholder.svg"} 
@@ -59,7 +60,7 @@ const BlogSection = () => {
                     {blog.excerpt}
                   </p>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
           

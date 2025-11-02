@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { supabase } from "@/integrations/supabase/client";
@@ -10,6 +11,7 @@ const Blogs = () => {
     excerpt: string;
     featured_image: string;
     published_at: string;
+    slug: string;
   }>>([]);
 
   useEffect(() => {
@@ -17,7 +19,7 @@ const Blogs = () => {
       try {
         const { data, error } = await supabase
           .from("blog_posts")
-          .select("id, title, excerpt, featured_image, published_at")
+          .select("id, title, excerpt, featured_image, published_at, slug")
           .eq("status", "published")
           .order("published_at", { ascending: false });
 
@@ -46,7 +48,11 @@ const Blogs = () => {
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[40px]">
             {blogs.map((blog) => (
-              <div key={blog.id} className="bg-white w-full overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+              <Link 
+                key={blog.id} 
+                to={`/blogs/${blog.slug}`}
+                className="bg-white w-full overflow-hidden shadow-sm hover:shadow-md transition-shadow block"
+              >
                 <div className="relative w-full h-[244px] bg-[#d9d9d9]">
                   <img 
                     src={blog.featured_image || "/placeholder.svg"} 
@@ -62,7 +68,7 @@ const Blogs = () => {
                     {blog.excerpt}
                   </p>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
 

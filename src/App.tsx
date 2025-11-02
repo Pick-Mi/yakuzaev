@@ -13,6 +13,7 @@ import Cart from "./pages/Cart";
 import Product from "./pages/Product";
 import Products from "./pages/Products";
 import Blogs from "./pages/Blogs";
+import BlogDetail from "./pages/BlogDetail";
 import Profile from "./pages/Profile";
 import ProfileSetup from "./pages/ProfileSetup";
 import Checkout from "./pages/Checkout";
@@ -47,6 +48,7 @@ const App = () => (
               <Route path="/profile-setup" element={<ProfileSetup />} />
               <Route path="/products" element={<Products />} />
               <Route path="/blogs" element={<Blogs />} />
+              <Route path="/blogs/:slug" element={<BlogDetail />} />
               <Route path="/become-dealer" element={<BecomeDealer />} />
               <Route path="/dealer-application" element={<DealerApplication />} />
               <Route path="/about-us" element={<AboutUs />} />
