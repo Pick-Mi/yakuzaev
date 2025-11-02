@@ -8,7 +8,7 @@ const jobOpportunities = [
   {
     id: 1,
     title: "TECHNICAL SUPPORT ENGINEERS",
-    description: "Provide voice-based support to international/domestic customers over the phone (Inbound and Outbound). Build a rapport with customers with clear and c...",
+    description: "Provide voice-based support to international/domestic customers over the phone (Inbound and Outbound)",
     type: "Full time",
     openings: 10,
     locations: 2,
@@ -16,7 +16,7 @@ const jobOpportunities = [
   {
     id: 2,
     title: "TECHNICAL SUPPORT ENGINEERS",
-    description: "Provide voice-based support to international/domestic customers over the phone (Inbound and Outbound). Build a rapport with customers with clear and c...",
+    description: "Provide voice-based support to international/domestic customers over the phone (Inbound and Outbound)",
     type: "Full time",
     openings: 10,
     locations: 2,
@@ -24,7 +24,7 @@ const jobOpportunities = [
   {
     id: 3,
     title: "TECHNICAL SUPPORT ENGINEERS",
-    description: "Provide voice-based support to international/domestic customers over the phone (Inbound and Outbound). Build a rapport with customers with clear and c...",
+    description: "Provide voice-based support to international/domestic customers over the phone (Inbound and Outbound)",
     type: "Full time",
     openings: 10,
     locations: 2,
@@ -32,7 +32,7 @@ const jobOpportunities = [
   {
     id: 4,
     title: "TECHNICAL SUPPORT ENGINEERS",
-    description: "Provide voice-based support to international/domestic customers over the phone (Inbound and Outbound). Build a rapport with customers with clear and c...",
+    description: "Provide voice-based support to international/domestic customers over the phone (Inbound and Outbound)",
     type: "Full time",
     openings: 10,
     locations: 2,
@@ -40,7 +40,7 @@ const jobOpportunities = [
   {
     id: 5,
     title: "TECHNICAL SUPPORT ENGINEERS",
-    description: "Provide voice-based support to international/domestic customers over the phone (Inbound and Outbound). Build a rapport with customers with clear and c...",
+    description: "Provide voice-based support to international/domestic customers over the phone (Inbound and Outbound)",
     type: "Full time",
     openings: 10,
     locations: 2,
@@ -48,7 +48,7 @@ const jobOpportunities = [
   {
     id: 6,
     title: "TECHNICAL SUPPORT ENGINEERS",
-    description: "Provide voice-based support to international/domestic customers over the phone (Inbound and Outbound). Build a rapport with customers with clear and c...",
+    description: "Provide voice-based support to international/domestic customers over the phone (Inbound and Outbound)",
     type: "Full time",
     openings: 10,
     locations: 2,
