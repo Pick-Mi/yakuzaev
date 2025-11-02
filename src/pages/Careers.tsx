@@ -62,21 +62,6 @@ const Careers = () => {
       <CareersHero />
       <main className="flex-1 bg-background">
         <div id="opportunities" className="container mx-auto px-4 py-16 md:px-20 max-w-[1280px]">
-          {/* Join Our Team Section */}
-          <div className="mb-16">
-            <h2 className="text-4xl md:text-5xl font-semibold mb-8 text-foreground">
-              Join Our Team
-            </h2>
-            <div className="space-y-6 text-foreground/80 max-w-4xl">
-              <p className="text-base leading-relaxed">
-                we're always looking for passionate, creative, and dedicated professionals to join our growing family. Whether you're a designer, developer, marketer, or strategist — your next career move could start here.
-              </p>
-              <p className="text-base leading-relaxed">
-                We're not just building designs — we're shaping experiences. If you're passionate, curious, and ready to take challenges that spark your creativity, this is the place for you. Drop your details below and let's build something amazing together.
-              </p>
-            </div>
-          </div>
-
           {/* Header */}
           <h1 className="text-4xl md:text-5xl font-semibold mb-16 text-foreground">
             Some opportunities for you to explore
@@ -123,6 +108,24 @@ const Careers = () => {
                 </div>
               </div>
             ))}
+          </div>
+
+          {/* Divider */}
+          <div className="my-16 border-t border-border"></div>
+
+          {/* Join Our Team Section */}
+          <div className="mb-16">
+            <h2 className="text-4xl md:text-5xl font-semibold mb-8 text-foreground">
+              Join Our Team
+            </h2>
+            <div className="space-y-6 text-foreground/80 max-w-4xl">
+              <p className="text-base leading-relaxed">
+                we're always looking for passionate, creative, and dedicated professionals to join our growing family. Whether you're a designer, developer, marketer, or strategist — your next career move could start here.
+              </p>
+              <p className="text-base leading-relaxed">
+                We're not just building designs — we're shaping experiences. If you're passionate, curious, and ready to take challenges that spark your creativity, this is the place for you. Drop your details below and let's build something amazing together.
+              </p>
+            </div>
           </div>
         </div>
       </main>
