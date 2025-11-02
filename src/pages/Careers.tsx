@@ -68,7 +68,7 @@ const Careers = () => {
           </h1>
 
           {/* Job Grid */}
-          <div className="grid gap-6" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))' }}>
+          <div className="grid grid-cols-1 gap-6">
             {jobOpportunities.map((job) => (
               <div
                 key={job.id}
