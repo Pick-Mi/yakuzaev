@@ -114,7 +114,7 @@ const Careers = () => {
           <div className="my-16 border-t border-border"></div>
 
           {/* Join Our Team Section */}
-          <div className="mb-16">
+          <div className="mb-16 w-full">
             <h2 className="text-4xl md:text-5xl font-semibold mb-8 text-foreground">
               Join Our Team
             </h2>
