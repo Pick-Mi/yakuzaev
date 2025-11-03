@@ -293,10 +293,11 @@ const JobApplication = () => {
             </div>
 
             {/* Job Information */}
-            <div className="bg-white dark:bg-neutral-950 rounded-lg p-8 space-y-6">
-              <h2 className="text-xl font-semibold text-foreground">Job Information</h2>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              <div className="bg-white dark:bg-neutral-950 p-8 space-y-6">
+                <h2 className="text-xl font-semibold text-foreground">Job Information</h2>
+                
+                <div className="grid grid-cols-1 gap-6">
                 <div className="space-y-2">
                   <Label htmlFor="experienceYears">Experience in Years</Label>
                   <Select onValueChange={(value) => setValue("experienceYears", value)}>
@@ -361,6 +362,7 @@ const JobApplication = () => {
                       <SelectItem value="Singapore">Singapore</SelectItem>
                     </SelectContent>
                   </Select>
+                </div>
                 </div>
               </div>
             </div>
