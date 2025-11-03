@@ -48,7 +48,7 @@ const ContactUs = () => {
           {/* Left Sidebar */}
           <aside className="space-y-6">
             {/* Need Help Card */}
-            <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+            <div className="bg-white p-6 shadow-sm">
               <h2 className="text-xl font-semibold mb-3 text-gray-900">Need more help?</h2>
               <p className="text-sm text-gray-600 mb-4 leading-relaxed">
                 Get the help you need from our automated assistant, or contact an agent
@@ -60,7 +60,7 @@ const ContactUs = () => {
             </div>
 
             {/* Type of Issue & Help Topics */}
-            <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+            <div className="bg-white p-6 shadow-sm">
               {/* Type of Issue */}
               <div>
                 <h3 className="text-base font-bold mb-4 text-gray-900 uppercase tracking-wide">TYPE OF ISSUE</h3>
@@ -99,7 +99,7 @@ const ContactUs = () => {
           {/* Main Content */}
           <div className="space-y-10">
             {/* Suggestions */}
-            <section className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+            <section className="bg-white p-6 shadow-sm">
               <h2 className="text-2xl font-semibold mb-2 text-gray-900">Suggestions for you</h2>
               <p className="text-sm text-gray-600 mb-6">Select an action or article to learn more</p>
               
@@ -124,7 +124,7 @@ const ContactUs = () => {
             </section>
 
             {/* Delivery Related */}
-            <section className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+            <section className="bg-white p-6 shadow-sm">
               <h2 className="text-2xl font-semibold mb-6 text-gray-900">Delivery related</h2>
               
               <div className="space-y-4">
