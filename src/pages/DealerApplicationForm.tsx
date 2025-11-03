@@ -697,7 +697,11 @@ const DealerApplication = () => {
             <Button
               onClick={handlePrevious}
               disabled={currentStep === 0}
-              className="px-12 h-12 text-base bg-gray-300 text-gray-500 hover:bg-gray-300 rounded-none cursor-not-allowed"
+              className={`px-12 h-12 text-base rounded-none ${
+                currentStep === 0 
+                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed' 
+                  : 'bg-gray-300 text-gray-700 hover:bg-gray-400'
+              }`}
             >
               Previous
             </Button>
