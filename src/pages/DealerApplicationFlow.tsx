@@ -20,7 +20,7 @@ const DealerApplicationFlow = () => {
   const [isVerifying, setIsVerifying] = useState(false);
   
   // Test OTP for development
-  const TEST_OTP = "123456";
+  const TEST_OTP = "1234";
 
   const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,7 +39,7 @@ const DealerApplicationFlow = () => {
   };
 
   const handleOTPVerify = async () => {
-    if (otp.length !== 6) {
+    if (otp.length !== 4) {
       toast.error("Please enter complete OTP");
       return;
     }
@@ -132,59 +132,62 @@ const DealerApplicationFlow = () => {
   );
 
   const renderOTPStep = () => (
-    <div className="min-h-[80vh] flex items-center justify-center px-4">
-      <div className="max-w-md w-full space-y-8">
-        <div className="text-center space-y-2">
-          <h2 className="text-3xl font-bold">Enter Verification Code</h2>
-          <p className="text-muted-foreground">
-            We've sent a 6-digit code to {email}
-          </p>
-          <p className="text-sm font-mono bg-muted p-2 rounded mt-4">
-            Test OTP: {TEST_OTP}
+    <div className="min-h-[calc(100vh-8rem)] flex items-center justify-center px-4">
+      <div className="max-w-2xl w-full bg-white p-12 md:p-16 shadow-sm">
+        <div className="text-center space-y-4 mb-8">
+          <h2 className="text-2xl md:text-3xl font-normal">
+            Verify your Authenticator app
+          </h2>
+          <p className="text-sm">
+            We emailed you a four digit code to <span className="font-medium">{email}</span>
+            <br />
+            <Button
+              type="button"
+              variant="link"
+              className="p-0 h-auto text-blue-600 hover:text-blue-700"
+              onClick={() => setCurrentStep("email")}
+            >
+              Change
+            </Button>{" "}
+            enter the code below to confirm your email address.
           </p>
         </div>
 
-        <div className="space-y-6">
-          <div className="flex justify-center">
+        <div className="space-y-8">
+          <div className="flex justify-center gap-3">
             <InputOTP
-              maxLength={6}
+              maxLength={4}
               value={otp}
               onChange={(value) => setOtp(value)}
             >
-              <InputOTPGroup>
-                <InputOTPSlot index={0} />
-                <InputOTPSlot index={1} />
-                <InputOTPSlot index={2} />
-                <InputOTPSlot index={3} />
-                <InputOTPSlot index={4} />
-                <InputOTPSlot index={5} />
+              <InputOTPGroup className="gap-3">
+                <InputOTPSlot index={0} className="w-14 h-14 text-xl" />
+                <InputOTPSlot index={1} className="w-14 h-14 text-xl" />
+                <InputOTPSlot index={2} className="w-14 h-14 text-xl" />
+                <InputOTPSlot index={3} className="w-14 h-14 text-xl" />
               </InputOTPGroup>
             </InputOTP>
           </div>
 
-          <Button 
-            onClick={handleOTPVerify}
-            disabled={isVerifying || otp.length !== 6}
-            className="w-full h-12 bg-black text-white hover:bg-black/90"
-          >
-            {isVerifying ? "Verifying..." : "Verify Code"}
-          </Button>
-
-          <div className="text-center space-y-2">
+          <div className="text-center text-sm">
+            If you didn't receive a code ?{" "}
             <Button
               type="button"
               variant="link"
+              className="p-0 h-auto text-blue-600 hover:text-blue-700"
               onClick={() => handleEmailSubmit(new Event("submit") as any)}
             >
-              Resend Code
+              Resend
             </Button>
-            <Button
-              type="button"
-              variant="ghost"
-              className="w-full"
-              onClick={() => setCurrentStep("email")}
+          </div>
+
+          <div className="flex justify-center">
+            <Button 
+              onClick={handleOTPVerify}
+              disabled={isVerifying || otp.length !== 4}
+              className="px-12 h-12 bg-black text-white hover:bg-black/90 rounded-none"
             >
-              Change Email
+              {isVerifying ? "Verifying..." : "Verify"}
             </Button>
           </div>
         </div>
