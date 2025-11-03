@@ -41,32 +41,32 @@ const ContactUs = () => {
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
       
-      <main className="flex-1 container mx-auto px-4 py-8 mt-32">
-        <h1 className="text-4xl font-bold mb-8 text-foreground">Customer Service</h1>
+      <main className="flex-1 container mx-auto px-4 py-8 mt-32 max-w-7xl">
+        <h1 className="text-3xl font-semibold mb-8 text-foreground">Customer Service</h1>
         
-        <div className="grid md:grid-cols-[300px_1fr] gap-6">
+        <div className="grid lg:grid-cols-[280px_1fr] gap-8">
           {/* Left Sidebar */}
           <aside className="space-y-6">
             {/* Need Help Card */}
-            <div className="bg-card border border-border rounded-lg p-6">
-              <h2 className="text-lg font-semibold mb-3 text-foreground">Need more help?</h2>
-              <p className="text-sm text-muted-foreground mb-4">
+            <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+              <h2 className="text-xl font-semibold mb-3 text-gray-900">Need more help?</h2>
+              <p className="text-sm text-gray-600 mb-4 leading-relaxed">
                 Get the help you need from our automated assistant, or contact an agent
               </p>
-              <Button className="w-full bg-orange-500 hover:bg-orange-600 text-white">
+              <Button className="w-full bg-orange-500 hover:bg-orange-600 text-white rounded-md h-11">
                 <MessageCircle className="w-4 h-4 mr-2" />
-                Contact via WhatsApp
+                Contact With WhatsApp
               </Button>
             </div>
 
             {/* Type of Issue */}
             <div>
-              <h3 className="text-lg font-bold mb-4 text-foreground">TYPE OF ISSUE</h3>
+              <h3 className="text-base font-bold mb-4 text-gray-900 uppercase tracking-wide">TYPE OF ISSUE</h3>
               <div className="space-y-3">
                 {issueTypes.map((issue, index) => (
                   <button
                     key={index}
-                    className="block w-full text-left text-sm text-foreground hover:text-primary transition-colors"
+                    className="block w-full text-left text-base text-gray-700 hover:text-gray-900 transition-colors"
                   >
                     {issue}
                   </button>
@@ -76,12 +76,12 @@ const ContactUs = () => {
 
             {/* Help Topics */}
             <div>
-              <h3 className="text-lg font-bold mb-4 text-foreground">HELP TOPICS</h3>
+              <h3 className="text-base font-bold mb-4 text-gray-900 uppercase tracking-wide">HELP TOPICS</h3>
               <div className="space-y-3">
                 {helpTopics.map((topic, index) => (
                   <button
                     key={index}
-                    className="block w-full text-left text-sm text-foreground hover:text-primary transition-colors"
+                    className="block w-full text-left text-base text-gray-700 hover:text-gray-900 transition-colors"
                   >
                     {topic}
                   </button>
@@ -91,26 +91,26 @@ const ContactUs = () => {
           </aside>
 
           {/* Main Content */}
-          <div className="space-y-8">
+          <div className="space-y-10">
             {/* Suggestions */}
             <section>
-              <h2 className="text-xl font-semibold mb-2 text-foreground">Suggestions for you</h2>
-              <p className="text-sm text-muted-foreground mb-4">Select an action or article to learn more</p>
+              <h2 className="text-2xl font-semibold mb-2 text-gray-900">Suggestions for you</h2>
+              <p className="text-sm text-gray-600 mb-6">Select an action or article to learn more</p>
               
               <div className="grid md:grid-cols-2 gap-4">
                 {suggestions.map((suggestion, index) => (
                   <button
                     key={index}
-                    className="bg-card border border-border rounded-lg p-4 text-left hover:shadow-md transition-shadow group"
+                    className="bg-white border border-gray-200 rounded-lg p-5 text-left hover:shadow-md transition-shadow group"
                   >
-                    <div className="flex items-start justify-between">
-                      <div>
-                        <h3 className="font-medium text-foreground mb-1 underline group-hover:text-primary">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex-1">
+                        <h3 className="font-normal text-base text-gray-900 mb-1 underline group-hover:text-blue-600">
                           {suggestion.title}
                         </h3>
-                        <p className="text-sm text-muted-foreground">{suggestion.subtitle}</p>
+                        <p className="text-sm text-gray-500">{suggestion.subtitle}</p>
                       </div>
-                      <ChevronRight className="w-5 h-5 text-muted-foreground flex-shrink-0 ml-2" />
+                      <ChevronRight className="w-5 h-5 text-gray-400 flex-shrink-0 mt-1" />
                     </div>
                   </button>
                 ))}
@@ -119,20 +119,20 @@ const ContactUs = () => {
 
             {/* Delivery Related */}
             <section>
-              <h2 className="text-xl font-semibold mb-4 text-foreground">Delivery related</h2>
+              <h2 className="text-2xl font-semibold mb-6 text-gray-900">Delivery related</h2>
               
-              <div className="space-y-3">
+              <div className="space-y-4">
                 {deliveryQuestions.map((question, index) => (
                   <button
                     key={index}
-                    className="block w-full text-left text-sm text-foreground hover:text-primary hover:underline transition-colors py-2"
+                    className="block w-full text-left text-base text-gray-700 hover:text-gray-900 hover:underline transition-colors py-1"
                   >
                     {question}
                   </button>
                 ))}
               </div>
 
-              <button className="mt-6 text-sm font-semibold text-foreground hover:text-primary">
+              <button className="mt-8 text-base font-semibold text-gray-900 hover:text-gray-700 transition-colors">
                 View More
               </button>
             </section>
