@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import BlogHero from "@/components/BlogHero";
 import { supabase } from "@/integrations/supabase/client";
 
 const Blogs = () => {
@@ -40,7 +41,8 @@ const Blogs = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <main className="w-full py-[60px] px-[70px]">
+      <BlogHero />
+      <main id="blogs-section" className="w-full py-[60px] px-[70px]">
         <div className="max-w-[1300px] mx-auto">
           <h1 className="font-['Inter',sans-serif] font-medium text-[48px] text-[#12141d] mb-[50px]">
             All Blogs
