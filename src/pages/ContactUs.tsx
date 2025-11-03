@@ -54,9 +54,14 @@ const ContactUs = () => {
               <p className="text-sm text-gray-600 mb-4 leading-relaxed">
                 Get the help you need from our automated assistant, or contact an agent
               </p>
-              <Button className="w-full bg-orange-500 hover:bg-orange-600 text-white h-11">
-                <FaWhatsapp className="w-5 h-5 mr-2" />
-                Contact With WhatsApp
+              <Button 
+                className="w-full bg-orange-500 hover:bg-orange-600 text-white h-11"
+                asChild
+              >
+                <a href="https://wa.me/917056009099" target="_blank" rel="noopener noreferrer">
+                  <FaWhatsapp className="w-5 h-5 mr-2" />
+                  Contact With WhatsApp
+                </a>
               </Button>
             </div>
 
