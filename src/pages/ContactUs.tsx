@@ -59,33 +59,39 @@ const ContactUs = () => {
               </Button>
             </div>
 
-            {/* Type of Issue */}
+            {/* Type of Issue & Help Topics */}
             <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
-              <h3 className="text-base font-bold mb-4 text-gray-900 uppercase tracking-wide">TYPE OF ISSUE</h3>
-              <div className="space-y-3">
-                {issueTypes.map((issue, index) => (
-                  <button
-                    key={index}
-                    className="block w-full text-left text-base text-gray-700 hover:text-gray-900 transition-colors"
-                  >
-                    {issue}
-                  </button>
-                ))}
+              {/* Type of Issue */}
+              <div>
+                <h3 className="text-base font-bold mb-4 text-gray-900 uppercase tracking-wide">TYPE OF ISSUE</h3>
+                <div className="space-y-3">
+                  {issueTypes.map((issue, index) => (
+                    <button
+                      key={index}
+                      className="block w-full text-left text-base text-gray-700 hover:text-gray-900 transition-colors"
+                    >
+                      {issue}
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
 
-            {/* Help Topics */}
-            <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
-              <h3 className="text-base font-bold mb-4 text-gray-900 uppercase tracking-wide">HELP TOPICS</h3>
-              <div className="space-y-3">
-                {helpTopics.map((topic, index) => (
-                  <button
-                    key={index}
-                    className="block w-full text-left text-base text-gray-700 hover:text-gray-900 transition-colors"
-                  >
-                    {topic}
-                  </button>
-                ))}
+              {/* Horizontal Divider */}
+              <hr className="my-6 border-gray-200" />
+
+              {/* Help Topics */}
+              <div>
+                <h3 className="text-base font-bold mb-4 text-gray-900 uppercase tracking-wide">HELP TOPICS</h3>
+                <div className="space-y-3">
+                  {helpTopics.map((topic, index) => (
+                    <button
+                      key={index}
+                      className="block w-full text-left text-base text-gray-700 hover:text-gray-900 transition-colors"
+                    >
+                      {topic}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
           </aside>
