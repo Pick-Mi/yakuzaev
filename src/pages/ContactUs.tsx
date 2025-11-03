@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
-import { ChevronRight, MessageCircle } from "lucide-react";
+import { ChevronRight } from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -53,8 +54,8 @@ const ContactUs = () => {
               <p className="text-sm text-gray-600 mb-4 leading-relaxed">
                 Get the help you need from our automated assistant, or contact an agent
               </p>
-              <Button className="w-full bg-orange-500 hover:bg-orange-600 text-white rounded-md h-11">
-                <MessageCircle className="w-4 h-4 mr-2" />
+              <Button className="w-full bg-orange-500 hover:bg-orange-600 text-white h-11">
+                <FaWhatsapp className="w-5 h-5 mr-2" />
                 Contact With WhatsApp
               </Button>
             </div>
