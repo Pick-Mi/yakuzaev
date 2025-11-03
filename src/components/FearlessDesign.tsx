@@ -18,47 +18,36 @@ const ProductCard = ({ product }: ProductCardProps) => {
   const { name, thumbnail, feature1, feature2, price } = product;
 
   return (
-    <div className="bg-white min-h-[450px] sm:h-[500px] md:h-[629px] w-full max-w-[630px] overflow-hidden">
-      <div className="w-full h-[200px] sm:h-[250px] md:h-[329px] bg-gray-200 overflow-hidden">
+    <div className="bg-white w-full overflow-hidden shadow-sm hover:shadow-lg transition-shadow">
+      {/* Product Image */}
+      <div className="w-full aspect-[4/3] bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden">
         <img
           src={thumbnail}
           alt={name}
           className="w-full h-full object-cover"
         />
       </div>
-      <div className="px-4 sm:px-[25px] pb-4 sm:pb-[25px] pt-4">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-[25px] gap-3 sm:gap-0">
-          <div>
-            <h3 className="font-medium text-[18px] sm:text-[20px] md:text-[24px] text-[#212121] mb-1 sm:mb-2">{name}</h3>
-            <p className="text-[14px] sm:text-[15px] md:text-[16px] text-[#4b4f54]">{feature1} {feature2}</p>
+      
+      {/* Product Info */}
+      <div className="px-6 py-6 bg-white">
+        <div className="flex items-start justify-between gap-6">
+          {/* Left: Product Name & Tagline */}
+          <div className="flex-1">
+            <h3 className="text-2xl font-normal text-gray-900 mb-2">{name}</h3>
+            <p className="text-base text-gray-600">{feature1}. {feature2}</p>
           </div>
-          <div className="h-[36.5px] w-[1px] bg-gray-300 mx-4 hidden sm:block" />
-          <div>
-            <p className="text-[12px] sm:text-[13px] md:text-[14px] text-[#4b4f54] opacity-80 mb-1 sm:mb-2">
-              Starting Price
-            </p>
-            <p>
-              <span className="font-medium text-[16px] sm:text-[18px] md:text-[20.939px] text-[#212121]">
-                ₹{price.toFixed(2)}
-              </span>
-              <span className="text-[13px] sm:text-[14px] md:text-[15.705px] text-[#212121] opacity-75 ml-1">
-                / showroom price
-              </span>
+          
+          {/* Vertical Divider */}
+          <div className="w-px h-16 bg-gray-300 mx-4" />
+          
+          {/* Right: Pricing */}
+          <div className="text-right">
+            <p className="text-sm text-gray-600 mb-2">Starting Price</p>
+            <p className="text-xl font-medium text-gray-900">
+              ₹{price.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              <span className="text-sm font-normal text-gray-600 ml-1">/ showroom price</span>
             </p>
           </div>
-        </div>
-        <div className="w-full h-[1px] bg-gray-300 mb-3 sm:mb-[15px]" />
-        <div className="flex flex-col gap-3 sm:gap-[15px]">
-          <Link to={`/products/${product.id}`} className="w-full">
-            <Button className="w-full h-[45px] sm:h-[50px] md:h-[55px] bg-primary text-primary-foreground hover:bg-primary/90 rounded-none text-[14px] sm:text-[15px] md:text-[16px] font-medium">
-              Book Now
-            </Button>
-          </Link>
-          <Link to={`/products/${product.id}`} className="w-full">
-            <Button variant="outline" className="w-full h-[45px] sm:h-[50px] md:h-[55px] bg-background text-foreground border-none rounded-none text-[12px] sm:text-[13px] md:text-[14px] font-medium">
-              Explore {name}
-            </Button>
-          </Link>
         </div>
       </div>
     </div>
