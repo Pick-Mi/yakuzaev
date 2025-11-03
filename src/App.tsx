@@ -57,6 +57,8 @@ const App = () => (
               <Route path="/become-dealer" element={<BecomeDealer />} />
               <Route path="/dealer-application-flow" element={<DealerApplicationFlow />} />
               <Route path="/dealer-application-form" element={<DealerApplicationForm />} />
+              {/* Redirect old dealer application route */}
+              <Route path="/dealer-application" element={<Navigate to="/dealer-application-flow" replace />} />
               <Route path="/about-us" element={<AboutUs />} />
               <Route path="/sitemap" element={<Sitemap />} />
               <Route path="/contact-us" element={<ContactUs />} />
