@@ -42,11 +42,11 @@ const ContactUs = () => {
       <Header />
       
       <main className="flex-1 container mx-auto px-4 py-8 mt-32 max-w-7xl">
-        <h1 className="text-3xl font-semibold mb-8 text-foreground">Customer Service</h1>
         
         <div className="grid lg:grid-cols-[280px_1fr] gap-8">
           {/* Left Sidebar */}
-          <aside className="space-y-6">
+          <aside className="space-y-6 sticky top-32 self-start">
+            <h1 className="text-3xl font-semibold text-foreground">Customer Service</h1>
             {/* Need Help Card */}
             <div className="bg-white p-6 shadow-sm">
               <h2 className="text-xl font-semibold mb-3 text-gray-900">Need more help?</h2>
