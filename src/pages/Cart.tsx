@@ -26,7 +26,7 @@ const Cart = () => {
             </div>
             <Link to="/products">
               <Button 
-                className="bg-foreground text-background hover:bg-foreground/90 px-8 py-6 text-base font-medium rounded-none mt-4"
+                className="bg-foreground text-background hover:bg-foreground/90 px-8 py-6 text-base font-medium rounded-none mt-[40px]"
                 size="lg"
               >
                 <ArrowLeft className="w-5 h-5 mr-2" />
