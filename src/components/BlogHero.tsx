@@ -21,21 +21,20 @@ const BlogHero = () => {
       </div>
 
       {/* Content */}
-      <div className="relative h-full container mx-auto px-4 flex items-center">
-        <div className="max-w-2xl">
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
-            Powering India's EV Future
-          </h1>
-          <p className="text-xl md:text-2xl text-white/90 mb-8 leading-relaxed">
-            Stories, insights, and innovations from Yakuza — where technology meets sustainability.
-          </p>
-          <Button 
-            onClick={scrollToBlogs}
-            className="bg-white text-black hover:bg-white/90 text-lg px-8 py-6 h-auto font-semibold"
-          >
-            Read Now
-          </Button>
-        </div>
+      <div className="absolute bottom-8 sm:bottom-16 md:bottom-24 left-4 sm:left-6 md:left-10 right-4 sm:right-auto w-auto sm:w-[601px] max-w-[calc(100%-2rem)] sm:max-w-[90%] flex flex-col gap-4 sm:gap-6 items-start px-2 sm:px-0 animate-fade-in">
+        <h1 className="font-sans font-normal text-[28px] sm:text-[42px] md:text-[52px] leading-[1.2] sm:leading-[1.4] md:leading-[73px] text-[#FFFFFF] m-0">
+          Powering India's EV Future
+        </h1>
+        <p className="text-sm sm:text-lg md:text-xl text-white/90 mb-2 sm:mb-4">
+          Stories, insights, and innovations from Yakuza — where technology meets sustainability.
+        </p>
+        
+        <Button 
+          onClick={scrollToBlogs}
+          className="flex justify-center items-center gap-[10px] bg-white text-black hover:bg-gray-100 px-[35px] h-[50px] text-[13px] sm:text-[14px] font-medium font-sans rounded-none transition-colors"
+        >
+          Read Now
+        </Button>
       </div>
     </section>
   );
