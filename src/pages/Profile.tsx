@@ -23,6 +23,12 @@ const Profile = () => {
   const [editingAddress, setEditingAddress] = useState<any>(null);
   const [deleteAddressDialogOpen, setDeleteAddressDialogOpen] = useState(false);
   const [addressToDelete, setAddressToDelete] = useState<string | null>(null);
+  const [uploadingId, setUploadingId] = useState(false);
+  const [idProof, setIdProof] = useState({
+    document_type: "",
+    document_number: "",
+    document_file_url: "",
+  });
   
   const [addressForm, setAddressForm] = useState({
     name: "",
@@ -75,6 +81,13 @@ const Profile = () => {
         };
         setProfile(profileData);
         setEditedProfile(profileData);
+        
+        // Set ID proof data
+        setIdProof({
+          document_type: data.document_type || "",
+          document_number: data.document_number || "",
+          document_file_url: data.document_file_url || "",
+        });
       }
     } catch (error) {
       console.error('Error fetching profile:', error);
@@ -249,6 +262,151 @@ const Profile = () => {
       toast({
         title: "Error",
         description: "Failed to delete address",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleIdProofUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Validate file size (5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      toast({
+        title: "Error",
+        description: "File size should be less than 5MB",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    // Validate file type
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'application/pdf'];
+    if (!allowedTypes.includes(file.type)) {
+      toast({
+        title: "Error",
+        description: "Only JPG, PNG, and PDF files are allowed",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setUploadingId(true);
+
+    try {
+      // Delete old file if exists
+      if (idProof.document_file_url) {
+        const oldPath = idProof.document_file_url.split('/').slice(-2).join('/');
+        await supabase.storage.from('id-documents').remove([oldPath]);
+      }
+
+      // Upload new file
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${user?.id}/${Date.now()}.${fileExt}`;
+      
+      const { error: uploadError } = await supabase.storage
+        .from('id-documents')
+        .upload(fileName, file);
+
+      if (uploadError) throw uploadError;
+
+      // Get public URL
+      const { data: { publicUrl } } = supabase.storage
+        .from('id-documents')
+        .getPublicUrl(fileName);
+
+      // Update profile
+      const { error: updateError } = await supabase
+        .from('profiles')
+        .update({
+          document_file_url: publicUrl,
+          document_type: idProof.document_type || 'other',
+          document_number: idProof.document_number,
+        })
+        .eq('user_id', user?.id);
+
+      if (updateError) throw updateError;
+
+      setIdProof({ ...idProof, document_file_url: publicUrl });
+
+      toast({
+        title: "Success",
+        description: "ID proof uploaded successfully",
+      });
+    } catch (error) {
+      console.error('Error uploading ID proof:', error);
+      toast({
+        title: "Error",
+        description: "Failed to upload ID proof",
+        variant: "destructive"
+      });
+    } finally {
+      setUploadingId(false);
+    }
+  };
+
+  const handleDeleteIdProof = async () => {
+    if (!idProof.document_file_url) return;
+
+    try {
+      // Delete file from storage
+      const filePath = idProof.document_file_url.split('/').slice(-2).join('/');
+      await supabase.storage.from('id-documents').remove([filePath]);
+
+      // Update profile
+      const { error } = await supabase
+        .from('profiles')
+        .update({
+          document_file_url: null,
+          document_type: null,
+          document_number: null,
+        })
+        .eq('user_id', user?.id);
+
+      if (error) throw error;
+
+      setIdProof({
+        document_type: "",
+        document_number: "",
+        document_file_url: "",
+      });
+
+      toast({
+        title: "Success",
+        description: "ID proof deleted successfully",
+      });
+    } catch (error) {
+      console.error('Error deleting ID proof:', error);
+      toast({
+        title: "Error",
+        description: "Failed to delete ID proof",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleSaveIdProof = async () => {
+    try {
+      const { error } = await supabase
+        .from('profiles')
+        .update({
+          document_type: idProof.document_type,
+          document_number: idProof.document_number,
+        })
+        .eq('user_id', user?.id);
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: "ID proof details updated successfully",
+      });
+    } catch (error) {
+      console.error('Error saving ID proof:', error);
+      toast({
+        title: "Error",
+        description: "Failed to save ID proof details",
         variant: "destructive"
       });
     }
@@ -555,8 +713,107 @@ const Profile = () => {
 
             {activeSection === "identification" && (
               <div className="border border-gray-200 p-8">
-                <h2 className="text-2xl font-semibold mb-4">Identification Details</h2>
-                <p className="text-gray-600">No identification documents added yet.</p>
+                <h2 className="text-2xl font-semibold mb-6">Identification Details</h2>
+                
+                <div className="space-y-6">
+                  <div>
+                    <Label className="text-sm mb-2 block">Document Type</Label>
+                    <select
+                      value={idProof.document_type}
+                      onChange={(e) => setIdProof({ ...idProof, document_type: e.target.value })}
+                      className="w-full px-3 py-2 border border-gray-300 bg-white rounded-none"
+                    >
+                      <option value="">Select Document Type</option>
+                      <option value="aadhaar">Aadhaar Card</option>
+                      <option value="pan">PAN Card</option>
+                      <option value="passport">Passport</option>
+                      <option value="driving_license">Driving License</option>
+                      <option value="voter_id">Voter ID</option>
+                      <option value="other">Other</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <Label className="text-sm mb-2 block">Document Number</Label>
+                    <Input
+                      value={idProof.document_number}
+                      onChange={(e) => setIdProof({ ...idProof, document_number: e.target.value })}
+                      placeholder="Enter document number"
+                      className="rounded-none"
+                    />
+                  </div>
+
+                  <div>
+                    <Label className="text-sm mb-2 block">Upload Document</Label>
+                    <p className="text-xs text-gray-500 mb-2">
+                      Accepted formats: JPG, PNG, PDF (Max 5MB)
+                    </p>
+                    
+                    {idProof.document_file_url ? (
+                      <div className="border border-gray-200 p-4 rounded-none">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className="text-sm font-medium mb-1">Document Uploaded</p>
+                            <a
+                              href={idProof.document_file_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-sm text-blue-600 hover:underline"
+                            >
+                              View Document
+                            </a>
+                          </div>
+                          <div className="flex gap-2">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => document.getElementById('id-proof-upload')?.click()}
+                              className="rounded-none"
+                              disabled={uploadingId}
+                            >
+                              <Pencil className="w-3 h-3 mr-1" />
+                              Replace
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={handleDeleteIdProof}
+                              className="rounded-none text-red-600 hover:text-red-700"
+                            >
+                              <Trash2 className="w-3 h-3 mr-1" />
+                              Delete
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      <Button
+                        variant="outline"
+                        onClick={() => document.getElementById('id-proof-upload')?.click()}
+                        className="rounded-none w-full"
+                        disabled={uploadingId}
+                      >
+                        <Plus className="w-4 h-4 mr-2" />
+                        {uploadingId ? "Uploading..." : "Upload Document"}
+                      </Button>
+                    )}
+                    
+                    <input
+                      id="id-proof-upload"
+                      type="file"
+                      accept="image/jpeg,image/png,image/jpg,application/pdf"
+                      onChange={handleIdProofUpload}
+                      className="hidden"
+                    />
+                  </div>
+
+                  <Button
+                    onClick={handleSaveIdProof}
+                    className="bg-black hover:bg-gray-800 rounded-none"
+                  >
+                    Save Details
+                  </Button>
+                </div>
               </div>
             )}
           </main>

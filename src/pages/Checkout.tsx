@@ -1,11 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { useCart } from "@/hooks/useCart";
 import { useAuth } from "@/hooks/useAuth";
 import Header from "@/components/Header";
 import PayUPayment from "@/components/PayUPayment";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Upload, X, FileText } from "lucide-react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
@@ -18,6 +20,12 @@ const Checkout = () => {
   const location = useLocation();
   const { toast } = useToast();
   const [userProfile, setUserProfile] = useState<any>(null);
+  const [uploadingId, setUploadingId] = useState(false);
+  const [idProof, setIdProof] = useState({
+    document_type: "",
+    document_number: "",
+    document_file_url: "",
+  });
   
   // Get data from booking confirmation or cart
   const bookingData = location.state;
@@ -39,6 +47,13 @@ const Checkout = () => {
         
         if (profile) {
           setUserProfile(profile);
+          
+          // Load existing ID proof if available
+          setIdProof({
+            document_type: profile.document_type || "",
+            document_number: profile.document_number || "",
+            document_file_url: profile.document_file_url || "",
+          });
         }
       }
     };
@@ -50,6 +65,89 @@ const Checkout = () => {
   const displayItems = isBookingFlow ? bookingData.orderData.order_items_data : items;
   const displayTotal = isBookingFlow ? bookingData.amount : total;
   const displayItemCount = isBookingFlow ? 1 : itemCount;
+
+  const handleIdProofUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Validate file size (5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      toast({
+        title: "Error",
+        description: "File size should be less than 5MB",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    // Validate file type
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'application/pdf'];
+    if (!allowedTypes.includes(file.type)) {
+      toast({
+        title: "Error",
+        description: "Only JPG, PNG, and PDF files are allowed",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setUploadingId(true);
+
+    try {
+      // Delete old file if exists
+      if (idProof.document_file_url) {
+        const oldPath = idProof.document_file_url.split('/').slice(-2).join('/');
+        await supabase.storage.from('id-documents').remove([oldPath]);
+      }
+
+      // Upload new file
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${user?.id}/${Date.now()}.${fileExt}`;
+      
+      const { error: uploadError } = await supabase.storage
+        .from('id-documents')
+        .upload(fileName, file);
+
+      if (uploadError) throw uploadError;
+
+      // Get public URL
+      const { data: { publicUrl } } = supabase.storage
+        .from('id-documents')
+        .getPublicUrl(fileName);
+
+      // Update profile
+      const { error: updateError } = await supabase
+        .from('profiles')
+        .update({
+          document_file_url: publicUrl,
+          document_type: idProof.document_type || 'other',
+          document_number: idProof.document_number,
+        })
+        .eq('user_id', user?.id);
+
+      if (updateError) throw updateError;
+
+      setIdProof({ ...idProof, document_file_url: publicUrl });
+
+      toast({
+        title: "Success",
+        description: "ID proof uploaded successfully",
+      });
+    } catch (error) {
+      console.error('Error uploading ID proof:', error);
+      toast({
+        title: "Error",
+        description: "Failed to upload ID proof",
+        variant: "destructive"
+      });
+    } finally {
+      setUploadingId(false);
+    }
+  };
+
+  const handleRemoveIdProof = () => {
+    setIdProof({ ...idProof, document_file_url: "" });
+  };
 
   if (!isBookingFlow && items.length === 0) {
     return (
@@ -155,6 +253,96 @@ const Checkout = () => {
                   <span className="text-primary">
                     {isBookingFlow ? `₹${displayTotal.toLocaleString('en-IN')}` : displayTotal}
                   </span>
+                </div>
+              </div>
+              
+              <Separator />
+              
+              {/* ID Proof Section */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold">Identification Details (Optional)</h3>
+                <p className="text-sm text-muted-foreground">
+                  Upload your ID proof for verification purposes
+                </p>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label className="text-sm mb-2 block">Document Type</Label>
+                    <select
+                      value={idProof.document_type}
+                      onChange={(e) => setIdProof({ ...idProof, document_type: e.target.value })}
+                      className="w-full px-3 py-2 border border-input bg-background rounded-md"
+                    >
+                      <option value="">Select Type</option>
+                      <option value="aadhaar">Aadhaar Card</option>
+                      <option value="pan">PAN Card</option>
+                      <option value="passport">Passport</option>
+                      <option value="driving_license">Driving License</option>
+                      <option value="voter_id">Voter ID</option>
+                      <option value="other">Other</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <Label className="text-sm mb-2 block">Document Number</Label>
+                    <Input
+                      value={idProof.document_number}
+                      onChange={(e) => setIdProof({ ...idProof, document_number: e.target.value })}
+                      placeholder="Enter document number"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <Label className="text-sm mb-2 block">Upload Document (JPG, PNG, PDF - Max 5MB)</Label>
+                  
+                  {idProof.document_file_url ? (
+                    <div className="border border-input rounded-md p-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <FileText className="w-5 h-5 text-muted-foreground" />
+                          <div>
+                            <p className="text-sm font-medium">Document Uploaded</p>
+                            <a
+                              href={idProof.document_file_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-xs text-primary hover:underline"
+                            >
+                              View Document
+                            </a>
+                          </div>
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={handleRemoveIdProof}
+                          className="text-red-600 hover:text-red-700"
+                        >
+                          <X className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div>
+                      <input
+                        id="id-proof-upload"
+                        type="file"
+                        accept="image/jpeg,image/png,image/jpg,application/pdf"
+                        onChange={handleIdProofUpload}
+                        className="hidden"
+                      />
+                      <Button
+                        variant="outline"
+                        onClick={() => document.getElementById('id-proof-upload')?.click()}
+                        disabled={uploadingId}
+                        className="w-full"
+                      >
+                        <Upload className="w-4 h-4 mr-2" />
+                        {uploadingId ? "Uploading..." : "Upload Document"}
+                      </Button>
+                    </div>
+                  )}
                 </div>
               </div>
               
