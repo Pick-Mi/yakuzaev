@@ -23,6 +23,7 @@ const DealerApplication = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [currentStep, setCurrentStep] = useState(0);
+  const [maxStepReached, setMaxStepReached] = useState(0); // Track highest step reached
   const [userEmail, setUserEmail] = useState("");
   const [userName, setUserName] = useState("");
   
@@ -65,7 +66,12 @@ const DealerApplication = () => {
 
   const handleNext = () => {
     if (currentStep < steps.length - 1) {
-      setCurrentStep(currentStep + 1);
+      const nextStep = currentStep + 1;
+      setCurrentStep(nextStep);
+      // Update max step reached
+      if (nextStep > maxStepReached) {
+        setMaxStepReached(nextStep);
+      }
     } else {
       handleSubmit();
     }
@@ -149,15 +155,15 @@ const DealerApplication = () => {
                 >
                   <button
                     onClick={() => {
-                      if (index <= currentStep) {
+                      if (index <= maxStepReached) {
                         setCurrentStep(index);
                       }
                     }}
-                    disabled={index > currentStep}
+                    disabled={index > maxStepReached}
                     className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-colors ${
                       index === currentStep
                         ? 'bg-blue-600 text-white'
-                        : index < currentStep
+                        : index <= maxStepReached
                         ? 'bg-gray-900 text-white hover:bg-gray-700 cursor-pointer'
                         : 'bg-gray-200 text-gray-600 cursor-not-allowed'
                     }`}
