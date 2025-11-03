@@ -81,7 +81,7 @@ const DealerApplicationFlow = () => {
 
   const renderEmailStep = () => (
     <div className="min-h-[calc(100vh-8rem)] flex items-center justify-center px-4 bg-muted/30">
-      <div className="max-w-lg w-full bg-white rounded-lg p-8 md:p-12 shadow-sm">
+      <div className="max-w-lg w-full bg-white p-8 md:p-12 shadow-sm">
         <div className="text-center space-y-3 mb-8">
           <h2 className="text-2xl md:text-3xl font-normal">
             Enter your email ID to log in.
