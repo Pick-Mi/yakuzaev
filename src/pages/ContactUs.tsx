@@ -60,7 +60,7 @@ const ContactUs = () => {
             </div>
 
             {/* Type of Issue */}
-            <div>
+            <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
               <h3 className="text-base font-bold mb-4 text-gray-900 uppercase tracking-wide">TYPE OF ISSUE</h3>
               <div className="space-y-3">
                 {issueTypes.map((issue, index) => (
@@ -75,7 +75,7 @@ const ContactUs = () => {
             </div>
 
             {/* Help Topics */}
-            <div>
+            <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
               <h3 className="text-base font-bold mb-4 text-gray-900 uppercase tracking-wide">HELP TOPICS</h3>
               <div className="space-y-3">
                 {helpTopics.map((topic, index) => (
@@ -118,7 +118,7 @@ const ContactUs = () => {
             </section>
 
             {/* Delivery Related */}
-            <section>
+            <section className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
               <h2 className="text-2xl font-semibold mb-6 text-gray-900">Delivery related</h2>
               
               <div className="space-y-4">
