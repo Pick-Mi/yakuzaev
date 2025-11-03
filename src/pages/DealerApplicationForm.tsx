@@ -143,18 +143,27 @@ const DealerApplication = () => {
             {/* Step Indicators */}
             <div className="hidden md:flex items-center gap-4">
               {steps.map((step, index) => (
-                <div key={index} className="flex items-center gap-2">
-                  <div
-                    className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
+                <div 
+                  key={index} 
+                  className="flex items-center gap-2"
+                >
+                  <button
+                    onClick={() => {
+                      if (index <= currentStep) {
+                        setCurrentStep(index);
+                      }
+                    }}
+                    disabled={index > currentStep}
+                    className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-colors ${
                       index === currentStep
                         ? 'bg-blue-600 text-white'
                         : index < currentStep
-                        ? 'bg-gray-900 text-white'
-                        : 'bg-gray-200 text-gray-600'
+                        ? 'bg-gray-900 text-white hover:bg-gray-700 cursor-pointer'
+                        : 'bg-gray-200 text-gray-600 cursor-not-allowed'
                     }`}
                   >
                     {index + 1}
-                  </div>
+                  </button>
                   <span
                     className={`text-sm ${
                       index === currentStep ? 'text-foreground font-medium' : 'text-muted-foreground'
