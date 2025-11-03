@@ -15,8 +15,8 @@ const Cart = () => {
     return (
       <div className="min-h-screen bg-background">
         <Header />
-        <div className="flex items-center justify-center min-h-[80vh]">
-          <div className="text-center space-y-8 max-w-md">
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="text-center space-y-8 max-w-md -mt-20">
             <div className="inline-block p-6 mb-[-30px]">
               <img src={emptyCartIcon} alt="Empty cart" className="w-12 h-12 text-foreground" />
             </div>
