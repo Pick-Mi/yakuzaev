@@ -191,7 +191,7 @@ const DealerApplicationFlow = () => {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       {/* Minimal Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-background border-b">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <img src={logo} alt="Yakuza" className="h-8" />
           <p className="text-sm text-muted-foreground">
