@@ -143,12 +143,12 @@ const Profile = () => {
   return (
     <div className="min-h-screen bg-white">
       <Header />
-      <div className="container mx-auto px-4 py-8 mt-32">
-        <div className="flex gap-8">
+      <div className="container mx-auto px-4 py-8 mt-32 bg-white">
+        <div className="flex gap-8 bg-white">
           {/* Sidebar */}
-          <aside className="w-64 flex-shrink-0">
+          <aside className="w-64 flex-shrink-0 bg-white">
             <h1 className="text-2xl font-bold mb-6">Account</h1>
-            <nav className="space-y-1">
+            <nav className="space-y-1 bg-white">
               {menuItems.map((item) => {
                 const Icon = item.icon;
                 return (
@@ -157,8 +157,8 @@ const Profile = () => {
                     onClick={item.onClick || (() => setActiveSection(item.id))}
                     className={`w-full flex items-center gap-3 px-4 py-3 text-left transition-colors ${
                       activeSection === item.id && !item.onClick
-                        ? "bg-gray-100 font-medium"
-                        : "hover:bg-gray-50"
+                        ? "bg-white border-l-4 border-orange-500 font-medium"
+                        : "hover:bg-white"
                     }`}
                   >
                     <Icon className="w-5 h-5 text-gray-600" />
@@ -168,7 +168,7 @@ const Profile = () => {
               })}
               <button
                 onClick={handleLogout}
-                className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-gray-50 transition-colors"
+                className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-white transition-colors"
               >
                 <LogOut className="w-5 h-5 text-gray-600" />
                 <span className="text-sm">Logout</span>
@@ -177,9 +177,9 @@ const Profile = () => {
           </aside>
 
           {/* Main Content */}
-          <main className="flex-1">
+          <main className="flex-1 bg-white">
             {activeSection === "profile" && (
-              <div className="space-y-8">
+              <div className="space-y-8 bg-white">
                 {/* Personal Information */}
                 <div className="border border-gray-200 p-8">
                   <div className="flex justify-between items-center mb-8">
@@ -224,13 +224,13 @@ const Profile = () => {
                             value={editedProfile.first_name}
                             onChange={(e) => setEditedProfile({ ...editedProfile, first_name: e.target.value })}
                             placeholder="First Name"
-                            className="rounded-none bg-gray-50"
+                            className="rounded-none bg-white border border-gray-300"
                           />
                           <Input
                             value={editedProfile.last_name}
                             onChange={(e) => setEditedProfile({ ...editedProfile, last_name: e.target.value })}
                             placeholder="Last Name"
-                            className="rounded-none bg-gray-50"
+                            className="rounded-none bg-white border border-gray-300"
                           />
                         </div>
                       ) : (
@@ -246,7 +246,7 @@ const Profile = () => {
                           value={editedProfile.phone}
                           onChange={(e) => setEditedProfile({ ...editedProfile, phone: e.target.value })}
                           placeholder="Phone Number"
-                          className="rounded-none bg-gray-50"
+                          className="rounded-none bg-white border border-gray-300"
                         />
                       ) : (
                         <p className="text-base font-medium">{profile.phone || "Not provided"}</p>
@@ -273,7 +273,7 @@ const Profile = () => {
                           value={editedProfile.country}
                           onChange={(e) => setEditedProfile({ ...editedProfile, country: e.target.value })}
                           placeholder="Country"
-                          className="rounded-none bg-gray-50"
+                          className="rounded-none bg-white border border-gray-300"
                         />
                       ) : (
                         <p className="text-base font-medium">{profile.country}</p>
@@ -287,7 +287,7 @@ const Profile = () => {
                         <select
                           value={editedProfile.gender}
                           onChange={(e) => setEditedProfile({ ...editedProfile, gender: e.target.value })}
-                          className="w-full px-3 py-2 border border-gray-300 bg-gray-50 rounded-none"
+                          className="w-full px-3 py-2 border border-gray-300 bg-white rounded-none"
                         >
                           <option value="">Select Gender</option>
                           <option value="Male">Male</option>
