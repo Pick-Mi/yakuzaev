@@ -118,9 +118,9 @@ const BecomeDealer = () => {
                 <div>
                   <Button 
                     onClick={() => navigate("/dealer-application")}
-                    className="px-12 h-12 text-base font-medium rounded-none"
+                    className="px-12 h-12 text-base font-medium rounded-none bg-black text-white hover:bg-black/90"
                   >
-                    Request
+                    Apply Now
                   </Button>
                 </div>
               </div>
