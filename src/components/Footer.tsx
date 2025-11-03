@@ -53,21 +53,23 @@ const Footer = () => {
           </div>
 
           {/* Social Icons */}
-          <div className="flex gap-8 opacity-80">
+          <div className="flex gap-8 items-center">
             <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="hover:opacity-70 transition-opacity">
-              <Linkedin className="w-[24px] h-[24px]" strokeWidth={0} fill="white" />
+              <Linkedin className="w-[28px] h-[28px]" strokeWidth={0} fill="white" />
             </a>
             <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="hover:opacity-70 transition-opacity">
-              <Twitter className="w-[24px] h-[24px]" strokeWidth={0} fill="white" />
+              <svg className="w-[28px] h-[28px]" viewBox="0 0 24 24" fill="white">
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+              </svg>
             </a>
             <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="hover:opacity-70 transition-opacity">
-              <Youtube className="w-[24px] h-[24px]" strokeWidth={0} fill="white" />
+              <Youtube className="w-[32px] h-[32px]" strokeWidth={0} fill="white" />
             </a>
             <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="hover:opacity-70 transition-opacity">
-              <Facebook className="w-[24px] h-[24px]" strokeWidth={0} fill="white" />
+              <Facebook className="w-[28px] h-[28px]" strokeWidth={0} fill="white" />
             </a>
             <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="hover:opacity-70 transition-opacity">
-              <Instagram className="w-[24px] h-[24px]" strokeWidth={0} fill="white" />
+              <Instagram className="w-[28px] h-[28px]" strokeWidth={0} fill="white" />
             </a>
           </div>
         </div>
