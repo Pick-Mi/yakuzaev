@@ -713,57 +713,108 @@ const Profile = () => {
 
             {activeSection === "identification" && (
               <div className="border border-gray-200 p-8">
-                <h2 className="text-2xl font-semibold mb-6">Identification Details</h2>
-                
-                <div className="space-y-6">
-                  <div>
-                    <Label className="text-sm mb-2 block">Document Type</Label>
-                    <select
-                      value={idProof.document_type}
-                      onChange={(e) => setIdProof({ ...idProof, document_type: e.target.value })}
-                      className="w-full px-3 py-2 border border-gray-300 bg-white rounded-none"
-                    >
-                      <option value="">Select Document Type</option>
-                      <option value="aadhaar">Aadhaar Card</option>
-                      <option value="pan">PAN Card</option>
-                      <option value="passport">Passport</option>
-                      <option value="driving_license">Driving License</option>
-                      <option value="voter_id">Voter ID</option>
-                      <option value="other">Other</option>
-                    </select>
-                  </div>
+                <div className="flex justify-between items-center mb-6">
+                  <h2 className="text-2xl font-semibold">Identification Details</h2>
+                  <Button
+                    onClick={() => setEditMode(true)}
+                    className="bg-black hover:bg-gray-800 rounded-none"
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    Add New Document
+                  </Button>
+                </div>
 
-                  <div>
-                    <Label className="text-sm mb-2 block">Document Number</Label>
-                    <Input
-                      value={idProof.document_number}
-                      onChange={(e) => setIdProof({ ...idProof, document_number: e.target.value })}
-                      placeholder="Enter document number"
-                      className="rounded-none"
-                    />
-                  </div>
-
-                  <div>
-                    <Label className="text-sm mb-2 block">Upload Document</Label>
-                    <p className="text-xs text-gray-500 mb-2">
-                      Accepted formats: JPG, PNG, PDF (Max 5MB)
+                {!idProof.document_file_url && !editMode ? (
+                  <p className="text-gray-600">No identification documents added yet.</p>
+                ) : idProof.document_file_url && !editMode ? (
+                  <div className="border border-gray-200 p-4 rounded-none">
+                    <div className="mb-2">
+                      <span className="font-semibold capitalize">
+                        {idProof.document_type.replace('_', ' ')}
+                      </span>
+                    </div>
+                    <p className="text-sm text-gray-700 mb-1">
+                      Document Number: {idProof.document_number || "Not provided"}
                     </p>
+                    <a
+                      href={idProof.document_file_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-blue-600 hover:underline"
+                    >
+                      View Document
+                    </a>
                     
-                    {idProof.document_file_url ? (
-                      <div className="border border-gray-200 p-4 rounded-none">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <p className="text-sm font-medium mb-1">Document Uploaded</p>
-                            <a
-                              href={idProof.document_file_url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-sm text-blue-600 hover:underline"
-                            >
-                              View Document
-                            </a>
-                          </div>
-                          <div className="flex gap-2">
+                    <div className="flex gap-2 mt-4">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setEditMode(true)}
+                        className="rounded-none"
+                      >
+                        <Pencil className="w-3 h-3 mr-1" />
+                        Edit
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={handleDeleteIdProof}
+                        className="rounded-none text-red-600 hover:text-red-700"
+                      >
+                        <Trash2 className="w-3 h-3 mr-1" />
+                        Delete
+                      </Button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="space-y-6">
+                    <div>
+                      <Label className="text-sm mb-2 block">Document Type</Label>
+                      <select
+                        value={idProof.document_type}
+                        onChange={(e) => setIdProof({ ...idProof, document_type: e.target.value })}
+                        className="w-full px-3 py-2 border border-gray-300 bg-white rounded-none"
+                      >
+                        <option value="">Select Document Type</option>
+                        <option value="aadhaar">Aadhaar Card</option>
+                        <option value="pan">PAN Card</option>
+                        <option value="passport">Passport</option>
+                        <option value="driving_license">Driving License</option>
+                        <option value="voter_id">Voter ID</option>
+                        <option value="other">Other</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <Label className="text-sm mb-2 block">Document Number</Label>
+                      <Input
+                        value={idProof.document_number}
+                        onChange={(e) => setIdProof({ ...idProof, document_number: e.target.value })}
+                        placeholder="Enter document number"
+                        className="rounded-none"
+                      />
+                    </div>
+
+                    <div>
+                      <Label className="text-sm mb-2 block">Upload Document</Label>
+                      <p className="text-xs text-gray-500 mb-2">
+                        Accepted formats: JPG, PNG, PDF (Max 5MB)
+                      </p>
+                      
+                      {idProof.document_file_url ? (
+                        <div className="border border-gray-200 p-4 rounded-none mb-4">
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <p className="text-sm font-medium mb-1">Document Uploaded</p>
+                              <a
+                                href={idProof.document_file_url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-sm text-blue-600 hover:underline"
+                              >
+                                View Document
+                              </a>
+                            </div>
                             <Button
                               variant="outline"
                               size="sm"
@@ -774,46 +825,49 @@ const Profile = () => {
                               <Pencil className="w-3 h-3 mr-1" />
                               Replace
                             </Button>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={handleDeleteIdProof}
-                              className="rounded-none text-red-600 hover:text-red-700"
-                            >
-                              <Trash2 className="w-3 h-3 mr-1" />
-                              Delete
-                            </Button>
                           </div>
                         </div>
-                      </div>
-                    ) : (
+                      ) : (
+                        <Button
+                          variant="outline"
+                          onClick={() => document.getElementById('id-proof-upload')?.click()}
+                          className="rounded-none w-full"
+                          disabled={uploadingId}
+                        >
+                          <Plus className="w-4 h-4 mr-2" />
+                          {uploadingId ? "Uploading..." : "Upload Document"}
+                        </Button>
+                      )}
+                      
+                      <input
+                        id="id-proof-upload"
+                        type="file"
+                        accept="image/jpeg,image/png,image/jpg,application/pdf"
+                        onChange={handleIdProofUpload}
+                        className="hidden"
+                      />
+                    </div>
+
+                    <div className="flex gap-2">
                       <Button
                         variant="outline"
-                        onClick={() => document.getElementById('id-proof-upload')?.click()}
-                        className="rounded-none w-full"
-                        disabled={uploadingId}
+                        onClick={() => setEditMode(false)}
+                        className="rounded-none"
                       >
-                        <Plus className="w-4 h-4 mr-2" />
-                        {uploadingId ? "Uploading..." : "Upload Document"}
+                        Cancel
                       </Button>
-                    )}
-                    
-                    <input
-                      id="id-proof-upload"
-                      type="file"
-                      accept="image/jpeg,image/png,image/jpg,application/pdf"
-                      onChange={handleIdProofUpload}
-                      className="hidden"
-                    />
+                      <Button
+                        onClick={() => {
+                          handleSaveIdProof();
+                          setEditMode(false);
+                        }}
+                        className="bg-black hover:bg-gray-800 rounded-none"
+                      >
+                        Save Details
+                      </Button>
+                    </div>
                   </div>
-
-                  <Button
-                    onClick={handleSaveIdProof}
-                    className="bg-black hover:bg-gray-800 rounded-none"
-                  >
-                    Save Details
-                  </Button>
-                </div>
+                )}
               </div>
             )}
           </main>
