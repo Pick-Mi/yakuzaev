@@ -59,38 +59,22 @@ const DealerApplicationFlow = () => {
   };
 
   const renderWelcome = () => (
-    <div className="min-h-[80vh] flex items-center justify-center px-4">
-      <div className="max-w-2xl w-full text-center space-y-8">
+    <div className="min-h-[80vh] flex items-start pt-32 px-4">
+      <div className="max-w-4xl w-full space-y-6">
         <div className="space-y-4">
-          <h1 className="text-4xl md:text-5xl font-bold">
-            Become a Dealer Partner
+          <h1 className="text-5xl md:text-6xl font-normal leading-tight">
+            Submit your business<br />details for onboarding?
           </h1>
           <p className="text-lg text-muted-foreground">
-            Join our growing network of dealers and help us revolutionize electric mobility
+            We'll set you up and running in four 6 steps!
           </p>
-        </div>
-        
-        <div className="grid md:grid-cols-3 gap-6 my-12">
-          <div className="p-6 border rounded-lg">
-            <div className="text-3xl font-bold mb-2">500+</div>
-            <p className="text-sm text-muted-foreground">Active Dealers</p>
-          </div>
-          <div className="p-6 border rounded-lg">
-            <div className="text-3xl font-bold mb-2">₹50L+</div>
-            <p className="text-sm text-muted-foreground">Avg. Revenue</p>
-          </div>
-          <div className="p-6 border rounded-lg">
-            <div className="text-3xl font-bold mb-2">24/7</div>
-            <p className="text-sm text-muted-foreground">Support</p>
-          </div>
         </div>
 
         <Button 
-          size="lg"
-          className="px-12 h-14 text-lg bg-black text-white hover:bg-black/90"
+          className="px-8 h-12 text-base bg-black text-white hover:bg-black/90 rounded-none"
           onClick={() => setCurrentStep("email")}
         >
-          Get Started
+          Let's Do it
         </Button>
       </div>
     </div>
