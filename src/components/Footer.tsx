@@ -54,20 +54,20 @@ const Footer = () => {
 
           {/* Social Icons */}
           <div className="flex gap-8 opacity-80">
-            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="hover:opacity-70 transition-opacity">
-              <Facebook className="w-[18px] h-[18px]" fill="white" />
+            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="hover:opacity-70 transition-opacity">
+              <Linkedin className="w-[24px] h-[24px]" strokeWidth={0} fill="white" />
             </a>
             <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="hover:opacity-70 transition-opacity">
-              <Twitter className="w-[18px] h-[18px]" fill="white" />
-            </a>
-            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="hover:opacity-70 transition-opacity">
-              <Instagram className="w-[18px] h-[18px]" fill="white" />
-            </a>
-            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="hover:opacity-70 transition-opacity">
-              <Linkedin className="w-[18px] h-[18px]" fill="white" />
+              <Twitter className="w-[24px] h-[24px]" strokeWidth={0} fill="white" />
             </a>
             <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="hover:opacity-70 transition-opacity">
-              <Youtube className="w-[18px] h-[18px]" fill="white" />
+              <Youtube className="w-[24px] h-[24px]" strokeWidth={0} fill="white" />
+            </a>
+            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="hover:opacity-70 transition-opacity">
+              <Facebook className="w-[24px] h-[24px]" strokeWidth={0} fill="white" />
+            </a>
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="hover:opacity-70 transition-opacity">
+              <Instagram className="w-[24px] h-[24px]" strokeWidth={0} fill="white" />
             </a>
           </div>
         </div>
