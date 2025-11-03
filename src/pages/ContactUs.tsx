@@ -41,7 +41,7 @@ const ContactUs = () => {
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
       
-      <main className="flex-1 container mx-auto px-4 py-8 mt-16">
+      <main className="flex-1 container mx-auto px-4 py-8 mt-32">
         <h1 className="text-4xl font-bold mb-8 text-foreground">Customer Service</h1>
         
         <div className="grid md:grid-cols-[300px_1fr] gap-6">
