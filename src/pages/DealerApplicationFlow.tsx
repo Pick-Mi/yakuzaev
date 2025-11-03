@@ -108,12 +108,20 @@ const DealerApplicationFlow = () => {
             />
           </div>
 
-          <div className="flex justify-center pt-4">
+          <div className="flex flex-col items-center gap-4 pt-4">
             <Button 
               type="submit"
               className="px-10 h-12 bg-black text-white hover:bg-black/90 rounded-none"
             >
               Continue
+            </Button>
+            <Button
+              type="button"
+              variant="link"
+              onClick={() => setCurrentStep("welcome")}
+              className="text-sm"
+            >
+              Back
             </Button>
           </div>
         </form>
