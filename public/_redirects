@@ -1,0 +1,18 @@
+# 301 Permanent Redirects (Server-side)
+# Old URL → New URL
+
+# Product URL changes
+/product/*  /products/:splat  301
+
+# Page URL changes
+/shop  /products  301
+/blog  /blogs  301
+/about  /about-us  301
+/contact  /contact-us  301
+/dealer-application  /dealer-application-flow  301
+
+# Add more redirects here as needed
+# Syntax: /old-url  /new-url  301
+
+# SPA fallback - must be last
+/*  /index.html  200

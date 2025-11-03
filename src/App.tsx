@@ -57,8 +57,13 @@ const App = () => (
               <Route path="/become-dealer" element={<BecomeDealer />} />
               <Route path="/dealer-application-flow" element={<DealerApplicationFlow />} />
               <Route path="/dealer-application-form" element={<DealerApplicationForm />} />
-              {/* Redirect old dealer application route */}
+              {/* 301 Redirects - Old URLs to New URLs */}
               <Route path="/dealer-application" element={<Navigate to="/dealer-application-flow" replace />} />
+              <Route path="/shop" element={<Navigate to="/products" replace />} />
+              <Route path="/blog" element={<Navigate to="/blogs" replace />} />
+              <Route path="/about" element={<Navigate to="/about-us" replace />} />
+              <Route path="/contact" element={<Navigate to="/contact-us" replace />} />
+              
               <Route path="/about-us" element={<AboutUs />} />
               <Route path="/sitemap" element={<Sitemap />} />
               <Route path="/contact-us" element={<ContactUs />} />
