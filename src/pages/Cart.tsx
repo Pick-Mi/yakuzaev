@@ -17,7 +17,7 @@ const Cart = () => {
         <Header />
         <div className="flex items-center justify-center min-h-[80vh]">
           <div className="text-center space-y-8 max-w-md">
-            <div className="inline-block p-6 mb-[10px]">
+            <div className="inline-block p-6 mb-[-20px]">
               <img src={emptyCartIcon} alt="Empty cart" className="w-12 h-12 text-foreground" />
             </div>
             <div className="space-y-3">
