@@ -18,9 +18,9 @@ const ProductCard = ({ product }: ProductCardProps) => {
   const { name, thumbnail, feature1, feature2, price } = product;
 
   return (
-    <div className="bg-white w-full overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 group">
-      {/* Product Image */}
-      <div className="w-full aspect-[4/3] bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden">
+    <div className="bg-white w-full overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 group h-[600px] flex flex-col">
+      {/* Product Image - shrinks on hover */}
+      <div className="w-full bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden transition-all duration-300 group-hover:h-[280px] h-[380px]">
         <img
           src={thumbnail}
           alt={name}
@@ -28,8 +28,8 @@ const ProductCard = ({ product }: ProductCardProps) => {
         />
       </div>
       
-      {/* Product Info */}
-      <div className="px-6 py-6 bg-white">
+      {/* Product Info - fixed height */}
+      <div className="px-6 py-6 bg-white flex-1 flex flex-col">
         <div className="flex items-start justify-between gap-6">
           {/* Left: Product Name & Tagline */}
           <div className="flex-1">
@@ -51,8 +51,8 @@ const ProductCard = ({ product }: ProductCardProps) => {
         </div>
 
         {/* Hover Action Buttons */}
-        <div className="overflow-hidden transition-all duration-300 max-h-0 opacity-0 group-hover:max-h-40 group-hover:opacity-100">
-          <div className="w-full h-px bg-gray-300 my-4" />
+        <div className="overflow-hidden transition-all duration-300 max-h-0 opacity-0 group-hover:max-h-40 group-hover:opacity-100 group-hover:mt-4">
+          <div className="w-full h-px bg-gray-300 mb-4" />
           <div className="flex flex-col gap-3">
             <Link to={`/products/${product.id}`} className="w-full">
               <Button className="w-full h-[55px] bg-black text-white hover:bg-black/90 rounded-none text-base font-medium">
