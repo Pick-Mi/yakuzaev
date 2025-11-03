@@ -172,7 +172,9 @@ const DealerApplication = () => {
                   </button>
                   <span
                     className={`text-sm ${
-                      index === currentStep ? 'text-foreground font-medium' : 'text-muted-foreground'
+                      index === currentStep 
+                        ? 'text-foreground font-medium' 
+                        : 'hidden'
                     }`}
                   >
                     {step}
