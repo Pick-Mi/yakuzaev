@@ -367,13 +367,15 @@ const JobApplication = () => {
               </div>
             </div>
 
-            <Button
-              type="submit"
-              disabled={isSubmitting}
-              className="w-full rounded-none bg-black text-white hover:bg-black/90 dark:bg-white dark:text-black dark:hover:bg-white/90"
-            >
-              {isSubmitting ? "Submitting..." : "Apply"}
-            </Button>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              <Button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full rounded-none bg-black text-white hover:bg-black/90 dark:bg-white dark:text-black dark:hover:bg-white/90"
+              >
+                {isSubmitting ? "Submitting..." : "Apply"}
+              </Button>
+            </div>
           </form>
 
           {/* Join Our Team Section */}
