@@ -143,7 +143,7 @@ const Profile = () => {
   return (
     <div className="min-h-screen bg-white">
       <Header />
-      <div className="container mx-auto px-4 py-8 mt-32 bg-white">
+      <div className="container mx-auto px-4 py-8 mt-20 bg-white">
         <div className="flex gap-8 bg-white">
           {/* Sidebar */}
           <aside className="w-64 flex-shrink-0 bg-white">
