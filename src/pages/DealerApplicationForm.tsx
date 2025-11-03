@@ -115,50 +115,59 @@ const DealerApplication = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      <main className="container mx-auto max-w-6xl px-4 py-8">
-        {/* Header with Logo and Copyright */}
-        <div className="flex justify-between items-center mb-8 pb-6 border-b border-border">
-          <button onClick={() => navigate('/')} className="cursor-pointer">
-            <img src={logo} alt="Yakuza EV" className="h-8" />
-          </button>
-          <p className="text-sm text-muted-foreground">Copyright © 2024 Yakuza</p>
-        </div>
+      {/* Header */}
+      <header className="border-b border-border">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            {/* Logo */}
+            <button onClick={() => navigate('/')} className="cursor-pointer">
+              <img src={logo} alt="Yakuza" className="h-8" />
+            </button>
 
-        {/* Progress Stepper */}
-        <div className="mb-12">
-          <div className="flex items-center justify-between">
-            {steps.map((step, index) => (
-              <div key={index} className="flex flex-col items-center flex-1">
-                <div className="flex items-center w-full">
-                  {index > 0 && (
-                    <div className={`flex-1 h-0.5 ${index <= currentStep ? 'bg-foreground' : 'bg-border'}`} />
-                  )}
+            {/* Step Indicators */}
+            <div className="hidden md:flex items-center gap-4">
+              {steps.map((step, index) => (
+                <div key={index} className="flex items-center gap-2">
                   <div
-                    className={`w-5 h-5 rounded-full flex items-center justify-center ${
+                    className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
                       index === currentStep
-                        ? 'bg-foreground'
+                        ? 'bg-blue-600 text-white'
                         : index < currentStep
-                        ? 'bg-foreground'
-                        : 'bg-transparent border-2 border-border'
+                        ? 'bg-gray-900 text-white'
+                        : 'bg-gray-200 text-gray-600'
                     }`}
                   >
-                    {index < currentStep && (
-                      <div className="w-2 h-2 bg-white rounded-full" />
-                    )}
+                    {index + 1}
                   </div>
-                  {index < steps.length - 1 && (
-                    <div className={`flex-1 h-0.5 ${index < currentStep ? 'bg-foreground' : 'bg-border'}`} />
-                  )}
+                  <span
+                    className={`text-sm ${
+                      index === currentStep ? 'text-foreground font-medium' : 'text-muted-foreground'
+                    }`}
+                  >
+                    {step}
+                  </span>
                 </div>
-                <span className={`text-xs sm:text-sm mt-2 text-center ${
-                  index === currentStep ? 'text-foreground font-medium' : 'text-muted-foreground'
-                }`}>
-                  {step}
-                </span>
+              ))}
+            </div>
+
+            {/* User Profile */}
+            <div className="flex items-center gap-2 md:gap-3">
+              <button className="p-2 hover:bg-muted rounded-full">
+                <svg className="w-5 h-5 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="10" strokeWidth="2" />
+                  <path strokeWidth="2" d="M12 16v-4m0-4h.01" />
+                </svg>
+              </button>
+              <span className="hidden sm:block text-sm font-medium">Karthik P</span>
+              <div className="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center text-sm font-medium">
+                K
               </div>
-            ))}
+            </div>
           </div>
         </div>
+      </header>
+
+      <main className="container mx-auto max-w-6xl px-4 py-8">
 
         {/* Form Content */}
         <div className="max-w-2xl mx-auto bg-white p-6 sm:p-8 rounded-lg">
@@ -648,24 +657,21 @@ const DealerApplication = () => {
             </div>
           )}
 
-          {/* Navigation Buttons */}
-          <div className="flex justify-between mt-8 pt-6 border-t border-border">
-            {currentStep > 0 && (
-              <Button
-                onClick={handlePrevious}
-                className="px-8 bg-black text-white hover:bg-black/90"
-              >
-                Pervious
-              </Button>
-            )}
+          {/* Navigation Button */}
+          <div className="flex justify-center mt-12">
             <Button
               onClick={handleNext}
-              className="ml-auto px-8 bg-[#FF6B35] hover:bg-[#FF6B35]/90 text-white"
+              className="px-12 h-12 text-base bg-orange-500 text-white hover:bg-orange-600 rounded-md"
             >
               {currentStep === steps.length - 1 ? "Submit" : "Next"}
             </Button>
           </div>
         </div>
+
+        {/* Footer */}
+        <footer className="text-center py-8 mt-12">
+          <p className="text-sm text-muted-foreground">Copyright © 2025 Yakuza</p>
+        </footer>
       </main>
     </div>
   );
