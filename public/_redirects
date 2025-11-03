@@ -12,8 +12,16 @@
 /contact  /contact-us  301
 /dealer-application  /dealer-application-flow  301
 
+# Sitemap files - serve as XML
+/sitemap.xml  /sitemap.xml  200
+/page-sitemap.xml  /page-sitemap.xml  200
+/product-sitemap.xml  /product-sitemap.xml  200
+/blog-sitemap.xml  /blog-sitemap.xml  200
+/category-sitemap.xml  /category-sitemap.xml  200
+
 # Add more redirects here as needed
 # Syntax: /old-url  /new-url  301
 
 # SPA fallback - must be last
 /*  /index.html  200
+

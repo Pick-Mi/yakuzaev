@@ -28,6 +28,7 @@ import DealerApplicationFlow from "./pages/DealerApplicationFlow";
 import DealerApplicationForm from "./pages/DealerApplicationForm";
 import AboutUs from "./pages/AboutUs";
 import Sitemap from "./pages/Sitemap";
+import SitemapXML from "./pages/SitemapXML";
 import ContactUs from "./pages/ContactUs";
 import Careers from "./pages/Careers";
 import JobDetail from "./pages/JobDetail";
@@ -66,6 +67,7 @@ const App = () => (
               
               <Route path="/about-us" element={<AboutUs />} />
               <Route path="/sitemap" element={<Sitemap />} />
+              <Route path="/sitemap.xml" element={<SitemapXML />} />
               <Route path="/contact-us" element={<ContactUs />} />
               <Route path="/careers" element={<Careers />} />
               <Route path="/careers/:id" element={<JobDetail />} />
