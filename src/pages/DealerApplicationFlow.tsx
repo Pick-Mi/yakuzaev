@@ -58,8 +58,8 @@ const DealerApplicationFlow = () => {
   };
 
   const renderWelcome = () => (
-    <div className="min-h-[80vh] flex items-start pt-[70px] px-4">
-      <div className="max-w-4xl w-full space-y-6">
+    <div className="min-h-[80vh] flex items-center justify-center px-4">
+      <div className="max-w-4xl w-full space-y-6 text-center">
         <div className="space-y-4">
           <h1 className="text-5xl md:text-6xl font-normal leading-tight">
             Submit your business<br />details for onboarding?
@@ -69,12 +69,14 @@ const DealerApplicationFlow = () => {
           </p>
         </div>
 
-        <Button 
-          className="px-8 h-12 text-base bg-black text-white hover:bg-black/90 rounded-none"
-          onClick={() => setCurrentStep("email")}
-        >
-          Let's Do it
-        </Button>
+        <div className="flex justify-center">
+          <Button 
+            className="px-8 h-12 text-base bg-black text-white hover:bg-black/90 rounded-none"
+            onClick={() => setCurrentStep("email")}
+          >
+            Let's Do it
+          </Button>
+        </div>
       </div>
     </div>
   );
