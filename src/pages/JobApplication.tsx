@@ -151,39 +151,45 @@ const JobApplication = () => {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
-      <main className="flex-1">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-12">
-          {/* Header Section with Share */}
-          <div className="flex items-start justify-between mb-8">
+      
+      {/* Fixed Job Info Section */}
+      <div className="fixed top-20 left-0 right-0 bg-background border-b border-border z-40">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-foreground">{jobData.title}</h1>
-              <p className="text-muted-foreground mt-2">{jobData.type}</p>
+              <h1 className="text-2xl font-bold text-foreground">{jobData.title}</h1>
+              <p className="text-muted-foreground mt-1">{jobData.type}</p>
             </div>
             
-            <div className="flex flex-col items-end gap-2">
+            <div className="flex items-center gap-4">
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <Share2 className="w-4 h-4" />
-                <span>Share The Job</span>
+                <span className="hidden sm:inline">Share The Job</span>
               </div>
               <div className="flex gap-3">
-                <button type="button" className="text-foreground hover:text-primary transition-colors">
+                <button type="button" className="text-foreground hover:text-primary transition-colors" aria-label="Share on X">
                   <FaXTwitter className="w-5 h-5" />
                 </button>
-                <button type="button" className="text-blue-600 hover:text-blue-700 transition-colors">
+                <button type="button" className="text-blue-600 hover:text-blue-700 transition-colors" aria-label="Share on LinkedIn">
                   <FaLinkedin className="w-5 h-5" />
                 </button>
-                <button type="button" className="text-blue-500 hover:text-blue-600 transition-colors">
+                <button type="button" className="text-blue-500 hover:text-blue-600 transition-colors" aria-label="Share on Telegram">
                   <FaTelegram className="w-5 h-5" />
                 </button>
-                <button type="button" className="text-blue-600 hover:text-blue-700 transition-colors">
+                <button type="button" className="text-blue-600 hover:text-blue-700 transition-colors" aria-label="Share on Facebook">
                   <FaFacebook className="w-5 h-5" />
                 </button>
-                <button type="button" className="text-green-600 hover:text-green-700 transition-colors">
+                <button type="button" className="text-green-600 hover:text-green-700 transition-colors" aria-label="Share on WhatsApp">
                   <FaWhatsapp className="w-5 h-5" />
                 </button>
               </div>
             </div>
           </div>
+        </div>
+      </div>
+      
+      <main className="flex-1">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-52 pb-12">
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
             {/* Two Column Layout for Personal Details and Autofill */}
