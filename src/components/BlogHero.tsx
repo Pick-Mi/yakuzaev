@@ -21,7 +21,7 @@ const BlogHero = () => {
       </div>
 
       {/* Content */}
-      <div className="absolute bottom-8 sm:bottom-16 md:bottom-24 left-4 sm:left-6 md:left-10 right-4 sm:right-auto w-auto sm:w-[601px] max-w-[calc(100%-2rem)] sm:max-w-[90%] flex flex-col gap-4 sm:gap-6 items-start px-2 sm:px-0 animate-fade-in">
+      <div className="absolute bottom-4 sm:bottom-8 md:bottom-12 left-4 sm:left-6 md:left-10 right-4 sm:right-auto w-auto sm:w-[601px] max-w-[calc(100%-2rem)] sm:max-w-[90%] flex flex-col gap-4 sm:gap-6 items-start px-2 sm:px-0 animate-fade-in">
         <h1 className="font-sans font-normal text-[28px] sm:text-[42px] md:text-[52px] leading-[1.2] sm:leading-[1.4] md:leading-[73px] text-[#FFFFFF] m-0">
           Powering India's EV Future
         </h1>
