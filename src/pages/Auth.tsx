@@ -877,7 +877,23 @@ const Auth = () => {
 
                   <form onSubmit={handleOTPSubmit} className="space-y-6">
                     <div className="space-y-3">
-                      <Label htmlFor="otp" className="text-gray-700 text-sm font-medium">OTP</Label>
+                      <div className="flex justify-between items-center">
+                        <Label htmlFor="otp" className="text-gray-700 text-sm font-medium">OTP</Label>
+                        {otp.length > 0 && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setOtp('');
+                              // Focus first input after clearing
+                              const firstInput = document.querySelector('input[type="text"][maxlength="1"]') as HTMLInputElement;
+                              firstInput?.focus();
+                            }}
+                            className="text-sm text-red-600 hover:text-red-700 font-medium"
+                          >
+                            Clear
+                          </button>
+                        )}
+                      </div>
                       <div className="flex gap-3">
                         {[0, 1, 2, 3, 4, 5].map((index) => (
                           <div key={index} className="flex-1">
@@ -899,9 +915,22 @@ const Auth = () => {
                                 }
                               }}
                               onKeyDown={(e) => {
-                                if (e.key === 'Backspace' && !otp[index] && index > 0 && e.target instanceof HTMLInputElement) {
-                                  const prevInput = (e.target.parentElement?.parentElement?.children[index - 1] as HTMLElement)?.querySelector('input') as HTMLInputElement;
-                                  prevInput?.focus();
+                                if (e.key === 'Backspace') {
+                                  e.preventDefault();
+                                  // If current field has value, clear it
+                                  if (otp[index]) {
+                                    const newOtp = otp.split('');
+                                    newOtp[index] = '';
+                                    setOtp(newOtp.join(''));
+                                  } 
+                                  // If current field is empty, move to previous and clear it
+                                  else if (index > 0) {
+                                    const newOtp = otp.split('');
+                                    newOtp[index - 1] = '';
+                                    setOtp(newOtp.join(''));
+                                    const prevInput = (e.target as HTMLInputElement).parentElement?.parentElement?.children[index - 1]?.querySelector('input') as HTMLInputElement;
+                                    prevInput?.focus();
+                                  }
                                 }
                               }}
                               className="w-full h-12 text-center text-xl bg-gray-50 border-gray-200 rounded-none"
