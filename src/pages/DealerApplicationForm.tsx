@@ -162,7 +162,7 @@ const DealerApplication = () => {
                     disabled={index > maxStepReached}
                     className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-colors ${
                       index === currentStep
-                        ? 'bg-blue-600 text-white'
+                        ? 'bg-orange-500 text-white'
                         : index <= maxStepReached
                         ? 'bg-gray-900 text-white hover:bg-gray-700 cursor-pointer'
                         : 'bg-gray-200 text-gray-600 cursor-not-allowed'
@@ -692,11 +692,18 @@ const DealerApplication = () => {
             </div>
           )}
 
-          {/* Navigation Button */}
-          <div className="flex justify-center mt-12">
+          {/* Navigation Buttons */}
+          <div className="flex justify-center gap-4 mt-12">
+            <Button
+              onClick={handlePrevious}
+              disabled={currentStep === 0}
+              className="px-12 h-12 text-base bg-gray-300 text-gray-500 hover:bg-gray-300 rounded-none cursor-not-allowed"
+            >
+              Previous
+            </Button>
             <Button
               onClick={handleNext}
-              className="px-12 h-12 text-base bg-orange-500 text-white hover:bg-orange-600 rounded-md"
+              className="px-12 h-12 text-base bg-black text-white hover:bg-black/90 rounded-none"
             >
               {currentStep === steps.length - 1 ? "Submit" : "Next"}
             </Button>
