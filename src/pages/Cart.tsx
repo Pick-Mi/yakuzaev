@@ -3,8 +3,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useCart } from "@/hooks/useCart";
 import { useAuth } from "@/hooks/useAuth";
 import Header from "@/components/Header";
-import { ArrowLeft, Minus, Plus, Trash2, ShoppingBag } from "lucide-react";
+import { ArrowLeft, Minus, Plus, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
+import emptyCartIcon from "@/assets/cart-icon.svg";
 
 const Cart = () => {
   const { items, updateQuantity, removeFromCart, itemCount, total } = useCart();
@@ -17,7 +18,7 @@ const Cart = () => {
         <div className="flex items-center justify-center min-h-[80vh]">
           <div className="text-center space-y-8 max-w-md">
             <div className="inline-block p-6 rounded-2xl border-2 border-foreground">
-              <ShoppingBag className="w-12 h-12 text-foreground" />
+              <img src={emptyCartIcon} alt="Empty cart" className="w-12 h-12 text-foreground" />
             </div>
             <div className="space-y-3">
               <h1 className="text-4xl font-bold text-foreground">Your cart is empty</h1>
