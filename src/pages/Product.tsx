@@ -18,7 +18,6 @@ import AccessoriesSection from "@/components/AccessoriesSection";
 import ProductShowcase from "@/components/ProductShowcase";
 import { FAQSection } from "@/components/FAQSection";
 import { ProductBottomNav } from "@/components/ProductBottomNav";
-import CustomMetadataSection from "@/components/CustomMetadataSection";
 import Footer from "@/components/Footer";
 
 
@@ -352,6 +351,50 @@ const Product = () => {
     );
   }
 
+  // Build Product Schema with custom metadata
+  const buildProductSchema = () => {
+    const schema: any = {
+      "@context": "https://schema.org/",
+      "@type": "Product",
+      "name": product.name,
+      "description": product.description || product.meta_description,
+      "image": product.image_url || product.thumbnail,
+      "brand": {
+        "@type": "Brand",
+        "name": product.custom_metadata?.brand || "Your Brand"
+      },
+      "sku": product.sku,
+      "offers": {
+        "@type": "Offer",
+        "url": window.location.href,
+        "priceCurrency": "INR",
+        "price": getCurrentPrice(),
+        "availability": "https://schema.org/InStock",
+        "priceValidUntil": product.scheme_end_date || new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+      }
+    };
+
+    // Add aggregateRating if available
+    if (product.rating && product.reviewCount) {
+      schema.aggregateRating = {
+        "@type": "AggregateRating",
+        "ratingValue": product.rating,
+        "reviewCount": product.reviewCount
+      };
+    }
+
+    // Add custom metadata as additionalProperty
+    if (product.custom_metadata && Object.keys(product.custom_metadata).length > 0) {
+      schema.additionalProperty = Object.entries(product.custom_metadata).map(([key, value]) => ({
+        "@type": "PropertyValue",
+        "name": key.replace(/_/g, ' '),
+        "value": typeof value === 'object' ? JSON.stringify(value) : String(value)
+      }));
+    }
+
+    return schema;
+  };
+
   return (
     <div className="min-h-screen bg-[#F8F9F9]">
       <Helmet>
@@ -364,10 +407,17 @@ const Product = () => {
         <meta property="og:description" content={product.meta_description || product.description} />
         <meta property="og:image" content={product.image_url || product.thumbnail} />
         <meta property="og:type" content="product" />
+        <meta property="og:price:amount" content={String(getCurrentPrice())} />
+        <meta property="og:price:currency" content="INR" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={product.meta_title || product.name} />
         <meta name="twitter:description" content={product.meta_description || product.description} />
         <meta name="twitter:image" content={product.image_url || product.thumbnail} />
+        
+        {/* Product Schema with Custom Metadata */}
+        <script type="application/ld+json">
+          {JSON.stringify(buildProductSchema())}
+        </script>
       </Helmet>
       <Header />
       
@@ -420,9 +470,6 @@ const Product = () => {
       
       {/* Product Showcase Section */}
       <ProductShowcase />
-      
-      {/* Custom Metadata Section */}
-      <CustomMetadataSection metadata={product.custom_metadata} />
       
       {/* FAQ Section */}
       <FAQSection faqs={product.qa_section} />
