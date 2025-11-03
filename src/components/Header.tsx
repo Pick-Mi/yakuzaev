@@ -165,9 +165,9 @@ const Header = () => {
             <div className="absolute right-0 top-1 flex gap-[15px] items-center">
               <Link to={user ? "/cart" : "/auth"} onClick={handleCartClick} state={{ showSignUp: true, from: location }}>
                 <Button variant="ghost" size="icon" className={`relative h-auto p-1 transition-all ${shouldShowFixedHeader ? 'hover:bg-gray-100' : 'hover:bg-white/10'}`}>
-                  <img src={cartIcon} alt="Cart" className={`w-[22px] h-[22px] transition-all ${shouldShowFixedHeader ? 'invert' : ''}`} />
+                  <img src={cartIcon} alt="Cart" className={`w-[22px] h-[22px] transition-all ${shouldShowFixedHeader ? 'brightness-0' : 'brightness-0 invert'}`} />
                   {itemCount > 0 && (
-                    <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs">
+                    <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs bg-primary text-primary-foreground">
                       {itemCount}
                     </Badge>
                   )}
