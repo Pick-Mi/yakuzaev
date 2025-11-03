@@ -19,7 +19,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { Upload } from "lucide-react";
+import { Upload, Share2 } from "lucide-react";
+import { FaXTwitter, FaLinkedin, FaTelegram, FaFacebook, FaWhatsapp } from "react-icons/fa6";
 
 const applicationSchema = z.object({
   salutation: z.string().min(1, "Salutation is required"),
@@ -151,122 +152,152 @@ const JobApplication = () => {
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
       <main className="flex-1">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-12">
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-foreground">{jobData.title}</h1>
-            <p className="text-muted-foreground mt-2">{jobData.type}</p>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-12">
+          {/* Header Section with Share */}
+          <div className="flex items-start justify-between mb-8">
+            <div>
+              <h1 className="text-3xl font-bold text-foreground">{jobData.title}</h1>
+              <p className="text-muted-foreground mt-2">{jobData.type}</p>
+            </div>
+            
+            <div className="flex flex-col items-end gap-2">
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <Share2 className="w-4 h-4" />
+                <span>Share The Job</span>
+              </div>
+              <div className="flex gap-3">
+                <button type="button" className="text-foreground hover:text-primary transition-colors">
+                  <FaXTwitter className="w-5 h-5" />
+                </button>
+                <button type="button" className="text-blue-600 hover:text-blue-700 transition-colors">
+                  <FaLinkedin className="w-5 h-5" />
+                </button>
+                <button type="button" className="text-blue-500 hover:text-blue-600 transition-colors">
+                  <FaTelegram className="w-5 h-5" />
+                </button>
+                <button type="button" className="text-blue-600 hover:text-blue-700 transition-colors">
+                  <FaFacebook className="w-5 h-5" />
+                </button>
+                <button type="button" className="text-green-600 hover:text-green-700 transition-colors">
+                  <FaWhatsapp className="w-5 h-5" />
+                </button>
+              </div>
+            </div>
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
-            {/* Personal Details */}
-            <div className="bg-white dark:bg-neutral-950 p-6 space-y-6">
-              <h2 className="text-xl font-semibold text-foreground">Personal Details</h2>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <Label htmlFor="salutation">Salutation</Label>
-                  <Select onValueChange={(value) => setValue("salutation", value)}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Mr">Mr</SelectItem>
-                      <SelectItem value="Ms">Ms</SelectItem>
-                      <SelectItem value="Mrs">Mrs</SelectItem>
-                      <SelectItem value="Dr">Dr</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  {errors.salutation && <p className="text-sm text-destructive">{errors.salutation.message}</p>}
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="firstName">First Name</Label>
-                  <Input {...register("firstName")} placeholder="Enter first name" />
-                  {errors.firstName && <p className="text-sm text-destructive">{errors.firstName.message}</p>}
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="lastName">Last Name</Label>
-                  <Input {...register("lastName")} placeholder="Enter last name" />
-                  {errors.lastName && <p className="text-sm text-destructive">{errors.lastName.message}</p>}
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email ID</Label>
-                  <Input {...register("email")} type="email" placeholder="Enter email" />
-                  {errors.email && <p className="text-sm text-destructive">{errors.email.message}</p>}
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="mobileNumber">Mobile Number</Label>
-                  <div className="flex gap-2">
-                    <Select defaultValue="+91" onValueChange={(value) => setValue("countryCode", value)}>
-                      <SelectTrigger className="w-24">
-                        <SelectValue />
+            {/* Two Column Layout for Personal Details and Autofill */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {/* Personal Details - Left Column */}
+              <div className="space-y-6">
+                <h2 className="text-xl font-semibold text-foreground">Personal Details</h2>
+                
+                <div className="space-y-6">
+                  <div className="space-y-2">
+                    <Label htmlFor="salutation">Salutation</Label>
+                    <Select onValueChange={(value) => setValue("salutation", value)}>
+                      <SelectTrigger className="bg-background">
+                        <SelectValue placeholder="Select" />
                       </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="+91">+91</SelectItem>
-                        <SelectItem value="+1">+1</SelectItem>
-                        <SelectItem value="+44">+44</SelectItem>
+                      <SelectContent className="bg-popover z-50">
+                        <SelectItem value="Mr">Mr</SelectItem>
+                        <SelectItem value="Ms">Ms</SelectItem>
+                        <SelectItem value="Mrs">Mrs</SelectItem>
+                        <SelectItem value="Dr">Dr</SelectItem>
                       </SelectContent>
                     </Select>
-                    <Input {...register("mobileNumber")} placeholder="Enter mobile number" className="flex-1" />
+                    {errors.salutation && <p className="text-sm text-destructive">{errors.salutation.message}</p>}
                   </div>
-                  {errors.mobileNumber && <p className="text-sm text-destructive">{errors.mobileNumber.message}</p>}
-                </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="gender">Gender</Label>
-                  <Select onValueChange={(value) => setValue("gender", value)}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Male">Male</SelectItem>
-                      <SelectItem value="Female">Female</SelectItem>
-                      <SelectItem value="Other">Other</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  {errors.gender && <p className="text-sm text-destructive">{errors.gender.message}</p>}
+                  <div className="space-y-2">
+                    <Label htmlFor="firstName">First Name</Label>
+                    <Input {...register("firstName")} placeholder="Enter first name" className="bg-background" />
+                    {errors.firstName && <p className="text-sm text-destructive">{errors.firstName.message}</p>}
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="lastName">Last Name</Label>
+                    <Input {...register("lastName")} placeholder="Enter last name" className="bg-background" />
+                    {errors.lastName && <p className="text-sm text-destructive">{errors.lastName.message}</p>}
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="email">Email ID</Label>
+                    <Input {...register("email")} type="email" placeholder="Enter email" className="bg-background" />
+                    {errors.email && <p className="text-sm text-destructive">{errors.email.message}</p>}
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="mobileNumber">Mobile Number</Label>
+                    <div className="flex gap-2">
+                      <Select defaultValue="+91" onValueChange={(value) => setValue("countryCode", value)}>
+                        <SelectTrigger className="w-24 bg-background">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent className="bg-popover z-50">
+                          <SelectItem value="+91">+91</SelectItem>
+                          <SelectItem value="+1">+1</SelectItem>
+                          <SelectItem value="+44">+44</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <Input {...register("mobileNumber")} placeholder="Enter mobile number" className="flex-1 bg-background" />
+                    </div>
+                    {errors.mobileNumber && <p className="text-sm text-destructive">{errors.mobileNumber.message}</p>}
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="gender">Gender</Label>
+                    <Select onValueChange={(value) => setValue("gender", value)}>
+                      <SelectTrigger className="bg-background">
+                        <SelectValue placeholder="Select" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-popover z-50">
+                        <SelectItem value="Male">Male</SelectItem>
+                        <SelectItem value="Female">Female</SelectItem>
+                        <SelectItem value="Other">Other</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    {errors.gender && <p className="text-sm text-destructive">{errors.gender.message}</p>}
+                  </div>
                 </div>
               </div>
-            </div>
 
-            {/* Autofill Application */}
-            <div className="bg-white dark:bg-neutral-950 p-6 space-y-4">
-              <h2 className="text-xl font-semibold text-foreground">Autofill Application</h2>
-              <p className="text-sm text-muted-foreground">Upload your resume/CV in seconds with the autofill option.</p>
-              
-              <div className="border-2 border-dashed border-border rounded-lg p-8 text-center">
-                <input
-                  type="file"
-                  id="resume"
-                  accept=".pdf,.doc,.docx"
-                  onChange={handleResumeUpload}
-                  className="hidden"
-                />
-                <label htmlFor="resume" className="cursor-pointer">
-                  <Upload className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-                  <p className="text-sm text-foreground mb-1">Upload you resume / CV</p>
-                  <p className="text-xs text-muted-foreground">
-                    {resumeFile ? resumeFile.name : "Word File / PDF file"}
-                  </p>
-                </label>
+              {/* Autofill Application - Right Column */}
+              <div className="space-y-6">
+                <h2 className="text-xl font-semibold text-foreground">Autofill Application</h2>
+                <p className="text-sm text-muted-foreground">Upload your resume/CV in seconds with the autofill option.</p>
+                
+                <div className="border-2 border-dashed border-border rounded-lg p-12 text-center bg-muted/20">
+                  <input
+                    type="file"
+                    id="resume"
+                    accept=".pdf,.doc,.docx"
+                    onChange={handleResumeUpload}
+                    className="hidden"
+                  />
+                  <label htmlFor="resume" className="cursor-pointer">
+                    <Upload className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
+                    <p className="text-sm text-foreground mb-1 font-medium">Upload you resume / CV</p>
+                    <p className="text-xs text-muted-foreground">
+                      {resumeFile ? resumeFile.name : "Word File / PDF file"}
+                    </p>
+                  </label>
+                </div>
               </div>
             </div>
 
             {/* Job Information */}
-            <div className="bg-white dark:bg-neutral-950 p-6 space-y-6">
+            <div className="space-y-6">
               <h2 className="text-xl font-semibold text-foreground">Job Information</h2>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <Label htmlFor="experienceYears">Experience in Years</Label>
                   <Select onValueChange={(value) => setValue("experienceYears", value)}>
-                    <SelectTrigger>
+                    <SelectTrigger className="bg-background">
                       <SelectValue placeholder="Select" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="bg-popover z-50">
                       <SelectItem value="0-1">0-1 years</SelectItem>
                       <SelectItem value="1-2">1-2 years</SelectItem>
                       <SelectItem value="2-5">2-5 years</SelectItem>
@@ -278,46 +309,46 @@ const JobApplication = () => {
 
                 <div className="space-y-2">
                   <Label htmlFor="currentEmployer">Current Employer</Label>
-                  <Input {...register("currentEmployer")} placeholder="Enter current employer" />
+                  <Input {...register("currentEmployer")} placeholder="Enter current employer" className="bg-background" />
                 </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="currentCtc">Current CTC (In Lakhs Per Annum)</Label>
-                  <Input {...register("currentCtc")} placeholder="Enter current CTC" />
+                  <Input {...register("currentCtc")} placeholder="Enter current CTC" className="bg-background" />
                 </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="expectedCtc">Expected CTC (In Lakhs Per Annum)</Label>
-                  <Input {...register("expectedCtc")} placeholder="Enter expected CTC" />
+                  <Input {...register("expectedCtc")} placeholder="Enter expected CTC" className="bg-background" />
                 </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="noticePeriod">Notice Period</Label>
-                  <Input {...register("noticePeriod")} placeholder="Enter notice period" />
+                  <Input {...register("noticePeriod")} placeholder="Enter notice period" className="bg-background" />
                 </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="skillSet">Skill Set</Label>
-                  <Input {...register("skillSet")} placeholder="HTML, CSS, JavaScript" />
+                  <Input {...register("skillSet")} placeholder="HTML, CSS, JavaScript" className="bg-background" />
                 </div>
 
                 <div className="space-y-2 md:col-span-2">
                   <Label htmlFor="howFoundVacancy">How did you come across this vacancy?</Label>
-                  <Input {...register("howFoundVacancy")} placeholder="Enter your response" />
+                  <Input {...register("howFoundVacancy")} placeholder="Enter your response" className="bg-background" />
                 </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="currentLocation">Current Location</Label>
-                  <Input {...register("currentLocation")} placeholder="Enter current location" />
+                  <Input {...register("currentLocation")} placeholder="Enter current location" className="bg-background" />
                 </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="preferredLocation">Preferred Location</Label>
                   <Select onValueChange={(value) => setValue("preferredLocation", value)}>
-                    <SelectTrigger>
+                    <SelectTrigger className="bg-background">
                       <SelectValue placeholder="Select" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="bg-popover z-50">
                       <SelectItem value="Bengaluru">Bengaluru</SelectItem>
                       <SelectItem value="Chennai">Chennai</SelectItem>
                       <SelectItem value="Mumbai">Mumbai</SelectItem>
