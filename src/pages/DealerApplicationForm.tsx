@@ -62,7 +62,6 @@ const DealerApplication = () => {
     experience: "",
     documents: [] as File[],
     gstNumber: "",
-    agreeToTerms: false,
   });
 
   const handleNext = () => {
@@ -280,19 +279,6 @@ const DealerApplication = () => {
                   onChange={(e) => updateFormData("mobile", e.target.value)}
                 />
               </div>
-
-              <div className="flex items-start gap-2">
-                <Checkbox
-                  checked={formData.agreeToTerms}
-                  onCheckedChange={(checked) => updateFormData("agreeToTerms", checked)}
-                />
-                <label className="text-sm text-muted-foreground">
-                  I agree to the{" "}
-                  <a href="#" className="text-primary underline">Terms of Service</a>
-                  {" "}and{" "}
-                  <a href="#" className="text-primary underline">Privacy Policy</a>.
-                </label>
-              </div>
             </div>
           )}
 
@@ -373,19 +359,6 @@ const DealerApplication = () => {
                   </SelectContent>
                 </Select>
               </div>
-
-              <div className="flex items-start gap-2 pt-4">
-                <Checkbox
-                  checked={formData.agreeToTerms}
-                  onCheckedChange={(checked) => updateFormData("agreeToTerms", checked)}
-                />
-                <label className="text-sm text-muted-foreground">
-                  I agree to the{" "}
-                  <a href="#" className="text-primary underline">Terms of Service</a>
-                  {" "}and{" "}
-                  <a href="#" className="text-primary underline">Privacy Policy</a>.
-                </label>
-              </div>
             </div>
           )}
 
@@ -447,19 +420,6 @@ const DealerApplication = () => {
                   onChange={(e) => updateFormData("spaceAvailable", e.target.value)}
                 />
               </div>
-
-              <div className="flex items-start gap-2 pt-4">
-                <Checkbox
-                  checked={formData.agreeToTerms}
-                  onCheckedChange={(checked) => updateFormData("agreeToTerms", checked)}
-                />
-                <label className="text-sm text-muted-foreground">
-                  I agree to the{" "}
-                  <a href="#" className="text-primary underline">Terms of Service</a>
-                  {" "}and{" "}
-                  <a href="#" className="text-primary underline">Privacy Policy</a>.
-                </label>
-              </div>
             </div>
           )}
 
@@ -517,19 +477,6 @@ const DealerApplication = () => {
                   onChange={(e) => updateFormData("yearsInBusiness", e.target.value)}
                 />
               </div>
-
-              <div className="flex items-start gap-2 pt-4">
-                <Checkbox
-                  checked={formData.agreeToTerms}
-                  onCheckedChange={(checked) => updateFormData("agreeToTerms", checked)}
-                />
-                <label className="text-sm text-muted-foreground">
-                  I agree to the{" "}
-                  <a href="#" className="text-primary underline">Terms of Service</a>
-                  {" "}and{" "}
-                  <a href="#" className="text-primary underline">Privacy Policy</a>.
-                </label>
-              </div>
             </div>
           )}
 
@@ -577,19 +524,6 @@ const DealerApplication = () => {
                   value={formData.gstNumber}
                   onChange={(e) => updateFormData("gstNumber", e.target.value)}
                 />
-              </div>
-
-              <div className="flex items-start gap-2 pt-4">
-                <Checkbox
-                  checked={formData.agreeToTerms}
-                  onCheckedChange={(checked) => updateFormData("agreeToTerms", checked)}
-                />
-                <label className="text-sm text-muted-foreground">
-                  I agree to the{" "}
-                  <a href="#" className="text-primary underline">Terms of Service</a>
-                  {" "}and{" "}
-                  <a href="#" className="text-primary underline">Privacy Policy</a>.
-                </label>
               </div>
             </div>
           )}
