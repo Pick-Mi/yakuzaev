@@ -93,15 +93,15 @@ const ContactUs = () => {
           {/* Main Content */}
           <div className="space-y-10">
             {/* Suggestions */}
-            <section>
+            <section className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
               <h2 className="text-2xl font-semibold mb-2 text-gray-900">Suggestions for you</h2>
               <p className="text-sm text-gray-600 mb-6">Select an action or article to learn more</p>
               
-              <div className="grid md:grid-cols-2 gap-4">
+              <div className="space-y-3">
                 {suggestions.map((suggestion, index) => (
                   <button
                     key={index}
-                    className="bg-white border border-gray-200 rounded-lg p-5 text-left hover:shadow-md transition-shadow group"
+                    className="w-full text-left hover:bg-gray-50 transition-colors p-3 rounded group"
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex-1">
