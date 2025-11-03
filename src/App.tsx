@@ -24,7 +24,8 @@ import OrderDetails from "./pages/OrderDetails";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import PaymentFailure from "./pages/PaymentFailure";
 import BecomeDealer from "./pages/BecomeDealer";
-import DealerApplication from "./pages/DealerApplication";
+import DealerApplicationFlow from "./pages/DealerApplicationFlow";
+import DealerApplicationForm from "./pages/DealerApplicationForm";
 import AboutUs from "./pages/AboutUs";
 import Sitemap from "./pages/Sitemap";
 import ContactUs from "./pages/ContactUs";
@@ -54,7 +55,8 @@ const App = () => (
               <Route path="/blogs" element={<Blogs />} />
               <Route path="/blogs/:slug" element={<BlogDetail />} />
               <Route path="/become-dealer" element={<BecomeDealer />} />
-              <Route path="/dealer-application" element={<DealerApplication />} />
+              <Route path="/dealer-application-flow" element={<DealerApplicationFlow />} />
+              <Route path="/dealer-application-form" element={<DealerApplicationForm />} />
               <Route path="/about-us" element={<AboutUs />} />
               <Route path="/sitemap" element={<Sitemap />} />
               <Route path="/contact-us" element={<ContactUs />} />
