@@ -877,23 +877,7 @@ const Auth = () => {
 
                   <form onSubmit={handleOTPSubmit} className="space-y-6">
                     <div className="space-y-3">
-                      <div className="flex justify-between items-center">
-                        <Label htmlFor="otp" className="text-gray-700 text-sm font-medium">OTP</Label>
-                        {otp.length > 0 && (
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setOtp('');
-                              // Focus first input after clearing
-                              const firstInput = document.querySelector('input[type="text"][maxlength="1"]') as HTMLInputElement;
-                              firstInput?.focus();
-                            }}
-                            className="text-sm text-red-600 hover:text-red-700 font-medium"
-                          >
-                            Clear
-                          </button>
-                        )}
-                      </div>
+                      <Label htmlFor="otp" className="text-gray-700 text-sm font-medium">OTP</Label>
                       <div className="flex gap-3">
                         {[0, 1, 2, 3, 4, 5].map((index) => (
                           <div key={index} className="flex-1">
