@@ -8,7 +8,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import Header from "@/components/Header";
-import { User, MapPin, CreditCard, Package, LogOut, AlertTriangle } from "lucide-react";
+import { User, MapPin, CreditCard, Package, LogOut, AlertTriangle, Plus, Pencil, Trash2 } from "lucide-react";
 
 const Profile = () => {
   const { user, signOut } = useAuth();
@@ -18,6 +18,23 @@ const Profile = () => {
   const [loading, setLoading] = useState(true);
   const [editMode, setEditMode] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [addresses, setAddresses] = useState<any[]>([]);
+  const [addressDialogOpen, setAddressDialogOpen] = useState(false);
+  const [editingAddress, setEditingAddress] = useState<any>(null);
+  const [deleteAddressDialogOpen, setDeleteAddressDialogOpen] = useState(false);
+  const [addressToDelete, setAddressToDelete] = useState<string | null>(null);
+  
+  const [addressForm, setAddressForm] = useState({
+    name: "",
+    phone: "",
+    pincode: "",
+    state: "",
+    city: "",
+    locality: "",
+    address: "",
+    address_type: "home",
+    is_default: false,
+  });
   
   const [profile, setProfile] = useState({
     first_name: "",
@@ -33,6 +50,7 @@ const Profile = () => {
   useEffect(() => {
     if (user) {
       fetchProfile();
+      fetchAddresses();
     }
   }, [user]);
 
@@ -117,6 +135,120 @@ const Profile = () => {
       toast({
         title: "Error",
         description: "Failed to delete account",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const fetchAddresses = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('user_addresses')
+        .select('*')
+        .eq('user_id', user?.id)
+        .order('is_default', { ascending: false });
+
+      if (error) throw error;
+      setAddresses(data || []);
+    } catch (error) {
+      console.error('Error fetching addresses:', error);
+    }
+  };
+
+  const handleAddressSubmit = async () => {
+    try {
+      if (editingAddress) {
+        const { error } = await supabase
+          .from('user_addresses')
+          .update(addressForm)
+          .eq('id', editingAddress.id);
+
+        if (error) throw error;
+
+        toast({
+          title: "Success",
+          description: "Address updated successfully",
+        });
+      } else {
+        const { error } = await supabase
+          .from('user_addresses')
+          .insert({
+            ...addressForm,
+            user_id: user?.id,
+          });
+
+        if (error) throw error;
+
+        toast({
+          title: "Success",
+          description: "Address added successfully",
+        });
+      }
+
+      setAddressDialogOpen(false);
+      setEditingAddress(null);
+      setAddressForm({
+        name: "",
+        phone: "",
+        pincode: "",
+        state: "",
+        city: "",
+        locality: "",
+        address: "",
+        address_type: "home",
+        is_default: false,
+      });
+      fetchAddresses();
+    } catch (error) {
+      console.error('Error saving address:', error);
+      toast({
+        title: "Error",
+        description: "Failed to save address",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleEditAddress = (address: any) => {
+    setEditingAddress(address);
+    setAddressForm({
+      name: address.name,
+      phone: address.phone,
+      pincode: address.pincode,
+      state: address.state,
+      city: address.city,
+      locality: address.locality,
+      address: address.address,
+      address_type: address.address_type,
+      is_default: address.is_default || false,
+    });
+    setAddressDialogOpen(true);
+  };
+
+  const handleDeleteAddress = async () => {
+    if (!addressToDelete) return;
+
+    try {
+      const { error } = await supabase
+        .from('user_addresses')
+        .delete()
+        .eq('id', addressToDelete);
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: "Address deleted successfully",
+      });
+
+      setDeleteAddressDialogOpen(false);
+      setAddressToDelete(null);
+      fetchAddresses();
+    } catch (error) {
+      console.error('Error deleting address:', error);
+      toast({
+        title: "Error",
+        description: "Failed to delete address",
         variant: "destructive"
       });
     }
@@ -340,8 +472,84 @@ const Profile = () => {
 
             {activeSection === "address" && (
               <div className="border border-gray-200 p-8">
-                <h2 className="text-2xl font-semibold mb-4">Delivery Addresses</h2>
-                <p className="text-gray-600">No addresses added yet.</p>
+                <div className="flex justify-between items-center mb-6">
+                  <h2 className="text-2xl font-semibold">Delivery Addresses</h2>
+                  <Button
+                    onClick={() => {
+                      setEditingAddress(null);
+                      setAddressForm({
+                        name: "",
+                        phone: "",
+                        pincode: "",
+                        state: "",
+                        city: "",
+                        locality: "",
+                        address: "",
+                        address_type: "home",
+                        is_default: false,
+                      });
+                      setAddressDialogOpen(true);
+                    }}
+                    className="bg-black hover:bg-gray-800 rounded-none"
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    Add New Address
+                  </Button>
+                </div>
+
+                {addresses.length === 0 ? (
+                  <p className="text-gray-600">No addresses added yet.</p>
+                ) : (
+                  <div className="space-y-4">
+                    {addresses.map((address) => (
+                      <div
+                        key={address.id}
+                        className="border border-gray-200 p-4 rounded-none relative"
+                      >
+                        {address.is_default && (
+                          <span className="absolute top-4 right-4 bg-black text-white text-xs px-2 py-1">
+                            Default
+                          </span>
+                        )}
+                        <div className="mb-2">
+                          <span className="font-semibold">{address.name}</span>
+                          <span className="ml-2 text-sm text-gray-600 capitalize">
+                            ({address.address_type})
+                          </span>
+                        </div>
+                        <p className="text-sm text-gray-700">{address.address}</p>
+                        <p className="text-sm text-gray-700">
+                          {address.locality}, {address.city}, {address.state} - {address.pincode}
+                        </p>
+                        <p className="text-sm text-gray-600 mt-1">Phone: {address.phone}</p>
+                        
+                        <div className="flex gap-2 mt-4">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleEditAddress(address)}
+                            className="rounded-none"
+                          >
+                            <Pencil className="w-3 h-3 mr-1" />
+                            Edit
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              setAddressToDelete(address.id);
+                              setDeleteAddressDialogOpen(true);
+                            }}
+                            className="rounded-none text-red-600 hover:text-red-700"
+                          >
+                            <Trash2 className="w-3 h-3 mr-1" />
+                            Delete
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
 
@@ -377,6 +585,161 @@ const Profile = () => {
               className="bg-red-600 hover:bg-red-700 text-white rounded-none"
             >
               Delete Account
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Add/Edit Address Dialog */}
+      <Dialog open={addressDialogOpen} onOpenChange={setAddressDialogOpen}>
+        <DialogContent className="rounded-none max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>{editingAddress ? "Edit Address" : "Add New Address"}</DialogTitle>
+          </DialogHeader>
+          
+          <div className="grid grid-cols-2 gap-4 py-4">
+            <div>
+              <Label className="text-sm mb-2 block">Full Name *</Label>
+              <Input
+                value={addressForm.name}
+                onChange={(e) => setAddressForm({ ...addressForm, name: e.target.value })}
+                placeholder="Full Name"
+                className="rounded-none"
+              />
+            </div>
+
+            <div>
+              <Label className="text-sm mb-2 block">Phone Number *</Label>
+              <Input
+                value={addressForm.phone}
+                onChange={(e) => setAddressForm({ ...addressForm, phone: e.target.value })}
+                placeholder="10-digit mobile number"
+                className="rounded-none"
+              />
+            </div>
+
+            <div className="col-span-2">
+              <Label className="text-sm mb-2 block">Address *</Label>
+              <Input
+                value={addressForm.address}
+                onChange={(e) => setAddressForm({ ...addressForm, address: e.target.value })}
+                placeholder="House No., Building Name"
+                className="rounded-none"
+              />
+            </div>
+
+            <div className="col-span-2">
+              <Label className="text-sm mb-2 block">Locality *</Label>
+              <Input
+                value={addressForm.locality}
+                onChange={(e) => setAddressForm({ ...addressForm, locality: e.target.value })}
+                placeholder="Road name, Area, Colony"
+                className="rounded-none"
+              />
+            </div>
+
+            <div>
+              <Label className="text-sm mb-2 block">City *</Label>
+              <Input
+                value={addressForm.city}
+                onChange={(e) => setAddressForm({ ...addressForm, city: e.target.value })}
+                placeholder="City"
+                className="rounded-none"
+              />
+            </div>
+
+            <div>
+              <Label className="text-sm mb-2 block">State *</Label>
+              <Input
+                value={addressForm.state}
+                onChange={(e) => setAddressForm({ ...addressForm, state: e.target.value })}
+                placeholder="State"
+                className="rounded-none"
+              />
+            </div>
+
+            <div>
+              <Label className="text-sm mb-2 block">Pincode *</Label>
+              <Input
+                value={addressForm.pincode}
+                onChange={(e) => setAddressForm({ ...addressForm, pincode: e.target.value })}
+                placeholder="6-digit pincode"
+                className="rounded-none"
+              />
+            </div>
+
+            <div>
+              <Label className="text-sm mb-2 block">Address Type *</Label>
+              <select
+                value={addressForm.address_type}
+                onChange={(e) => setAddressForm({ ...addressForm, address_type: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 bg-white rounded-none"
+              >
+                <option value="home">Home</option>
+                <option value="work">Work</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+
+            <div className="col-span-2">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={addressForm.is_default}
+                  onChange={(e) => setAddressForm({ ...addressForm, is_default: e.target.checked })}
+                  className="w-4 h-4"
+                />
+                <span className="text-sm">Set as default address</span>
+              </label>
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setAddressDialogOpen(false);
+                setEditingAddress(null);
+              }}
+              className="rounded-none"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleAddressSubmit}
+              className="bg-black hover:bg-gray-800 rounded-none"
+            >
+              {editingAddress ? "Update Address" : "Add Address"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete Address Confirmation Dialog */}
+      <Dialog open={deleteAddressDialogOpen} onOpenChange={setDeleteAddressDialogOpen}>
+        <DialogContent className="rounded-none">
+          <DialogHeader>
+            <DialogTitle>Delete Address</DialogTitle>
+          </DialogHeader>
+          <p className="text-sm text-gray-700 py-4">
+            Are you sure you want to delete this address? This action cannot be undone.
+          </p>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setDeleteAddressDialogOpen(false);
+                setAddressToDelete(null);
+              }}
+              className="rounded-none"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleDeleteAddress}
+              className="bg-red-600 hover:bg-red-700 text-white rounded-none"
+            >
+              Delete
             </Button>
           </DialogFooter>
         </DialogContent>
