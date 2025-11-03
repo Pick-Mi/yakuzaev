@@ -24,7 +24,7 @@ const Header = () => {
   const [featuredProduct, setFeaturedProduct] = useState<any>(null);
   
   // Routes where header should be transparent initially
-  const transparentRoutes = ['/', '/products', '/become-dealer', '/about-us', '/careers'];
+  const transparentRoutes = ['/', '/products', '/become-dealer', '/about-us', '/careers', '/blogs'];
   const shouldBeTransparent = transparentRoutes.some(route => 
     location.pathname === route || location.pathname.startsWith('/products/')
   );
