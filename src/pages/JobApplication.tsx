@@ -195,7 +195,7 @@ const JobApplication = () => {
             {/* Two Column Layout for Personal Details and Autofill */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               {/* Personal Details - Left Column */}
-              <div className="bg-white dark:bg-neutral-950 rounded-lg p-8 space-y-6">
+              <div className="bg-white dark:bg-neutral-950 p-8 space-y-6">
                 <h2 className="text-xl font-semibold text-foreground">Personal Details</h2>
                 
                 <div className="space-y-6">
@@ -293,7 +293,7 @@ const JobApplication = () => {
             </div>
 
             {/* Job Information */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
               <div className="bg-white dark:bg-neutral-950 p-8 space-y-6">
                 <h2 className="text-xl font-semibold text-foreground">Job Information</h2>
                 
