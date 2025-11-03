@@ -87,6 +87,7 @@ const Header = () => {
           .from('products')
           .select('id, name, price, image_url, feature1, feature2')
           .eq('is_active', true)
+          .order('created_at', { ascending: false })
           .limit(1)
           .single();
         
@@ -261,70 +262,63 @@ const Header = () => {
                 )}
 
                 {/* Navigation Links */}
-                <div className="grid grid-cols-3 gap-6 pt-4">
+                <div className="grid grid-cols-3 gap-8 pt-4">
                   {/* Column 1 */}
-                  <div>
+                  <div className="space-y-3">
                     <Link
-                      to="/become-dealer"
+                      to="/products"
                       onClick={() => setIsMenuOpen(false)}
-                      className="block text-gray-700 text-sm mb-3 hover:opacity-70 transition-opacity"
+                      className="block text-gray-700 text-base hover:opacity-70 transition-opacity"
                     >
-                      Become a Dealers
+                      Products
+                    </Link>
+                    <Link
+                      to="/careers"
+                      onClick={() => setIsMenuOpen(false)}
+                      className="block text-gray-700 text-base hover:opacity-70 transition-opacity"
+                    >
+                      Careers
                     </Link>
                   </div>
 
                   {/* Column 2 */}
-                  <div>
+                  <div className="space-y-3">
                     <Link
-                      to="/products"
+                      to="/become-dealer"
                       onClick={() => setIsMenuOpen(false)}
-                      className="block text-gray-900 text-sm font-medium mb-4 hover:opacity-70 transition-opacity"
+                      className="block text-gray-700 text-base hover:opacity-70 transition-opacity"
                     >
-                      Product
+                      Become a Dealers
                     </Link>
                     <Link
-                      to="/about-us"
+                      to="/blogs"
                       onClick={() => setIsMenuOpen(false)}
-                      className="block text-gray-700 text-sm mb-3 hover:opacity-70 transition-opacity"
-                    >
-                      About Us
-                    </Link>
-                    <Link
-                      to="/"
-                      onClick={() => setIsMenuOpen(false)}
-                      className="block text-gray-700 text-sm mb-3 hover:opacity-70 transition-opacity"
+                      className="block text-gray-700 text-base hover:opacity-70 transition-opacity"
                     >
                       Blogs
-                    </Link>
-                    <Link
-                      to="/"
-                      onClick={() => setIsMenuOpen(false)}
-                      className="block text-gray-700 text-sm mb-3 hover:opacity-70 transition-opacity"
-                    >
-                      Contact Us
                     </Link>
                   </div>
 
                   {/* Column 3 */}
-                  <div>
+                  <div className="space-y-3">
                     <Link
                       to={user ? "/profile" : "/auth"}
                       onClick={() => setIsMenuOpen(false)}
-                      className="block text-gray-900 text-sm font-medium mb-4 hover:opacity-70 transition-opacity"
+                      className="block text-gray-700 text-base hover:opacity-70 transition-opacity"
                     >
                       Account
                     </Link>
                     <Link
                       to={user ? "/cart" : "/auth"}
                       onClick={() => setIsMenuOpen(false)}
-                      className="block text-gray-700 text-sm mb-3 hover:opacity-70 transition-opacity"
+                      className="block text-gray-700 text-base hover:opacity-70 transition-opacity"
                     >
                       Cart
                     </Link>
                     <Link
-                      to="/"
+                      to="/contact-us"
                       onClick={() => setIsMenuOpen(false)}
-                      className="block text-gray-700 text-sm mb-3 hover:opacity-70 transition-opacity"
+                      className="block text-gray-700 text-base hover:opacity-70 transition-opacity"
                     >
                       Contact Us
                     </Link>
