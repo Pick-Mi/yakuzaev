@@ -7,7 +7,6 @@ import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
-import { Settings, User } from "lucide-react";
 import logo from "@/assets/logo.svg";
 
 type Step = "welcome" | "email" | "otp" | "form";
@@ -192,17 +191,12 @@ const DealerApplicationFlow = () => {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       {/* Minimal Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-background">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-background border-b">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <img src={logo} alt="Yakuza" className="h-8" />
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon" className="rounded-full">
-              <Settings className="h-5 w-5" />
-            </Button>
-            <Button variant="ghost" size="icon" className="rounded-full">
-              <User className="h-5 w-5" />
-            </Button>
-          </div>
+          <p className="text-sm text-muted-foreground">
+            Copyright © 2025 Yakuza
+          </p>
         </div>
       </header>
 
@@ -215,8 +209,7 @@ const DealerApplicationFlow = () => {
       </main>
 
       {/* Copyright Footer */}
-      <footer className="py-6 text-center text-sm text-muted-foreground">
-        Copyright © 2025 Yakuza
+      <footer className="py-6">
       </footer>
     </div>
   );
