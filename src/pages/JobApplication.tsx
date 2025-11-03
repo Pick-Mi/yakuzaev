@@ -269,11 +269,11 @@ const JobApplication = () => {
               </div>
 
               {/* Autofill Application - Right Column */}
-              <div className="bg-white dark:bg-neutral-950 rounded-lg p-8 space-y-6">
+              <div className="bg-white dark:bg-neutral-950 p-8 space-y-6 sticky top-60 self-start">
                 <h2 className="text-xl font-semibold text-foreground">Autofill Application</h2>
                 <p className="text-sm text-muted-foreground">Upload your resume/CV in seconds with the autofill option.</p>
                 
-                <div className="border-2 border-dashed border-border rounded-lg p-12 text-center bg-muted/20">
+                <div className="border-2 border-dashed border-border rounded-lg p-12 text-center bg-muted/20 min-h-[300px] flex flex-col items-center justify-center">
                   <input
                     type="file"
                     id="resume"
