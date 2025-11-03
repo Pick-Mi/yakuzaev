@@ -65,6 +65,7 @@ export type Database = {
           published_at: string | null
           slug: string
           status: string
+          style: string | null
           title: string
           updated_at: string
         }
@@ -79,6 +80,7 @@ export type Database = {
           published_at?: string | null
           slug: string
           status?: string
+          style?: string | null
           title: string
           updated_at?: string
         }
@@ -93,6 +95,7 @@ export type Database = {
           published_at?: string | null
           slug?: string
           status?: string
+          style?: string | null
           title?: string
           updated_at?: string
         }
@@ -310,6 +313,87 @@ export type Database = {
           tablet_image_url?: string | null
           title?: string | null
           updated_at?: string
+        }
+        Relationships: []
+      }
+      job_applications: {
+        Row: {
+          country_code: string | null
+          created_at: string
+          current_ctc: string | null
+          current_employer: string | null
+          current_location: string | null
+          email: string
+          expected_ctc: string | null
+          experience_years: string | null
+          first_name: string
+          gender: string | null
+          how_found_vacancy: string | null
+          id: string
+          job_id: string
+          job_title: string
+          last_name: string
+          mobile_number: string
+          notice_period: string | null
+          preferred_location: string | null
+          resume_url: string | null
+          salutation: string | null
+          skill_set: string | null
+          status: string | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          country_code?: string | null
+          created_at?: string
+          current_ctc?: string | null
+          current_employer?: string | null
+          current_location?: string | null
+          email: string
+          expected_ctc?: string | null
+          experience_years?: string | null
+          first_name: string
+          gender?: string | null
+          how_found_vacancy?: string | null
+          id?: string
+          job_id: string
+          job_title: string
+          last_name: string
+          mobile_number: string
+          notice_period?: string | null
+          preferred_location?: string | null
+          resume_url?: string | null
+          salutation?: string | null
+          skill_set?: string | null
+          status?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          country_code?: string | null
+          created_at?: string
+          current_ctc?: string | null
+          current_employer?: string | null
+          current_location?: string | null
+          email?: string
+          expected_ctc?: string | null
+          experience_years?: string | null
+          first_name?: string
+          gender?: string | null
+          how_found_vacancy?: string | null
+          id?: string
+          job_id?: string
+          job_title?: string
+          last_name?: string
+          mobile_number?: string
+          notice_period?: string | null
+          preferred_location?: string | null
+          resume_url?: string | null
+          salutation?: string | null
+          skill_set?: string | null
+          status?: string | null
+          updated_at?: string
+          user_id?: string | null
         }
         Relationships: []
       }

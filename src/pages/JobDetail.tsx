@@ -146,7 +146,10 @@ const JobDetail = () => {
                   <Button variant="outline" className="w-full rounded-none">
                     Refer a Friend
                   </Button>
-                  <Button className="w-full rounded-none bg-black text-white hover:bg-black/90 dark:bg-white dark:text-black dark:hover:bg-white/90">
+                  <Button 
+                    onClick={() => navigate(`/careers/${id}/apply`)}
+                    className="w-full rounded-none bg-black text-white hover:bg-black/90 dark:bg-white dark:text-black dark:hover:bg-white/90"
+                  >
                     Apply
                   </Button>
                 </div>
