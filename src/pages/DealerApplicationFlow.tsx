@@ -81,44 +81,42 @@ const DealerApplicationFlow = () => {
   );
 
   const renderEmailStep = () => (
-    <div className="min-h-[80vh] flex items-center justify-center px-4">
-      <div className="max-w-md w-full space-y-8">
-        <div className="text-center space-y-2">
-          <h2 className="text-3xl font-bold">Verify Your Email</h2>
-          <p className="text-muted-foreground">
-            Enter your email address to receive a verification code
+    <div className="min-h-[calc(100vh-8rem)] flex items-center justify-center px-4 bg-muted/30">
+      <div className="max-w-lg w-full bg-white rounded-lg p-8 md:p-12 shadow-sm">
+        <div className="text-center space-y-3 mb-8">
+          <h2 className="text-2xl md:text-3xl font-normal">
+            Enter your email ID to log in.
+          </h2>
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            Lorem Ipsum is simply dummy text of the printing and typesetting industry.<br />
+            Lorem Ipsum has been the industry's standard dummy text
           </p>
         </div>
 
         <form onSubmit={handleEmailSubmit} className="space-y-6">
           <div className="space-y-2">
-            <Label htmlFor="email">Email Address</Label>
+            <Label htmlFor="email" className="text-sm font-normal">
+              Email ID
+            </Label>
             <Input
               id="email"
               type="email"
-              placeholder="your.email@example.com"
+              placeholder="Placeholder"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="h-12"
+              className="h-12 bg-background"
               required
             />
           </div>
 
-          <Button 
-            type="submit"
-            className="w-full h-12 bg-black text-white hover:bg-black/90"
-          >
-            Send Verification Code
-          </Button>
-
-          <Button
-            type="button"
-            variant="ghost"
-            className="w-full"
-            onClick={() => setCurrentStep("welcome")}
-          >
-            Back
-          </Button>
+          <div className="flex justify-center pt-4">
+            <Button 
+              type="submit"
+              className="px-10 h-12 bg-black text-white hover:bg-black/90 rounded-none"
+            >
+              Continue
+            </Button>
+          </div>
         </form>
       </div>
     </div>
