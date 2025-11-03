@@ -18,6 +18,7 @@ import AccessoriesSection from "@/components/AccessoriesSection";
 import ProductShowcase from "@/components/ProductShowcase";
 import { FAQSection } from "@/components/FAQSection";
 import { ProductBottomNav } from "@/components/ProductBottomNav";
+import CustomMetadataSection from "@/components/CustomMetadataSection";
 import Footer from "@/components/Footer";
 
 
@@ -419,6 +420,9 @@ const Product = () => {
       
       {/* Product Showcase Section */}
       <ProductShowcase />
+      
+      {/* Custom Metadata Section */}
+      <CustomMetadataSection metadata={product.custom_metadata} />
       
       {/* FAQ Section */}
       <FAQSection faqs={product.qa_section} />
