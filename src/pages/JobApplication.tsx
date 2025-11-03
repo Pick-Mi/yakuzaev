@@ -162,10 +162,6 @@ const JobApplication = () => {
             </div>
             
             <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Share2 className="w-4 h-4" />
-                <span className="hidden sm:inline">Share The Job</span>
-              </div>
               <div className="flex gap-3">
                 <button type="button" className="text-foreground hover:text-primary transition-colors" aria-label="Share on X">
                   <FaXTwitter className="w-5 h-5" />
