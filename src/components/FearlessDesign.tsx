@@ -18,7 +18,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
   const { name, thumbnail, feature1, feature2, price } = product;
 
   return (
-    <div className="bg-white w-full overflow-hidden shadow-sm hover:shadow-lg transition-shadow">
+    <div className="bg-white w-full overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 group">
       {/* Product Image */}
       <div className="w-full aspect-[4/3] bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden">
         <img
@@ -47,6 +47,23 @@ const ProductCard = ({ product }: ProductCardProps) => {
               ₹{price.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               <span className="text-sm font-normal text-gray-600 ml-1">/ showroom price</span>
             </p>
+          </div>
+        </div>
+
+        {/* Hover Action Buttons */}
+        <div className="overflow-hidden transition-all duration-300 max-h-0 opacity-0 group-hover:max-h-40 group-hover:opacity-100">
+          <div className="w-full h-px bg-gray-300 my-4" />
+          <div className="flex flex-col gap-3">
+            <Link to={`/products/${product.id}`} className="w-full">
+              <Button className="w-full h-[55px] bg-black text-white hover:bg-black/90 rounded-none text-base font-medium">
+                Book Now
+              </Button>
+            </Link>
+            <Link to={`/products/${product.id}`} className="w-full">
+              <Button variant="outline" className="w-full h-[55px] bg-gray-100 text-gray-900 border-none hover:bg-gray-200 rounded-none text-base font-medium">
+                Explore {name}
+              </Button>
+            </Link>
           </div>
         </div>
       </div>
