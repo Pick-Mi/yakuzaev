@@ -30,7 +30,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Helmet } from "react-helmet";
 
 const Product = () => {
-  const { id } = useParams();
+  const { slug } = useParams();
   const navigate = useNavigate();
   const { addToCart } = useCart();
   const { toast } = useToast();
@@ -46,8 +46,8 @@ const Product = () => {
         // Using any type to bypass the current type limitations
         const response = await (supabase as any)
           .from('products')
-          .select('id, name, price, image_url, thumbnail, images, description, is_active, preview_section, features, visual_features, design_features, benefits, promo_card, videos, accessories, qa_section, variants, specification_titles, color_variety, meta_title, meta_description, meta_keywords, scheme_name, scheme_description, scheme_discount_percentage, scheme_start_date, scheme_end_date, scheme_active, custom_metadata, sku, cost_price')
-          .eq('id', id)
+          .select('id, name, slug, price, image_url, thumbnail, images, description, is_active, preview_section, features, visual_features, design_features, benefits, promo_card, videos, accessories, qa_section, variants, specification_titles, color_variety, meta_title, meta_description, meta_keywords, scheme_name, scheme_description, scheme_discount_percentage, scheme_start_date, scheme_end_date, scheme_active, custom_metadata, sku, cost_price')
+          .eq('slug', slug)
           .eq('is_active', true)
           .single();
 
@@ -203,6 +203,7 @@ const Product = () => {
           const fetchedProduct = {
             id: response.data.id,
             name: response.data.name,
+            slug: response.data.slug,
             price: response.data.price,
             sku: response.data.sku,
             cost_price: response.data.cost_price,
@@ -259,10 +260,10 @@ const Product = () => {
       }
     };
 
-    if (id) {
+    if (slug) {
       fetchProduct();
     }
-  }, [id, toast]);
+  }, [slug, toast]);
 
   const handleAddToCart = () => {
     if (product) {

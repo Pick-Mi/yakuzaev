@@ -104,7 +104,7 @@ const ProductShowcase = () => {
   };
 
   const handleExplore = (product: any) => {
-    navigate(`/products/${product.id}`);
+    navigate(`/products/${product.slug}`);
   };
 
   const scrollLeft = () => {

@@ -235,7 +235,7 @@ const Header = () => {
                         <p className="text-white text-2xl font-bold">₹ {featuredProduct.price.toLocaleString()} <span className="text-base font-normal">/ Per Month</span></p>
                       </div>
                       <Link
-                        to={`/products/${featuredProduct.id}`}
+                        to={`/products/${featuredProduct.slug}`}
                         onClick={() => setIsMenuOpen(false)}
                         className="inline-flex items-center gap-2 px-6 py-2.5 border-2 border-white text-white rounded-full hover:bg-white hover:text-gray-900 transition-colors text-sm"
                       >
@@ -246,7 +246,7 @@ const Header = () => {
                       className="absolute top-6 right-6 p-2 bg-white/10 rounded-full hover:bg-white/20 transition-colors"
                       onClick={() => {
                         setIsMenuOpen(false);
-                        navigate(`/products/${featuredProduct.id}`);
+                        navigate(`/products/${featuredProduct.slug}`);
                       }}
                     >
                       <ArrowUpRight className="w-5 h-5 text-white" />

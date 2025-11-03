@@ -193,7 +193,7 @@ const ProductListingSection = () => {
                         >
                           Book Now
                         </button>
-                        <Link to={`/products/${product.id}`} className="w-full">
+                        <Link to={`/products/${product.slug}`} className="w-full">
                           <button
                             className="bg-[#f8f9f9] text-black h-[55px] px-[50px] py-[13px] font-['Inter'] font-medium text-[14px] w-full hover:bg-[#e8e9e9] transition-colors"
                           >

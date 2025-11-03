@@ -1,7 +1,8 @@
 # 301 Permanent Redirects (Server-side)
 # Old URL → New URL
 
-# Product URL changes
+# Product URL changes - ID-based to slug-based
+/products/id/*  /products/id/:splat  301
 /product/*  /products/:splat  301
 
 # Page URL changes

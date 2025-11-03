@@ -7,6 +7,7 @@ interface ProductCardProps {
   product: {
     id: string;
     name: string;
+    slug: string;
     thumbnail: string;
     feature1: string;
     feature2: string;
@@ -54,12 +55,12 @@ const ProductCard = ({ product }: ProductCardProps) => {
         <div className="overflow-hidden transition-all duration-300 max-h-0 opacity-0 group-hover:max-h-40 group-hover:opacity-100 group-hover:mt-4">
           <div className="w-full h-px bg-gray-300 mb-4" />
           <div className="flex flex-col gap-3">
-            <Link to={`/products/${product.id}`} className="w-full">
+            <Link to={`/products/${product.slug}`} className="w-full">
               <Button className="w-full h-[55px] bg-black text-white hover:bg-black/90 rounded-none text-base font-medium">
                 Book Now
               </Button>
             </Link>
-            <Link to={`/products/${product.id}`} className="w-full">
+            <Link to={`/products/${product.slug}`} className="w-full">
               <Button variant="outline" className="w-full h-[55px] bg-gray-100 text-gray-900 border-none hover:bg-gray-200 rounded-none text-base font-medium">
                 Explore {name}
               </Button>
@@ -92,7 +93,7 @@ const FearlessDesign = () => {
           // Fetch products from sports category
           const { data, error: productsError } = await supabase
             .from("products")
-            .select("id, name, thumbnail, feature1, feature2, price")
+            .select("id, name, slug, thumbnail, feature1, feature2, price")
             .eq("category_id", category.id)
             .eq("is_active", true)
             .limit(4);

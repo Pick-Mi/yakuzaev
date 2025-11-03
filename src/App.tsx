@@ -70,7 +70,11 @@ const App = () => (
               <Route path="/careers" element={<Careers />} />
               <Route path="/careers/:id" element={<JobDetail />} />
               <Route path="/careers/:id/apply" element={<JobApplication />} />
-              <Route path="/products/:id" element={<Product />} />
+              <Route path="/products/:slug" element={<Product />} />
+              
+              {/* Redirect old ID-based product URLs to slug-based URLs */}
+              <Route path="/products/id/:id" element={<ProductRedirect />} />
+              
               <Route path="/profile" element={
                 <ProtectedRoute>
                   <Profile />
