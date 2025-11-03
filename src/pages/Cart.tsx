@@ -14,16 +14,21 @@ const Cart = () => {
     return (
       <div className="min-h-screen bg-background">
         <Header />
-        <div className="flex items-center justify-center pt-20">
-          <div className="text-center space-y-6">
-            <ShoppingBag className="w-24 h-24 text-muted-foreground mx-auto" />
-            <div className="space-y-2">
-              <h1 className="text-2xl font-bold text-foreground">Your cart is empty</h1>
-              <p className="text-muted-foreground">Add some products to get started</p>
+        <div className="flex items-center justify-center min-h-[80vh]">
+          <div className="text-center space-y-8 max-w-md">
+            <div className="inline-block p-6 rounded-2xl border-2 border-foreground">
+              <ShoppingBag className="w-12 h-12 text-foreground" />
             </div>
-            <Link to="/">
-              <Button variant="ai" size="lg">
-                <ArrowLeft className="w-4 h-4" />
+            <div className="space-y-3">
+              <h1 className="text-4xl font-bold text-foreground">Your cart is empty</h1>
+              <p className="text-lg text-muted-foreground">Add some products to get started</p>
+            </div>
+            <Link to="/products">
+              <Button 
+                className="bg-foreground text-background hover:bg-foreground/90 px-8 py-6 text-base font-medium"
+                size="lg"
+              >
+                <ArrowLeft className="w-5 h-5 mr-2" />
                 Continue Shopping
               </Button>
             </Link>
