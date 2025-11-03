@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { Facebook, Twitter, Instagram, Linkedin, Youtube, ChevronDown } from "lucide-react";
+import logo from "@/assets/logo.svg";
 
 const Footer = () => {
   return (
@@ -7,7 +8,7 @@ const Footer = () => {
       <div className="container mx-auto max-w-[1280px]">
         {/* Logo */}
         <div className="mb-16">
-          <h2 className="text-2xl font-semibold">YAKUZA</h2>
+          <img src={logo} alt="Yakuza" className="h-8" />
         </div>
 
         {/* Navigation and Social Icons */}
