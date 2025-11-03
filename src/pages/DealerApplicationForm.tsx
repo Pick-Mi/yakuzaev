@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -23,6 +23,22 @@ const DealerApplication = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [currentStep, setCurrentStep] = useState(0);
+  const [userEmail, setUserEmail] = useState("");
+  const [userName, setUserName] = useState("");
+  
+  // Get verified email from session storage on mount
+  useEffect(() => {
+    const storedEmail = sessionStorage.getItem("dealer_application_email");
+    if (storedEmail) {
+      setUserEmail(storedEmail);
+      // Extract name from email (part before @)
+      const emailName = storedEmail.split("@")[0];
+      // Capitalize first letter
+      const displayName = emailName.charAt(0).toUpperCase() + emailName.slice(1);
+      setUserName(displayName);
+    }
+  }, []);
+
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -158,9 +174,11 @@ const DealerApplication = () => {
                   <path strokeWidth="2" d="M12 16v-4m0-4h.01" />
                 </svg>
               </button>
-              <span className="hidden sm:block text-sm font-medium">Karthik P</span>
+              <span className="hidden sm:block text-sm font-medium">
+                {userName || userEmail.split("@")[0] || "User"}
+              </span>
               <div className="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center text-sm font-medium">
-                K
+                {(userName || userEmail || "U").charAt(0).toUpperCase()}
               </div>
             </div>
           </div>
