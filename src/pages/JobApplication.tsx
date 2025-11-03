@@ -192,83 +192,168 @@ const JobApplication = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-52 pb-12">
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
-            {/* Two Column Layout for Personal Details and Autofill */}
+            {/* Two Column Layout */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {/* Personal Details - Left Column */}
-              <div className="bg-white dark:bg-neutral-950 p-8 space-y-6">
-                <h2 className="text-xl font-semibold text-foreground">Personal Details</h2>
-                
-                <div className="space-y-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="salutation">Salutation</Label>
-                    <Select onValueChange={(value) => setValue("salutation", value)}>
-                      <SelectTrigger className="bg-background">
-                        <SelectValue placeholder="Select" />
-                      </SelectTrigger>
-                      <SelectContent className="bg-popover z-50">
-                        <SelectItem value="Mr">Mr</SelectItem>
-                        <SelectItem value="Ms">Ms</SelectItem>
-                        <SelectItem value="Mrs">Mrs</SelectItem>
-                        <SelectItem value="Dr">Dr</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    {errors.salutation && <p className="text-sm text-destructive">{errors.salutation.message}</p>}
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="firstName">First Name</Label>
-                    <Input {...register("firstName")} placeholder="Enter first name" className="bg-background" />
-                    {errors.firstName && <p className="text-sm text-destructive">{errors.firstName.message}</p>}
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="lastName">Last Name</Label>
-                    <Input {...register("lastName")} placeholder="Enter last name" className="bg-background" />
-                    {errors.lastName && <p className="text-sm text-destructive">{errors.lastName.message}</p>}
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="email">Email ID</Label>
-                    <Input {...register("email")} type="email" placeholder="Enter email" className="bg-background" />
-                    {errors.email && <p className="text-sm text-destructive">{errors.email.message}</p>}
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="mobileNumber">Mobile Number</Label>
-                    <div className="flex gap-2">
-                      <Select defaultValue="+91" onValueChange={(value) => setValue("countryCode", value)}>
-                        <SelectTrigger className="w-24 bg-background">
-                          <SelectValue />
+              {/* Left Column - Personal Details, Job Info, and CTA */}
+              <div className="space-y-8">
+                {/* Personal Details */}
+                <div className="bg-white dark:bg-neutral-950 p-8 space-y-6">
+                  <h2 className="text-xl font-semibold text-foreground">Personal Details</h2>
+                  
+                  <div className="space-y-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="salutation">Salutation</Label>
+                      <Select onValueChange={(value) => setValue("salutation", value)}>
+                        <SelectTrigger className="bg-background">
+                          <SelectValue placeholder="Select" />
                         </SelectTrigger>
                         <SelectContent className="bg-popover z-50">
-                          <SelectItem value="+91">+91</SelectItem>
-                          <SelectItem value="+1">+1</SelectItem>
-                          <SelectItem value="+44">+44</SelectItem>
+                          <SelectItem value="Mr">Mr</SelectItem>
+                          <SelectItem value="Ms">Ms</SelectItem>
+                          <SelectItem value="Mrs">Mrs</SelectItem>
+                          <SelectItem value="Dr">Dr</SelectItem>
                         </SelectContent>
                       </Select>
-                      <Input {...register("mobileNumber")} placeholder="Enter mobile number" className="flex-1 bg-background" />
+                      {errors.salutation && <p className="text-sm text-destructive">{errors.salutation.message}</p>}
                     </div>
-                    {errors.mobileNumber && <p className="text-sm text-destructive">{errors.mobileNumber.message}</p>}
-                  </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="gender">Gender</Label>
-                    <Select onValueChange={(value) => setValue("gender", value)}>
-                      <SelectTrigger className="bg-background">
-                        <SelectValue placeholder="Select" />
-                      </SelectTrigger>
-                      <SelectContent className="bg-popover z-50">
-                        <SelectItem value="Male">Male</SelectItem>
-                        <SelectItem value="Female">Female</SelectItem>
-                        <SelectItem value="Other">Other</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    {errors.gender && <p className="text-sm text-destructive">{errors.gender.message}</p>}
+                    <div className="space-y-2">
+                      <Label htmlFor="firstName">First Name</Label>
+                      <Input {...register("firstName")} placeholder="Enter first name" className="bg-background" />
+                      {errors.firstName && <p className="text-sm text-destructive">{errors.firstName.message}</p>}
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="lastName">Last Name</Label>
+                      <Input {...register("lastName")} placeholder="Enter last name" className="bg-background" />
+                      {errors.lastName && <p className="text-sm text-destructive">{errors.lastName.message}</p>}
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="email">Email ID</Label>
+                      <Input {...register("email")} type="email" placeholder="Enter email" className="bg-background" />
+                      {errors.email && <p className="text-sm text-destructive">{errors.email.message}</p>}
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="mobileNumber">Mobile Number</Label>
+                      <div className="flex gap-2">
+                        <Select defaultValue="+91" onValueChange={(value) => setValue("countryCode", value)}>
+                          <SelectTrigger className="w-24 bg-background">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent className="bg-popover z-50">
+                            <SelectItem value="+91">+91</SelectItem>
+                            <SelectItem value="+1">+1</SelectItem>
+                            <SelectItem value="+44">+44</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <Input {...register("mobileNumber")} placeholder="Enter mobile number" className="flex-1 bg-background" />
+                      </div>
+                      {errors.mobileNumber && <p className="text-sm text-destructive">{errors.mobileNumber.message}</p>}
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="gender">Gender</Label>
+                      <Select onValueChange={(value) => setValue("gender", value)}>
+                        <SelectTrigger className="bg-background">
+                          <SelectValue placeholder="Select" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-popover z-50">
+                          <SelectItem value="Male">Male</SelectItem>
+                          <SelectItem value="Female">Female</SelectItem>
+                          <SelectItem value="Other">Other</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      {errors.gender && <p className="text-sm text-destructive">{errors.gender.message}</p>}
+                    </div>
                   </div>
                 </div>
+
+                {/* Job Information */}
+                <div className="bg-white dark:bg-neutral-950 p-8 space-y-6">
+                  <h2 className="text-xl font-semibold text-foreground">Job Information</h2>
+                  
+                  <div className="grid grid-cols-1 gap-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="experienceYears">Experience in Years</Label>
+                      <Select onValueChange={(value) => setValue("experienceYears", value)}>
+                        <SelectTrigger className="bg-background">
+                          <SelectValue placeholder="Select" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-popover z-50">
+                          <SelectItem value="0-1">0-1 years</SelectItem>
+                          <SelectItem value="1-2">1-2 years</SelectItem>
+                          <SelectItem value="2-5">2-5 years</SelectItem>
+                          <SelectItem value="5+">5+ years</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      {errors.experienceYears && <p className="text-sm text-destructive">{errors.experienceYears.message}</p>}
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="currentEmployer">Current Employer</Label>
+                      <Input {...register("currentEmployer")} placeholder="Enter current employer" className="bg-background" />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="currentCtc">Current CTC (In Lakhs Per Annum)</Label>
+                      <Input {...register("currentCtc")} placeholder="Enter current CTC" className="bg-background" />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="expectedCtc">Expected CTC (In Lakhs Per Annum)</Label>
+                      <Input {...register("expectedCtc")} placeholder="Enter expected CTC" className="bg-background" />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="noticePeriod">Notice Period</Label>
+                      <Input {...register("noticePeriod")} placeholder="Enter notice period" className="bg-background" />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="skillSet">Skill Set</Label>
+                      <Input {...register("skillSet")} placeholder="HTML, CSS, JavaScript" className="bg-background" />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="howFoundVacancy">How did you come across this vacancy?</Label>
+                      <Input {...register("howFoundVacancy")} placeholder="Enter your response" className="bg-background" />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="currentLocation">Current Location</Label>
+                      <Input {...register("currentLocation")} placeholder="Enter current location" className="bg-background" />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="preferredLocation">Preferred Location</Label>
+                      <Select onValueChange={(value) => setValue("preferredLocation", value)}>
+                        <SelectTrigger className="bg-background">
+                          <SelectValue placeholder="Select" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-popover z-50">
+                          <SelectItem value="Bengaluru">Bengaluru</SelectItem>
+                          <SelectItem value="Chennai">Chennai</SelectItem>
+                          <SelectItem value="Mumbai">Mumbai</SelectItem>
+                          <SelectItem value="Singapore">Singapore</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Apply Button */}
+                <Button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full rounded-none bg-black text-white hover:bg-black/90 dark:bg-white dark:text-black dark:hover:bg-white/90"
+                >
+                  {isSubmitting ? "Submitting..." : "Apply"}
+                </Button>
               </div>
 
-              {/* Autofill Application - Right Column */}
+              {/* Right Column - Autofill Application (Sticky) */}
               <div className="bg-white dark:bg-neutral-950 p-8 space-y-6 sticky top-60 self-start">
                 <h2 className="text-xl font-semibold text-foreground">Autofill Application</h2>
                 <p className="text-sm text-muted-foreground">Upload your resume/CV in seconds with the autofill option.</p>
@@ -290,91 +375,6 @@ const JobApplication = () => {
                   </label>
                 </div>
               </div>
-            </div>
-
-            {/* Job Information */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
-              <div className="bg-white dark:bg-neutral-950 p-8 space-y-6">
-                <h2 className="text-xl font-semibold text-foreground">Job Information</h2>
-                
-                <div className="grid grid-cols-1 gap-6">
-                <div className="space-y-2">
-                  <Label htmlFor="experienceYears">Experience in Years</Label>
-                  <Select onValueChange={(value) => setValue("experienceYears", value)}>
-                    <SelectTrigger className="bg-background">
-                      <SelectValue placeholder="Select" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-popover z-50">
-                      <SelectItem value="0-1">0-1 years</SelectItem>
-                      <SelectItem value="1-2">1-2 years</SelectItem>
-                      <SelectItem value="2-5">2-5 years</SelectItem>
-                      <SelectItem value="5+">5+ years</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  {errors.experienceYears && <p className="text-sm text-destructive">{errors.experienceYears.message}</p>}
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="currentEmployer">Current Employer</Label>
-                  <Input {...register("currentEmployer")} placeholder="Enter current employer" className="bg-background" />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="currentCtc">Current CTC (In Lakhs Per Annum)</Label>
-                  <Input {...register("currentCtc")} placeholder="Enter current CTC" className="bg-background" />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="expectedCtc">Expected CTC (In Lakhs Per Annum)</Label>
-                  <Input {...register("expectedCtc")} placeholder="Enter expected CTC" className="bg-background" />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="noticePeriod">Notice Period</Label>
-                  <Input {...register("noticePeriod")} placeholder="Enter notice period" className="bg-background" />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="skillSet">Skill Set</Label>
-                  <Input {...register("skillSet")} placeholder="HTML, CSS, JavaScript" className="bg-background" />
-                </div>
-
-                <div className="space-y-2 md:col-span-2">
-                  <Label htmlFor="howFoundVacancy">How did you come across this vacancy?</Label>
-                  <Input {...register("howFoundVacancy")} placeholder="Enter your response" className="bg-background" />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="currentLocation">Current Location</Label>
-                  <Input {...register("currentLocation")} placeholder="Enter current location" className="bg-background" />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="preferredLocation">Preferred Location</Label>
-                  <Select onValueChange={(value) => setValue("preferredLocation", value)}>
-                    <SelectTrigger className="bg-background">
-                      <SelectValue placeholder="Select" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-popover z-50">
-                      <SelectItem value="Bengaluru">Bengaluru</SelectItem>
-                      <SelectItem value="Chennai">Chennai</SelectItem>
-                      <SelectItem value="Mumbai">Mumbai</SelectItem>
-                      <SelectItem value="Singapore">Singapore</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              <Button
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full rounded-none bg-black text-white hover:bg-black/90 dark:bg-white dark:text-black dark:hover:bg-white/90"
-              >
-                {isSubmitting ? "Submitting..." : "Apply"}
-              </Button>
             </div>
           </form>
 
