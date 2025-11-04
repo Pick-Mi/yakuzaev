@@ -50,6 +50,7 @@ interface Order {
   cancellation_status?: string;
   cancellation_reason?: string;
   cancellation_requested_at?: string;
+  refund_details?: any;
 }
 const OrderDetails = () => {
   const {
@@ -441,6 +442,62 @@ const OrderDetails = () => {
 
             {/* Action Buttons */}
             <div className="space-y-4 pt-4">
+              {/* Order Cancelled Status - Show when approved */}
+              {order.cancellation_status === 'approved' && order.status === 'cancelled' && (
+                <div className="flex items-center justify-center gap-3 px-6 py-4 bg-gradient-to-r from-red-50 to-red-100 border-2 border-red-500 rounded-lg shadow-sm">
+                  <div className="flex items-center gap-2">
+                    <XCircle className="w-6 h-6 text-red-600" />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-base font-bold text-red-900">
+                      Order Cancelled
+                    </span>
+                    <span className="text-sm text-red-700">
+                      Your order has been cancelled by admin
+                    </span>
+                  </div>
+                </div>
+              )}
+
+              {/* Refund Information - Show when refund is processed */}
+              {order.refund_details && (
+                <div className="bg-green-50 border-2 border-green-500 rounded-lg p-4">
+                  <div className="flex items-start gap-3">
+                    <CheckCircle className="w-6 h-6 text-green-600 mt-1" />
+                    <div className="flex-1">
+                      <h3 className="font-bold text-green-900 text-base mb-2">Refund Processed</h3>
+                      <div className="space-y-2 text-sm text-green-800">
+                        <div className="flex justify-between">
+                          <span>Refund Amount:</span>
+                          <span className="font-semibold">₹{parseFloat(order.refund_details.amount || order.total_amount).toLocaleString('en-IN')}</span>
+                        </div>
+                        {order.refund_details.transaction_id && (
+                          <div className="flex justify-between">
+                            <span>Transaction ID:</span>
+                            <span className="font-mono text-xs">{order.refund_details.transaction_id}</span>
+                          </div>
+                        )}
+                        {order.refund_details.refund_date && (
+                          <div className="flex justify-between">
+                            <span>Refund Date:</span>
+                            <span>{format(new Date(order.refund_details.refund_date), 'MMM dd, yyyy')}</span>
+                          </div>
+                        )}
+                        {order.refund_details.status && (
+                          <div className="flex justify-between">
+                            <span>Status:</span>
+                            <Badge variant="default" className="bg-green-600">{order.refund_details.status}</Badge>
+                          </div>
+                        )}
+                        <p className="text-xs mt-2 pt-2 border-t border-green-300">
+                          Refund will be credited to your original payment method within 5-7 business days.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {/* Cancellation Status Chip - Show prominently if pending */}
               {order.cancellation_status === 'pending' && (
                 <div className="flex items-center justify-center gap-3 px-6 py-4 bg-gradient-to-r from-yellow-50 to-orange-50 border-2 border-yellow-400 rounded-lg shadow-sm">
