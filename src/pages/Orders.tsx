@@ -495,7 +495,7 @@ const Orders = () => {
                     const deliveryDate = order.estimated_delivery_date || order.created_at;
                     
                     return (
-                      <div key={order.id} className="border border-gray-200 rounded-lg p-6">
+                      <div key={order.id} className="border border-gray-200 p-6">
                         {/* Delivery Date Header */}
                         <div className="mb-4">
                           <h3 className="text-base font-semibold text-gray-900">
