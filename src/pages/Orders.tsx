@@ -423,86 +423,100 @@ const Orders = () => {
           </div>
         ) : (
           // Desktop Layout
-          <div className="flex gap-8 max-w-7xl">
-            {/* Sidebar */}
-            <aside className="w-64 flex-shrink-0">
-              <div className="sticky top-32">
-                <h2 className="text-xl font-bold mb-6 text-foreground">Account</h2>
-                <nav className="space-y-1">
-                  <button
-                    onClick={() => navigate("/profile?section=profile")}
-                    className="w-full flex items-center gap-3 px-4 py-3 text-foreground hover:bg-muted transition-colors rounded text-left"
-                  >
-                    <User className="w-5 h-5" />
-                    <span>Profile Details</span>
-                  </button>
-                  <button
-                    onClick={() => navigate("/profile?section=address")}
-                    className="w-full flex items-center gap-3 px-4 py-3 text-foreground hover:bg-muted transition-colors rounded text-left"
-                  >
-                    <Package className="w-5 h-5" />
-                    <span>Delivery Addresses</span>
-                  </button>
-                  <button
-                    onClick={() => navigate("/profile?section=pan")}
-                    className="w-full flex items-center gap-3 px-4 py-3 text-foreground hover:bg-muted transition-colors rounded text-left"
-                  >
-                    <Star className="w-5 h-5" />
-                    <span>Identification Details</span>
-                  </button>
-                  <button
-                    className="w-full flex items-center gap-3 px-4 py-3 bg-muted text-foreground font-semibold rounded text-left"
-                  >
-                    <Package className="w-5 h-5" />
-                    <span>My Orders</span>
-                  </button>
-                  <button
-                    onClick={handleLogout}
-                    className="w-full flex items-center gap-3 px-4 py-3 text-foreground hover:bg-muted transition-colors rounded text-left"
-                  >
-                    <LogOut className="w-5 h-5" />
-                    <span>Logout</span>
-                  </button>
-                </nav>
-              </div>
+          <div className="flex gap-6">
+            {/* Sidebar - Same as Profile page */}
+            <aside className="w-80 flex-shrink-0">
+              <nav className="flex flex-col gap-[15px] sticky top-32">
+                {/* Account Settings Section */}
+                <div className="bg-white">
+                  <div className="flex items-center gap-3 px-6 py-4 border-b">
+                    <div className="w-10 h-10 rounded-full bg-orange-500 flex items-center justify-center">
+                      <User className="w-6 h-6 text-white" />
+                    </div>
+                    <span className="font-semibold text-lg text-gray-700">ACCOUNT SETTINGS</span>
+                  </div>
+                  
+                  <div className="space-y-0">
+                    <button
+                      onClick={() => navigate("/profile?section=profile")}
+                      className="w-full text-left px-6 py-4 text-gray-900 hover:bg-gray-50 transition-colors"
+                    >
+                      Profile information
+                    </button>
+                    <button
+                      onClick={() => navigate("/profile?section=address")}
+                      className="w-full text-left px-6 py-4 text-gray-900 hover:bg-gray-50 transition-colors"
+                    >
+                      Manage Addresses
+                    </button>
+                    <button
+                      onClick={() => navigate("/profile?section=pan")}
+                      className="w-full text-left px-6 py-4 text-gray-900 hover:bg-gray-50 transition-colors"
+                    >
+                      ID Proof
+                    </button>
+                  </div>
+                </div>
+
+                {/* My Orders */}
+                <button
+                  className="w-full flex items-center justify-between px-6 py-4 text-left bg-orange-50 transition-colors"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 flex items-center justify-center">
+                      <Package className="w-6 h-6 text-orange-500" />
+                    </div>
+                    <span className="font-semibold text-lg text-orange-500">MY ORDERS</span>
+                  </div>
+                  <ChevronRight className="w-5 h-5 text-orange-500" />
+                </button>
+
+                {/* Logout */}
+                <button
+                  onClick={handleLogout}
+                  className="w-full flex items-center gap-3 px-6 py-4 text-left bg-white hover:bg-gray-50 transition-colors"
+                >
+                  <div className="w-10 h-10 flex items-center justify-center">
+                    <LogOut className="w-6 h-6 text-orange-500" />
+                  </div>
+                  <span className="font-semibold text-lg text-gray-700">Logout</span>
+                </button>
+              </nav>
             </aside>
 
             {/* Main Content */}
-            <main className="flex-1">
-              <h1 className="text-3xl font-bold mb-8 text-foreground">My Orders</h1>
+            <main className="flex-1 bg-white p-8 rounded-none">
+              <h1 className="text-3xl font-bold mb-8">My Orders</h1>
               
-              {/* Orders List */}
-              <div className="space-y-4">
-                {filteredOrders.length === 0 ? (
-                  <div className="text-center py-12 bg-card rounded-lg border border-border">
-                    <Package className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
-                    <h2 className="text-xl font-semibold mb-2">
-                      {orders.length === 0 ? "No orders yet" : "No orders found"}
-                    </h2>
-                    <p className="text-muted-foreground mb-4">
-                      {orders.length === 0 
-                        ? "You haven't placed any orders yet." 
-                        : "Try adjusting your filters or search query."}
-                    </p>
-                    {orders.length === 0 && (
-                      <Button onClick={() => navigate('/')}>
-                        Start Shopping
-                      </Button>
-                    )}
-                  </div>
-                ) : (
-                  filteredOrders.map((order) => {
+              {filteredOrders.length === 0 ? (
+                <div className="text-center py-12">
+                  <Package className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
+                  <h2 className="text-xl font-semibold mb-2">
+                    {orders.length === 0 ? "No orders yet" : "No orders found"}
+                  </h2>
+                  <p className="text-muted-foreground mb-4">
+                    {orders.length === 0 
+                      ? "You haven't placed any orders yet." 
+                      : "Try adjusting your filters or search query."}
+                  </p>
+                  {orders.length === 0 && (
+                    <Button onClick={() => navigate('/')}>
+                      Start Shopping
+                    </Button>
+                  )}
+                </div>
+              ) : (
+                <div className="space-y-6">
+                  {filteredOrders.map((order) => {
                     const orderItems = order.order_items_data || [];
                     const firstItem = orderItems[0];
                     const deliveryDate = order.estimated_delivery_date || order.created_at;
-                    const returnDate = new Date(deliveryDate);
-                    returnDate.setDate(returnDate.getDate() + 15);
                     
                     return (
-                      <div key={order.id} className="bg-card border border-border rounded-lg p-6">
+                      <div key={order.id} className="border-b pb-6 last:border-0">
                         {/* Delivery Date Header */}
                         <div className="mb-4">
-                          <h3 className="text-base font-normal text-foreground">
+                          <h3 className="font-bold text-base">
                             Delivered on {format(new Date(deliveryDate), 'MMM dd, yyyy')}
                           </h3>
                         </div>
@@ -510,7 +524,7 @@ const Orders = () => {
                         {/* Product Card */}
                         <div className="flex gap-6 items-start">
                           {/* Product Image */}
-                          <div className="w-32 h-32 flex-shrink-0 bg-muted rounded overflow-hidden">
+                          <div className="w-28 h-28 flex-shrink-0 bg-gray-100 overflow-hidden">
                             {firstItem?.image_url ? (
                               <img 
                                 src={firstItem.image_url} 
@@ -519,60 +533,67 @@ const Orders = () => {
                               />
                             ) : (
                               <div className="w-full h-full flex items-center justify-center">
-                                <Package className="w-12 h-12 text-muted-foreground" />
+                                <Package className="w-12 h-12 text-gray-400" />
                               </div>
                             )}
                           </div>
 
                           {/* Product Details */}
-                          <div className="flex-1 min-w-0">
-                            <h4 className="font-normal text-base mb-1 text-foreground">
+                          <div className="flex-1">
+                            <h4 className="font-bold text-lg mb-2">
                               {firstItem?.product_name || firstItem?.name || 'Product'}
                             </h4>
-                            <p className="text-sm text-muted-foreground mb-3">
-                              Return or Replace: Eligible through {format(returnDate, 'MMM dd, yyyy')}
-                            </p>
+                            <div className="inline-flex items-center px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium mb-2">
+                              {order.order_type === 'test_ride' ? 'Book a Bike' : order.order_type === 'purchase' ? 'Book a Buy' : 'Order'}
+                            </div>
                             {firstItem?.variant && (
-                              <p className="text-sm text-muted-foreground mb-1">
-                                Variant : <span className="text-foreground font-medium">({firstItem.variant})</span>
+                              <p className="text-sm text-gray-700 mb-1">
+                                Variant : <span className="font-medium">{firstItem.variant}</span>
                               </p>
                             )}
                             <div className="flex items-center gap-2 text-sm">
-                              <span className="text-muted-foreground">Colour :</span>
-                              <span className="text-foreground">{firstItem?.color || 'Black'}</span>
+                              <span className="text-gray-700">Colour :</span>
+                              <span className="font-medium">{firstItem?.color || 'Black'}</span>
                               <div 
-                                className="w-4 h-4 border border-border rounded"
+                                className="w-4 h-4"
                                 style={{ backgroundColor: firstItem?.color_hex || '#000000' }}
                               ></div>
                             </div>
                           </div>
 
-                          {/* Status Badge */}
+                          {/* Price and Actions */}
                           <div className="text-right">
-                            <div className="text-sm font-medium text-primary mb-3">
-                              {order.order_type === 'test_ride' ? 'Booking' : order.order_type === 'purchase' ? 'Purchased' : 'Order'}
+                            <div className="text-2xl font-bold mb-4">
+                              ₹{parseFloat(order.total_amount.toString()).toLocaleString('en-IN')}
                             </div>
-                          </div>
-
-                          {/* Price and Button */}
-                          <div className="flex flex-col items-end gap-3">
-                            <div className="text-2xl font-medium text-foreground">
-                              ₹{parseFloat(order.total_amount.toString()).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                            <div className="flex gap-2">
+                              <Button 
+                                variant="outline" 
+                                className="rounded-none"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  // Handle view invoice
+                                }}
+                              >
+                                View Invoice
+                              </Button>
+                              <Button 
+                                className="bg-orange-500 hover:bg-orange-600 rounded-none"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleViewOrder(order.id);
+                                }}
+                              >
+                                View Order
+                              </Button>
                             </div>
-                            <Button
-                              onClick={() => handleViewOrder(order.id)}
-                              variant="default"
-                              className="bg-foreground text-background hover:bg-foreground/90"
-                            >
-                              View Order
-                            </Button>
                           </div>
                         </div>
                       </div>
                     );
-                  })
-                )}
-              </div>
+                  })}
+                </div>
+              )}
             </main>
           </div>
         )}
