@@ -510,7 +510,7 @@ const OrderDetails = () => {
                     <h2 className="text-2xl font-semibold">
                       {firstItem.product_name || firstItem.name || 'Product'}
                     </h2>
-                    <div className="inline-flex items-center px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium">
+                    <div className="inline-flex items-center px-3 py-1 rounded-full bg-green-50 text-green-600 text-sm font-medium">
                       {order.order_type === 'test_ride' ? 'Book a Bike' : order.order_type === 'purchase' ? 'Purchased' : 'Order'}
                     </div>
                     <p className="text-sm">
