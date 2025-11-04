@@ -97,11 +97,23 @@ const OrderDetails = () => {
         if (productId) {
           const {
             data: productData
-          } = await supabase.from('products').select('image_url, images, name, thumbnail, variants, color_variety').eq('id', productId).maybeSingle();
+          } = await supabase.from('products').select('image_url, images, name, thumbnail, variants, color_variety, price').eq('id', productId).maybeSingle();
           
           if (productData) {
             // Add product image to order_items_data - prioritize thumbnail, then image_url, then images array
             data.order_items_data[0].image_url = productData.thumbnail || productData.image_url || productData.images && productData.images[0]?.url;
+            
+            // Get the variant price
+            let variantPrice = productData.price; // Default to base product price
+            if (productData.variants && Array.isArray(productData.variants) && variantName) {
+              const variant = (productData.variants as any[]).find((v: any) => v.name === variantName);
+              if (variant && variant.price) {
+                variantPrice = parseFloat(variant.price);
+              }
+            }
+            
+            // Store the variant price in order_items_data
+            data.order_items_data[0].variant_price = variantPrice;
             
             // Find color hex code from color_variety first (doesn't require variant match)
             let colorHex = null;
@@ -363,9 +375,12 @@ const OrderDetails = () => {
   const timeline = getOrderTimeline();
   const deliveryAddress = order.delivery_address || order.customer_details?.address || {};
 
+  // Get variant price from order items
+  const variantPrice = firstItem.variant_price || order.total_amount;
+
   // Calculate price details from order_summary if available
   const orderSummary = order.order_summary || {};
-  const listingPrice = orderSummary.listing_price || order.total_amount;
+  const listingPrice = orderSummary.listing_price || variantPrice;
   const sellingPrice = orderSummary.selling_price || 381;
   const extraDiscount = orderSummary.extra_discount || 82;
   const specialPrice = orderSummary.special_price || 299;
@@ -701,7 +716,7 @@ const OrderDetails = () => {
                   <div className="bg-gray-50 p-6 space-y-4">
                     <div className="flex justify-between text-base">
                       <span className="text-foreground">Product price</span>
-                      <span className="font-medium">₹36,999.00</span>
+                      <span className="font-medium">₹{variantPrice.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                     </div>
                     
                     <div className="flex justify-between text-base">
@@ -716,7 +731,7 @@ const OrderDetails = () => {
                     
                     <div className="flex justify-between text-base">
                       <span className="text-foreground">Sub Total</span>
-                      <span className="font-medium">₹{(36999 - parseFloat(order.total_amount.toString())).toLocaleString('en-IN')}</span>
+                      <span className="font-medium">₹{(variantPrice - parseFloat(order.total_amount.toString())).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                     </div>
 
                     <div className="border-t-2 border-dashed border-gray-300 my-4"></div>
