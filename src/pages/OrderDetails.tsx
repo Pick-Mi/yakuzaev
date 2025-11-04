@@ -352,10 +352,23 @@ const OrderDetails = () => {
       description: "Your payment has been processed successfully."
     });
     
-    // Verify with database after webhook processes
-    setTimeout(async () => {
-      await fetchOrder();
-    }, 3000);
+    // Poll database to check if webhook has updated the order
+    let attempts = 0;
+    const maxAttempts = 10;
+    const pollInterval = setInterval(async () => {
+      attempts++;
+      
+      const { data } = await supabase
+        .from('orders')
+        .select('payment_status')
+        .eq('id', order?.id)
+        .single();
+      
+      if (data?.payment_status === 'completed' || attempts >= maxAttempts) {
+        clearInterval(pollInterval);
+        await fetchOrder();
+      }
+    }, 2000);
   };
   const handlePaymentFailure = (error: any) => {
     setShowPaymentDialog(false);
