@@ -557,7 +557,10 @@ const OrderDetails = () => {
                       />
                     </div>
                     <p className="text-3xl font-bold pt-2">
-                      ₹{parseFloat(order.total_amount.toString()).toLocaleString('en-IN')}
+                      ₹{(firstItem.variant_price 
+                        ? parseFloat(firstItem.variant_price.toString()) 
+                        : parseFloat(order.total_amount.toString())
+                      ).toLocaleString('en-IN')}
                     </p>
                   </div>
                 </div>
