@@ -721,7 +721,7 @@ const OrderDetails = () => {
                     
                     <div className="flex justify-between text-base">
                       <span className="text-foreground">Booking amount</span>
-                      <span className="font-medium">-₹{parseFloat(order.total_amount.toString()).toLocaleString('en-IN')}</span>
+                      <span className="font-medium">₹{parseFloat(order.total_amount.toString()).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                     </div>
                     
                     <div className="flex justify-between text-base">
