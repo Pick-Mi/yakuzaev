@@ -1017,21 +1017,9 @@ const Profile = () => {
                             </div>
 
                             <div className="flex-1">
-                              <div className="flex justify-between items-start mb-2">
-                                <h4 className="font-semibold text-lg text-gray-900">
-                                  {firstItem?.product_name || firstItem?.name || 'Product'}
-                                </h4>
-                                <Badge 
-                                  variant="secondary" 
-                                  className={
-                                    order.order_type === 'test_ride' 
-                                      ? 'bg-orange-100 text-orange-600 hover:bg-orange-100' 
-                                      : 'bg-green-100 text-green-600 hover:bg-green-100'
-                                  }
-                                >
-                                  {order.order_type === 'test_ride' ? 'Booking' : 'Purchased'}
-                                </Badge>
-                              </div>
+                              <h4 className="font-semibold text-lg text-gray-900 mb-2">
+                                {firstItem?.product_name || firstItem?.name || 'Product'}
+                              </h4>
 
                               <p className="text-sm text-gray-500 mb-2">
                                 Return or Replace: Eligible through {format(new Date(deliveryDate), 'MMM dd, yyyy')}
@@ -1054,15 +1042,28 @@ const Profile = () => {
                             </div>
 
                             <div className="flex flex-col items-end justify-between gap-4">
-                              <p className="text-2xl font-bold text-gray-900">
-                                ₹{order.total_amount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                              </p>
-                              <Button 
-                                onClick={() => navigate(`/orders/${order.id}`)}
-                                className="bg-black text-white hover:bg-gray-800 px-8 rounded-none"
+                              <Badge 
+                                variant="secondary" 
+                                className={
+                                  order.order_type === 'test_ride' 
+                                    ? 'bg-orange-100 text-orange-600 hover:bg-orange-100' 
+                                    : 'bg-green-100 text-green-600 hover:bg-green-100'
+                                }
                               >
-                                View Order
-                              </Button>
+                                {order.order_type === 'test_ride' ? 'Booking' : 'Purchased'}
+                              </Badge>
+
+                              <div className="flex flex-col items-end gap-2">
+                                <p className="text-2xl font-bold text-gray-900">
+                                  ₹{order.total_amount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                </p>
+                                <Button 
+                                  onClick={() => navigate(`/orders/${order.id}`)}
+                                  className="bg-black text-white hover:bg-gray-800 px-8 rounded-none"
+                                >
+                                  View Order
+                                </Button>
+                              </div>
                             </div>
                           </div>
                         </div>
