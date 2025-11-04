@@ -662,72 +662,140 @@ const OrderDetails = () => {
 
             {/* Price Details */}
             <div className="bg-white border p-6">
-              <h3 className="text-lg font-bold mb-6">Order Sumarry</h3>
+              <h3 className="text-lg font-bold mb-6">Order Summary</h3>
               
-              <div className="bg-gray-50 p-6 space-y-4">
-                <div className="flex justify-between text-base">
-                  <span className="text-foreground">Product price</span>
-                  <span className="font-medium">₹{parseFloat(order.total_amount.toString()).toLocaleString('en-IN')}</span>
-                </div>
-                
-                <div className="flex justify-between text-base">
-                  <span className="text-foreground">Discount</span>
-                  <span className="font-medium">₹{order.discount_amount || 0}</span>
-                </div>
-                
-                <div className="flex justify-between text-base">
-                  <span className="text-foreground">Sub Total</span>
-                  <span className="font-medium">₹{parseFloat(order.total_amount.toString()).toLocaleString('en-IN')}</span>
-                </div>
-
-                <div className="border-t-2 border-dashed border-gray-300 my-4"></div>
-
-                <div className="flex justify-between text-base font-bold">
-                  <span>Total amount</span>
-                  <span>₹{parseFloat(order.total_amount.toString()).toLocaleString('en-IN')}</span>
-                </div>
-
-                <div className="space-y-3 mt-4">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium text-foreground">Payment Status</span>
-                    <Badge 
-                      variant={
-                        (order.payment_status === 'completed' || order.payment_status === 'success' || transaction?.status === 'success') 
-                          ? 'default' 
-                          : (order.payment_status === 'pending' || !order.payment_status) 
-                            ? 'secondary' 
-                            : 'destructive'
-                      }
-                      className="font-medium"
-                    >
-                      {(order.payment_status === 'completed' || order.payment_status === 'success' || transaction?.status === 'success') 
-                        ? 'Payment Completed' 
-                        : (order.payment_status === 'failed' || transaction?.status === 'failed')
-                          ? 'Payment Failed'
-                          : 'Payment Pending'}
-                    </Badge>
-                  </div>
-                  {transaction && (
-                    <div className="text-xs text-muted-foreground">
-                      Transaction ID: {transaction.transaction_id || transaction.payment_id}
+              {order.order_type === 'test_ride' ? (
+                <>
+                  {/* Booking Summary */}
+                  <div className="bg-gray-50 p-6 space-y-4 mb-6">
+                    <div className="flex justify-between text-base">
+                      <span className="text-foreground">Booking</span>
+                      <span className="font-medium">₹{parseFloat(order.total_amount.toString()).toLocaleString('en-IN')}</span>
                     </div>
-                  )}
-                </div>
+                    
+                    <div className="border-t-2 border-dashed border-gray-300 my-4"></div>
 
-                <div className="mt-6 pt-4">
-                  <div className="flex items-center justify-between text-base mb-6">
-                    <span className="font-semibold">Paid by</span>
-                    <span className="font-medium">
-                      {order.payment_method === 'payu' ? 'PayU' : order.payment_method === 'cod' ? 'Cash On Delivery' : order.payment_method || 'Not specified'}
-                    </span>
+                    <div className="flex justify-between text-base font-bold">
+                      <span>Total amount</span>
+                      <span>₹{parseFloat(order.total_amount.toString()).toLocaleString('en-IN')}</span>
+                    </div>
+
+                    <div className="mt-6 pt-4">
+                      <div className="flex items-center justify-between text-base">
+                        <span className="font-semibold">Paid by</span>
+                        <span className="font-medium">
+                          {order.payment_method === 'payu' ? 'PayU' : order.payment_method === 'cod' ? 'Cash On Delivery' : order.payment_method || 'Not specified'}
+                        </span>
+                      </div>
+                    </div>
                   </div>
 
-                  <Button variant="outline" className="w-full gap-2 rounded-none">
-                    <Download className="w-5 h-5" />
-                    Download Invoice
-                  </Button>
+                  {/* Detailed Breakdown */}
+                  <div className="bg-gray-50 p-6 space-y-4">
+                    <div className="flex justify-between text-base">
+                      <span className="text-foreground">Product price</span>
+                      <span className="font-medium">₹36,999.00</span>
+                    </div>
+                    
+                    <div className="flex justify-between text-base">
+                      <span className="text-foreground">Booking amount</span>
+                      <span className="font-medium">-₹{parseFloat(order.total_amount.toString()).toLocaleString('en-IN')}</span>
+                    </div>
+                    
+                    <div className="flex justify-between text-base">
+                      <span className="text-foreground">Discount</span>
+                      <button className="text-primary font-medium hover:underline">Apply</button>
+                    </div>
+                    
+                    <div className="flex justify-between text-base">
+                      <span className="text-foreground">Sub Total</span>
+                      <span className="font-medium">₹{(36999 - parseFloat(order.total_amount.toString())).toLocaleString('en-IN')}</span>
+                    </div>
+
+                    <div className="border-t-2 border-dashed border-gray-300 my-4"></div>
+
+                    <div className="flex justify-between text-base font-bold">
+                      <span>Total amount</span>
+                      <span>₹{parseFloat(order.total_amount.toString()).toLocaleString('en-IN')}</span>
+                    </div>
+
+                    <Button className="w-full mt-6 rounded-none">
+                      Make Payment
+                    </Button>
+                  </div>
+
+                  {/* Payment Note */}
+                  <div className="mt-6 flex items-start gap-3 text-sm text-muted-foreground">
+                    <Info className="w-5 h-5 mt-0.5 flex-shrink-0" />
+                    <p>Otherwise, you can pay the remaining amount at the time of delivery.</p>
+                  </div>
+                </>
+              ) : (
+                <div className="bg-gray-50 p-6 space-y-4">
+                  <div className="flex justify-between text-base">
+                    <span className="text-foreground">Product price</span>
+                    <span className="font-medium">₹{parseFloat(order.total_amount.toString()).toLocaleString('en-IN')}</span>
+                  </div>
+                  
+                  <div className="flex justify-between text-base">
+                    <span className="text-foreground">Discount</span>
+                    <span className="font-medium">₹{order.discount_amount || 0}</span>
+                  </div>
+                  
+                  <div className="flex justify-between text-base">
+                    <span className="text-foreground">Sub Total</span>
+                    <span className="font-medium">₹{parseFloat(order.total_amount.toString()).toLocaleString('en-IN')}</span>
+                  </div>
+
+                  <div className="border-t-2 border-dashed border-gray-300 my-4"></div>
+
+                  <div className="flex justify-between text-base font-bold">
+                    <span>Total amount</span>
+                    <span>₹{parseFloat(order.total_amount.toString()).toLocaleString('en-IN')}</span>
+                  </div>
+
+                  <div className="space-y-3 mt-4">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium text-foreground">Payment Status</span>
+                      <Badge 
+                        variant={
+                          (order.payment_status === 'completed' || order.payment_status === 'success' || transaction?.status === 'success') 
+                            ? 'default' 
+                            : (order.payment_status === 'pending' || !order.payment_status) 
+                              ? 'secondary' 
+                              : 'destructive'
+                        }
+                        className="font-medium"
+                      >
+                        {(order.payment_status === 'completed' || order.payment_status === 'success' || transaction?.status === 'success') 
+                          ? 'Payment Completed' 
+                          : (order.payment_status === 'failed' || transaction?.status === 'failed')
+                            ? 'Payment Failed'
+                            : 'Payment Pending'}
+                      </Badge>
+                    </div>
+                    {transaction && (
+                      <div className="text-xs text-muted-foreground">
+                        Transaction ID: {transaction.transaction_id || transaction.payment_id}
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="mt-6 pt-4">
+                    <div className="flex items-center justify-between text-base mb-6">
+                      <span className="font-semibold">Paid by</span>
+                      <span className="font-medium">
+                        {order.payment_method === 'payu' ? 'PayU' : order.payment_method === 'cod' ? 'Cash On Delivery' : order.payment_method || 'Not specified'}
+                      </span>
+                    </div>
+
+                    <Button variant="outline" className="w-full gap-2 rounded-none">
+                      <Download className="w-5 h-5" />
+                      Download Invoice
+                    </Button>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
         </div>
