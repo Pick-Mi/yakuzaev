@@ -770,16 +770,37 @@ const OrderDetails = () => {
                       <span className="text-foreground">Booking amount (Paid)</span>
                       <span className="font-medium text-green-600">-₹{parseFloat(order.total_amount.toString()).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                     </div>
+
+                    {order.payment_status === 'completed' && (
+                      <>
+                        <div className="flex justify-between text-base">
+                          <span className="text-foreground">Remaining Amount (Paid)</span>
+                          <span className="font-medium text-green-600">-₹{(variantPrice - parseFloat(order.total_amount.toString())).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                        </div>
+                        <div className="border-t border-gray-300 pt-3 mt-3 space-y-2">
+                          <div className="flex justify-between text-base">
+                            <span className="text-foreground">Payment Status</span>
+                            <span className="font-medium text-green-600">Paid</span>
+                          </div>
+                          <div className="flex justify-between text-base">
+                            <span className="text-foreground">Paid By</span>
+                            <span className="font-medium">{order.payment_details?.mode || order.payment_method || 'PayU'}</span>
+                          </div>
+                        </div>
+                      </>
+                    )}
                     
-                    <div className="flex justify-between text-base">
-                      <span className="text-foreground">Discount</span>
-                      <button 
-                        onClick={() => setShowPromoDialog(true)}
-                        className="text-primary font-medium hover:underline"
-                      >
-                        Apply
-                      </button>
-                    </div>
+                    {order.payment_status !== 'completed' && (
+                      <div className="flex justify-between text-base">
+                        <span className="text-foreground">Discount</span>
+                        <button 
+                          onClick={() => setShowPromoDialog(true)}
+                          className="text-primary font-medium hover:underline"
+                        >
+                          Apply
+                        </button>
+                      </div>
+                    )}
                     
                     <div className="flex justify-between text-base">
                       <span className="text-foreground">Sub Total</span>
@@ -804,10 +825,12 @@ const OrderDetails = () => {
                   </div>
 
                   {/* Payment Note */}
-                  <div className="mt-6 flex items-start gap-3 text-sm text-muted-foreground">
-                    <Info className="w-5 h-5 mt-0.5 flex-shrink-0" />
-                    <p>Otherwise, you can pay the remaining amount at the time of delivery.</p>
-                  </div>
+                  {order.payment_status !== 'completed' && (
+                    <div className="mt-6 flex items-start gap-3 text-sm text-muted-foreground">
+                      <Info className="w-5 h-5 mt-0.5 flex-shrink-0" />
+                      <p>Otherwise, you can pay the remaining amount at the time of delivery.</p>
+                    </div>
+                  )}
                 </>
               ) : (
                 <div className="bg-gray-50 p-6 space-y-4">
