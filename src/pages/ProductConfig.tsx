@@ -4,6 +4,7 @@ import { ArrowLeft, ArrowRight, ChevronLeft, ChevronRight, ChevronRightIcon, Inf
 import { useState, useEffect } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { supabase } from "@/integrations/supabase/client";
 
 const ProductConfig = () => {
   const location = useLocation();
@@ -15,6 +16,7 @@ const ProductConfig = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [product, setProduct] = useState<any>(null);
   const [showHeader, setShowHeader] = useState(false);
+  const [bookingPriceFromDB, setBookingPriceFromDB] = useState<number>(0);
 
   // Determine breadcrumb text based on where user came from
   const getBreadcrumbText = () => {
@@ -112,6 +114,22 @@ const ProductConfig = () => {
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
+  }, []);
+
+  // Fetch booking price from database
+  useEffect(() => {
+    const fetchBookingPrice = async () => {
+      const { data, error } = await supabase
+        .from('booking_pricing' as any)
+        .select('booking_amount')
+        .single();
+      
+      if (data && !error) {
+        setBookingPriceFromDB(Number((data as any).booking_amount) || 0);
+      }
+    };
+
+    fetchBookingPrice();
   }, []);
 
   useEffect(() => {
@@ -527,7 +545,7 @@ const ProductConfig = () => {
                         <Info className="w-4 h-4 text-gray-400" />
                       </div>
                       <span className="font-['Poppins'] font-bold text-[20px] md:text-[24px] text-green-700">
-                        ₹{bookingAmount}
+                        ₹{bookingPriceFromDB?.toLocaleString('en-IN')}
                       </span>
                     </div>
                     <p className="text-xs text-gray-600">
