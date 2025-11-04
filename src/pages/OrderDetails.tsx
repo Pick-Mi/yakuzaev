@@ -450,17 +450,22 @@ const OrderDetails = () => {
                   </div>
                   <div className="flex flex-col">
                     <span className="text-base font-bold text-red-900">
-                      Order Cancelled
+                      Order Cancelled - Admin Approved
                     </span>
                     <span className="text-sm text-red-700">
-                      Your order has been cancelled by admin
+                      Cancellation Reason: {order.cancellation_reason || 'Not specified'}
                     </span>
+                    {order.cancellation_requested_at && (
+                      <span className="text-xs text-red-600 mt-1">
+                        Requested on {format(new Date(order.cancellation_requested_at), 'MMM dd, yyyy h:mm a')}
+                      </span>
+                    )}
                   </div>
                 </div>
               )}
 
-              {/* Refund Information - Show when refund is processed */}
-              {order.refund_details && (
+              {/* Refund Information - Show when payment status is refunded or refund_details exists */}
+              {(order.payment_status === 'refunded' || order.refund_details) && (
                 <div className="bg-green-50 border-2 border-green-500 rounded-lg p-4">
                   <div className="flex items-start gap-3">
                     <CheckCircle className="w-6 h-6 text-green-600 mt-1" />
@@ -469,26 +474,26 @@ const OrderDetails = () => {
                       <div className="space-y-2 text-sm text-green-800">
                         <div className="flex justify-between">
                           <span>Refund Amount:</span>
-                          <span className="font-semibold">₹{parseFloat(order.refund_details.amount || order.total_amount).toLocaleString('en-IN')}</span>
+                          <span className="font-semibold">₹{order.refund_details?.amount ? parseFloat(order.refund_details.amount).toLocaleString('en-IN') : Number(order.total_amount).toLocaleString('en-IN')}</span>
                         </div>
-                        {order.refund_details.transaction_id && (
+                        {order.refund_details?.transaction_id && (
                           <div className="flex justify-between">
                             <span>Transaction ID:</span>
                             <span className="font-mono text-xs">{order.refund_details.transaction_id}</span>
                           </div>
                         )}
-                        {order.refund_details.refund_date && (
+                        {order.refund_details?.refund_date && (
                           <div className="flex justify-between">
                             <span>Refund Date:</span>
                             <span>{format(new Date(order.refund_details.refund_date), 'MMM dd, yyyy')}</span>
                           </div>
                         )}
-                        {order.refund_details.status && (
-                          <div className="flex justify-between">
-                            <span>Status:</span>
-                            <Badge variant="default" className="bg-green-600">{order.refund_details.status}</Badge>
-                          </div>
-                        )}
+                        <div className="flex justify-between">
+                          <span>Status:</span>
+                          <Badge variant="default" className="bg-green-600">
+                            {order.refund_details?.status || 'Processing'}
+                          </Badge>
+                        </div>
                         <p className="text-xs mt-2 pt-2 border-t border-green-300">
                           Refund will be credited to your original payment method within 5-7 business days.
                         </p>
@@ -514,6 +519,26 @@ const OrderDetails = () => {
                     </span>
                     <span className="text-sm text-yellow-700">
                       Waiting for admin approval
+                    </span>
+                    {order.cancellation_reason && (
+                      <span className="text-xs text-yellow-600 mt-1">
+                        Reason: {order.cancellation_reason}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Rejected Cancellation */}
+              {order.cancellation_status === 'rejected' && (
+                <div className="flex items-center justify-center gap-3 px-6 py-4 bg-gradient-to-r from-gray-50 to-gray-100 border-2 border-gray-400 rounded-lg shadow-sm">
+                  <XCircle className="w-6 h-6 text-gray-600" />
+                  <div className="flex flex-col">
+                    <span className="text-base font-bold text-gray-900">
+                      Cancellation Request Rejected
+                    </span>
+                    <span className="text-sm text-gray-700">
+                      Your cancellation request was not approved
                     </span>
                   </div>
                 </div>
