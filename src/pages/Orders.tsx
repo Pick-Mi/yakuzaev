@@ -313,7 +313,7 @@ const Orders = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-white">
       <Header />
       
       <div className={`container mx-auto ${isMobile ? 'px-0 pt-[60px]' : 'px-4 pt-40'} pb-8`}>
@@ -332,7 +332,7 @@ const Orders = () => {
             </div>
 
             {/* Orders List */}
-            <div className="bg-gray-50 mt-[52px] px-4 py-6 space-y-6">
+            <div className="bg-white mt-[52px] px-4 py-6 space-y-6">
               {filteredOrders.length === 0 ? (
                 <div className="text-center py-12 px-4 bg-white rounded-lg">
                   <Package className="w-16 h-16 mx-auto text-gray-400 mb-4" />
