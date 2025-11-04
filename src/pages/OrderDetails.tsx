@@ -724,11 +724,9 @@ const OrderDetails = () => {
                   <div className="flex justify-between text-base">
                     <span className="text-foreground">Product price</span>
                     <span className="font-medium">
-                      ₹{(firstItem.unit_price 
-                        ? parseFloat(firstItem.unit_price.toString()) 
-                        : firstItem.total_price 
-                          ? parseFloat(firstItem.total_price.toString())
-                          : parseFloat(order.total_amount.toString())
+                      ₹{(firstItem.variant_price 
+                        ? parseFloat(firstItem.variant_price.toString()) 
+                        : parseFloat(order.total_amount.toString())
                       ).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </span>
                   </div>
