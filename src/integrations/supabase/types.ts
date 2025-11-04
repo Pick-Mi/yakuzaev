@@ -571,20 +571,11 @@ export type Database = {
           image_url: string | null
           images: Json | null
           is_active: boolean
-          meta_description: string | null
-          meta_keywords: string[] | null
-          meta_title: string | null
           name: string
           preview_section: Json | null
           price: number
           promo_card: Json | null
           qa_section: Json | null
-          scheme_active: boolean | null
-          scheme_description: string | null
-          scheme_discount_percentage: number | null
-          scheme_end_date: string | null
-          scheme_name: string | null
-          scheme_start_date: string | null
           sku: string | null
           slug: string
           specification_titles: Json | null
@@ -612,20 +603,11 @@ export type Database = {
           image_url?: string | null
           images?: Json | null
           is_active?: boolean
-          meta_description?: string | null
-          meta_keywords?: string[] | null
-          meta_title?: string | null
           name: string
           preview_section?: Json | null
           price?: number
           promo_card?: Json | null
           qa_section?: Json | null
-          scheme_active?: boolean | null
-          scheme_description?: string | null
-          scheme_discount_percentage?: number | null
-          scheme_end_date?: string | null
-          scheme_name?: string | null
-          scheme_start_date?: string | null
           sku?: string | null
           slug: string
           specification_titles?: Json | null
@@ -653,20 +635,11 @@ export type Database = {
           image_url?: string | null
           images?: Json | null
           is_active?: boolean
-          meta_description?: string | null
-          meta_keywords?: string[] | null
-          meta_title?: string | null
           name?: string
           preview_section?: Json | null
           price?: number
           promo_card?: Json | null
           qa_section?: Json | null
-          scheme_active?: boolean | null
-          scheme_description?: string | null
-          scheme_discount_percentage?: number | null
-          scheme_end_date?: string | null
-          scheme_name?: string | null
-          scheme_start_date?: string | null
           sku?: string | null
           slug?: string
           specification_titles?: Json | null

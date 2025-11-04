@@ -43,11 +43,24 @@ serve(async (req) => {
       console.log('Processing payment:', { orderId, status, transactionId, paymentId, amount })
 
       if (orderId && status === 'success') {
+        // First, get the order to extract user_id
+        const { data: orderData, error: fetchError } = await supabase
+          .from('orders')
+          .select('customer_id')
+          .eq('id', orderId)
+          .single()
+
+        if (fetchError) {
+          console.error('Error fetching order:', fetchError)
+        }
+
+        const userId = orderData?.customer_id || null
+
         // Save transaction to database
         const { error: txnError } = await supabase
           .from('transactions')
           .insert({
-            user_id: null, // Will be updated based on order
+            user_id: userId,
             payment_id: paymentId,
             transaction_id: transactionId,
             amount: amount,
