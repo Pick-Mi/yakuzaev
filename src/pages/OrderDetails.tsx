@@ -426,81 +426,94 @@ const OrderDetails = () => {
             </div>
 
             {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row justify-center gap-4 pt-4">
-              {/* Cancel Order Button */}
-              {canCancelOrder(order.status, order.cancellation_status) && (
-                <AlertDialog>
-                  <AlertDialogTrigger asChild>
-                    <Button variant="outline" className="gap-2 px-8 rounded-none border-red-500 text-red-500 hover:bg-red-50">
-                      <XCircle className="w-5 h-5" />
-                      Cancel Order
-                    </Button>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>Cancel Order Request</AlertDialogTitle>
-                      <AlertDialogDescription className="space-y-4">
-                        <p>Your cancellation request will be sent to our admin team for review.</p>
-                        <div className="space-y-2">
-                          <label className="text-sm font-medium text-foreground">
-                            Reason for cancellation <span className="text-red-500">*</span>
-                          </label>
-                          <textarea
-                            className="w-full min-h-[100px] p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
-                            placeholder="Please tell us why you want to cancel this order..."
-                            value={cancelReason}
-                            onChange={(e) => setCancelReason(e.target.value)}
-                          />
-                        </div>
-                        <div className="bg-blue-50 p-3 rounded-md text-sm">
-                          <p className="font-medium text-blue-900 mb-1">What happens next?</p>
-                          <ul className="text-blue-800 space-y-1 ml-4 list-disc">
-                            <li>Request sent to admin team</li>
-                            <li>Admin reviews within 24 hours</li>
-                            <li>If approved, refund processed in 5-7 days</li>
-                            <li>You'll be notified of the decision</li>
-                          </ul>
-                        </div>
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel onClick={() => setCancelReason("")}>
-                        Keep Order
-                      </AlertDialogCancel>
-                      <AlertDialogAction
-                        onClick={() => {
-                          handleCancelOrder(cancelReason);
-                          setCancelReason("");
-                        }}
-                        disabled={!cancelReason.trim() || cancelling}
-                        className="bg-red-500 hover:bg-red-600"
-                      >
-                        {cancelling ? "Submitting..." : "Submit Cancellation"}
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
-              )}
-
-              {/* Cancellation Status Badge */}
+            <div className="space-y-4 pt-4">
+              {/* Cancellation Status Chip - Show prominently if pending */}
               {order.cancellation_status === 'pending' && (
-                <div className="flex items-center gap-2 px-4 py-2 bg-yellow-50 border border-yellow-200 rounded-md">
-                  <Info className="w-5 h-5 text-yellow-600" />
-                  <span className="text-sm font-medium text-yellow-800">
-                    Cancellation request pending admin approval
-                  </span>
+                <div className="flex items-center justify-center gap-3 px-6 py-4 bg-gradient-to-r from-yellow-50 to-orange-50 border-2 border-yellow-400 rounded-lg shadow-sm">
+                  <div className="flex items-center gap-2">
+                    <div className="relative flex h-3 w-3">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-3 w-3 bg-yellow-500"></span>
+                    </div>
+                    <Info className="w-6 h-6 text-yellow-600" />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-base font-bold text-yellow-900">
+                      Cancellation Request Pending
+                    </span>
+                    <span className="text-sm text-yellow-700">
+                      Waiting for admin approval
+                    </span>
+                  </div>
                 </div>
               )}
 
-              {/* WhatsApp Support Button */}
-              <Button 
-                variant="outline" 
-                className="gap-2 px-8 rounded-none border-green-500 text-green-600 hover:bg-green-50"
-                onClick={() => window.open('https://wa.me/919876543210', '_blank')}
-              >
-                <Phone className="w-5 h-5" />
-                WhatsApp Support
-              </Button>
+              <div className="flex flex-col sm:flex-row justify-center gap-4">
+                {/* Cancel Order Button - Only show if can cancel */}
+                {canCancelOrder(order.status, order.cancellation_status) && (
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button variant="outline" className="gap-2 px-8 rounded-none border-red-500 text-red-500 hover:bg-red-50">
+                        <XCircle className="w-5 h-5" />
+                        Cancel Order
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Cancel Order Request</AlertDialogTitle>
+                        <AlertDialogDescription className="space-y-4">
+                          <p>Your cancellation request will be sent to our admin team for review.</p>
+                          <div className="space-y-2">
+                            <label className="text-sm font-medium text-foreground">
+                              Reason for cancellation <span className="text-red-500">*</span>
+                            </label>
+                            <textarea
+                              className="w-full min-h-[100px] p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+                              placeholder="Please tell us why you want to cancel this order..."
+                              value={cancelReason}
+                              onChange={(e) => setCancelReason(e.target.value)}
+                            />
+                          </div>
+                          <div className="bg-blue-50 p-3 rounded-md text-sm">
+                            <p className="font-medium text-blue-900 mb-1">What happens next?</p>
+                            <ul className="text-blue-800 space-y-1 ml-4 list-disc">
+                              <li>Request sent to admin team</li>
+                              <li>Admin reviews within 24 hours</li>
+                              <li>If approved, refund processed in 5-7 days</li>
+                              <li>You'll be notified of the decision</li>
+                            </ul>
+                          </div>
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel onClick={() => setCancelReason("")}>
+                          Keep Order
+                        </AlertDialogCancel>
+                        <AlertDialogAction
+                          onClick={() => {
+                            handleCancelOrder(cancelReason);
+                            setCancelReason("");
+                          }}
+                          disabled={!cancelReason.trim() || cancelling}
+                          className="bg-red-500 hover:bg-red-600"
+                        >
+                          {cancelling ? "Submitting..." : "Submit Cancellation"}
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                )}
+
+                {/* WhatsApp Support Button */}
+                <Button 
+                  variant="outline" 
+                  className="gap-2 px-8 rounded-none border-green-500 text-green-600 hover:bg-green-50"
+                  onClick={() => window.open('https://wa.me/919876543210', '_blank')}
+                >
+                  <Phone className="w-5 h-5" />
+                  WhatsApp Support
+                </Button>
+              </div>
             </div>
           </div>
 
