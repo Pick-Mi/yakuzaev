@@ -1073,12 +1073,12 @@ const Profile = () => {
                               <Badge 
                                 variant="secondary" 
                                 className={
-                                  order.order_type === 'test_ride' 
+                                  order.order_type === 'booking' 
                                     ? 'bg-orange-100 text-orange-600 hover:bg-orange-100' 
                                     : 'bg-green-100 text-green-600 hover:bg-green-100'
                                 }
                               >
-                                {order.order_type === 'test_ride' ? 'Booking' : 'Purchased'}
+                                {order.order_type === 'booking' ? 'Booking' : 'Purchased'}
                               </Badge>
 
                               <div className="flex flex-col items-end gap-2">
