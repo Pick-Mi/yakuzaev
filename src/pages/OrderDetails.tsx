@@ -624,7 +624,7 @@ const OrderDetails = () => {
           </div>
 
           {/* Right Sidebar */}
-          <div className="space-y-6">
+          <div className="space-y-6 sticky top-24 self-start">
             {/* Delivery Details */}
             <div className="bg-white border p-6">
               <h3 className="text-lg font-bold mb-6">Delivery details</h3>
