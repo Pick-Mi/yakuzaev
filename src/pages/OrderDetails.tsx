@@ -461,10 +461,31 @@ const OrderDetails = () => {
                   <span>₹{parseFloat(order.total_amount.toString()).toLocaleString('en-IN')}</span>
                 </div>
 
-                <div className="flex justify-center mt-4">
-                  <Badge variant={order.payment_status === 'completed' ? 'default' : order.payment_status === 'pending' ? 'secondary' : 'destructive'}>
-                    {order.payment_status === 'completed' ? 'Payment Done' : order.payment_status === 'pending' ? 'Payment Pending' : 'Payment Failed'}
-                  </Badge>
+                <div className="space-y-3 mt-4">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium text-foreground">Payment Status</span>
+                    <Badge 
+                      variant={
+                        (order.payment_status === 'completed' || order.payment_status === 'success' || transaction?.status === 'success') 
+                          ? 'default' 
+                          : (order.payment_status === 'pending' || !order.payment_status) 
+                            ? 'secondary' 
+                            : 'destructive'
+                      }
+                      className="font-medium"
+                    >
+                      {(order.payment_status === 'completed' || order.payment_status === 'success' || transaction?.status === 'success') 
+                        ? 'Payment Completed' 
+                        : (order.payment_status === 'failed' || transaction?.status === 'failed')
+                          ? 'Payment Failed'
+                          : 'Payment Pending'}
+                    </Badge>
+                  </div>
+                  {transaction && (
+                    <div className="text-xs text-muted-foreground">
+                      Transaction ID: {transaction.transaction_id || transaction.payment_id}
+                    </div>
+                  )}
                 </div>
 
                 <div className="mt-6 pt-4">
