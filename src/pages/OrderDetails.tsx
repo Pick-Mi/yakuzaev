@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -74,6 +75,8 @@ const OrderDetails = () => {
   const [showPaymentDialog, setShowPaymentDialog] = useState(false);
   const [showPaymentDetails, setShowPaymentDetails] = useState(false);
   const [cancelReason, setCancelReason] = useState("");
+  const [showPromoDialog, setShowPromoDialog] = useState(false);
+  const [promoCode, setPromoCode] = useState("");
   useEffect(() => {
     if (user && id) {
       fetchOrder();
@@ -360,6 +363,26 @@ const OrderDetails = () => {
       description: "There was an error processing your payment. Please try again.",
       variant: "destructive"
     });
+  };
+
+  const handleApplyPromo = () => {
+    if (!promoCode.trim()) {
+      toast({
+        title: "Invalid Promo Code",
+        description: "Please enter a promo code.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    // TODO: Implement promo code validation logic here
+    toast({
+      title: "Promo Code Applied",
+      description: `Promo code "${promoCode}" has been applied successfully.`,
+    });
+    
+    setShowPromoDialog(false);
+    setPromoCode("");
   };
   if (loading) {
     return <div className="min-h-screen bg-background">
@@ -750,7 +773,12 @@ const OrderDetails = () => {
                     
                     <div className="flex justify-between text-base">
                       <span className="text-foreground">Discount</span>
-                      <button className="text-primary font-medium hover:underline">Apply</button>
+                      <button 
+                        onClick={() => setShowPromoDialog(true)}
+                        className="text-primary font-medium hover:underline"
+                      >
+                        Apply
+                      </button>
                     </div>
                     
                     <div className="flex justify-between text-base">
@@ -846,6 +874,46 @@ const OrderDetails = () => {
           </div>
         </div>
       </div>
+
+      {/* Promo Code Dialog */}
+      <Dialog open={showPromoDialog} onOpenChange={setShowPromoDialog}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Apply Promo Code</DialogTitle>
+            <DialogDescription>
+              Enter your promo code to get a discount on your order.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Input
+                placeholder="Enter promo code"
+                value={promoCode}
+                onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
+                className="uppercase"
+              />
+            </div>
+            <div className="flex gap-3">
+              <Button
+                variant="outline"
+                className="flex-1"
+                onClick={() => {
+                  setShowPromoDialog(false);
+                  setPromoCode("");
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                className="flex-1"
+                onClick={handleApplyPromo}
+              >
+                Apply Code
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>;
 };
 export default OrderDetails;
