@@ -793,7 +793,10 @@ const OrderDetails = () => {
                       <span>₹{(variantPrice - parseFloat(order.total_amount.toString())).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                     </div>
 
-                    <Button className="w-full mt-6 rounded-none">
+                    <Button 
+                      className="w-full mt-6 rounded-none"
+                      onClick={() => setShowPaymentDialog(true)}
+                    >
                       Make Payment
                     </Button>
                   </div>
@@ -914,6 +917,22 @@ const OrderDetails = () => {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Payment Dialog */}
+      {showPaymentDialog && order && (
+        <PayUPayment
+          amount={variantPrice - parseFloat(order.total_amount.toString())}
+          productInfo={`${firstItem.product_name} - ${firstItem.variant} - ${firstItem.color} (Remaining Payment)`}
+          customerDetails={{
+            firstName: order.customer_details?.first_name || order.customer_name?.split(' ')[0] || '',
+            email: order.customer_details?.email || '',
+            phone: order.customer_details?.phone || order.customer_details?.mobile || ''
+          }}
+          orderId={order.id}
+          onSuccess={handlePaymentSuccess}
+          onFailure={handlePaymentFailure}
+        />
+      )}
     </div>;
 };
 export default OrderDetails;
