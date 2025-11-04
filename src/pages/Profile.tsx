@@ -634,7 +634,9 @@ const Profile = () => {
                           />
                         </div>
                       ) : (
-                        <p className="text-base font-medium">{profile.first_name} {profile.last_name}</p>
+                        <div className="bg-gray-50 p-3">
+                          <p className="text-base font-medium">{profile.first_name} {profile.last_name}</p>
+                        </div>
                       )}
                     </div>
 
@@ -649,20 +651,26 @@ const Profile = () => {
                           className="rounded-none bg-white border border-gray-300"
                         />
                       ) : (
-                        <p className="text-base font-medium">{profile.phone || "Not provided"}</p>
+                        <div className="bg-gray-50 p-3">
+                          <p className="text-base font-medium">{profile.phone || "Not provided"}</p>
+                        </div>
                       )}
                     </div>
 
                     {/* Email */}
                     <div>
                       <Label className="text-sm text-gray-600 mb-2 block">Email</Label>
-                      <p className="text-base font-medium">{profile.email}</p>
+                      <div className="bg-gray-50 p-3">
+                        <p className="text-base font-medium">{profile.email}</p>
+                      </div>
                     </div>
 
                     {/* Password */}
                     <div>
                       <Label className="text-sm text-gray-600 mb-2 block">Password</Label>
-                      <p className="text-base font-medium">••••••</p>
+                      <div className="bg-gray-50 p-3">
+                        <p className="text-base font-medium">••••••</p>
+                      </div>
                     </div>
 
                     {/* Country */}
@@ -676,7 +684,9 @@ const Profile = () => {
                           className="rounded-none bg-white border border-gray-300"
                         />
                       ) : (
-                        <p className="text-base font-medium">{profile.country}</p>
+                        <div className="bg-gray-50 p-3">
+                          <p className="text-base font-medium">{profile.country}</p>
+                        </div>
                       )}
                     </div>
 
@@ -695,7 +705,9 @@ const Profile = () => {
                           <option value="Other">Other</option>
                         </select>
                       ) : (
-                        <p className="text-base font-medium capitalize">{profile.gender || "Not specified"}</p>
+                        <div className="bg-gray-50 p-3">
+                          <p className="text-base font-medium capitalize">{profile.gender || "Not specified"}</p>
+                        </div>
                       )}
                     </div>
                   </div>
