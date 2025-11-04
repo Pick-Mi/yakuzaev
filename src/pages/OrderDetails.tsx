@@ -370,7 +370,7 @@ const OrderDetails = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Content */}
-          <div className="lg:col-span-2 space-y-8 bg-white p-6">
+          <div className="lg:col-span-2 space-y-8 bg-white p-6 border">
             <h1 className="text-3xl font-bold">Your Orders</h1>
 
             {/* Product Card */}
