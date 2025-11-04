@@ -747,38 +747,24 @@ const OrderDetails = () => {
                   </div>
                     
                     <div className="flex justify-between text-base">
-                      <span className="text-foreground">Booking amount (Paid)</span>
-                      <span className="font-medium text-green-600">-₹{parseFloat(order.total_amount.toString()).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-                    </div>
-                    
-                    <div className="border-t border-gray-300 pt-4">
-                      <label className="text-sm font-medium text-foreground mb-2 block">Apply Promo Code</label>
-                      <div className="flex gap-2">
-                        <input 
-                          type="text" 
-                          placeholder="Enter promo code"
-                          className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-sm"
-                        />
-                        <Button variant="outline" className="px-6 rounded-md">
-                          Apply
-                        </Button>
-                      </div>
+                      <span className="text-foreground">Booking amount</span>
+                      <span className="font-medium">₹{parseFloat(order.total_amount.toString()).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                     </div>
                     
                     <div className="flex justify-between text-base">
                       <span className="text-foreground">Discount</span>
-                      <span className="font-medium text-green-600">₹0.00</span>
+                      <button className="text-primary font-medium hover:underline">Apply</button>
                     </div>
-
-                    <div className="border-t-2 border-dashed border-gray-300 my-4"></div>
-
+                    
                     <div className="flex justify-between text-base">
                       <span className="text-foreground">Sub Total</span>
                       <span className="font-medium">₹{(variantPrice - parseFloat(order.total_amount.toString())).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                     </div>
 
-                    <div className="flex justify-between text-lg font-bold">
-                      <span>Remaining Amount</span>
+                    <div className="border-t-2 border-dashed border-gray-300 my-4"></div>
+
+                    <div className="flex justify-between text-base font-bold">
+                      <span>Total amount</span>
                       <span>₹{(variantPrice - parseFloat(order.total_amount.toString())).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                     </div>
 
