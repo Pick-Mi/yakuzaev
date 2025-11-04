@@ -453,9 +453,19 @@ const Orders = () => {
 
                           {/* Price and Button */}
                           <div className="flex flex-col items-end justify-between gap-4">
-                            <Badge variant="secondary" className={order.order_type === 'test_ride' ? 'bg-orange-100 text-orange-600 hover:bg-orange-100' : 'bg-green-100 text-green-600 hover:bg-green-100'}>
-                              {order.order_type === 'test_ride' ? 'Booking' : 'Purchased'}
-                            </Badge>
+                            <div className="flex flex-col items-end gap-2">
+                              {/* Cancellation Status - Show when order is cancelled */}
+                              {order.status === 'cancelled' && (
+                                <Badge variant="destructive" className="bg-red-100 text-red-600 hover:bg-red-100">
+                                  Cancelled
+                                </Badge>
+                              )}
+                              
+                              {/* Order Type Badge */}
+                              <Badge variant="secondary" className={order.order_type === 'test_ride' ? 'bg-orange-100 text-orange-600 hover:bg-orange-100' : 'bg-green-100 text-green-600 hover:bg-green-100'}>
+                                {order.order_type === 'test_ride' ? 'Booking' : 'Purchased'}
+                              </Badge>
+                            </div>
                             
                             <div className="text-right">
                               
