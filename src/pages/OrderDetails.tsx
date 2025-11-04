@@ -919,20 +919,30 @@ const OrderDetails = () => {
       </Dialog>
 
       {/* Payment Dialog */}
-      {showPaymentDialog && order && (
-        <PayUPayment
-          amount={variantPrice - parseFloat(order.total_amount.toString())}
-          productInfo={`${firstItem.product_name} - ${firstItem.variant} - ${firstItem.color} (Remaining Payment)`}
-          customerDetails={{
-            firstName: order.customer_details?.first_name || order.customer_name?.split(' ')[0] || '',
-            email: order.customer_details?.email || '',
-            phone: order.customer_details?.phone || order.customer_details?.mobile || ''
-          }}
-          orderId={order.id}
-          onSuccess={handlePaymentSuccess}
-          onFailure={handlePaymentFailure}
-        />
-      )}
+      <Dialog open={showPaymentDialog} onOpenChange={setShowPaymentDialog}>
+        <DialogContent className="sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle>Complete Payment</DialogTitle>
+            <DialogDescription>
+              Pay the remaining amount for your order
+            </DialogDescription>
+          </DialogHeader>
+          {order && (
+            <PayUPayment
+              amount={variantPrice - parseFloat(order.total_amount.toString())}
+              productInfo={`${firstItem.product_name} - ${firstItem.variant} - ${firstItem.color} (Remaining Payment)`}
+              customerDetails={{
+                firstName: order.customer_details?.first_name || order.customer_name?.split(' ')[0] || '',
+                email: order.customer_details?.email || '',
+                phone: order.customer_details?.phone || order.customer_details?.mobile || ''
+              }}
+              orderId={order.id}
+              onSuccess={handlePaymentSuccess}
+              onFailure={handlePaymentFailure}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
     </div>;
 };
 export default OrderDetails;
