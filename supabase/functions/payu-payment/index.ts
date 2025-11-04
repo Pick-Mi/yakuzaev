@@ -265,7 +265,7 @@ serve(async (req) => {
         }
 
         // Update order status based on PayU response
-        const orderStatus = responseData.status === 'success' ? 'completed' : 'failed'
+        const orderStatus = responseData.status === 'success' ? 'placed' : 'cancelled'
         const paymentStatus = responseData.status === 'success' ? 'completed' : 'failed'
         
         // Extract order ID from udf2 (we stored it there during initiation)
