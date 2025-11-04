@@ -316,7 +316,7 @@ const Orders = () => {
     <div className="min-h-screen bg-white">
       <Header />
       
-      <div className={`container mx-auto ${isMobile ? 'px-0 pt-[60px]' : 'px-4 pt-40'} pb-8`}>
+      <div className={`container mx-auto ${isMobile ? 'px-0 pt-[60px]' : 'px-4 py-8 mt-20'} pb-8`}>
         {isMobile ? (
           // Mobile Layout
           <div className="space-y-0">
@@ -423,57 +423,52 @@ const Orders = () => {
           </div>
         ) : (
           // Desktop Layout
-          <div className="flex gap-6">
+          <div className="flex gap-8">
             {/* Sidebar */}
             <aside className="w-64 flex-shrink-0">
-              <div className="bg-white rounded-lg overflow-hidden sticky top-32">
-                <div className="px-6 py-4">
-                  <h2 className="text-lg font-semibold text-gray-900">Account</h2>
-                </div>
-                
-                <nav className="space-y-0">
-                  <button
-                    onClick={() => navigate("/profile?section=profile")}
-                    className="w-full text-left px-6 py-3 text-gray-700 hover:bg-gray-50 transition-colors flex items-center gap-3"
-                  >
-                    <User className="w-5 h-5" />
-                    <span>Profile Details</span>
-                  </button>
-                  <button
-                    onClick={() => navigate("/profile?section=address")}
-                    className="w-full text-left px-6 py-3 text-gray-700 hover:bg-gray-50 transition-colors flex items-center gap-3"
-                  >
-                    <MapPin className="w-5 h-5" />
-                    <span>Delivery Addresses</span>
-                  </button>
-                  <button
-                    onClick={() => navigate("/profile?section=pan")}
-                    className="w-full text-left px-6 py-3 text-gray-700 hover:bg-gray-50 transition-colors flex items-center gap-3"
-                  >
-                    <CreditCard className="w-5 h-5" />
-                    <span>Identification Details</span>
-                  </button>
-                  <button
-                    onClick={() => navigate("/orders")}
-                    className="w-full text-left px-6 py-3 bg-gray-50 text-gray-900 font-medium transition-colors flex items-center gap-3"
-                  >
-                    <ShoppingCart className="w-5 h-5" />
-                    <span>My Orders</span>
-                  </button>
-                  <button
-                    onClick={handleLogout}
-                    className="w-full text-left px-6 py-3 text-gray-700 hover:bg-gray-50 transition-colors flex items-center gap-3"
-                  >
-                    <LogOut className="w-5 h-5" />
-                    <span>Logout</span>
-                  </button>
-                </nav>
-              </div>
+              <h1 className="text-2xl font-bold mb-6">Account</h1>
+              <nav className="space-y-1">
+                <button
+                  onClick={() => navigate("/profile?section=profile")}
+                  className="w-full flex items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-gray-50"
+                >
+                  <User className="w-5 h-5" />
+                  <span>Profile Details</span>
+                </button>
+                <button
+                  onClick={() => navigate("/profile?section=address")}
+                  className="w-full flex items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-gray-50"
+                >
+                  <MapPin className="w-5 h-5" />
+                  <span>Delivery Addresses</span>
+                </button>
+                <button
+                  onClick={() => navigate("/profile?section=pan")}
+                  className="w-full flex items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-gray-50"
+                >
+                  <CreditCard className="w-5 h-5" />
+                  <span>Identification Details</span>
+                </button>
+                <button
+                  onClick={() => navigate("/orders")}
+                  className="w-full flex items-center gap-3 px-4 py-3 text-left transition-colors bg-white border-l-4 border-orange-500 font-medium"
+                >
+                  <ShoppingCart className="w-5 h-5" />
+                  <span>My Orders</span>
+                </button>
+                <button
+                  onClick={handleLogout}
+                  className="w-full flex items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-gray-50"
+                >
+                  <LogOut className="w-5 h-5" />
+                  <span>Logout</span>
+                </button>
+              </nav>
             </aside>
 
             {/* Main Content */}
-            <main className="flex-1 bg-white p-8 rounded-lg">
-              <h1 className="text-3xl font-bold mb-8 text-gray-900">My Orders</h1>
+            <main className="flex-1">
+              <h1 className="text-3xl font-bold mb-6 text-gray-900">My Orders</h1>
               
               {filteredOrders.length === 0 ? (
                 <div className="text-center py-12">
