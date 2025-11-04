@@ -738,7 +738,7 @@ const OrderDetails = () => {
 
                     <div className="flex justify-between text-base font-bold">
                       <span>Total amount</span>
-                      <span>₹{parseFloat(order.total_amount.toString()).toLocaleString('en-IN')}</span>
+                      <span>₹{(variantPrice - parseFloat(order.total_amount.toString())).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                     </div>
 
                     <Button className="w-full mt-6 rounded-none">
