@@ -721,10 +721,10 @@ const OrderDetails = () => {
 
                   {/* Detailed Breakdown */}
                   <div className="bg-gray-50 p-6 space-y-4">
-                    <div className="flex justify-between text-base">
-                      <span className="text-foreground">Product price</span>
-                      <span className="font-medium">₹{variantPrice.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-                    </div>
+                  <div className="flex justify-between text-base">
+                    <span className="text-foreground">Product price</span>
+                    <span className="font-medium">₹{firstItem.variant_price ? parseFloat(firstItem.variant_price.toString()).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '0.00'}</span>
+                  </div>
                     
                     <div className="flex justify-between text-base">
                       <span className="text-foreground">Booking amount</span>
