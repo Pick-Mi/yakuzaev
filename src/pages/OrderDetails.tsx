@@ -341,20 +341,15 @@ const OrderDetails = () => {
   const handlePaymentSuccess = async (paymentData: any) => {
     setShowPaymentDialog(false);
 
-    // Update order payment status
-    const {
-      error
-    } = await supabase.from('orders').update({
-      payment_status: 'completed'
-    }).eq('id', order?.id);
-    if (error) {
-      console.error('Error updating payment status:', error);
-    }
     toast({
       title: "Payment Successful",
-      description: "Your payment has been processed successfully."
+      description: "Your payment has been processed successfully. Updating order details..."
     });
-    await fetchOrder();
+    
+    // Wait a bit for webhook to process, then refetch order data
+    setTimeout(async () => {
+      await fetchOrder();
+    }, 2000);
   };
   const handlePaymentFailure = (error: any) => {
     setShowPaymentDialog(false);
