@@ -50,9 +50,12 @@ export default function PayUPayment({
     setIsProcessing(true);
 
     try {
-      // If orderData is provided (from booking flow), use it directly
-      let createdOrder;
+      // Determine if this is a remaining payment for existing order or a new order
+      let actualOrderId = orderId;
+      
+      // Only create a new order if orderData is provided (booking flow) or if we have cart items (cart flow)
       if (orderData) {
+        // Booking flow - create new order
         const { data: order, error: orderError } = await supabase
           .from('orders')
           .insert(orderData)
@@ -63,9 +66,10 @@ export default function PayUPayment({
           console.error('Order creation error:', orderError);
           throw new Error('Failed to create order: ' + orderError.message);
         }
-        createdOrder = order;
-      } else {
-        // Original cart flow - create order from cart items
+        actualOrderId = order.id;
+        console.log('New order created successfully:', order);
+      } else if (cartItems && cartItems.length > 0) {
+        // Cart flow - create order from cart items
         const orderDataFromCart = {
           customer_id: user.id,
           status: 'pending',
@@ -126,13 +130,12 @@ export default function PayUPayment({
           console.error('Order creation error:', orderError);
           throw new Error('Failed to create order: ' + orderError.message);
         }
-        createdOrder = order;
+        actualOrderId = order.id;
+        console.log('New order created successfully:', order);
+      } else {
+        // Remaining payment flow - use existing orderId, don't create new order
+        console.log('Processing remaining payment for existing order:', actualOrderId);
       }
-
-      console.log('Order created successfully:', createdOrder);
-
-      // Now proceed with PayU payment using the database order ID
-      const actualOrderId = createdOrder.id;
 
       // Create success and failure URLs - pointing to webhook endpoint
       const baseUrl = window.location.origin;
