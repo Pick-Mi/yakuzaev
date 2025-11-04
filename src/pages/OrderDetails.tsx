@@ -341,15 +341,21 @@ const OrderDetails = () => {
   const handlePaymentSuccess = async (paymentData: any) => {
     setShowPaymentDialog(false);
 
+    // Immediately update local state for instant UI feedback
+    setOrder(prev => prev ? {
+      ...prev,
+      payment_status: 'completed'
+    } : null);
+
     toast({
       title: "Payment Successful",
-      description: "Your payment has been processed successfully. Updating order details..."
+      description: "Your payment has been processed successfully."
     });
     
-    // Wait a bit for webhook to process, then refetch order data
+    // Verify with database after webhook processes
     setTimeout(async () => {
       await fetchOrder();
-    }, 2000);
+    }, 3000);
   };
   const handlePaymentFailure = (error: any) => {
     setShowPaymentDialog(false);
