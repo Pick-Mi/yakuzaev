@@ -793,12 +793,14 @@ const OrderDetails = () => {
                       <span>₹{(variantPrice - parseFloat(order.total_amount.toString())).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                     </div>
 
-                    <Button 
-                      className="w-full mt-6 rounded-none"
-                      onClick={() => setShowPaymentDialog(true)}
-                    >
-                      Make Payment
-                    </Button>
+                    {order.payment_status !== 'completed' && (
+                      <Button 
+                        className="w-full mt-6 rounded-none"
+                        onClick={() => setShowPaymentDialog(true)}
+                      >
+                        Make Payment
+                      </Button>
+                    )}
                   </div>
 
                   {/* Payment Note */}

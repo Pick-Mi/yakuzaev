@@ -150,7 +150,7 @@ export default function PayUPayment({
         surl: surl,
         furl: furl,
         udf1: user.id,
-        udf2: '', 
+        udf2: actualOrderId, 
         udf3: '',
         udf4: '',
         udf5: ''
