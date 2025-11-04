@@ -462,8 +462,18 @@ const OrderDetails = () => {
                 </div>
 
                 <div className="flex justify-center mt-4">
-                  <Badge variant={order.payment_status === 'completed' ? 'default' : order.payment_status === 'pending' ? 'secondary' : 'destructive'}>
-                    {order.payment_status === 'completed' ? 'Payment Done' : order.payment_status === 'pending' ? 'Payment Pending' : 'Payment Failed'}
+                  <Badge variant={
+                    transaction?.status === 'completed' || transaction?.payu_response?.status === 'success'
+                      ? 'default' 
+                      : order.payment_status === 'pending' || transaction?.status === 'pending'
+                      ? 'secondary' 
+                      : 'destructive'
+                  }>
+                    {transaction?.status === 'completed' || transaction?.payu_response?.status === 'success'
+                      ? 'Payment Done' 
+                      : order.payment_status === 'pending' || transaction?.status === 'pending'
+                      ? 'Payment Pending' 
+                      : 'Payment Failed'}
                   </Badge>
                 </div>
 
