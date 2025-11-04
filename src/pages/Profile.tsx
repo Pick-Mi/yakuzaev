@@ -581,7 +581,7 @@ const Profile = () => {
             {activeSection === "profile" && (
               <div className="space-y-8 bg-white">
                 {/* Personal Information */}
-                <div className="border border-gray-200 p-8">
+                <div className="p-8">
                   <div className="flex justify-between items-center mb-8">
                     <h2 className="text-2xl font-semibold">Personal Information</h2>
                     {!editMode ? (
@@ -701,8 +701,11 @@ const Profile = () => {
                   </div>
                 </div>
 
+                {/* Divider */}
+                <div className="h-px bg-gray-200"></div>
+
                 {/* Delete Account Section */}
-                <div className="border border-gray-200 p-8">
+                <div className="p-8">
                   <div className="flex items-center gap-2 mb-4">
                     <AlertTriangle className="w-5 h-5 text-orange-500" />
                     <h2 className="text-xl font-semibold text-orange-500">Delete Account</h2>
