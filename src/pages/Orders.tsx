@@ -337,9 +337,16 @@ const Orders = () => {
                             <h4 className="font-bold text-2xl mb-3 text-gray-900">
                               {firstItem?.product_name || firstItem?.name || 'Product'}
                             </h4>
-                            <div className="inline-block px-4 py-1.5 bg-orange-100 text-orange-500 text-base font-semibold mb-3 rounded">
-                              {order.order_type === 'test_ride' ? 'Book a Bike' : order.order_type === 'purchase' ? 'Book a Buy' : 'Order'}
-                            </div>
+                            <Badge 
+                              variant="secondary" 
+                              className={
+                                order.order_type === 'booking' 
+                                  ? 'bg-orange-100 text-orange-600 hover:bg-orange-100 text-base font-semibold px-4 py-1.5' 
+                                  : 'bg-green-100 text-green-600 hover:bg-green-100 text-base font-semibold px-4 py-1.5'
+                              }
+                            >
+                              {order.order_type === 'booking' ? 'Booking' : 'Purchased'}
+                            </Badge>
                             {firstItem?.variant && <p className="text-base text-gray-700 mb-2">
                                 Variant : <span className="font-semibold">{firstItem.variant}</span>
                               </p>}
@@ -462,8 +469,8 @@ const Orders = () => {
                               )}
                               
                               {/* Order Type Badge */}
-                              <Badge variant="secondary" className={order.order_type === 'test_ride' ? 'bg-orange-100 text-orange-600 hover:bg-orange-100' : 'bg-green-100 text-green-600 hover:bg-green-100'}>
-                                {order.order_type === 'test_ride' ? 'Booking' : 'Purchased'}
+                              <Badge variant="secondary" className={order.order_type === 'booking' ? 'bg-orange-100 text-orange-600 hover:bg-orange-100' : 'bg-green-100 text-green-600 hover:bg-green-100'}>
+                                {order.order_type === 'booking' ? 'Booking' : 'Purchased'}
                               </Badge>
                             </div>
                             
