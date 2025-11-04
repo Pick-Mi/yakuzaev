@@ -431,54 +431,55 @@ const Profile = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-background">
       <Header />
-      <div className="container mx-auto px-4 py-8 mt-20 bg-white">
-        <div className="flex gap-8 bg-white">
+      <div className="container mx-auto px-4 py-8 mt-20 max-w-7xl">
+        <div className="flex gap-8">
           {/* Sidebar */}
-          <aside className="w-64 flex-shrink-0 bg-white">
-            <h1 className="text-2xl font-bold mb-6">Account</h1>
-            <nav className="space-y-1 bg-white">
-              {menuItems.map((item) => {
-                const Icon = item.icon;
-                return (
-                  <button
-                    key={item.id}
-                    onClick={item.onClick || (() => setActiveSection(item.id))}
-                    className={`w-full flex items-center gap-3 px-4 py-3 text-left transition-colors ${
-                      activeSection === item.id && !item.onClick
-                        ? "bg-white border-l-4 border-orange-500 font-medium"
-                        : "hover:bg-white"
-                    }`}
-                  >
-                    <Icon className="w-5 h-5 text-gray-600" />
-                    <span className="text-sm">{item.label}</span>
-                  </button>
-                );
-              })}
-              <button
-                onClick={handleLogout}
-                className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-white transition-colors"
-              >
-                <LogOut className="w-5 h-5 text-gray-600" />
-                <span className="text-sm">Logout</span>
-              </button>
-            </nav>
+          <aside className="w-64 flex-shrink-0">
+            <div className="sticky top-32">
+              <h2 className="text-xl font-bold mb-6 text-foreground">Account</h2>
+              <nav className="space-y-1">
+                {menuItems.map((item) => {
+                  const Icon = item.icon;
+                  return (
+                    <button
+                      key={item.id}
+                      onClick={item.onClick || (() => setActiveSection(item.id))}
+                      className={`w-full flex items-center gap-3 px-4 py-3 text-foreground transition-colors rounded text-left ${
+                        activeSection === item.id && !item.onClick
+                          ? "bg-muted font-semibold"
+                          : "hover:bg-muted"
+                      }`}
+                    >
+                      <Icon className="w-5 h-5" />
+                      <span>{item.label}</span>
+                    </button>
+                  );
+                })}
+                <button
+                  onClick={handleLogout}
+                  className="w-full flex items-center gap-3 px-4 py-3 text-foreground hover:bg-muted transition-colors rounded text-left"
+                >
+                  <LogOut className="w-5 h-5" />
+                  <span>Logout</span>
+                </button>
+              </nav>
+            </div>
           </aside>
 
           {/* Main Content */}
-          <main className="flex-1 bg-white">
+          <main className="flex-1">
             {activeSection === "profile" && (
-              <div className="space-y-8 bg-white">
+              <div className="space-y-6">
                 {/* Personal Information */}
-                <div className="border border-gray-200 p-8">
+                <div className="bg-card border border-border rounded-lg p-8">
                   <div className="flex justify-between items-center mb-8">
-                    <h2 className="text-2xl font-semibold">Personal Information</h2>
+                    <h2 className="text-2xl font-semibold text-foreground">Personal Information</h2>
                     {!editMode ? (
                       <Button
                         variant="outline"
                         onClick={() => setEditMode(true)}
-                        className="rounded-none"
                       >
                         Edit
                       </Button>
@@ -490,13 +491,12 @@ const Profile = () => {
                             setEditedProfile(profile);
                             setEditMode(false);
                           }}
-                          className="rounded-none"
                         >
                           Cancel
                         </Button>
                         <Button
                           onClick={handleSave}
-                          className="rounded-none bg-black hover:bg-gray-800"
+                          className="bg-foreground text-background hover:bg-foreground/90"
                         >
                           Save
                         </Button>
@@ -507,77 +507,73 @@ const Profile = () => {
                   <div className="grid grid-cols-2 gap-6">
                     {/* Full Name */}
                     <div className="col-span-2">
-                      <Label className="text-sm text-gray-600 mb-2 block">Full Name</Label>
+                      <Label className="text-sm text-muted-foreground mb-2 block">Full Name</Label>
                       {editMode ? (
                         <div className="flex gap-2">
                           <Input
                             value={editedProfile.first_name}
                             onChange={(e) => setEditedProfile({ ...editedProfile, first_name: e.target.value })}
                             placeholder="First Name"
-                            className="rounded-none bg-white border border-gray-300"
                           />
                           <Input
                             value={editedProfile.last_name}
                             onChange={(e) => setEditedProfile({ ...editedProfile, last_name: e.target.value })}
                             placeholder="Last Name"
-                            className="rounded-none bg-white border border-gray-300"
                           />
                         </div>
                       ) : (
-                        <p className="text-base font-medium">{profile.first_name} {profile.last_name}</p>
+                        <p className="text-base font-medium text-foreground">{profile.first_name} {profile.last_name}</p>
                       )}
                     </div>
 
                     {/* Phone Number */}
                     <div>
-                      <Label className="text-sm text-gray-600 mb-2 block">Phone Number</Label>
+                      <Label className="text-sm text-muted-foreground mb-2 block">Phone Number</Label>
                       {editMode ? (
                         <Input
                           value={editedProfile.phone}
                           onChange={(e) => setEditedProfile({ ...editedProfile, phone: e.target.value })}
                           placeholder="Phone Number"
-                          className="rounded-none bg-white border border-gray-300"
                         />
                       ) : (
-                        <p className="text-base font-medium">{profile.phone || "Not provided"}</p>
+                        <p className="text-base font-medium text-foreground">{profile.phone || "Not provided"}</p>
                       )}
                     </div>
 
                     {/* Email */}
                     <div>
-                      <Label className="text-sm text-gray-600 mb-2 block">Email</Label>
-                      <p className="text-base font-medium">{profile.email}</p>
+                      <Label className="text-sm text-muted-foreground mb-2 block">Email</Label>
+                      <p className="text-base font-medium text-foreground">{profile.email}</p>
                     </div>
 
                     {/* Password */}
                     <div>
-                      <Label className="text-sm text-gray-600 mb-2 block">Password</Label>
-                      <p className="text-base font-medium">••••••</p>
+                      <Label className="text-sm text-muted-foreground mb-2 block">Password</Label>
+                      <p className="text-base font-medium text-foreground">••••••</p>
                     </div>
 
                     {/* Country */}
                     <div>
-                      <Label className="text-sm text-gray-600 mb-2 block">Country</Label>
+                      <Label className="text-sm text-muted-foreground mb-2 block">Country</Label>
                       {editMode ? (
                         <Input
                           value={editedProfile.country}
                           onChange={(e) => setEditedProfile({ ...editedProfile, country: e.target.value })}
                           placeholder="Country"
-                          className="rounded-none bg-white border border-gray-300"
                         />
                       ) : (
-                        <p className="text-base font-medium">{profile.country}</p>
+                        <p className="text-base font-medium text-foreground">{profile.country}</p>
                       )}
                     </div>
 
                     {/* Gender */}
                     <div className="col-span-2">
-                      <Label className="text-sm text-gray-600 mb-2 block">Gender</Label>
+                      <Label className="text-sm text-muted-foreground mb-2 block">Gender</Label>
                       {editMode ? (
                         <select
                           value={editedProfile.gender}
                           onChange={(e) => setEditedProfile({ ...editedProfile, gender: e.target.value })}
-                          className="w-full px-3 py-2 border border-gray-300 bg-white rounded-none"
+                          className="w-full px-3 py-2 border border-input bg-background rounded-md"
                         >
                           <option value="">Select Gender</option>
                           <option value="Male">Male</option>
@@ -585,42 +581,42 @@ const Profile = () => {
                           <option value="Other">Other</option>
                         </select>
                       ) : (
-                        <p className="text-base font-medium capitalize">{profile.gender || "Not specified"}</p>
+                        <p className="text-base font-medium text-foreground capitalize">{profile.gender || "Not specified"}</p>
                       )}
                     </div>
                   </div>
                 </div>
 
                 {/* Delete Account Section */}
-                <div className="border border-gray-200 p-8">
+                <div className="bg-card border border-border rounded-lg p-8">
                   <div className="flex items-center gap-2 mb-4">
-                    <AlertTriangle className="w-5 h-5 text-orange-500" />
-                    <h2 className="text-xl font-semibold text-orange-500">Delete Account</h2>
+                    <AlertTriangle className="w-5 h-5 text-destructive" />
+                    <h2 className="text-xl font-semibold text-destructive">Delete Account</h2>
                   </div>
 
-                  <h3 className="text-lg font-semibold mb-2">We're sorry to see you go!</h3>
-                  <p className="text-sm text-gray-700 mb-4">
+                  <h3 className="text-lg font-semibold mb-2 text-foreground">We're sorry to see you go!</h3>
+                  <p className="text-sm text-muted-foreground mb-4">
                     Deleting your account will permanently remove your profile, order history, saved addresses, and wallet balance. Once deleted, your data cannot be recovered.
                   </p>
 
-                  <h4 className="font-semibold mb-2">Before You Continue</h4>
-                  <ul className="list-disc list-inside text-sm text-gray-700 space-y-1 mb-4">
+                  <h4 className="font-semibold mb-2 text-foreground">Before You Continue</h4>
+                  <ul className="list-disc list-inside text-sm text-muted-foreground space-y-1 mb-4">
                     <li>All past orders and invoices will be permanently deleted.</li>
                     <li>Any unused coupons or wallet credits will be lost.</li>
                     <li>You won't be able to access your purchase history after deletion.</li>
                   </ul>
 
-                  <p className="text-sm text-gray-700 mb-4">
-                    <strong>Are You Sure You Want to Delete Your Account?</strong>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    <strong className="text-foreground">Are You Sure You Want to Delete Your Account?</strong>
                     <br />
-                    If you still wish to proceed, click "<span className="text-red-600 font-semibold">Delete My Account</span>" below.
+                    If you still wish to proceed, click "<span className="text-destructive font-semibold">Delete My Account</span>" below.
                     <br />
                     We value your time with us and hope to see you again in the future.
                   </p>
 
                   <Button
                     onClick={() => setDeleteDialogOpen(true)}
-                    className="bg-red-600 hover:bg-red-700 text-white rounded-none"
+                    variant="destructive"
                   >
                     Delete My Account
                   </Button>
@@ -629,9 +625,9 @@ const Profile = () => {
             )}
 
             {activeSection === "address" && (
-              <div className="border border-gray-200 p-8">
+              <div className="bg-card border border-border rounded-lg p-8">
                 <div className="flex justify-between items-center mb-6">
-                  <h2 className="text-2xl font-semibold">Delivery Addresses</h2>
+                  <h2 className="text-2xl font-semibold text-foreground">Delivery Addresses</h2>
                   <Button
                     onClick={() => {
                       setEditingAddress(null);
