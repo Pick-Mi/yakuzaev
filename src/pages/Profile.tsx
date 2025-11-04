@@ -1,21 +1,26 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import Header from "@/components/Header";
-import { User, MapPin, CreditCard, Package, LogOut, AlertTriangle, Plus, Pencil, Trash2 } from "lucide-react";
+import { User, MapPin, CreditCard, Package, LogOut, AlertTriangle, Plus, Pencil, Trash2, ShoppingCart } from "lucide-react";
+import { format } from "date-fns";
 
 const Profile = () => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { toast } = useToast();
-  const [activeSection, setActiveSection] = useState("profile");
+  const [activeSection, setActiveSection] = useState(searchParams.get("section") || "profile");
   const [loading, setLoading] = useState(true);
+  const [ordersLoading, setOrdersLoading] = useState(false);
+  const [orders, setOrders] = useState<any[]>([]);
   const [editMode, setEditMode] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [addresses, setAddresses] = useState<any[]>([]);
@@ -54,11 +59,19 @@ const Profile = () => {
   const [editedProfile, setEditedProfile] = useState(profile);
 
   useEffect(() => {
+    const section = searchParams.get("section") || "profile";
+    setActiveSection(section);
+  }, [searchParams]);
+
+  useEffect(() => {
     if (user) {
       fetchProfile();
       fetchAddresses();
+      if (activeSection === "orders") {
+        fetchOrders();
+      }
     }
-  }, [user]);
+  }, [user, activeSection]);
 
   const fetchProfile = async () => {
     try {
@@ -93,6 +106,85 @@ const Profile = () => {
       console.error('Error fetching profile:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchOrders = async () => {
+    setOrdersLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from('orders')
+        .select('*')
+        .eq('customer_id', user?.id)
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      
+      // Fetch product details for each order
+      const ordersWithProducts = await Promise.all((data || []).map(async (order) => {
+        const orderItemsData = order.order_items_data as any[];
+        if (orderItemsData && Array.isArray(orderItemsData) && orderItemsData.length > 0) {
+          const productId = orderItemsData[0].product_id;
+          const colorName = orderItemsData[0].color;
+          const variantName = orderItemsData[0].variant;
+          
+          if (productId) {
+            const { data: productData } = await supabase
+              .from('products')
+              .select('thumbnail, image_url, images, name, variants, color_variety')
+              .eq('id', productId)
+              .maybeSingle();
+            
+            if (productData) {
+              order.order_items_data[0].image_url = productData.thumbnail || 
+                productData.image_url || 
+                (productData.images && productData.images[0]?.url);
+              order.order_items_data[0].product_name = order.order_items_data[0].product_name || productData.name;
+              
+              let colorHex = null;
+              if (productData.color_variety && colorName) {
+                const colorVariety = productData.color_variety as any;
+                if (colorVariety.colors && Array.isArray(colorVariety.colors)) {
+                  const colorMatch = colorVariety.colors.find((c: any) => 
+                    c.name?.toLowerCase() === colorName.toLowerCase()
+                  );
+                  if (colorMatch && colorMatch.hex) {
+                    colorHex = colorMatch.hex;
+                  }
+                }
+              }
+              
+              if (!colorHex && productData.variants && Array.isArray(productData.variants) && colorName && variantName) {
+                const variant = (productData.variants as any[]).find((v: any) => v.name === variantName);
+                if (variant && variant.colors && Array.isArray(variant.colors)) {
+                  const colorMatch = (variant.colors as any[]).find((c: any) => {
+                    const colorNameInVariant = c.name?.split('(')[0].trim();
+                    return colorNameInVariant?.toLowerCase() === colorName.toLowerCase();
+                  });
+                  
+                  if (colorMatch && colorMatch.name) {
+                    const hexMatch = colorMatch.name.match(/#([0-9A-Fa-f]{6})/);
+                    if (hexMatch) {
+                      colorHex = hexMatch[0];
+                    }
+                  }
+                }
+              }
+              
+              if (colorHex) {
+                order.order_items_data[0].color_hex = colorHex;
+              }
+            }
+          }
+        }
+        return order;
+      }));
+      
+      setOrders(ordersWithProducts);
+    } catch (error) {
+      console.error('Error fetching orders:', error);
+    } finally {
+      setOrdersLoading(false);
     }
   };
 
@@ -423,11 +515,16 @@ const Profile = () => {
     );
   }
 
+  const handleSectionChange = (section: string) => {
+    setActiveSection(section);
+    setSearchParams({ section });
+  };
+
   const menuItems = [
     { id: "profile", label: "Profile Details", icon: User },
     { id: "address", label: "Delivery Addresses", icon: MapPin },
     { id: "identification", label: "Identification Details", icon: CreditCard },
-    { id: "orders", label: "My Orders", icon: Package, onClick: () => navigate("/orders") },
+    { id: "orders", label: "My Orders", icon: ShoppingCart },
   ];
 
   return (
@@ -444,9 +541,9 @@ const Profile = () => {
                 return (
                   <button
                     key={item.id}
-                    onClick={item.onClick || (() => setActiveSection(item.id))}
+                    onClick={() => handleSectionChange(item.id)}
                     className={`w-full flex items-center gap-3 px-4 py-3 text-left transition-colors ${
-                      activeSection === item.id && !item.onClick
+                      activeSection === item.id
                         ? "bg-white border-l-4 border-orange-500 font-medium"
                         : "hover:bg-white"
                     }`}
@@ -866,6 +963,111 @@ const Profile = () => {
                         Save Details
                       </Button>
                     </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* My Orders Section */}
+            {activeSection === "orders" && (
+              <div>
+                <h2 className="text-3xl font-bold mb-6 text-gray-900">My Orders</h2>
+
+                {ordersLoading ? (
+                  <div className="text-center py-12">
+                    <p className="text-gray-600">Loading orders...</p>
+                  </div>
+                ) : orders.length === 0 ? (
+                  <div className="text-center py-12">
+                    <Package className="w-16 h-16 mx-auto text-gray-400 mb-4" />
+                    <h3 className="text-xl font-semibold mb-2">No orders yet</h3>
+                    <p className="text-gray-600 mb-4">You haven't placed any orders yet.</p>
+                    <Button onClick={() => navigate('/')}>
+                      Start Shopping
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="space-y-6">
+                    {orders.map((order) => {
+                      const orderItems = order.order_items_data || [];
+                      const firstItem = orderItems[0];
+                      const deliveryDate = order.estimated_delivery_date || order.created_at;
+                      
+                      return (
+                        <div key={order.id} className="border border-gray-200 rounded-lg p-6">
+                          <div className="mb-4">
+                            <h3 className="text-base font-semibold text-gray-900">
+                              Delivered on {format(new Date(deliveryDate), 'MMM dd, yyyy')}
+                            </h3>
+                          </div>
+
+                          <div className="flex gap-6">
+                            <div className="w-32 h-32 flex-shrink-0 bg-gray-100 rounded overflow-hidden">
+                              {firstItem?.image_url ? (
+                                <img 
+                                  src={firstItem.image_url} 
+                                  alt={firstItem.name || "Product"} 
+                                  className="w-full h-full object-cover"
+                                />
+                              ) : (
+                                <div className="w-full h-full flex items-center justify-center">
+                                  <Package className="w-12 h-12 text-gray-400" />
+                                </div>
+                              )}
+                            </div>
+
+                            <div className="flex-1">
+                              <div className="flex justify-between items-start mb-2">
+                                <h4 className="font-semibold text-lg text-gray-900">
+                                  {firstItem?.product_name || firstItem?.name || 'Product'}
+                                </h4>
+                                <Badge 
+                                  variant="secondary" 
+                                  className={
+                                    order.order_type === 'test_ride' 
+                                      ? 'bg-orange-100 text-orange-600 hover:bg-orange-100' 
+                                      : 'bg-green-100 text-green-600 hover:bg-green-100'
+                                  }
+                                >
+                                  {order.order_type === 'test_ride' ? 'Booking' : 'Purchased'}
+                                </Badge>
+                              </div>
+
+                              <p className="text-sm text-gray-500 mb-2">
+                                Return or Replace: Eligible through {format(new Date(deliveryDate), 'MMM dd, yyyy')}
+                              </p>
+
+                              {firstItem?.variant && (
+                                <p className="text-sm text-gray-700 mb-1">
+                                  Variant : <span className="font-medium">({firstItem.variant})</span>
+                                </p>
+                              )}
+
+                              <div className="flex items-center gap-2 text-sm">
+                                <span className="text-gray-700">Colour :</span>
+                                <span className="font-medium text-gray-900">{firstItem?.color || 'Black'}</span>
+                                <div 
+                                  className="w-4 h-4 rounded-full border border-gray-300"
+                                  style={{ backgroundColor: firstItem?.color_hex || '#000000' }}
+                                ></div>
+                              </div>
+                            </div>
+
+                            <div className="flex flex-col items-end justify-between gap-4">
+                              <p className="text-2xl font-bold text-gray-900">
+                                ₹{order.total_amount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                              </p>
+                              <Button 
+                                onClick={() => navigate(`/orders/${order.id}`)}
+                                className="bg-black text-white hover:bg-gray-800 px-8"
+                              >
+                                View Order
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
                 )}
               </div>
