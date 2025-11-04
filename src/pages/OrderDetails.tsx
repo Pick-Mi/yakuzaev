@@ -375,8 +375,8 @@ const OrderDetails = () => {
   const timeline = getOrderTimeline();
   const deliveryAddress = order.delivery_address || order.customer_details?.address || {};
 
-  // Get variant price from order items
-  const variantPrice = firstItem.variant_price || order.total_amount;
+  // Get variant price from order items - prioritize stored unit_price, then variant_price from DB
+  const variantPrice = firstItem.unit_price || firstItem.variant_price || firstItem.total_price || order.total_amount;
 
   // Calculate price details from order_summary if available
   const orderSummary = order.order_summary || {};
