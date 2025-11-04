@@ -375,8 +375,15 @@ const OrderDetails = () => {
   const timeline = getOrderTimeline();
   const deliveryAddress = order.delivery_address || order.customer_details?.address || {};
 
-  // Get variant price from order items - prioritize stored unit_price, then variant_price from DB
-  const variantPrice = firstItem.unit_price || firstItem.variant_price || firstItem.total_price || order.total_amount;
+  // Get the actual product price from order - use the price stored when order was placed
+  // Priority: unit_price (from order) > total_price (from order) > variant_price (fetched from DB)
+  const variantPrice = firstItem.unit_price 
+    ? parseFloat(firstItem.unit_price.toString()) 
+    : firstItem.total_price 
+      ? parseFloat(firstItem.total_price.toString()) 
+      : firstItem.variant_price 
+        ? parseFloat(firstItem.variant_price.toString())
+        : parseFloat(order.total_amount.toString());
 
   // Calculate price details from order_summary if available
   const orderSummary = order.order_summary || {};
