@@ -103,12 +103,24 @@ const OrderDetails = () => {
             // Add product image to order_items_data - prioritize thumbnail, then image_url, then images array
             data.order_items_data[0].image_url = productData.thumbnail || productData.image_url || productData.images && productData.images[0]?.url;
             
-            // Get the variant price
+            // Get the variant price from specifications
             let variantPrice = productData.price; // Default to base product price
             if (productData.variants && Array.isArray(productData.variants) && variantName) {
               const variant = (productData.variants as any[]).find((v: any) => v.name === variantName);
-              if (variant && variant.price) {
-                variantPrice = parseFloat(variant.price);
+              if (variant) {
+                // Check if price exists in specifications
+                if (variant.specifications && Array.isArray(variant.specifications)) {
+                  const priceSpec = variant.specifications.find((spec: any) => 
+                    spec.label?.toLowerCase() === 'price'
+                  );
+                  if (priceSpec && priceSpec.value) {
+                    // Remove commas and parse the price
+                    const priceValue = priceSpec.value.toString().replace(/,/g, '');
+                    variantPrice = parseFloat(priceValue);
+                  }
+                } else if (variant.price) {
+                  variantPrice = parseFloat(variant.price);
+                }
               }
             }
             
