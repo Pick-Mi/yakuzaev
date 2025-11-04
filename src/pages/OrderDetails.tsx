@@ -439,111 +439,121 @@ const OrderDetails = () => {
                   </div>
                 </div>)}
             </div>
+          </div>
 
-            {/* Action Buttons */}
-            <div className="space-y-4 pt-4">
-              {/* Order Cancelled Status - Show when approved */}
-              {order.cancellation_status === 'approved' && order.status === 'cancelled' && (
-                <div className="flex items-center justify-center gap-3 px-6 py-4 bg-gradient-to-r from-red-50 to-red-100 border-2 border-red-500 rounded-lg shadow-sm">
-                  <div className="flex items-center gap-2">
-                    <XCircle className="w-6 h-6 text-red-600" />
-                  </div>
-                  <div className="flex flex-col">
-                    <span className="text-base font-bold text-red-900">
-                      Order Cancelled - Admin Approved
-                    </span>
-                    <span className="text-sm text-red-700">
-                      Cancellation Reason: {order.cancellation_reason || 'Not specified'}
-                    </span>
-                    {order.cancellation_requested_at && (
-                      <span className="text-xs text-red-600 mt-1">
-                        Requested on {format(new Date(order.cancellation_requested_at), 'MMM dd, yyyy h:mm a')}
-                      </span>
-                    )}
-                  </div>
+          {/* Order Cancelled Status Card - Show when approved */}
+          {order.cancellation_status === 'approved' && order.status === 'cancelled' && (
+            <div className="lg:col-span-2 bg-white border p-6">
+              <div className="flex items-center justify-center gap-3 px-6 py-4 bg-gradient-to-r from-red-50 to-red-100 border-2 border-red-500 rounded-lg shadow-sm">
+                <div className="flex items-center gap-2">
+                  <XCircle className="w-6 h-6 text-red-600" />
                 </div>
-              )}
+                <div className="flex flex-col">
+                  <span className="text-base font-bold text-red-900">
+                    Order Cancelled - Admin Approved
+                  </span>
+                  <span className="text-sm text-red-700">
+                    Cancellation Reason: {order.cancellation_reason || 'Not specified'}
+                  </span>
+                  {order.cancellation_requested_at && (
+                    <span className="text-xs text-red-600 mt-1">
+                      Requested on {format(new Date(order.cancellation_requested_at), 'MMM dd, yyyy h:mm a')}
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
 
-              {/* Refund Information - Show when payment status is refunded or refund_details exists */}
-              {(order.payment_status === 'refunded' || order.refund_details) && (
-                <div className="bg-green-50 border-2 border-green-500 rounded-lg p-4">
-                  <div className="flex items-start gap-3">
-                    <CheckCircle className="w-6 h-6 text-green-600 mt-1" />
-                    <div className="flex-1">
-                      <h3 className="font-bold text-green-900 text-base mb-2">Refund Processed</h3>
-                      <div className="space-y-2 text-sm text-green-800">
-                        <div className="flex justify-between">
-                          <span>Refund Amount:</span>
-                          <span className="font-semibold">₹{order.refund_details?.amount ? parseFloat(order.refund_details.amount).toLocaleString('en-IN') : Number(order.total_amount).toLocaleString('en-IN')}</span>
-                        </div>
-                        {order.refund_details?.transaction_id && (
-                          <div className="flex justify-between">
-                            <span>Transaction ID:</span>
-                            <span className="font-mono text-xs">{order.refund_details.transaction_id}</span>
-                          </div>
-                        )}
-                        {order.refund_details?.refund_date && (
-                          <div className="flex justify-between">
-                            <span>Refund Date:</span>
-                            <span>{format(new Date(order.refund_details.refund_date), 'MMM dd, yyyy')}</span>
-                          </div>
-                        )}
-                        <div className="flex justify-between">
-                          <span>Status:</span>
-                          <Badge variant="default" className="bg-green-600">
-                            {order.refund_details?.status || 'Processing'}
-                          </Badge>
-                        </div>
-                        <p className="text-xs mt-2 pt-2 border-t border-green-300">
-                          Refund will be credited to your original payment method within 5-7 business days.
-                        </p>
+          {/* Refund Information Card - Show when payment status is refunded or refund_details exists */}
+          {(order.payment_status === 'refunded' || order.refund_details) && (
+            <div className="lg:col-span-2 bg-white border p-6">
+              <div className="bg-green-50 border-2 border-green-500 rounded-lg p-4">
+                <div className="flex items-start gap-3">
+                  <CheckCircle className="w-6 h-6 text-green-600 mt-1" />
+                  <div className="flex-1">
+                    <h3 className="font-bold text-green-900 text-base mb-2">Refund Processed</h3>
+                    <div className="space-y-2 text-sm text-green-800">
+                      <div className="flex justify-between">
+                        <span>Refund Amount:</span>
+                        <span className="font-semibold">₹{order.refund_details?.amount ? parseFloat(order.refund_details.amount).toLocaleString('en-IN') : Number(order.total_amount).toLocaleString('en-IN')}</span>
                       </div>
+                      {order.refund_details?.transaction_id && (
+                        <div className="flex justify-between">
+                          <span>Transaction ID:</span>
+                          <span className="font-mono text-xs">{order.refund_details.transaction_id}</span>
+                        </div>
+                      )}
+                      {order.refund_details?.refund_date && (
+                        <div className="flex justify-between">
+                          <span>Refund Date:</span>
+                          <span>{format(new Date(order.refund_details.refund_date), 'MMM dd, yyyy')}</span>
+                        </div>
+                      )}
+                      <div className="flex justify-between">
+                        <span>Status:</span>
+                        <Badge variant="default" className="bg-green-600">
+                          {order.refund_details?.status || 'Processing'}
+                        </Badge>
+                      </div>
+                      <p className="text-xs mt-2 pt-2 border-t border-green-300">
+                        Refund will be credited to your original payment method within 5-7 business days.
+                      </p>
                     </div>
                   </div>
                 </div>
-              )}
+              </div>
+            </div>
+          )}
 
-              {/* Cancellation Status Chip - Show prominently if pending */}
-              {order.cancellation_status === 'pending' && (
-                <div className="flex items-center justify-center gap-3 px-6 py-4 bg-gradient-to-r from-yellow-50 to-orange-50 border-2 border-yellow-400 rounded-lg shadow-sm">
-                  <div className="flex items-center gap-2">
-                    <div className="relative flex h-3 w-3">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-3 w-3 bg-yellow-500"></span>
-                    </div>
-                    <Info className="w-6 h-6 text-yellow-600" />
+          {/* Cancellation Pending Card */}
+          {order.cancellation_status === 'pending' && (
+            <div className="lg:col-span-2 bg-white border p-6">
+              <div className="flex items-center justify-center gap-3 px-6 py-4 bg-gradient-to-r from-yellow-50 to-orange-50 border-2 border-yellow-400 rounded-lg shadow-sm">
+                <div className="flex items-center gap-2">
+                  <div className="relative flex h-3 w-3">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-3 w-3 bg-yellow-500"></span>
                   </div>
-                  <div className="flex flex-col">
-                    <span className="text-base font-bold text-yellow-900">
-                      Cancellation Request Pending
-                    </span>
-                    <span className="text-sm text-yellow-700">
-                      Waiting for admin approval
-                    </span>
-                    {order.cancellation_reason && (
-                      <span className="text-xs text-yellow-600 mt-1">
-                        Reason: {order.cancellation_reason}
-                      </span>
-                    )}
-                  </div>
+                  <Info className="w-6 h-6 text-yellow-600" />
                 </div>
-              )}
-
-              {/* Rejected Cancellation */}
-              {order.cancellation_status === 'rejected' && (
-                <div className="flex items-center justify-center gap-3 px-6 py-4 bg-gradient-to-r from-gray-50 to-gray-100 border-2 border-gray-400 rounded-lg shadow-sm">
-                  <XCircle className="w-6 h-6 text-gray-600" />
-                  <div className="flex flex-col">
-                    <span className="text-base font-bold text-gray-900">
-                      Cancellation Request Rejected
+                <div className="flex flex-col">
+                  <span className="text-base font-bold text-yellow-900">
+                    Cancellation Request Pending
+                  </span>
+                  <span className="text-sm text-yellow-700">
+                    Waiting for admin approval
+                  </span>
+                  {order.cancellation_reason && (
+                    <span className="text-xs text-yellow-600 mt-1">
+                      Reason: {order.cancellation_reason}
                     </span>
-                    <span className="text-sm text-gray-700">
-                      Your cancellation request was not approved
-                    </span>
-                  </div>
+                  )}
                 </div>
-              )}
+              </div>
+            </div>
+          )}
 
+          {/* Rejected Cancellation Card */}
+          {order.cancellation_status === 'rejected' && (
+            <div className="lg:col-span-2 bg-white border p-6">
+              <div className="flex items-center justify-center gap-3 px-6 py-4 bg-gradient-to-r from-gray-50 to-gray-100 border-2 border-gray-400 rounded-lg shadow-sm">
+                <XCircle className="w-6 h-6 text-gray-600" />
+                <div className="flex flex-col">
+                  <span className="text-base font-bold text-gray-900">
+                    Cancellation Request Rejected
+                  </span>
+                  <span className="text-sm text-gray-700">
+                    Your cancellation request was not approved
+                  </span>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Action Buttons */}
+          <div className="lg:col-span-2 bg-white border p-6">
+            <div className="space-y-4">
               <div className="flex flex-col sm:flex-row justify-center gap-4">
                 {/* Cancel Order Button - Only show if can cancel */}
                 {canCancelOrder(order.status, order.cancellation_status) && (
