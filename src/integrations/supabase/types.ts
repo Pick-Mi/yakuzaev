@@ -445,6 +445,10 @@ export type Database = {
       orders: {
         Row: {
           billing_address: Json | null
+          cancellation_reason: string | null
+          cancellation_request: Json | null
+          cancellation_requested_at: string | null
+          cancellation_status: string | null
           created_at: string
           customer_details: Json | null
           customer_id: string | null
@@ -472,6 +476,10 @@ export type Database = {
         }
         Insert: {
           billing_address?: Json | null
+          cancellation_reason?: string | null
+          cancellation_request?: Json | null
+          cancellation_requested_at?: string | null
+          cancellation_status?: string | null
           created_at?: string
           customer_details?: Json | null
           customer_id?: string | null
@@ -499,6 +507,10 @@ export type Database = {
         }
         Update: {
           billing_address?: Json | null
+          cancellation_reason?: string | null
+          cancellation_request?: Json | null
+          cancellation_requested_at?: string | null
+          cancellation_status?: string | null
           created_at?: string
           customer_details?: Json | null
           customer_id?: string | null

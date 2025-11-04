@@ -10,7 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { format } from "date-fns";
-import { Package, CheckCircle, User, ChevronRight, Home, MessageCircle, XCircle, ChevronDown, Info, Download } from "lucide-react";
+import { Package, CheckCircle, User, ChevronRight, Home, XCircle, ChevronDown, Info, Download, Phone } from "lucide-react";
 import Header from "@/components/Header";
 import PayUPayment from "@/components/PayUPayment";
 import heroScooter from "@/assets/hero-scooter.png";
@@ -46,6 +46,10 @@ interface Order {
   customer_id?: string;
   customer_name?: string;
   status_history?: any[];
+  cancellation_request?: any;
+  cancellation_status?: string;
+  cancellation_reason?: string;
+  cancellation_requested_at?: string;
 }
 const OrderDetails = () => {
   const {
@@ -68,6 +72,7 @@ const OrderDetails = () => {
   const [showPriceBreakdown, setShowPriceBreakdown] = useState(false);
   const [showPaymentDialog, setShowPaymentDialog] = useState(false);
   const [showPaymentDetails, setShowPaymentDetails] = useState(false);
+  const [cancelReason, setCancelReason] = useState("");
   useEffect(() => {
     if (user && id) {
       fetchOrder();
@@ -235,35 +240,61 @@ const OrderDetails = () => {
     
     return timeline;
   };
-  const handleCancelOrder = async () => {
-    if (!order || !user) return;
-    setCancelling(true);
-    try {
-      const {
-        error: updateError
-      } = await supabase.from('orders').update({
-        status: 'cancelled',
-        payment_status: 'refunded'
-      }).eq('id', order.id).eq('customer_id', user.id);
-      if (updateError) throw updateError;
-      toast({
-        title: "Order Cancelled",
-        description: "Your order has been cancelled and refund will be processed within 5-7 business days."
-      });
-      await fetchOrder();
-    } catch (error) {
-      console.error('Error cancelling order:', error);
+  const handleCancelOrder = async (reason: string) => {
+    if (!order || !user || !reason.trim()) {
       toast({
         title: "Cancellation Failed",
-        description: "Unable to cancel order. Please contact support.",
+        description: "Please provide a reason for cancellation.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    setCancelling(true);
+    try {
+      const { error: updateError } = await supabase
+        .from('orders')
+        .update({
+          cancellation_request: {
+            reason: reason,
+            requested_by: user.id,
+            requested_at: new Date().toISOString()
+          },
+          cancellation_status: 'pending',
+          cancellation_reason: reason,
+          cancellation_requested_at: new Date().toISOString()
+        })
+        .eq('id', order.id)
+        .eq('customer_id', user.id);
+
+      if (updateError) throw updateError;
+
+      toast({
+        title: "Cancellation Request Submitted",
+        description: "Your cancellation request has been submitted and is waiting for admin approval."
+      });
+      
+      await fetchOrder();
+    } catch (error) {
+      console.error('Error submitting cancellation request:', error);
+      toast({
+        title: "Cancellation Failed",
+        description: "Unable to submit cancellation request. Please try again.",
         variant: "destructive"
       });
     } finally {
       setCancelling(false);
     }
   };
-  const canCancelOrder = (status: string) => {
-    return ['pending', 'confirmed', 'processing'].includes(status.toLowerCase());
+  const canCancelOrder = (status: string, cancellationStatus?: string) => {
+    // Can't cancel if already cancelled or delivered
+    if (['cancelled', 'delivered'].includes(status.toLowerCase())) return false;
+    
+    // Can't submit new request if one is already pending
+    if (cancellationStatus === 'pending') return false;
+    
+    // Can cancel if status is placed, confirmed, or processing
+    return ['placed', 'confirmed', 'processing', 'pending'].includes(status.toLowerCase());
   };
   const handlePaymentSuccess = async (paymentData: any) => {
     setShowPaymentDialog(false);
@@ -394,11 +425,81 @@ const OrderDetails = () => {
                 </div>)}
             </div>
 
-            {/* Chat Button */}
-            <div className="flex justify-center pt-4">
-              <Button variant="outline" className="gap-2 px-8 rounded-none">
-                <MessageCircle className="w-5 h-5" />
-                Chat with us
+            {/* Action Buttons */}
+            <div className="flex flex-col sm:flex-row justify-center gap-4 pt-4">
+              {/* Cancel Order Button */}
+              {canCancelOrder(order.status, order.cancellation_status) && (
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button variant="outline" className="gap-2 px-8 rounded-none border-red-500 text-red-500 hover:bg-red-50">
+                      <XCircle className="w-5 h-5" />
+                      Cancel Order
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Cancel Order Request</AlertDialogTitle>
+                      <AlertDialogDescription className="space-y-4">
+                        <p>Your cancellation request will be sent to our admin team for review.</p>
+                        <div className="space-y-2">
+                          <label className="text-sm font-medium text-foreground">
+                            Reason for cancellation <span className="text-red-500">*</span>
+                          </label>
+                          <textarea
+                            className="w-full min-h-[100px] p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+                            placeholder="Please tell us why you want to cancel this order..."
+                            value={cancelReason}
+                            onChange={(e) => setCancelReason(e.target.value)}
+                          />
+                        </div>
+                        <div className="bg-blue-50 p-3 rounded-md text-sm">
+                          <p className="font-medium text-blue-900 mb-1">What happens next?</p>
+                          <ul className="text-blue-800 space-y-1 ml-4 list-disc">
+                            <li>Request sent to admin team</li>
+                            <li>Admin reviews within 24 hours</li>
+                            <li>If approved, refund processed in 5-7 days</li>
+                            <li>You'll be notified of the decision</li>
+                          </ul>
+                        </div>
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel onClick={() => setCancelReason("")}>
+                        Keep Order
+                      </AlertDialogCancel>
+                      <AlertDialogAction
+                        onClick={() => {
+                          handleCancelOrder(cancelReason);
+                          setCancelReason("");
+                        }}
+                        disabled={!cancelReason.trim() || cancelling}
+                        className="bg-red-500 hover:bg-red-600"
+                      >
+                        {cancelling ? "Submitting..." : "Submit Cancellation"}
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              )}
+
+              {/* Cancellation Status Badge */}
+              {order.cancellation_status === 'pending' && (
+                <div className="flex items-center gap-2 px-4 py-2 bg-yellow-50 border border-yellow-200 rounded-md">
+                  <Info className="w-5 h-5 text-yellow-600" />
+                  <span className="text-sm font-medium text-yellow-800">
+                    Cancellation request pending admin approval
+                  </span>
+                </div>
+              )}
+
+              {/* WhatsApp Support Button */}
+              <Button 
+                variant="outline" 
+                className="gap-2 px-8 rounded-none border-green-500 text-green-600 hover:bg-green-50"
+                onClick={() => window.open('https://wa.me/919876543210', '_blank')}
+              >
+                <Phone className="w-5 h-5" />
+                WhatsApp Support
               </Button>
             </div>
           </div>
