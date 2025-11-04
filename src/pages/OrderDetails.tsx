@@ -739,16 +739,13 @@ const OrderDetails = () => {
                   <div className="flex justify-between text-base">
                     <span className="text-foreground">Product price</span>
                     <span className="font-medium">
-                      ₹{(firstItem.variant_price 
-                        ? parseFloat(firstItem.variant_price.toString()) 
-                        : parseFloat(order.total_amount.toString())
-                      ).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                      ₹{variantPrice.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </span>
                   </div>
                     
                     <div className="flex justify-between text-base">
-                      <span className="text-foreground">Booking amount</span>
-                      <span className="font-medium">₹{parseFloat(order.total_amount.toString()).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                      <span className="text-foreground">Booking amount (Paid)</span>
+                      <span className="font-medium text-green-600">-₹{parseFloat(order.total_amount.toString()).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                     </div>
                     
                     <div className="flex justify-between text-base">
@@ -758,13 +755,13 @@ const OrderDetails = () => {
                     
                     <div className="flex justify-between text-base">
                       <span className="text-foreground">Sub Total</span>
-                      <span className="font-medium">₹{(variantPrice - parseFloat(order.total_amount.toString())).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                      <span className="font-medium">₹{variantPrice.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                     </div>
 
                     <div className="border-t-2 border-dashed border-gray-300 my-4"></div>
 
                     <div className="flex justify-between text-base font-bold">
-                      <span>Total amount</span>
+                      <span>Total amount (Remaining)</span>
                       <span>₹{(variantPrice - parseFloat(order.total_amount.toString())).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                     </div>
 
