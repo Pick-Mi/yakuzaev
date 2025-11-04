@@ -565,7 +565,7 @@ const Orders = () => {
                             </p>
                             <Button 
                               onClick={() => handleViewOrder(order.id)}
-                              className="bg-black text-white hover:bg-gray-800 px-8"
+                              className="bg-black text-white hover:bg-gray-800 px-8 rounded-none"
                             >
                               View Order
                             </Button>
