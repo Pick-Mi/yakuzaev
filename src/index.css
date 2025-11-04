@@ -7,7 +7,7 @@
 @layer base {
   :root {
     /* Base colors - 60% white, 30% orange, 10% black */
-    --background: 180 9% 97%;
+    --background: 0 0% 100%;
     --foreground: 0 0% 0%;
 
     /* Card system */
