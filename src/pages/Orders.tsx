@@ -506,7 +506,7 @@ const Orders = () => {
                         {/* Order Content */}
                         <div className="flex gap-6">
                           {/* Product Image */}
-                          <div className="w-32 h-32 flex-shrink-0 bg-gray-100 rounded overflow-hidden">
+                          <div className="w-32 h-32 flex-shrink-0 bg-gray-100 overflow-hidden">
                             {firstItem?.image_url ? (
                               <img 
                                 src={firstItem.image_url} 
