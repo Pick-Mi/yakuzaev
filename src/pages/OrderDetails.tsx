@@ -510,9 +510,16 @@ const OrderDetails = () => {
                     <h2 className="text-2xl font-semibold">
                       {firstItem.product_name || firstItem.name || 'Product'}
                     </h2>
-                    <div className="inline-flex items-center px-3 py-1 rounded-full bg-green-50 text-green-600 text-sm font-medium">
-                      {order.order_type === 'test_ride' ? 'Book a Bike' : order.order_type === 'purchase' ? 'Purchased' : 'Order'}
-                    </div>
+                    <Badge 
+                      variant="secondary" 
+                      className={
+                        order.order_type === 'booking' 
+                          ? 'bg-orange-100 text-orange-600 hover:bg-orange-100' 
+                          : 'bg-green-100 text-green-600 hover:bg-green-100'
+                      }
+                    >
+                      {order.order_type === 'booking' ? 'Booking' : 'Purchased'}
+                    </Badge>
                     <p className="text-sm">
                       <span className="text-foreground">Variant : </span>
                       <span className="font-medium">{firstItem.variant || 'YAKUZA NEU 43V'}</span>
@@ -664,7 +671,7 @@ const OrderDetails = () => {
             <div className="bg-white border p-6">
               <h3 className="text-lg font-bold mb-6">Order Summary</h3>
               
-              {order.order_type === 'test_ride' ? (
+              {order.order_type === 'booking' ? (
                 <>
                   {/* Booking Summary */}
                   <div className="bg-gray-50 p-6 space-y-4 mb-6">
