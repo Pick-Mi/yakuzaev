@@ -511,7 +511,7 @@ const OrderDetails = () => {
                       {firstItem.product_name || firstItem.name || 'Product'}
                     </h2>
                     <div className="inline-flex items-center px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium">
-                      {order.order_type === 'test_ride' ? 'Book a Bike' : order.order_type === 'purchase' ? 'Book a Buy' : 'Order'}
+                      {order.order_type === 'test_ride' ? 'Book a Bike' : order.order_type === 'purchase' ? 'Purchased' : 'Order'}
                     </div>
                     <p className="text-sm">
                       <span className="text-foreground">Variant : </span>
