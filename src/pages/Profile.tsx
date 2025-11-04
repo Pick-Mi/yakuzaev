@@ -112,13 +112,19 @@ const Profile = () => {
   const fetchOrders = async () => {
     setOrdersLoading(true);
     try {
+      console.log('Fetching orders for user:', user?.id);
       const { data, error } = await supabase
         .from('orders')
         .select('*')
         .eq('customer_id', user?.id)
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching orders:', error);
+        throw error;
+      }
+      
+      console.log('Orders fetched:', data);
       
       // Fetch product details for each order
       const ordersWithProducts = await Promise.all((data || []).map(async (order) => {
@@ -180,6 +186,7 @@ const Profile = () => {
         return order;
       }));
       
+      console.log('Orders with products:', ordersWithProducts);
       setOrders(ordersWithProducts);
     } catch (error) {
       console.error('Error fetching orders:', error);
