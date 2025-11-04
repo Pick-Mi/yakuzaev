@@ -269,11 +269,25 @@ const OrderDetails = () => {
 
       if (updateError) throw updateError;
 
+      // Immediately update local state to show the cancellation status
+      setOrder(prev => prev ? {
+        ...prev,
+        cancellation_status: 'pending',
+        cancellation_reason: reason,
+        cancellation_requested_at: new Date().toISOString(),
+        cancellation_request: {
+          reason: reason,
+          requested_by: user.id,
+          requested_at: new Date().toISOString()
+        }
+      } : null);
+
       toast({
         title: "Cancellation Request Submitted",
         description: "Your cancellation request has been submitted and is waiting for admin approval."
       });
       
+      // Also refresh from database to ensure sync
       await fetchOrder();
     } catch (error) {
       console.error('Error submitting cancellation request:', error);
