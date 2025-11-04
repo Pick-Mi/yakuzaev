@@ -994,7 +994,7 @@ const Profile = () => {
                       const deliveryDate = order.estimated_delivery_date || order.created_at;
                       
                       return (
-                        <div key={order.id} className="border border-gray-200 rounded-lg p-6">
+                        <div key={order.id} className="border border-gray-200 p-6">
                           <div className="mb-4">
                             <h3 className="text-base font-semibold text-gray-900">
                               Delivered on {format(new Date(deliveryDate), 'MMM dd, yyyy')}
@@ -1002,7 +1002,7 @@ const Profile = () => {
                           </div>
 
                           <div className="flex gap-6">
-                            <div className="w-32 h-32 flex-shrink-0 bg-gray-100 rounded overflow-hidden">
+                            <div className="w-32 h-32 flex-shrink-0 bg-gray-100 overflow-hidden">
                               {firstItem?.image_url ? (
                                 <img 
                                   src={firstItem.image_url} 
@@ -1047,7 +1047,7 @@ const Profile = () => {
                                 <span className="text-gray-700">Colour :</span>
                                 <span className="font-medium text-gray-900">{firstItem?.color || 'Black'}</span>
                                 <div 
-                                  className="w-4 h-4 rounded-full border border-gray-300"
+                                  className="w-4 h-4 border border-gray-300"
                                   style={{ backgroundColor: firstItem?.color_hex || '#000000' }}
                                 ></div>
                               </div>
@@ -1059,7 +1059,7 @@ const Profile = () => {
                               </p>
                               <Button 
                                 onClick={() => navigate(`/orders/${order.id}`)}
-                                className="bg-black text-white hover:bg-gray-800 px-8"
+                                className="bg-black text-white hover:bg-gray-800 px-8 rounded-none"
                               >
                                 View Order
                               </Button>
