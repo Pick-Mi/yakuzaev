@@ -761,7 +761,7 @@ const OrderDetails = () => {
                     <div className="border-t-2 border-dashed border-gray-300 my-4"></div>
 
                     <div className="flex justify-between text-base font-bold">
-                      <span>Total amount (Remaining)</span>
+                      <span>Total amount</span>
                       <span>₹{(variantPrice - parseFloat(order.total_amount.toString())).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                     </div>
 
