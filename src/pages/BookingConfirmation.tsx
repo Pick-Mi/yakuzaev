@@ -135,15 +135,32 @@ const BookingConfirmation = () => {
   const [promoApplied, setPromoApplied] = useState(false);
   const [userDetails, setUserDetails] = useState('');
   const [isSummaryOpen, setIsSummaryOpen] = useState(false);
+  const [bookingPriceFromDB, setBookingPriceFromDB] = useState<number>(0);
   const {
     signInWithPhone,
     verifyOTP,
     user
   } = useAuth();
 
+  // Fetch booking price from database
+  useEffect(() => {
+    const fetchBookingPrice = async () => {
+      const { data, error } = await supabase
+        .from('booking_pricing' as any)
+        .select('booking_amount')
+        .single();
+      
+      if (data && !error) {
+        setBookingPriceFromDB(Number((data as any).booking_amount) || 0);
+      }
+    };
+
+    fetchBookingPrice();
+  }, []);
+
   // Calculate pricing
   const deliveryFee = 0;
-  const productPrice = bookingAmount || 999;
+  const productPrice = purchaseType === 'book' ? bookingPriceFromDB : (bookingAmount || 999);
   const subtotal = productPrice;
   const discountAmount = promoDiscount;
   const totalAmount = subtotal + deliveryFee - discountAmount;
