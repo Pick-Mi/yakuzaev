@@ -60,7 +60,7 @@ const Careers = () => {
     <div className="min-h-screen flex flex-col">
       <Header />
       <CareersHero />
-      <main className="flex-1 bg-background">
+      <main className="flex-1" style={{ backgroundColor: '#F8F9F9' }}>
         <div id="opportunities" className="w-full" style={{ padding: '70px' }}>
           {/* Header */}
           <h1 className="text-4xl md:text-5xl font-semibold mb-16 text-foreground">
