@@ -46,7 +46,7 @@ const Product = () => {
         // Using any type to bypass the current type limitations
         const response = await (supabase as any)
           .from('products')
-          .select('id, name, slug, price, image_url, thumbnail, images, description, is_active, preview_section, features, visual_features, design_features, benefits, promo_card, videos, accessories, qa_section, variants, specification_titles, color_variety, meta_title, meta_description, meta_keywords, scheme_name, scheme_description, scheme_discount_percentage, scheme_start_date, scheme_end_date, scheme_active, custom_metadata, sku, cost_price')
+          .select('id, name, slug, price, image_url, thumbnail, images, description, is_active, preview_section, features, visual_features, design_features, benefits, promo_card, videos, accessories, qa_section, variants, specification_titles, color_variety')
           .eq('slug', slug)
           .eq('is_active', true)
           .single();
@@ -205,8 +205,8 @@ const Product = () => {
             name: response.data.name,
             slug: response.data.slug,
             price: response.data.price,
-            sku: response.data.sku,
-            cost_price: response.data.cost_price,
+            sku: null,
+            cost_price: null,
             thumbnail: response.data.thumbnail,
             image_url: response.data.image_url,
             images: parsedImages,
@@ -227,19 +227,19 @@ const Product = () => {
             accessories: parsedAccessories,
             qa_section: parsedQASection,
             color_variety: parsedColorVariety,
-            // SEO Fields
-            meta_title: response.data.meta_title,
-            meta_description: response.data.meta_description,
-            meta_keywords: response.data.meta_keywords,
-            // Promotional Scheme Fields
-            scheme_name: response.data.scheme_name,
-            scheme_description: response.data.scheme_description,
-            scheme_discount_percentage: response.data.scheme_discount_percentage,
-            scheme_start_date: response.data.scheme_start_date,
-            scheme_end_date: response.data.scheme_end_date,
-            scheme_active: response.data.scheme_active,
-            // Custom Metadata
-            custom_metadata: parsedCustomMetadata
+            // SEO Fields (defaults)
+            meta_title: null,
+            meta_description: null,
+            meta_keywords: null,
+            // Promotional Scheme Fields (defaults)
+            scheme_name: null,
+            scheme_description: null,
+            scheme_discount_percentage: null,
+            scheme_start_date: null,
+            scheme_end_date: null,
+            scheme_active: false,
+            // Custom Metadata (defaults)
+            custom_metadata: {}
           };
           setProduct(fetchedProduct);
           
