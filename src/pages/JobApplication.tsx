@@ -210,7 +210,7 @@ const JobApplication = () => {
       <Header />
       
       {/* Fixed Job Info Section */}
-      <div className="fixed top-24 left-0 right-0 bg-white dark:bg-neutral-950 border-b border-border z-40">
+      <div className="fixed top-16 left-0 right-0 bg-white dark:bg-neutral-950 border-b border-border z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between">
             <div>
