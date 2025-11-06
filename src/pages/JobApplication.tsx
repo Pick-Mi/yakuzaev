@@ -19,8 +19,16 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { Upload, Share2 } from "lucide-react";
+import { Upload, Share2, CheckCircle2 } from "lucide-react";
 import { FaXTwitter, FaLinkedin, FaTelegram, FaFacebook, FaWhatsapp } from "react-icons/fa6";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 const applicationSchema = z.object({
   salutation: z.string().min(1, "Salutation is required"),
@@ -50,6 +58,7 @@ const JobApplication = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [resumeFile, setResumeFile] = useState<File | null>(null);
   const [isParsingResume, setIsParsingResume] = useState(false);
+  const [showSuccessDialog, setShowSuccessDialog] = useState(false);
 
   const jobData = {
     title: "Technical Support",
@@ -187,8 +196,7 @@ const JobApplication = () => {
 
       if (insertError) throw insertError;
 
-      toast.success("Application submitted successfully!");
-      navigate("/careers");
+      setShowSuccessDialog(true);
     } catch (error: any) {
       console.error('Error submitting application:', error);
       toast.error(error.message || "Failed to submit application");
@@ -233,7 +241,7 @@ const JobApplication = () => {
         </div>
       </div>
       
-      <main className="flex-1">
+      <main className="flex-1" style={{ backgroundColor: '#F8F9F9' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-64 pb-12">
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
@@ -448,6 +456,33 @@ const JobApplication = () => {
           </div>
         </div>
       </main>
+      
+      {/* Success Dialog */}
+      <AlertDialog open={showSuccessDialog} onOpenChange={setShowSuccessDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <div className="flex justify-center mb-4">
+              <CheckCircle2 className="w-16 h-16 text-green-600" />
+            </div>
+            <AlertDialogTitle className="text-center text-2xl">Application Submitted Successfully!</AlertDialogTitle>
+            <AlertDialogDescription className="text-center">
+              Thank you for applying. We have received your application and will review it shortly. You will be contacted if your profile matches our requirements.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="flex justify-center sm:justify-center">
+            <Button 
+              onClick={() => {
+                setShowSuccessDialog(false);
+                navigate("/careers");
+              }}
+              className="bg-black text-white hover:bg-black/90 dark:bg-white dark:text-black dark:hover:bg-white/90"
+            >
+              Back to Careers
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+      
       <Footer />
     </div>
   );
