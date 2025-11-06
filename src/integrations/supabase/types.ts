@@ -109,6 +109,27 @@ export type Database = {
           },
         ]
       }
+      booking_pricing: {
+        Row: {
+          booking_amount: number
+          created_at: string
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          booking_amount?: number
+          created_at?: string
+          id?: string
+          updated_at?: string
+        }
+        Update: {
+          booking_amount?: number
+          created_at?: string
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       categories: {
         Row: {
           created_at: string
