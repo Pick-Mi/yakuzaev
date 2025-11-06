@@ -888,28 +888,20 @@ const OrderDetails = () => {
                           <span className="text-foreground">Discount</span>
                           <span className="font-medium">₹0</span>
                         </div>
-                        
-                        <div className="flex justify-between text-base">
-                          <span className="text-foreground">Sub Total</span>
-                          <span className="font-medium">₹{Math.abs(remainingAmount).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-                        </div>
 
                         <div className="border-t-2 border-dashed border-gray-300 my-4"></div>
 
                         <div className="flex justify-between text-base font-bold">
-                          <span>Total amount</span>
-                          <span>₹{Math.abs(remainingAmount).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                          <span>Paid by</span>
+                          <div className="text-right">
+                            <div className="font-bold">₹{totalPaid.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+                            <div className="text-sm font-normal text-muted-foreground">
+                              {order.payment_method === 'payu' ? 'PayU' : order.payment_method === 'cod' ? 'Cash On Delivery' : order.payment_method || 'Cash On Delivery'}
+                            </div>
+                          </div>
                         </div>
 
                         <div className="mt-6 pt-4 border-t border-gray-200">
-                          <div className="flex items-center justify-between text-base mb-6">
-                            <span className="font-semibold">Paid by</span>
-                            <span className="font-medium flex items-center gap-1">
-                              <span className="text-lg">₹</span>
-                              {order.payment_method === 'payu' ? 'PayU' : order.payment_method === 'cod' ? 'Cash On Delivery' : order.payment_method || 'Cash On Delivery'}
-                            </span>
-                          </div>
-
                           <Button variant="outline" className="w-full gap-2 rounded-none">
                             <Download className="w-5 h-5" />
                             Download Invoice
