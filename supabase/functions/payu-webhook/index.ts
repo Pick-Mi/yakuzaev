@@ -34,29 +34,18 @@ serve(async (req) => {
       console.log('PayU POST Response received:', params)
       
       // Extract key information
-      const orderId = params.order_id
+      // Order ID is stored in udf2, user ID in udf1
+      const orderId = params.udf2 // Order ID from payment initialization
+      const userId = params.udf1 // User ID from payment initialization
       const status = params.status?.toLowerCase()
       const transactionId = params.txnid
       const paymentId = params.mihpayid
       const amount = parseFloat(params.amount || '0')
       
-      console.log('Processing payment:', { orderId, status, transactionId, paymentId, amount })
+      console.log('Processing payment:', { orderId, userId, status, transactionId, paymentId, amount })
 
       if (orderId && status === 'success') {
-        // First, get the order to extract user_id
-        const { data: orderData, error: fetchError } = await supabase
-          .from('orders')
-          .select('customer_id')
-          .eq('id', orderId)
-          .single()
-
-        if (fetchError) {
-          console.error('Error fetching order:', fetchError)
-        }
-
-        const userId = orderData?.customer_id || null
-
-        // Save transaction to database
+        // Save transaction to database with order_id in payu_response
         const { error: txnError } = await supabase
           .from('transactions')
           .insert({
@@ -64,12 +53,15 @@ serve(async (req) => {
             payment_id: paymentId,
             transaction_id: transactionId,
             amount: amount,
-            status: 'completed',
+            status: 'success',
             product_info: params.productinfo || '',
             customer_name: params.firstname || '',
             customer_email: params.email || '',
             customer_phone: params.phone || '',
-            payu_response: params
+            payu_response: {
+              ...params,
+              order_id: orderId // Add order_id to payu_response for tracking
+            }
           })
 
         if (txnError) {
@@ -78,21 +70,49 @@ serve(async (req) => {
           console.log('Transaction saved successfully')
         }
 
-        // Update order payment status
+        // Update order payment status to completed
         const { error: orderError } = await supabase
           .from('orders')
           .update({ 
             payment_status: 'completed',
-            payment_details: params 
+            payment_method: 'payu',
+            payment_details: {
+              payment_id: paymentId,
+              transaction_id: transactionId,
+              mode: params.mode || 'UPI',
+              bank_ref_num: params.bank_ref_num || '',
+              completed_at: new Date().toISOString()
+            }
           })
           .eq('id', orderId)
 
         if (orderError) {
           console.error('Error updating order:', orderError)
         } else {
-          console.log('Order updated successfully')
+          console.log('Order payment status updated to completed for order:', orderId)
+        }
+      } else if (status === 'failure') {
+        // Handle failed payment
+        console.log('Payment failed for order:', orderId)
+        
+        if (orderId) {
+          const { error: orderError } = await supabase
+            .from('orders')
+            .update({ 
+              payment_status: 'failed',
+              payment_details: {
+                error: params.error_Message || 'Payment failed',
+                failed_at: new Date().toISOString()
+              }
+            })
+            .eq('id', orderId)
+
+          if (orderError) {
+            console.error('Error updating failed order:', orderError)
+          }
         }
       }
+      
       
       // Build redirect URL with order ID from udf2
       const baseUrl = Deno.env.get('SITE_URL') || 'https://preview--yakuzaev.lovable.app'
