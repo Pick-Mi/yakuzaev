@@ -864,8 +864,10 @@ const OrderDetails = () => {
 
                   {/* Detailed Breakdown */}
                   {(() => {
-                    const remainingAmount = variantPrice - parseFloat(order.total_amount.toString());
-                    const isFullyPaid = remainingAmount <= 0;
+                    // Calculate total paid from all transactions
+                    const totalPaid = transactions.reduce((sum, txn) => sum + parseFloat(txn.amount.toString()), 0);
+                    const remainingAmount = variantPrice - totalPaid;
+                    const isFullyPaid = totalPaid >= variantPrice;
 
                     return isFullyPaid ? (
                       // Show simple summary when fully paid
