@@ -861,75 +861,95 @@ const OrderDetails = () => {
                     </div>
                   </div>
 
+
                   {/* Detailed Breakdown */}
-                  <div className="bg-gray-50 p-6 space-y-4">
-                  <div className="flex justify-between text-base">
-                    <span className="text-foreground">Product price</span>
-                    <span className="font-medium">
-                      ₹{variantPrice.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                    </span>
-                  </div>
-                    
-                    <div className="flex justify-between text-base">
-                      <span className="text-foreground">Booking amount (Paid)</span>
-                      <span className="font-medium text-green-600">-₹{parseFloat(order.total_amount.toString()).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-                    </div>
+                  {order.payment_status === 'completed' ? (
+                    // Show simple summary when fully paid
+                    <div className="bg-gray-50 p-6 space-y-4">
+                      <div className="flex justify-between text-base">
+                        <span className="text-foreground">Product price</span>
+                        <span className="font-medium">
+                          ₹{variantPrice.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                        </span>
+                      </div>
+                      
+                      <div className="flex justify-between text-base">
+                        <span className="text-foreground">Discount</span>
+                        <span className="font-medium">₹0</span>
+                      </div>
+                      
+                      <div className="flex justify-between text-base">
+                        <span className="text-foreground">Sub Total</span>
+                        <span className="font-medium">₹{variantPrice.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                      </div>
 
-                    {order.payment_status === 'completed' ? (
-                      <>
-                        <div className="flex justify-between text-base">
-                          <span className="text-foreground">Remaining Amount (Paid)</span>
-                          <span className="font-medium text-green-600">-₹{(variantPrice - parseFloat(order.total_amount.toString())).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-                        </div>
-                        <div className="border-t border-gray-300 pt-3 mt-3 space-y-2">
-                          <div className="flex justify-between text-base font-bold">
-                            <span className="text-foreground">Payment Status</span>
-                            <span className="text-green-600">Fully Paid</span>
-                          </div>
-                          <div className="flex justify-between text-base">
-                            <span className="text-foreground">Paid By</span>
-                            <span className="font-medium">PayU</span>
-                          </div>
-                        </div>
-                        <div className="border-t-2 border-dashed border-gray-300 my-4"></div>
-                        <div className="flex justify-between text-base font-bold text-green-600">
-                          <span>Total Paid</span>
-                          <span>₹{variantPrice.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-                        </div>
-                      </>
-                    ) : (
-                      <>
-                        <div className="flex justify-between text-base">
-                          <span className="text-foreground">Discount</span>
-                          <button 
-                            onClick={() => setShowPromoDialog(true)}
-                            className="text-primary font-medium hover:underline"
-                          >
-                            Apply
-                          </button>
-                        </div>
-                        
-                        <div className="flex justify-between text-base">
-                          <span className="text-foreground">Sub Total</span>
-                          <span className="font-medium">₹{(variantPrice - parseFloat(order.total_amount.toString())).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                      <div className="border-t-2 border-dashed border-gray-300 my-4"></div>
+
+                      <div className="flex justify-between text-base font-bold">
+                        <span>Total amount</span>
+                        <span>₹{variantPrice.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                      </div>
+
+                      <div className="mt-6 pt-4 border-t border-gray-200">
+                        <div className="flex items-center justify-between text-base mb-6">
+                          <span className="font-semibold">Paid by</span>
+                          <span className="font-medium flex items-center gap-1">
+                            <span className="text-lg">₹</span>
+                            {order.payment_method === 'payu' ? 'PayU' : order.payment_method === 'cod' ? 'Cash On Delivery' : order.payment_method || 'PayU'}
+                          </span>
                         </div>
 
-                        <div className="border-t-2 border-dashed border-gray-300 my-4"></div>
-
-                        <div className="flex justify-between text-base font-bold">
-                          <span>Total amount</span>
-                          <span>₹{(variantPrice - parseFloat(order.total_amount.toString())).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-                        </div>
-
-                        <Button 
-                          className="w-full mt-6 rounded-none"
-                          onClick={() => setShowPaymentDialog(true)}
-                        >
-                          Make Payment
+                        <Button variant="outline" className="w-full gap-2 rounded-none">
+                          <Download className="w-5 h-5" />
+                          Download Invoice
                         </Button>
-                      </>
-                    )}
-                  </div>
+                      </div>
+                    </div>
+                  ) : (
+                    // Show detailed breakdown when payment pending
+                    <div className="bg-gray-50 p-6 space-y-4">
+                      <div className="flex justify-between text-base">
+                        <span className="text-foreground">Product price</span>
+                        <span className="font-medium">
+                          ₹{variantPrice.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                        </span>
+                      </div>
+                        
+                      <div className="flex justify-between text-base">
+                        <span className="text-foreground">Booking amount (Paid)</span>
+                        <span className="font-medium text-green-600">-₹{parseFloat(order.total_amount.toString()).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                      </div>
+
+                      <div className="flex justify-between text-base">
+                        <span className="text-foreground">Discount</span>
+                        <button 
+                          onClick={() => setShowPromoDialog(true)}
+                          className="text-primary font-medium hover:underline"
+                        >
+                          Apply
+                        </button>
+                      </div>
+                      
+                      <div className="flex justify-between text-base">
+                        <span className="text-foreground">Sub Total</span>
+                        <span className="font-medium">₹{(variantPrice - parseFloat(order.total_amount.toString())).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                      </div>
+
+                      <div className="border-t-2 border-dashed border-gray-300 my-4"></div>
+
+                      <div className="flex justify-between text-base font-bold">
+                        <span>Total amount</span>
+                        <span>₹{(variantPrice - parseFloat(order.total_amount.toString())).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                      </div>
+
+                      <Button 
+                        className="w-full mt-6 rounded-none"
+                        onClick={() => setShowPaymentDialog(true)}
+                      >
+                        Make Payment
+                      </Button>
+                    </div>
+                  )}
 
                   {/* Payment Note */}
                   {order.payment_status !== 'completed' && (
