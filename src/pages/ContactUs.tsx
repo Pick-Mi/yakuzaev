@@ -42,7 +42,7 @@ const ContactUs = () => {
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
       
-      <main className="flex-1 container mx-auto px-4 py-8 mt-32 max-w-7xl">
+      <main className="flex-1 container mx-auto px-4 py-8 mt-32 max-w-7xl" style={{ backgroundColor: '#F8F9F9' }}>
         
         <div className="grid lg:grid-cols-[280px_1fr] gap-8">
           {/* Left Sidebar */}
