@@ -874,20 +874,25 @@ const OrderDetails = () => {
                       </div>
                       
                       <div className="flex justify-between text-base">
+                        <span className="text-foreground">Booking amount</span>
+                        <span className="font-medium">-₹{parseFloat(order.total_amount.toString()).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                      </div>
+
+                      <div className="flex justify-between text-base">
                         <span className="text-foreground">Discount</span>
                         <span className="font-medium">₹0</span>
                       </div>
                       
                       <div className="flex justify-between text-base">
                         <span className="text-foreground">Sub Total</span>
-                        <span className="font-medium">₹{variantPrice.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                        <span className="font-medium">₹{(variantPrice - parseFloat(order.total_amount.toString())).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                       </div>
 
                       <div className="border-t-2 border-dashed border-gray-300 my-4"></div>
 
                       <div className="flex justify-between text-base font-bold">
                         <span>Total amount</span>
-                        <span>₹{variantPrice.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                        <span>₹{(variantPrice - parseFloat(order.total_amount.toString())).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                       </div>
 
                       <div className="mt-6 pt-4 border-t border-gray-200">
@@ -895,7 +900,7 @@ const OrderDetails = () => {
                           <span className="font-semibold">Paid by</span>
                           <span className="font-medium flex items-center gap-1">
                             <span className="text-lg">₹</span>
-                            {order.payment_method === 'payu' ? 'PayU' : order.payment_method === 'cod' ? 'Cash On Delivery' : order.payment_method || 'PayU'}
+                            {order.payment_method === 'payu' ? 'PayU' : order.payment_method === 'cod' ? 'Cash On Delivery' : order.payment_method || 'Cash On Delivery'}
                           </span>
                         </div>
 
@@ -916,8 +921,8 @@ const OrderDetails = () => {
                       </div>
                         
                       <div className="flex justify-between text-base">
-                        <span className="text-foreground">Booking amount (Paid)</span>
-                        <span className="font-medium text-green-600">-₹{parseFloat(order.total_amount.toString()).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                        <span className="text-foreground">Booking amount</span>
+                        <span className="font-medium">-₹{parseFloat(order.total_amount.toString()).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                       </div>
 
                       <div className="flex justify-between text-base">
