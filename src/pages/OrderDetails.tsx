@@ -736,7 +736,7 @@ const OrderDetails = () => {
                 <h3 className="text-lg font-bold mb-6">Payment History</h3>
                 <div className="space-y-4">
                   {transactions.map((txn, index) => (
-                    <div key={txn.id} className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                    <div key={txn.id} className="bg-gray-50 p-4">
                       <div className="flex justify-between items-start mb-3">
                         <div>
                           <h4 className="font-semibold text-base">
@@ -786,7 +786,7 @@ const OrderDetails = () => {
                   ))}
                   
                   {/* Total Paid Summary */}
-                  <div className="bg-primary/5 p-4 rounded-lg border border-primary/20 mt-4">
+                  <div className="bg-primary/5 p-4 mt-4">
                     <div className="flex justify-between items-center">
                       <span className="font-bold text-base">Total Paid</span>
                       <span className="font-bold text-lg text-primary">
