@@ -68,6 +68,7 @@ const OrderDetails = () => {
   } = useToast();
   const [order, setOrder] = useState<Order | null>(null);
   const [transaction, setTransaction] = useState<Transaction | null>(null);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
   const [cancelling, setCancelling] = useState(false);
   const [showAllUpdates, setShowAllUpdates] = useState(false);
@@ -192,7 +193,7 @@ const OrderDetails = () => {
       };
       setOrder(orderWithName as Order);
 
-      // Fetch transaction details for this order
+      // Fetch all transaction details for this order
       try {
         const {
           data: transactionData
@@ -200,20 +201,35 @@ const OrderDetails = () => {
           ascending: false
         })) as any;
         if (transactionData && transactionData.length > 0) {
-          // Find transaction with order ID in payu_response
-          const orderTransaction = transactionData.find((t: any) => t.payu_response?.order_id === id);
-          if (orderTransaction) {
+          // Find all transactions with this order ID in payu_response
+          const orderTransactions = transactionData.filter((t: any) => t.payu_response?.order_id === id);
+          
+          if (orderTransactions.length > 0) {
+            // Set the latest transaction
             setTransaction({
-              id: orderTransaction.id,
-              payment_id: orderTransaction.payment_id,
-              transaction_id: orderTransaction.transaction_id,
-              amount: orderTransaction.amount,
-              status: orderTransaction.status,
-              payu_response: orderTransaction.payu_response,
-              created_at: orderTransaction.created_at,
-              customer_name: orderTransaction.customer_name,
-              customer_email: orderTransaction.customer_email
+              id: orderTransactions[0].id,
+              payment_id: orderTransactions[0].payment_id,
+              transaction_id: orderTransactions[0].transaction_id,
+              amount: orderTransactions[0].amount,
+              status: orderTransactions[0].status,
+              payu_response: orderTransactions[0].payu_response,
+              created_at: orderTransactions[0].created_at,
+              customer_name: orderTransactions[0].customer_name,
+              customer_email: orderTransactions[0].customer_email
             });
+            
+            // Set all transactions for payment history
+            setTransactions(orderTransactions.map((t: any) => ({
+              id: t.id,
+              payment_id: t.payment_id,
+              transaction_id: t.transaction_id,
+              amount: t.amount,
+              status: t.status,
+              payu_response: t.payu_response,
+              created_at: t.created_at,
+              customer_name: t.customer_name,
+              customer_email: t.customer_email
+            })));
           }
         }
       } catch (err) {
@@ -399,15 +415,18 @@ const OrderDetails = () => {
     setPromoCode("");
   };
   if (loading) {
-    return <div className="min-h-screen bg-background">
+    return (
+      <div className="min-h-screen bg-background">
         <Header />
         <div className="flex items-center justify-center h-64">
           <div className="text-lg">Loading order details...</div>
         </div>
-      </div>;
+      </div>
+    );
   }
   if (!order) {
-    return <div className="min-h-screen bg-background">
+    return (
+      <div className="min-h-screen bg-background">
         <Header />
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
@@ -417,7 +436,8 @@ const OrderDetails = () => {
             </Button>
           </div>
         </div>
-      </div>;
+      </div>
+    );
   }
   const orderItems = order.order_items_data || [];
   const firstItem = orderItems[0] || {};
@@ -442,7 +462,8 @@ const OrderDetails = () => {
   const specialPrice = orderSummary.special_price || 299;
   const otherDiscount = orderSummary.other_discount || 22;
   const totalFees = orderSummary.total_fees || (order.shipping_charge || 0) + (order.tax_amount || 0) || 10;
-  return <div className="min-h-screen bg-background">
+  return (
+    <div className="min-h-screen bg-background">
       <Header />
       <div className="container mx-auto px-4 pt-32 pb-8 max-w-7xl">
         {/* Breadcrumb */}
@@ -708,7 +729,76 @@ const OrderDetails = () => {
               </div>
             </div>
             </div>
+
+            {/* Payment History Section */}
+            {transactions.length > 0 && (
+              <div className="bg-white border p-6">
+                <h3 className="text-lg font-bold mb-6">Payment History</h3>
+                <div className="space-y-4">
+                  {transactions.map((txn, index) => (
+                    <div key={txn.id} className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                      <div className="flex justify-between items-start mb-3">
+                        <div>
+                          <h4 className="font-semibold text-base">
+                            {index === 0 && transactions.length === 1 
+                              ? 'Booking Payment' 
+                              : index === 0 
+                                ? 'Remaining Payment' 
+                                : 'Booking Payment'}
+                          </h4>
+                          <p className="text-sm text-muted-foreground mt-1">
+                            {format(new Date(txn.created_at), 'MMM dd, yyyy h:mm a')}
+                          </p>
+                        </div>
+                        <Badge 
+                          variant={txn.status === 'success' ? 'default' : txn.status === 'failed' ? 'destructive' : 'secondary'}
+                        >
+                          {txn.status === 'success' ? 'Success' : txn.status === 'failed' ? 'Failed' : 'Pending'}
+                        </Badge>
+                      </div>
+                      
+                      <div className="space-y-2 text-sm">
+                        <div className="flex justify-between">
+                          <span className="text-muted-foreground">Amount Paid:</span>
+                          <span className="font-semibold">₹{parseFloat(txn.amount.toString()).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                        </div>
+                        
+                        {txn.transaction_id && (
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">Transaction ID:</span>
+                            <span className="font-mono text-xs">{txn.transaction_id}</span>
+                          </div>
+                        )}
+                        
+                        {txn.payment_id && (
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">Payment ID:</span>
+                            <span className="font-mono text-xs">{txn.payment_id}</span>
+                          </div>
+                        )}
+                        
+                        <div className="flex justify-between">
+                          <span className="text-muted-foreground">Payment Method:</span>
+                          <span className="font-medium">PayU</span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                  
+                  {/* Total Paid Summary */}
+                  <div className="bg-primary/5 p-4 rounded-lg border border-primary/20 mt-4">
+                    <div className="flex justify-between items-center">
+                      <span className="font-bold text-base">Total Paid</span>
+                      <span className="font-bold text-lg text-primary">
+                        ₹{transactions.reduce((sum, txn) => sum + parseFloat(txn.amount.toString()), 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
+
 
           {/* Right Sidebar */}
           <div className="space-y-6 sticky top-32 self-start z-10">
@@ -985,6 +1075,7 @@ const OrderDetails = () => {
           )}
         </DialogContent>
       </Dialog>
-    </div>;
+    </div>
+  );
 };
 export default OrderDetails;
