@@ -157,6 +157,30 @@ export type Database = {
         }
         Relationships: []
       }
+      custom_roles: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          id: string
+          name: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       dealer_enquiries: {
         Row: {
           area_type: string | null
@@ -415,6 +439,57 @@ export type Database = {
           status?: string | null
           updated_at?: string
           user_id?: string | null
+        }
+        Relationships: []
+      }
+      job_posts: {
+        Row: {
+          created_at: string | null
+          description: string
+          experience_required: string | null
+          id: string
+          job_type: string | null
+          location: string | null
+          posted_by: string | null
+          requirements: string | null
+          responsibilities: string | null
+          salary_range: string | null
+          slug: string
+          status: string | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description: string
+          experience_required?: string | null
+          id?: string
+          job_type?: string | null
+          location?: string | null
+          posted_by?: string | null
+          requirements?: string | null
+          responsibilities?: string | null
+          salary_range?: string | null
+          slug: string
+          status?: string | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string
+          experience_required?: string | null
+          id?: string
+          job_type?: string | null
+          location?: string | null
+          posted_by?: string | null
+          requirements?: string | null
+          responsibilities?: string | null
+          salary_range?: string | null
+          slug?: string
+          status?: string | null
+          title?: string
+          updated_at?: string | null
         }
         Relationships: []
       }
@@ -837,6 +912,101 @@ export type Database = {
         }
         Relationships: []
       }
+      role_permissions: {
+        Row: {
+          can_create: boolean | null
+          can_delete: boolean | null
+          can_edit: boolean | null
+          can_view: boolean | null
+          created_at: string | null
+          full_access: boolean | null
+          id: string
+          module: string
+          role_id: string
+        }
+        Insert: {
+          can_create?: boolean | null
+          can_delete?: boolean | null
+          can_edit?: boolean | null
+          can_view?: boolean | null
+          created_at?: string | null
+          full_access?: boolean | null
+          id?: string
+          module: string
+          role_id: string
+        }
+        Update: {
+          can_create?: boolean | null
+          can_delete?: boolean | null
+          can_edit?: boolean | null
+          can_view?: boolean | null
+          created_at?: string | null
+          full_access?: boolean | null
+          id?: string
+          module?: string
+          role_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "role_permissions_role_id_fkey"
+            columns: ["role_id"]
+            isOneToOne: false
+            referencedRelation: "custom_roles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      site_page_management: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          github_branch: string | null
+          github_url: string | null
+          id: string
+          is_active: boolean
+          last_synced_at: string | null
+          metadata: Json | null
+          page_name: string
+          page_slug: string
+          source_code: string
+          updated_at: string
+          updated_by: string | null
+          version: number
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          github_branch?: string | null
+          github_url?: string | null
+          id?: string
+          is_active?: boolean
+          last_synced_at?: string | null
+          metadata?: Json | null
+          page_name: string
+          page_slug: string
+          source_code: string
+          updated_at?: string
+          updated_by?: string | null
+          version?: number
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          github_branch?: string | null
+          github_url?: string | null
+          id?: string
+          is_active?: boolean
+          last_synced_at?: string | null
+          metadata?: Json | null
+          page_name?: string
+          page_slug?: string
+          source_code?: string
+          updated_at?: string
+          updated_by?: string | null
+          version?: number
+        }
+        Relationships: []
+      }
       site_settings: {
         Row: {
           created_at: string | null
@@ -993,23 +1163,34 @@ export type Database = {
       user_roles: {
         Row: {
           created_at: string
+          custom_role_id: string | null
           id: string
-          role: Database["public"]["Enums"]["app_role"]
+          role: Database["public"]["Enums"]["app_role"] | null
           user_id: string
         }
         Insert: {
           created_at?: string
+          custom_role_id?: string | null
           id?: string
-          role: Database["public"]["Enums"]["app_role"]
+          role?: Database["public"]["Enums"]["app_role"] | null
           user_id: string
         }
         Update: {
           created_at?: string
+          custom_role_id?: string | null
           id?: string
-          role?: Database["public"]["Enums"]["app_role"]
+          role?: Database["public"]["Enums"]["app_role"] | null
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "user_roles_custom_role_id_fkey"
+            columns: ["custom_role_id"]
+            isOneToOne: false
+            referencedRelation: "custom_roles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
@@ -1076,6 +1257,17 @@ export type Database = {
           stock_quantity: number
           updated_at: string
           variants: Json
+        }[]
+      }
+      get_user_permissions: {
+        Args: { p_user_id: string }
+        Returns: {
+          can_create: boolean
+          can_delete: boolean
+          can_edit: boolean
+          can_view: boolean
+          full_access: boolean
+          module: string
         }[]
       }
       has_role: {
