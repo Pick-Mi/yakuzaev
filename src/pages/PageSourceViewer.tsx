@@ -1,23 +1,13 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { Code, Home, FileCode } from "lucide-react";
+import { ArrowLeft, Code, Eye, Copy, Check, ExternalLink } from "lucide-react";
 import logo from "@/assets/logo.svg";
 
-interface PageData {
-  id: string;
-  page_name: string;
-  page_slug: string;
-  source_code: string;
-  github_url: string | null;
-  type: string;
-  file_path: string;
-  description: string;
-}
-
-// Static list of all website pages
-const WEBSITE_PAGES: PageData[] = [
+// Import the same page data
+const WEBSITE_PAGES = [
   { id: '1', page_name: 'Home / Landing', page_slug: '/', source_code: 'Main landing page with hero, product showcase, and blog sections', github_url: 'https://github.com/yakuza-ev/website/blob/main/src/pages/Index.tsx', type: 'public', file_path: 'src/pages/Index.tsx', description: 'Main landing page' },
   { id: '2', page_name: 'Products Listing', page_slug: '/products', source_code: 'Product catalog page showing all available electric scooters', github_url: 'https://github.com/yakuza-ev/website/blob/main/src/pages/Products.tsx', type: 'public', file_path: 'src/pages/Products.tsx', description: 'Product listing page' },
   { id: '3', page_name: 'Product Detail', page_slug: '/products/:slug', source_code: 'Individual product detail page with specifications and pricing', github_url: 'https://github.com/yakuza-ev/website/blob/main/src/pages/Product.tsx', type: 'public', file_path: 'src/pages/Product.tsx', description: 'Product detail page' },
@@ -45,126 +35,164 @@ const WEBSITE_PAGES: PageData[] = [
   { id: '25', page_name: 'Sitemap', page_slug: '/sitemap', source_code: 'HTML sitemap for site navigation', github_url: 'https://github.com/yakuza-ev/website/blob/main/src/pages/Sitemap.tsx', type: 'public', file_path: 'src/pages/Sitemap.tsx', description: 'Sitemap' },
 ];
 
-const SourceCodeManagement = () => {
-  const pages = WEBSITE_PAGES;
+const PageSourceViewer = () => {
+  const { pageId } = useParams();
+  const [copied, setCopied] = useState(false);
+  const page = WEBSITE_PAGES.find(p => p.id === pageId);
 
-
-
-  return (
-    <div className="min-h-screen bg-background">
-      {/* Sidebar */}
-      <div className="fixed left-0 top-0 h-full w-60 bg-card border-r border-border flex flex-col">
-        {/* Logo */}
-        <div className="p-6 border-b border-border">
-          <img src={logo} alt="Yakuza Logo" className="h-10" />
-        </div>
-
-        {/* Menu Label */}
-        <div className="px-4 py-3 text-sm text-muted-foreground">
-          Source Code
-        </div>
-
-        {/* Menu */}
-        <nav className="flex-1 px-3 py-2">
-          <button className="w-full flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/10 text-primary">
-            <FileCode className="w-5 h-5" />
-            <span className="font-medium">Page Management</span>
-          </button>
-        </nav>
-
-        {/* Back to Home */}
-        <div className="p-4 border-t border-border">
-          <Link to="/">
-            <Button
-              variant="ghost"
-              className="w-full justify-start"
-            >
-              <Home className="w-4 h-4 mr-2" />
-              Back to Home
+  if (!page) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="text-center">
+          <Code className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
+          <p className="text-lg text-muted-foreground">Page not found</p>
+          <Link to="/source-code">
+            <Button variant="outline" className="mt-4">
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Pages
             </Button>
           </Link>
         </div>
       </div>
+    );
+  }
 
-        {/* Main Content */}
-        <div className="ml-60 p-8">
-          {/* Header */}
-          <div className="mb-8">
-            <div className="flex items-center justify-between mb-2">
-              <h1 className="text-4xl font-bold">Page Management</h1>
-              <span className="text-lg text-muted-foreground">
-                {pages.length} Total Pages
-              </span>
-            </div>
-            <p className="text-muted-foreground">
-              View source code for all pages in the website
-            </p>
-          </div>
+  const handleCopy = async () => {
+    await navigator.clipboard.writeText(page.source_code);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
-        {/* Pages List */}
-        <div className="bg-card rounded-lg border border-border">
-          <div className="p-6 border-b border-border">
-            <h2 className="text-xl font-semibold flex items-center gap-2">
-              <FileCode className="w-5 h-5" />
-              Website Pages
-            </h2>
-          </div>
+  const getPreviewUrl = () => {
+    // For dynamic routes, use example URL
+    if (page.page_slug.includes(':slug')) {
+      return page.page_slug.replace(':slug', 'example');
+    }
+    if (page.page_slug.includes(':id')) {
+      return page.page_slug.replace(':id', '1');
+    }
+    return page.page_slug;
+  };
 
-          {/* Table Header */}
-          <div className="grid grid-cols-[2fr,1.5fr,2fr,2fr,1fr,1fr] gap-4 px-6 py-4 border-b border-border bg-muted/50 text-sm font-medium text-muted-foreground">
-            <div>Page Name</div>
-            <div>Route</div>
-            <div>File Path</div>
-            <div>Description</div>
-            <div>Type</div>
-            <div>Actions</div>
-          </div>
-
-          {/* Table Body */}
-          <div className="divide-y divide-border">
-            {pages.map((page) => (
-              <div
-                key={page.id}
-                className="grid grid-cols-[2fr,1.5fr,2fr,2fr,1fr,1fr] gap-4 px-6 py-4 items-center hover:bg-muted/50 transition-colors"
-              >
-                <div className="font-medium">{page.page_name}</div>
-                <div className="text-sm text-muted-foreground font-mono">
-                  {page.page_slug}
-                </div>
-                <div className="text-sm text-muted-foreground font-mono truncate">
-                  {page.file_path}
-                </div>
-                <div className="text-sm text-muted-foreground">
-                  {page.description}
-                </div>
-                <div>
-                  <Badge
-                    variant={page.type === "auth" ? "secondary" : "outline"}
-                    className="rounded-full"
-                  >
-                    {page.type}
-                  </Badge>
-                </div>
-                <div>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="gap-2"
-                    asChild
-                  >
-                    <Link to={`/source-code/${page.id}`}>
-                      <Code className="w-4 h-4" />
-                      View Source
-                    </Link>
+  return (
+    <div className="min-h-screen bg-background">
+      {/* Header */}
+      <div className="border-b border-border bg-card">
+        <div className="max-w-7xl mx-auto px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <img src={logo} alt="Logo" className="h-8" />
+              <div className="flex items-center gap-2">
+                <Link to="/source-code">
+                  <Button variant="ghost" size="sm">
+                    <ArrowLeft className="w-4 h-4 mr-2" />
+                    Back
                   </Button>
+                </Link>
+                <div className="h-6 w-px bg-border" />
+                <div>
+                  <h1 className="text-lg font-semibold">{page.page_name}</h1>
+                  <p className="text-sm text-muted-foreground">{page.file_path}</p>
                 </div>
               </div>
-            ))}
+            </div>
+            <div className="flex items-center gap-2">
+              <Badge variant={page.type === "auth" ? "secondary" : "outline"}>
+                {page.type}
+              </Badge>
+              {page.github_url && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => window.open(page.github_url!, "_blank")}
+                >
+                  <ExternalLink className="w-4 h-4 mr-2" />
+                  GitHub
+                </Button>
+              )}
+            </div>
           </div>
         </div>
+      </div>
+
+      {/* Tabs */}
+      <div className="max-w-7xl mx-auto px-6 py-6">
+        <Tabs defaultValue="visual" className="w-full">
+          <TabsList className="grid w-[400px] grid-cols-2">
+            <TabsTrigger value="visual" className="gap-2">
+              <Eye className="w-4 h-4" />
+              Visual
+            </TabsTrigger>
+            <TabsTrigger value="code" className="gap-2">
+              <Code className="w-4 h-4" />
+              Code
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="visual" className="mt-6">
+            <div className="bg-card rounded-lg border border-border overflow-hidden">
+              <div className="border-b border-border px-4 py-3 bg-muted/50">
+                <div className="flex items-center gap-2">
+                  <div className="flex gap-1.5">
+                    <div className="w-3 h-3 rounded-full bg-red-500" />
+                    <div className="w-3 h-3 rounded-full bg-yellow-500" />
+                    <div className="w-3 h-3 rounded-full bg-green-500" />
+                  </div>
+                  <code className="text-sm text-muted-foreground ml-4">
+                    {page.page_slug}
+                  </code>
+                </div>
+              </div>
+              <div className="relative" style={{ height: 'calc(100vh - 280px)' }}>
+                <iframe
+                  src={getPreviewUrl()}
+                  className="w-full h-full border-0"
+                  title={`Preview of ${page.page_name}`}
+                />
+              </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="code" className="mt-6">
+            <div className="bg-card rounded-lg border border-border overflow-hidden">
+              <div className="border-b border-border px-4 py-3 bg-muted/50 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Code className="w-4 h-4 text-muted-foreground" />
+                  <span className="text-sm font-medium">{page.file_path}</span>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleCopy}
+                  className="gap-2"
+                >
+                  {copied ? (
+                    <>
+                      <Check className="w-4 h-4" />
+                      Copied
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-4 h-4" />
+                      Copy
+                    </>
+                  )}
+                </Button>
+              </div>
+              <div 
+                className="overflow-auto p-6" 
+                style={{ height: 'calc(100vh - 280px)' }}
+              >
+                <pre className="text-sm font-mono">
+                  <code>{page.source_code}</code>
+                </pre>
+              </div>
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
 };
 
-export default SourceCodeManagement;
+export default PageSourceViewer;
