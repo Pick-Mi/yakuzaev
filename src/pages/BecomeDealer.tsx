@@ -1,16 +1,25 @@
 import { useNavigate } from "react-router-dom";
+import { Helmet } from "react-helmet";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { DollarSign, MapPin } from "lucide-react";
 import dealerMeetingImage from "@/assets/dealer-meeting.jpg";
+import { useSchemaMarkup } from "@/hooks/useSchemaMarkup";
 
 const BecomeDealer = () => {
   const navigate = useNavigate();
-
+  const schemaMarkup = useSchemaMarkup('/dealer');
 
   return (
     <div className="min-h-screen bg-background">
+      <Helmet>
+        {schemaMarkup && (
+          <script type="application/ld+json">
+            {JSON.stringify(schemaMarkup, null, 2)}
+          </script>
+        )}
+      </Helmet>
       <Header />
       
       <main>
