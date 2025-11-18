@@ -28,9 +28,11 @@ import { ArrowLeft, Star, Heart, Shield, Truck, RotateCcw, Minus, Plus } from "l
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Helmet } from "react-helmet";
+import { useSchemaMarkup } from "@/hooks/useSchemaMarkup";
 
 const Product = () => {
   const { slug } = useParams();
+  const schemaMarkup = useSchemaMarkup(`/products/${slug}`);
   const navigate = useNavigate();
   const { addToCart } = useCart();
   const { toast } = useToast();
@@ -419,6 +421,13 @@ const Product = () => {
         <script type="application/ld+json">
           {JSON.stringify(buildProductSchema())}
         </script>
+        
+        {/* Additional Schema from Database */}
+        {schemaMarkup && (
+          <script type="application/ld+json">
+            {JSON.stringify(schemaMarkup, null, 2)}
+          </script>
+        )}
       </Helmet>
       <Header />
       

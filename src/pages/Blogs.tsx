@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import BlogHero from "@/components/BlogHero";
 import { supabase } from "@/integrations/supabase/client";
+import { useSchemaMarkup } from "@/hooks/useSchemaMarkup";
 
 const Blogs = () => {
+  const schemaMarkup = useSchemaMarkup('/blogs');
   const [blogs, setBlogs] = useState<Array<{
     id: string;
     title: string;
@@ -40,6 +43,13 @@ const Blogs = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <Helmet>
+        {schemaMarkup && (
+          <script type="application/ld+json">
+            {JSON.stringify(schemaMarkup, null, 2)}
+          </script>
+        )}
+      </Helmet>
       <Header />
       <BlogHero />
       <main id="blogs-section" className="w-full py-[60px] px-[70px]">
