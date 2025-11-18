@@ -3,8 +3,10 @@ import { useParams, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Code, Eye, Copy, Check, ExternalLink } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import { ArrowLeft, Code, Eye, Copy, Check, ExternalLink, Edit, Save } from "lucide-react";
 import logo from "@/assets/logo.svg";
+import { toast } from "sonner";
 
 // Import the same page data
 const WEBSITE_PAGES = [
@@ -38,7 +40,14 @@ const WEBSITE_PAGES = [
 const PageSourceViewer = () => {
   const { pageId } = useParams();
   const [copied, setCopied] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedCode, setEditedCode] = useState("");
   const page = WEBSITE_PAGES.find(p => p.id === pageId);
+
+  // Initialize edited code when page loads
+  if (page && !editedCode) {
+    setEditedCode(page.source_code);
+  }
 
   if (!page) {
     return (
@@ -58,9 +67,20 @@ const PageSourceViewer = () => {
   }
 
   const handleCopy = async () => {
-    await navigator.clipboard.writeText(page.source_code);
+    await navigator.clipboard.writeText(isEditing ? editedCode : page.source_code);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleSave = () => {
+    // In a real implementation, this would save to a backend
+    toast.success("Code saved successfully!");
+    setIsEditing(false);
+  };
+
+  const handleEdit = () => {
+    setEditedCode(page.source_code);
+    setIsEditing(true);
   };
 
   const getPreviewUrl = () => {
@@ -160,32 +180,75 @@ const PageSourceViewer = () => {
                   <Code className="w-4 h-4 text-muted-foreground" />
                   <span className="text-sm font-medium">{page.file_path}</span>
                 </div>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={handleCopy}
-                  className="gap-2"
-                >
-                  {copied ? (
+                <div className="flex items-center gap-2">
+                  {isEditing ? (
                     <>
-                      <Check className="w-4 h-4" />
-                      Copied
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setIsEditing(false)}
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        variant="default"
+                        size="sm"
+                        onClick={handleSave}
+                        className="gap-2"
+                      >
+                        <Save className="w-4 h-4" />
+                        Save
+                      </Button>
                     </>
                   ) : (
                     <>
-                      <Copy className="w-4 h-4" />
-                      Copy
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={handleCopy}
+                        className="gap-2"
+                      >
+                        {copied ? (
+                          <>
+                            <Check className="w-4 h-4" />
+                            Copied
+                          </>
+                        ) : (
+                          <>
+                            <Copy className="w-4 h-4" />
+                            Copy
+                          </>
+                        )}
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={handleEdit}
+                        className="gap-2"
+                      >
+                        <Edit className="w-4 h-4" />
+                        Edit
+                      </Button>
                     </>
                   )}
-                </Button>
+                </div>
               </div>
               <div 
-                className="overflow-auto p-6" 
+                className="overflow-auto" 
                 style={{ height: 'calc(100vh - 280px)' }}
               >
-                <pre className="text-sm font-mono">
-                  <code>{page.source_code}</code>
-                </pre>
+                {isEditing ? (
+                  <Textarea
+                    value={editedCode}
+                    onChange={(e) => setEditedCode(e.target.value)}
+                    className="w-full h-full font-mono text-sm border-0 rounded-none resize-none focus-visible:ring-0"
+                    style={{ minHeight: 'calc(100vh - 280px)' }}
+                  />
+                ) : (
+                  <pre className="p-6 text-sm font-mono text-foreground bg-muted/30">
+                    <code>{page.source_code}</code>
+                  </pre>
+                )}
               </div>
             </div>
           </TabsContent>
