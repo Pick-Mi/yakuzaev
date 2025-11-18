@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Code, LogOut, FileCode } from "lucide-react";
+import { Code, Home, FileCode } from "lucide-react";
 import logo from "@/assets/logo.svg";
 import SourceCodeViewer from "@/components/SourceCodeViewer";
 import { toast } from "@/hooks/use-toast";
@@ -20,43 +19,14 @@ interface PageData {
 }
 
 const SourceCodeManagement = () => {
-  const { user, signOut } = useAuth();
-  const navigate = useNavigate();
   const [pages, setPages] = useState<PageData[]>([]);
   const [loading, setLoading] = useState(true);
-  const [isAdmin, setIsAdmin] = useState(false);
   const [selectedPage, setSelectedPage] = useState<PageData | null>(null);
   const [viewerOpen, setViewerOpen] = useState(false);
 
   useEffect(() => {
-    checkAdminAccess();
-  }, [user]);
-
-  const checkAdminAccess = async () => {
-    if (!user) {
-      navigate("/auth");
-      return;
-    }
-
-    try {
-      const { data, error } = await supabase
-        .from("user_roles")
-        .select("role")
-        .eq("user_id", user.id)
-        .single();
-
-      if (error || !data || (data.role !== "admin" && data.role !== "manager")) {
-        navigate("/");
-        return;
-      }
-
-      setIsAdmin(true);
-      fetchPages();
-    } catch (error) {
-      console.error("Error checking admin access:", error);
-      navigate("/");
-    }
-  };
+    fetchPages();
+  }, []);
 
   const fetchPages = async () => {
     try {
@@ -92,10 +62,6 @@ const SourceCodeManagement = () => {
     setViewerOpen(true);
   };
 
-  const handleSignOut = async () => {
-    await signOut();
-    navigate("/");
-  };
 
   const getPageType = (metadata: any) => {
     if (!metadata) return "public";
@@ -120,10 +86,6 @@ const SourceCodeManagement = () => {
     );
   }
 
-  if (!isAdmin) {
-    return null;
-  }
-
   return (
     <div className="min-h-screen bg-background">
       {/* Sidebar */}
@@ -133,9 +95,9 @@ const SourceCodeManagement = () => {
           <img src={logo} alt="Yakuza Logo" className="h-10" />
         </div>
 
-        {/* Admin Panel Label */}
+        {/* Menu Label */}
         <div className="px-4 py-3 text-sm text-muted-foreground">
-          Admin Panel
+          Source Code
         </div>
 
         {/* Menu */}
@@ -146,16 +108,17 @@ const SourceCodeManagement = () => {
           </button>
         </nav>
 
-        {/* Sign Out */}
+        {/* Back to Home */}
         <div className="p-4 border-t border-border">
-          <Button
-            variant="ghost"
-            className="w-full justify-start"
-            onClick={handleSignOut}
-          >
-            <LogOut className="w-4 h-4 mr-2" />
-            Sign Out
-          </Button>
+          <Link to="/">
+            <Button
+              variant="ghost"
+              className="w-full justify-start"
+            >
+              <Home className="w-4 h-4 mr-2" />
+              Back to Home
+            </Button>
+          </Link>
         </div>
       </div>
 
