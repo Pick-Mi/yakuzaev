@@ -322,6 +322,13 @@ const Header = () => {
                     >
                       Contact Us
                     </Link>
+                    <Link
+                      to="/source-code"
+                      onClick={() => setIsMenuOpen(false)}
+                      className="block text-gray-700 text-base hover:opacity-70 transition-opacity"
+                    >
+                      Source Code
+                    </Link>
                   </div>
                 </div>
               </div>
