@@ -664,6 +664,48 @@ export type Database = {
         }
         Relationships: []
       }
+      page_management: {
+        Row: {
+          created_at: string
+          description: string | null
+          file_path: string
+          github_url: string | null
+          id: string
+          is_active: boolean
+          page_name: string
+          page_slug: string
+          source_code: string
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          file_path: string
+          github_url?: string | null
+          id?: string
+          is_active?: boolean
+          page_name: string
+          page_slug: string
+          source_code: string
+          type?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          file_path?: string
+          github_url?: string | null
+          id?: string
+          is_active?: boolean
+          page_name?: string
+          page_slug?: string
+          source_code?: string
+          type?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       products: {
         Row: {
           accessories: Json | null
