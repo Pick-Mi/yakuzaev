@@ -956,57 +956,6 @@ export type Database = {
           },
         ]
       }
-      site_page_management: {
-        Row: {
-          created_at: string
-          created_by: string | null
-          github_branch: string | null
-          github_url: string | null
-          id: string
-          is_active: boolean
-          last_synced_at: string | null
-          metadata: Json | null
-          page_name: string
-          page_slug: string
-          source_code: string
-          updated_at: string
-          updated_by: string | null
-          version: number
-        }
-        Insert: {
-          created_at?: string
-          created_by?: string | null
-          github_branch?: string | null
-          github_url?: string | null
-          id?: string
-          is_active?: boolean
-          last_synced_at?: string | null
-          metadata?: Json | null
-          page_name: string
-          page_slug: string
-          source_code: string
-          updated_at?: string
-          updated_by?: string | null
-          version?: number
-        }
-        Update: {
-          created_at?: string
-          created_by?: string | null
-          github_branch?: string | null
-          github_url?: string | null
-          id?: string
-          is_active?: boolean
-          last_synced_at?: string | null
-          metadata?: Json | null
-          page_name?: string
-          page_slug?: string
-          source_code?: string
-          updated_at?: string
-          updated_by?: string | null
-          version?: number
-        }
-        Relationships: []
-      }
       site_settings: {
         Row: {
           created_at: string | null
