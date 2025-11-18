@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
@@ -166,11 +167,42 @@ const PageSourceViewer = () => {
   const [copied, setCopied] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editedCode, setEditedCode] = useState("");
-  const page = WEBSITE_PAGES.find(p => p.id === pageId);
+  const [page, setPage] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
-  // Initialize edited code when page loads
-  if (page && !editedCode) {
-    setEditedCode(page.source_code);
+  // Fetch page data from database
+  useEffect(() => {
+    const fetchPage = async () => {
+      try {
+        const { data, error } = await supabase
+          .from("page_management")
+          .select("*")
+          .eq("id", pageId)
+          .single();
+
+        if (error) throw error;
+        
+        setPage(data);
+        setEditedCode(data.source_code);
+      } catch (error) {
+        console.error("Error fetching page:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPage();
+  }, [pageId]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="text-center">
+          <Code className="w-12 h-12 mx-auto mb-4 text-muted-foreground animate-pulse" />
+          <p className="text-lg text-muted-foreground">Loading...</p>
+        </div>
+      </div>
+    );
   }
 
   if (!page) {
@@ -196,10 +228,22 @@ const PageSourceViewer = () => {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const handleSave = () => {
-    // In a real implementation, this would save to a backend
-    toast.success("Code saved successfully!");
-    setIsEditing(false);
+  const handleSave = async () => {
+    try {
+      const { error } = await supabase
+        .from("page_management")
+        .update({ source_code: editedCode })
+        .eq("id", pageId);
+
+      if (error) throw error;
+
+      toast.success("Code saved successfully and is now live!");
+      setPage({ ...page, source_code: editedCode });
+      setIsEditing(false);
+    } catch (error) {
+      console.error("Error saving code:", error);
+      toast.error("Failed to save code. Please try again.");
+    }
   };
 
   const handleEdit = () => {
