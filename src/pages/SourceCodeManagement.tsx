@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Code, LogOut, FileCode } from "lucide-react";
 import logo from "@/assets/logo.svg";
+import SourceCodeViewer from "@/components/SourceCodeViewer";
+import { toast } from "@/hooks/use-toast";
 
 interface PageData {
   id: string;
@@ -23,6 +25,8 @@ const SourceCodeManagement = () => {
   const [pages, setPages] = useState<PageData[]>([]);
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [selectedPage, setSelectedPage] = useState<PageData | null>(null);
+  const [viewerOpen, setViewerOpen] = useState(false);
 
   useEffect(() => {
     checkAdminAccess();
@@ -63,11 +67,29 @@ const SourceCodeManagement = () => {
 
       if (error) throw error;
       setPages(data || []);
+      
+      if (!data || data.length === 0) {
+        toast({
+          title: "No Pages Found",
+          description: "The page management table is empty. Please run the seed SQL to populate it.",
+          variant: "destructive",
+        });
+      }
     } catch (error) {
       console.error("Error fetching pages:", error);
+      toast({
+        title: "Error",
+        description: "Failed to fetch pages. Please check your permissions.",
+        variant: "destructive",
+      });
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleViewSource = (page: PageData) => {
+    setSelectedPage(page);
+    setViewerOpen(true);
   };
 
   const handleSignOut = async () => {
@@ -80,6 +102,11 @@ const SourceCodeManagement = () => {
     if (metadata.route?.includes("/admin")) return "admin";
     if (metadata.route?.includes("/auth")) return "auth";
     return "public";
+  };
+
+  const getFilePath = (page: PageData) => {
+    if (page.metadata?.file_path) return page.metadata.file_path;
+    return `src/pages/${page.page_name.replace(/\s+/g, '')}.tsx`;
   };
 
   if (loading) {
@@ -168,61 +195,79 @@ const SourceCodeManagement = () => {
 
           {/* Table Body */}
           <div className="divide-y divide-border">
-            {pages.map((page) => {
-              const pageType = getPageType(page.metadata);
-              const description = page.metadata?.description || "No description";
-              const filePath = page.source_code.match(/\/\/ File: (.+)/)?.[1] || 
-                              `src/pages/${page.page_name.replace(/\s+/g, '')}.tsx`;
+            {pages.length === 0 ? (
+              <div className="px-6 py-12 text-center text-muted-foreground">
+                <FileCode className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                <p className="text-lg font-medium mb-2">No Pages Found</p>
+                <p className="text-sm">The page management table is empty. Please run the seed SQL to populate it.</p>
+              </div>
+            ) : (
+              pages.map((page) => {
+                const pageType = getPageType(page.metadata);
+                const description = page.metadata?.description || "No description";
+                const filePath = getFilePath(page);
 
-              return (
-                <div
-                  key={page.id}
-                  className="grid grid-cols-[2fr,1.5fr,2fr,2fr,1fr,1fr] gap-4 px-6 py-4 items-center hover:bg-muted/50 transition-colors"
-                >
-                  <div className="font-medium">{page.page_name}</div>
-                  <div className="text-sm text-muted-foreground font-mono">
-                    {page.page_slug}
+                return (
+                  <div
+                    key={page.id}
+                    className="grid grid-cols-[2fr,1.5fr,2fr,2fr,1fr,1fr] gap-4 px-6 py-4 items-center hover:bg-muted/50 transition-colors"
+                  >
+                    <div className="font-medium">{page.page_name}</div>
+                    <div className="text-sm text-muted-foreground font-mono">
+                      {page.page_slug}
+                    </div>
+                    <div className="text-sm text-muted-foreground font-mono truncate">
+                      {filePath}
+                    </div>
+                    <div className="text-sm text-muted-foreground">
+                      {description}
+                    </div>
+                    <div>
+                      <Badge
+                        variant={
+                          pageType === "admin"
+                            ? "default"
+                            : pageType === "auth"
+                            ? "secondary"
+                            : "outline"
+                        }
+                        className="rounded-full"
+                      >
+                        {pageType}
+                      </Badge>
+                    </div>
+                    <div>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="gap-2"
+                        onClick={() => handleViewSource(page)}
+                      >
+                        <Code className="w-4 h-4" />
+                        View Source
+                      </Button>
+                    </div>
                   </div>
-                  <div className="text-sm text-muted-foreground font-mono truncate">
-                    {filePath}
-                  </div>
-                  <div className="text-sm text-muted-foreground">
-                    {description}
-                  </div>
-                  <div>
-                    <Badge
-                      variant={
-                        pageType === "admin"
-                          ? "default"
-                          : pageType === "auth"
-                          ? "secondary"
-                          : "outline"
-                      }
-                      className="rounded-full"
-                    >
-                      {pageType}
-                    </Badge>
-                  </div>
-                  <div>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="gap-2"
-                      onClick={() => {
-                        // View source code logic
-                        console.log(page.source_code);
-                      }}
-                    >
-                      <Code className="w-4 h-4" />
-                      View Source
-                    </Button>
-                  </div>
-                </div>
-              );
-            })}
+                );
+              })
+            )}
           </div>
         </div>
       </div>
+
+      {/* Source Code Viewer Dialog */}
+      {selectedPage && (
+        <SourceCodeViewer
+          isOpen={viewerOpen}
+          onClose={() => {
+            setViewerOpen(false);
+            setSelectedPage(null);
+          }}
+          pageName={selectedPage.page_name}
+          sourceCode={selectedPage.source_code}
+          githubUrl={selectedPage.github_url}
+        />
+      )}
     </div>
   );
 };
