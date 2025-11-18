@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
+import { Helmet } from "react-helmet";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -11,6 +12,7 @@ import { format } from "date-fns";
 import { Package, Search, Star, CheckCircle, Clock, User, ChevronRight, LogOut, ChevronLeft, MapPin, CreditCard, ShoppingCart } from "lucide-react";
 import Header from "@/components/Header";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useSchemaMarkup } from "@/hooks/useSchemaMarkup";
 interface Order {
   id: string;
   order_number?: number;
@@ -30,6 +32,7 @@ const Orders = () => {
   } = useAuth();
   const navigate = useNavigate();
   const isMobile = useIsMobile();
+  const schemaMarkup = useSchemaMarkup('/orders');
   const [orders, setOrders] = useState<Order[]>([]);
   const [filteredOrders, setFilteredOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
@@ -270,8 +273,15 @@ const Orders = () => {
     navigate("/");
   };
   if (loading) {
-    return <div className="min-h-screen bg-background">
-        <Header />
+  return <div className="min-h-screen bg-background">
+      <Helmet>
+        {schemaMarkup && (
+          <script type="application/ld+json">
+            {JSON.stringify(schemaMarkup, null, 2)}
+          </script>
+        )}
+      </Helmet>
+      <Header />
         <div className="container mx-auto px-4 pt-40 pb-8">
           <div className="flex items-center justify-center h-64">
             <div className="text-lg">Loading orders...</div>

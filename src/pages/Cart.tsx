@@ -2,18 +2,28 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useCart } from "@/hooks/useCart";
 import { useAuth } from "@/hooks/useAuth";
+import { Helmet } from "react-helmet";
 import Header from "@/components/Header";
 import { ArrowLeft, Minus, Plus, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import emptyCartIcon from "@/assets/cart-icon.svg";
+import { useSchemaMarkup } from "@/hooks/useSchemaMarkup";
 
 const Cart = () => {
   const { items, updateQuantity, removeFromCart, itemCount, total } = useCart();
   const { user } = useAuth();
+  const schemaMarkup = useSchemaMarkup('/cart');
 
   if (items.length === 0) {
     return (
       <div className="min-h-screen bg-background">
+        <Helmet>
+          {schemaMarkup && (
+            <script type="application/ld+json">
+              {JSON.stringify(schemaMarkup, null, 2)}
+            </script>
+          )}
+        </Helmet>
         <Header />
         <div className="flex items-center justify-center min-h-screen">
           <div className="text-center space-y-8 max-w-md -mt-20">
@@ -50,6 +60,13 @@ const Cart = () => {
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#F8F9F9' }}>
+      <Helmet>
+        {schemaMarkup && (
+          <script type="application/ld+json">
+            {JSON.stringify(schemaMarkup, null, 2)}
+          </script>
+        )}
+      </Helmet>
       <Header />
       <div className="pt-24 pb-12">
         <div className="container mx-auto px-4 md:px-8 lg:px-12 max-w-7xl">

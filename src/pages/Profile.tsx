@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { Helmet } from "react-helmet";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -11,12 +12,14 @@ import { supabase } from "@/integrations/supabase/client";
 import Header from "@/components/Header";
 import { User, MapPin, CreditCard, Package, LogOut, AlertTriangle, Plus, Pencil, Trash2, ShoppingCart } from "lucide-react";
 import { format } from "date-fns";
+import { useSchemaMarkup } from "@/hooks/useSchemaMarkup";
 
 const Profile = () => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const { toast } = useToast();
+  const schemaMarkup = useSchemaMarkup('/profile');
   const [activeSection, setActiveSection] = useState(searchParams.get("section") || "profile");
   const [loading, setLoading] = useState(true);
   const [ordersLoading, setOrdersLoading] = useState(false);
@@ -542,6 +545,13 @@ const Profile = () => {
 
   return (
     <div className="min-h-screen bg-white">
+      <Helmet>
+        {schemaMarkup && (
+          <script type="application/ld+json">
+            {JSON.stringify(schemaMarkup, null, 2)}
+          </script>
+        )}
+      </Helmet>
       <Header />
       <div className="container mx-auto px-4 py-8 mt-32 bg-white">
         <div className="flex gap-8 bg-white">

@@ -1,3 +1,4 @@
+import { Helmet } from "react-helmet";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import BlogSection from "@/components/BlogSection";
@@ -9,10 +10,20 @@ import teamCollaboration from "@/assets/team-collaboration.jpg";
 import factoryTeam from "@/assets/factory-team.jpg";
 import batteryCenter from "@/assets/battery-innovation-center.jpg";
 import futureFactory from "@/assets/future-factory-construction.jpg";
+import { useSchemaMarkup } from "@/hooks/useSchemaMarkup";
 
 const AboutUs = () => {
+  const schemaMarkup = useSchemaMarkup('/about');
+  
   return (
     <div className="min-h-screen bg-background">
+      <Helmet>
+        {schemaMarkup && (
+          <script type="application/ld+json">
+            {JSON.stringify(schemaMarkup, null, 2)}
+          </script>
+        )}
+      </Helmet>
       <Header />
       
       <main>
