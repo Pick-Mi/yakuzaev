@@ -10,11 +10,135 @@ import { toast } from "sonner";
 
 // Import the same page data
 const WEBSITE_PAGES = [
-  { id: '1', page_name: 'Home / Landing', page_slug: '/', source_code: 'Main landing page with hero, product showcase, and blog sections', github_url: 'https://github.com/yakuza-ev/website/blob/main/src/pages/Index.tsx', type: 'public', file_path: 'src/pages/Index.tsx', description: 'Main landing page' },
-  { id: '2', page_name: 'Products Listing', page_slug: '/products', source_code: 'Product catalog page showing all available electric scooters', github_url: 'https://github.com/yakuza-ev/website/blob/main/src/pages/Products.tsx', type: 'public', file_path: 'src/pages/Products.tsx', description: 'Product listing page' },
+  { id: '1', page_name: 'Home / Landing', page_slug: '/', source_code: `import Header from "@/components/Header";
+import Hero from "@/components/Hero";
+import ProductShowcase from "@/components/ProductShowcase";
+import FearlessDesign from "@/components/FearlessDesign";
+import PromoSection from "@/components/PromoSection";
+import BlogSection from "@/components/BlogSection";
+import Footer from "@/components/Footer";
+
+const Index = () => {
+  return (
+    <div className="min-h-screen bg-background">
+      <Header />
+      <Hero />
+      <ProductShowcase />
+      <FearlessDesign />
+      <PromoSection />
+      <BlogSection />
+      <Footer />
+    </div>
+  );
+};
+
+export default Index;`, github_url: 'https://github.com/yakuza-ev/website/blob/main/src/pages/Index.tsx', type: 'public', file_path: 'src/pages/Index.tsx', description: 'Main landing page' },
+  { id: '2', page_name: 'Products Listing', page_slug: '/products', source_code: `import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import Hero from "@/components/Hero";
+import ProductsGrid from "@/components/ProductsGrid";
+
+const Products = () => {
+  return (
+    <div className="min-h-screen bg-background">
+      <Header />
+      <Hero />
+      <ProductsGrid />
+      <Footer />
+    </div>
+  );
+};
+
+export default Products;`, github_url: 'https://github.com/yakuza-ev/website/blob/main/src/pages/Products.tsx', type: 'public', file_path: 'src/pages/Products.tsx', description: 'Product listing page' },
   { id: '3', page_name: 'Product Detail', page_slug: '/products/:slug', source_code: 'Individual product detail page with specifications and pricing', github_url: 'https://github.com/yakuza-ev/website/blob/main/src/pages/Product.tsx', type: 'public', file_path: 'src/pages/Product.tsx', description: 'Product detail page' },
   { id: '4', page_name: 'Product Configuration', page_slug: '/product-config', source_code: 'Product customization and configuration page', github_url: 'https://github.com/yakuza-ev/website/blob/main/src/pages/ProductConfig.tsx', type: 'public', file_path: 'src/pages/ProductConfig.tsx', description: 'Product configuration' },
-  { id: '5', page_name: 'Blogs Listing', page_slug: '/blogs', source_code: 'Blog posts listing page with all published articles', github_url: 'https://github.com/yakuza-ev/website/blob/main/src/pages/Blogs.tsx', type: 'public', file_path: 'src/pages/Blogs.tsx', description: 'Blogs listing' },
+  { id: '5', page_name: 'Blogs Listing', page_slug: '/blogs', source_code: `import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import BlogHero from "@/components/BlogHero";
+import { supabase } from "@/integrations/supabase/client";
+
+const Blogs = () => {
+  const [blogs, setBlogs] = useState<Array<{
+    id: string;
+    title: string;
+    excerpt: string;
+    featured_image: string;
+    published_at: string;
+    slug: string;
+  }>>([]);
+
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        const { data, error } = await supabase
+          .from("blog_posts")
+          .select("id, title, excerpt, featured_image, published_at, slug")
+          .eq("status", "published")
+          .order("published_at", { ascending: false });
+
+        if (error) {
+          console.error("Error fetching blogs:", error);
+          return;
+        }
+
+        setBlogs(data || []);
+      } catch (error) {
+        console.error("Error fetching blogs:", error);
+      }
+    };
+
+    fetchBlogs();
+  }, []);
+
+  return (
+    <div className="min-h-screen bg-background">
+      <Header />
+      <BlogHero />
+      <main id="blogs-section" className="w-full py-[60px] px-[70px]">
+        <div className="max-w-[1300px] mx-auto">
+          <h1 className="font-['Inter',sans-serif] font-medium text-[48px] text-[#12141d] mb-[50px]">
+            All Blogs
+          </h1>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[40px]">
+            {blogs.map((blog) => (
+              <Link 
+                key={blog.id} 
+                to={\`/blogs/\${blog.slug}\`}
+                className="bg-white w-full overflow-hidden shadow-sm hover:shadow-md transition-shadow block"
+              >
+                <div className="relative w-full h-[244px] bg-[#d9d9d9]">
+                  <img 
+                    src={blog.featured_image || "/placeholder.svg"} 
+                    alt={blog.title}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="p-[20px] flex flex-col gap-[9.403px]">
+                  <h3 className="font-['Inter',sans-serif] font-semibold text-[22px] text-black capitalize leading-[39px]">
+                    {blog.title}
+                  </h3>
+                  <p className="font-['Inter',sans-serif] font-normal text-[15.386px] text-black opacity-80">
+                    {blog.excerpt}
+                  </p>
+                </div>
+              </Link>
+            ))}
+          </div>
+
+          {blogs.length === 0 && (
+            <p className="text-center text-gray-500 py-20">No blogs published yet.</p>
+          )}
+        </div>
+      </main>
+      <Footer />
+    </div>
+  );
+};
+
+export default Blogs;`, github_url: 'https://github.com/yakuza-ev/website/blob/main/src/pages/Blogs.tsx', type: 'public', file_path: 'src/pages/Blogs.tsx', description: 'Blogs listing' },
   { id: '6', page_name: 'Blog Detail', page_slug: '/blogs/:slug', source_code: 'Individual blog post detail page', github_url: 'https://github.com/yakuza-ev/website/blob/main/src/pages/BlogDetail.tsx', type: 'public', file_path: 'src/pages/BlogDetail.tsx', description: 'Blog detail page' },
   { id: '7', page_name: 'About Us', page_slug: '/about-us', source_code: 'Company information, mission, vision, and team', github_url: 'https://github.com/yakuza-ev/website/blob/main/src/pages/AboutUs.tsx', type: 'public', file_path: 'src/pages/AboutUs.tsx', description: 'About company page' },
   { id: '8', page_name: 'Contact Us', page_slug: '/contact-us', source_code: 'Contact form and company contact information', github_url: 'https://github.com/yakuza-ev/website/blob/main/src/pages/ContactUs.tsx', type: 'public', file_path: 'src/pages/ContactUs.tsx', description: 'Contact page' },
