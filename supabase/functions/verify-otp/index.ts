@@ -76,31 +76,11 @@ serve(async (req) => {
     const userWithPhone = existingUsers?.users?.find(u => u.phone === phoneNumber);
 
     let userId: string;
-    let sessionToken: string;
 
     if (userWithPhone) {
-      // User exists - generate session
+      // User exists
       userId = userWithPhone.id;
       console.log('✅ Existing user verified:', userId);
-      
-      // Generate a session for existing user
-      const { data: linkData, error: linkError } = await supabase.auth.admin.generateLink({
-        type: 'magiclink',
-        email: userWithPhone.email || `${phoneNumber}@phone.user`,
-        options: {
-          redirectTo: `${Deno.env.get('SUPABASE_URL')}/auth/v1/verify`
-        }
-      });
-
-      if (linkError || !linkData) {
-        console.error('Failed to generate session:', linkError);
-        return new Response(
-          JSON.stringify({ success: false, error: 'Failed to create session' }),
-          { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        );
-      }
-
-      sessionToken = linkData.properties.hashed_token;
     } else {
       // Create new user with phone number
       const { data: newUser, error: createError } = await supabase.auth.admin.createUser({
@@ -131,25 +111,20 @@ serve(async (req) => {
           is_verified: true,
           verification_date: new Date().toISOString()
         });
+    }
 
-      // Generate session for new user
-      const { data: linkData, error: linkError } = await supabase.auth.admin.generateLink({
-        type: 'magiclink',
-        email: newUser.user.email || `${phoneNumber}@phone.user`,
-        options: {
-          redirectTo: `${Deno.env.get('SUPABASE_URL')}/auth/v1/verify`
-        }
-      });
+    // Generate a session token for the user
+    const { data: sessionData, error: sessionError } = await supabase.auth.admin.generateLink({
+      type: 'magiclink',
+      email: userWithPhone?.email || `${phoneNumber.replace(/\+/g, '')}@phone.user`,
+    });
 
-      if (linkError || !linkData) {
-        console.error('Failed to generate session:', linkError);
-        return new Response(
-          JSON.stringify({ success: false, error: 'Failed to create session' }),
-          { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        );
-      }
-
-      sessionToken = linkData.properties.hashed_token;
+    if (sessionError || !sessionData) {
+      console.error('Failed to generate session:', sessionError);
+      return new Response(
+        JSON.stringify({ success: false, error: 'Failed to create session' }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
     }
 
     console.log('✅ OTP verified successfully for:', phoneNumber);
@@ -160,7 +135,14 @@ serve(async (req) => {
         message: 'OTP verified successfully',
         userId,
         verified: true,
-        access_token: sessionToken
+        session: {
+          access_token: sessionData.properties.action_link.split('#')[1]?.split('&')[0]?.replace('access_token=', '') || sessionData.properties.hashed_token,
+          refresh_token: sessionData.properties.hashed_token,
+          user: {
+            id: userId,
+            phone: phoneNumber
+          }
+        }
       }),
       { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );

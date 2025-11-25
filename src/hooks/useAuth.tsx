@@ -71,34 +71,32 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         throw new Error(data?.error || 'Invalid OTP');
       }
 
-      console.log('OTP verified successfully, setting session...');
+      console.log('✅ OTP verified, session data:', data);
       
-      // If we have an access token, set the session
-      if (data.access_token) {
-        const { data: sessionData, error: sessionError } = await supabase.auth.setSession({
-          access_token: data.access_token,
-          refresh_token: data.access_token
+      // Set the session using the returned session data
+      if (data.session) {
+        const { error: sessionError } = await supabase.auth.setSession({
+          access_token: data.session.access_token,
+          refresh_token: data.session.refresh_token
         });
 
         if (sessionError) {
-          console.error('Session error:', sessionError);
-        } else if (sessionData?.session) {
-          setSession(sessionData.session);
-          setUser(sessionData.session.user);
-          console.log('✅ User authenticated:', sessionData.session.user.id);
+          console.error('❌ Session error:', sessionError);
+          throw sessionError;
         }
-      } else {
-        // Fallback: refresh session
-        const { data: sessionData } = await supabase.auth.getSession();
-        if (sessionData?.session) {
-          setSession(sessionData.session);
-          setUser(sessionData.session.user);
+
+        // Update local state
+        const { data: { session: newSession } } = await supabase.auth.getSession();
+        if (newSession) {
+          setSession(newSession);
+          setUser(newSession.user);
+          console.log('✅ User authenticated successfully:', newSession.user.id);
         }
       }
       
       return { error: null };
     } catch (error: any) {
-      console.error('Verify OTP error:', error);
+      console.error('❌ Verify OTP error:', error);
       return { error };
     }
   };
