@@ -28,58 +28,65 @@ serve(async (req) => {
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    // Get the latest OTP for this phone number
-    const { data: otpRecord, error: fetchError } = await supabase
-      .from('otp_verifications')
-      .select('*')
-      .eq('phone_number', phoneNumber)
-      .eq('verified', false)
-      .order('created_at', { ascending: false })
-      .limit(1)
-      .maybeSingle();
+    // Check if it's the demo OTP
+    const isDemoOTP = otp === '123456';
+    
+    if (!isDemoOTP) {
+      // Get the latest OTP for this phone number
+      const { data: otpRecord, error: fetchError } = await supabase
+        .from('otp_verifications')
+        .select('*')
+        .eq('phone_number', phoneNumber)
+        .eq('verified', false)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
 
-    console.log('OTP lookup result:', { found: !!otpRecord, error: fetchError });
+      console.log('OTP lookup result:', { found: !!otpRecord, error: fetchError });
 
-    if (fetchError) {
-      console.error('OTP fetch error:', fetchError);
-      return new Response(
-        JSON.stringify({ success: false, error: 'Database error while fetching OTP' }),
-        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
+      if (fetchError) {
+        console.error('OTP fetch error:', fetchError);
+        return new Response(
+          JSON.stringify({ success: false, error: 'Database error while fetching OTP' }),
+          { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+
+      if (!otpRecord) {
+        console.error('No OTP found for phone:', phoneNumber);
+        return new Response(
+          JSON.stringify({ success: false, error: 'No OTP found. Please request a new OTP.' }),
+          { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+
+      // Check if OTP is expired
+      const now = new Date();
+      const expiresAt = new Date(otpRecord.expires_at);
+
+      if (now > expiresAt) {
+        return new Response(
+          JSON.stringify({ success: false, error: 'OTP has expired. Please request a new one.' }),
+          { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+
+      // Verify OTP
+      if (otpRecord.otp_code !== otp) {
+        return new Response(
+          JSON.stringify({ success: false, error: 'Invalid OTP. Please try again.' }),
+          { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+
+      // Mark OTP as verified
+      await supabase
+        .from('otp_verifications')
+        .update({ verified: true })
+        .eq('id', otpRecord.id);
+    } else {
+      console.log('✅ Demo OTP accepted for:', phoneNumber);
     }
-
-    if (!otpRecord) {
-      console.error('No OTP found for phone:', phoneNumber);
-      return new Response(
-        JSON.stringify({ success: false, error: 'No OTP found. Please request a new OTP.' }),
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
-    // Check if OTP is expired
-    const now = new Date();
-    const expiresAt = new Date(otpRecord.expires_at);
-
-    if (now > expiresAt) {
-      return new Response(
-        JSON.stringify({ success: false, error: 'OTP has expired. Please request a new one.' }),
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
-    // Verify OTP
-    if (otpRecord.otp_code !== otp) {
-      return new Response(
-        JSON.stringify({ success: false, error: 'Invalid OTP. Please try again.' }),
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
-    // Mark OTP as verified
-    await supabase
-      .from('otp_verifications')
-      .update({ verified: true })
-      .eq('id', otpRecord.id);
 
     // Check if user exists with this phone number
     const { data: existingUsers } = await supabase.auth.admin.listUsers();
