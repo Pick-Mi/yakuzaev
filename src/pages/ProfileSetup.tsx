@@ -7,7 +7,6 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { useAuth } from '@/hooks/useAuth';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
@@ -22,7 +21,6 @@ const ProfileSetup = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
   const location = useLocation();
-  const { user } = useAuth();
 
   const from = location.state?.from?.pathname || '/';
 
@@ -68,22 +66,20 @@ const ProfileSetup = () => {
     setLoading(true);
 
     try {
-      if (!user?.id) {
-        throw new Error('User not authenticated');
-      }
+      // Get phone from location state
+      const phoneNumber = location.state?.phoneNumber;
 
-      const { error } = await supabase
-        .from('profiles')
-        .update({
-          first_name: firstName.trim(),
-          last_name: lastName.trim(),
-          email: email.trim(),
-          country: country.trim(),
-          gender: gender || null,
-        })
-        .eq('user_id', user.id);
-
-      if (error) throw error;
+      // Save to localStorage for now (simple approach without authentication)
+      const profileData = {
+        phone: phoneNumber,
+        first_name: firstName.trim(),
+        last_name: lastName.trim(),
+        email: email.trim(),
+        country: country.trim(),
+        gender: gender || null,
+      };
+      
+      localStorage.setItem('userProfile', JSON.stringify(profileData));
 
       toast({
         title: "Success! 🎉",
@@ -106,8 +102,6 @@ const ProfileSetup = () => {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
-      
-      
       
       <div className="flex-1 flex items-center justify-center p-4 pt-32 pb-16">
         <div className="w-full max-w-4xl">
