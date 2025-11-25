@@ -60,22 +60,34 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const verifyOTP = async (phone: string, token: string) => {
     try {
+      console.log('📞 Verifying OTP for:', phone);
+      
       // Call our custom verify-otp edge function
       const { data, error } = await supabase.functions.invoke('verify-otp', {
         body: { phoneNumber: phone, otp: token }
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error('❌ Edge function error:', error);
+        throw error;
+      }
       
       if (!data?.success) {
+        console.error('❌ Verification failed:', data?.error);
         throw new Error(data?.error || 'Invalid OTP');
       }
 
-      console.log('✅ OTP verified, session data:', data);
+      console.log('✅ OTP verified, session data received:', { 
+        hasSession: !!data.session,
+        hasAccessToken: !!data.session?.access_token,
+        hasRefreshToken: !!data.session?.refresh_token 
+      });
       
       // Set the session using the returned session data
-      if (data.session) {
-        const { error: sessionError } = await supabase.auth.setSession({
+      if (data.session?.access_token && data.session?.refresh_token) {
+        console.log('🔐 Setting session...');
+        
+        const { data: sessionResult, error: sessionError } = await supabase.auth.setSession({
           access_token: data.session.access_token,
           refresh_token: data.session.refresh_token
         });
@@ -85,13 +97,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           throw sessionError;
         }
 
+        console.log('✅ Session set successfully:', { 
+          hasSession: !!sessionResult.session,
+          userId: sessionResult.session?.user?.id 
+        });
+
         // Update local state
-        const { data: { session: newSession } } = await supabase.auth.getSession();
-        if (newSession) {
-          setSession(newSession);
-          setUser(newSession.user);
-          console.log('✅ User authenticated successfully:', newSession.user.id);
-        }
+        setSession(sessionResult.session);
+        setUser(sessionResult.session.user);
+        
+        console.log('✅ User authenticated successfully:', sessionResult.session.user.id);
+      } else {
+        console.error('❌ No session tokens in response');
+        throw new Error('No session tokens received');
       }
       
       return { error: null };

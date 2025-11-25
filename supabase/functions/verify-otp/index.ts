@@ -76,23 +76,30 @@ serve(async (req) => {
     const userWithPhone = existingUsers?.users?.find(u => u.phone === phoneNumber);
 
     let userId: string;
+    let userEmail: string;
 
     if (userWithPhone) {
       // User exists
       userId = userWithPhone.id;
-      console.log('✅ Existing user verified:', userId);
+      userEmail = userWithPhone.email || `${phoneNumber.replace(/\+/g, '')}@phone.user`;
+      console.log('✅ Existing user found:', userId);
     } else {
-      // Create new user with phone number
+      // Create new user with phone number and temporary email
+      userEmail = `${phoneNumber.replace(/\+/g, '')}@phone.user`;
+      
       const { data: newUser, error: createError } = await supabase.auth.admin.createUser({
         phone: phoneNumber,
         phone_confirm: true,
+        email: userEmail,
         email_confirm: true,
-        email: `${phoneNumber.replace(/\+/g, '')}@phone.user`,
-        user_metadata: { phone: phoneNumber }
+        user_metadata: { 
+          phone: phoneNumber,
+          phone_verified: true 
+        }
       });
 
       if (createError || !newUser.user) {
-        console.error('Failed to create user:', createError);
+        console.error('❌ Failed to create user:', createError);
         return new Response(
           JSON.stringify({ success: false, error: 'Failed to create user account' }),
           { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -103,7 +110,7 @@ serve(async (req) => {
       console.log('✅ New user created:', userId);
 
       // Create profile for new user
-      await supabase
+      const { error: profileError } = await supabase
         .from('profiles')
         .insert({
           user_id: userId,
@@ -111,23 +118,38 @@ serve(async (req) => {
           is_verified: true,
           verification_date: new Date().toISOString()
         });
+
+      if (profileError) {
+        console.error('⚠️ Profile creation warning:', profileError);
+      }
     }
 
-    // Generate a session token for the user
-    const { data: sessionData, error: sessionError } = await supabase.auth.admin.generateLink({
+    // Generate magic link to get session tokens
+    console.log('📝 Generating session for user:', userId);
+    const { data: linkData, error: linkError } = await supabase.auth.admin.generateLink({
       type: 'magiclink',
-      email: userWithPhone?.email || `${phoneNumber.replace(/\+/g, '')}@phone.user`,
+      email: userEmail,
     });
 
-    if (sessionError || !sessionData) {
-      console.error('Failed to generate session:', sessionError);
+    if (linkError || !linkData) {
+      console.error('❌ Failed to generate link:', linkError);
       return new Response(
         JSON.stringify({ success: false, error: 'Failed to create session' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
+    console.log('✅ Session link generated successfully');
     console.log('✅ OTP verified successfully for:', phoneNumber);
+
+    // Extract tokens from the action_link
+    const actionLink = linkData.properties.action_link;
+    const urlParams = new URL(actionLink).hash.substring(1);
+    const params = new URLSearchParams(urlParams);
+    const accessToken = params.get('access_token');
+    const refreshToken = params.get('refresh_token');
+
+    console.log('🔑 Tokens extracted:', { hasAccess: !!accessToken, hasRefresh: !!refreshToken });
 
     return new Response(
       JSON.stringify({ 
@@ -136,12 +158,8 @@ serve(async (req) => {
         userId,
         verified: true,
         session: {
-          access_token: sessionData.properties.action_link.split('#')[1]?.split('&')[0]?.replace('access_token=', '') || sessionData.properties.hashed_token,
-          refresh_token: sessionData.properties.hashed_token,
-          user: {
-            id: userId,
-            phone: phoneNumber
-          }
+          access_token: accessToken,
+          refresh_token: refreshToken,
         }
       }),
       { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
