@@ -12,12 +12,51 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { removeBackground, loadImageFromUrl } from "@/utils/backgroundRemoval";
 import { X, ArrowUpRight } from "lucide-react";
+import { Helmet } from "react-helmet";
 
 const Header = () => {
   const { user } = useAuth();
   const { itemCount } = useCart();
   const location = useLocation();
   const navigate = useNavigate();
+
+  const navigationSchema = {
+    "@context": "https://schema.org",
+    "@type": "SiteNavigationElement",
+    "name": "Main Navigation",
+    "hasPart": [
+      {
+        "@type": "WebPage",
+        "name": "Products",
+        "url": "https://yakuza.lovable.app/products"
+      },
+      {
+        "@type": "WebPage",
+        "name": "Become a Dealer",
+        "url": "https://yakuza.lovable.app/become-dealer"
+      },
+      {
+        "@type": "WebPage",
+        "name": "About Us",
+        "url": "https://yakuza.lovable.app/about-us"
+      },
+      {
+        "@type": "WebPage",
+        "name": "Careers",
+        "url": "https://yakuza.lovable.app/careers"
+      },
+      {
+        "@type": "WebPage",
+        "name": "Blogs",
+        "url": "https://yakuza.lovable.app/blogs"
+      },
+      {
+        "@type": "WebPage",
+        "name": "Contact Us",
+        "url": "https://yakuza.lovable.app/contact-us"
+      }
+    ]
+  };
   const [isScrolled, setIsScrolled] = useState(false);
   const [logoUrl, setLogoUrl] = useState<string | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -119,6 +158,11 @@ const Header = () => {
 
   return (
     <>
+      <Helmet>
+        <script type="application/ld+json">
+          {JSON.stringify(navigationSchema, null, 2)}
+        </script>
+      </Helmet>
       <div className={`${isScrolled ? 'fixed' : 'absolute'} top-0 left-0 w-full z-50 transition-all duration-300`}>
         <NotificationBar />
         <nav className={`w-full p-[13px] transition-all duration-300 ${shouldShowFixedHeader ? 'bg-white shadow-sm' : 'bg-transparent'} ${isMenuOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
