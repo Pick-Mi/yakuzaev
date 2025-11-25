@@ -130,6 +130,57 @@ export type Database = {
         }
         Relationships: []
       }
+      cart_activity_logs: {
+        Row: {
+          action_type: string
+          created_at: string
+          id: string
+          ip_address: unknown
+          product_id: string
+          product_name: string
+          product_price: number | null
+          quantity: number | null
+          session_id: string | null
+          total_cart_items: number | null
+          total_cart_value: number | null
+          user_agent: string | null
+          user_id: string | null
+          variant_details: Json | null
+        }
+        Insert: {
+          action_type: string
+          created_at?: string
+          id?: string
+          ip_address?: unknown
+          product_id: string
+          product_name: string
+          product_price?: number | null
+          quantity?: number | null
+          session_id?: string | null
+          total_cart_items?: number | null
+          total_cart_value?: number | null
+          user_agent?: string | null
+          user_id?: string | null
+          variant_details?: Json | null
+        }
+        Update: {
+          action_type?: string
+          created_at?: string
+          id?: string
+          ip_address?: unknown
+          product_id?: string
+          product_name?: string
+          product_price?: number | null
+          quantity?: number | null
+          session_id?: string | null
+          total_cart_items?: number | null
+          total_cart_value?: number | null
+          user_agent?: string | null
+          user_id?: string | null
+          variant_details?: Json | null
+        }
+        Relationships: []
+      }
       categories: {
         Row: {
           created_at: string
