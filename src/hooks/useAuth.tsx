@@ -42,22 +42,50 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const signInWithPhone = async (phone: string) => {
-    const { error } = await supabase.auth.signInWithOtp({
-      phone,
-      options: {
-        shouldCreateUser: true,
-      },
-    });
-    return { error };
+    try {
+      // Call our custom send-otp edge function instead of Supabase's phone auth
+      const { data, error } = await supabase.functions.invoke('send-otp', {
+        body: { phoneNumber: phone }
+      });
+
+      if (error) throw error;
+      
+      console.log('OTP sent successfully:', data);
+      return { error: null };
+    } catch (error: any) {
+      console.error('Send OTP error:', error);
+      return { error };
+    }
   };
 
   const verifyOTP = async (phone: string, token: string) => {
-    const { error } = await supabase.auth.verifyOtp({
-      phone,
-      token,
-      type: 'sms',
-    });
-    return { error };
+    try {
+      // Call our custom verify-otp edge function
+      const { data, error } = await supabase.functions.invoke('verify-otp', {
+        body: { phoneNumber: phone, otp: token }
+      });
+
+      if (error) throw error;
+      
+      if (!data?.success) {
+        throw new Error(data?.error || 'Invalid OTP');
+      }
+
+      console.log('OTP verified successfully');
+      
+      // The verify-otp function should handle user creation and session
+      // Trigger a session refresh
+      const { data: sessionData } = await supabase.auth.getSession();
+      if (sessionData?.session) {
+        setSession(sessionData.session);
+        setUser(sessionData.session.user);
+      }
+      
+      return { error: null };
+    } catch (error: any) {
+      console.error('Verify OTP error:', error);
+      return { error };
+    }
   };
 
   const signOut = async () => {

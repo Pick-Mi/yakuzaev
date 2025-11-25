@@ -21,7 +21,9 @@ serve(async (req) => {
       );
     }
 
-    // Initialize Supabase client
+    console.log('Verifying OTP for phone number:', phoneNumber);
+
+    // Initialize Supabase client with service role key
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const supabase = createClient(supabaseUrl, supabaseKey);
@@ -39,7 +41,7 @@ serve(async (req) => {
     if (fetchError || !otpRecord) {
       console.error('OTP fetch error:', fetchError);
       return new Response(
-        JSON.stringify({ error: 'Invalid or expired OTP' }),
+        JSON.stringify({ success: false, error: 'Invalid or expired OTP' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
@@ -50,7 +52,7 @@ serve(async (req) => {
 
     if (now > expiresAt) {
       return new Response(
-        JSON.stringify({ error: 'OTP has expired. Please request a new one.' }),
+        JSON.stringify({ success: false, error: 'OTP has expired. Please request a new one.' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
@@ -58,36 +60,73 @@ serve(async (req) => {
     // Verify OTP
     if (otpRecord.otp_code !== otp) {
       return new Response(
-        JSON.stringify({ error: 'Invalid OTP. Please try again.' }),
+        JSON.stringify({ success: false, error: 'Invalid OTP. Please try again.' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
     // Mark OTP as verified
-    const { error: updateError } = await supabase
+    await supabase
       .from('otp_verifications')
       .update({ verified: true })
       .eq('id', otpRecord.id);
 
-    if (updateError) {
-      console.error('Update error:', updateError);
-      return new Response(
-        JSON.stringify({ error: 'Failed to verify OTP' }),
-        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
+    // Check if user exists with this phone number
+    const { data: existingUsers } = await supabase.auth.admin.listUsers();
+    const userWithPhone = existingUsers?.users?.find(u => u.phone === phoneNumber);
+
+    let userId: string;
+
+    if (userWithPhone) {
+      // User exists
+      userId = userWithPhone.id;
+      console.log('✅ Existing user verified:', userId);
+    } else {
+      // Create new user with phone number
+      const { data: newUser, error: createError } = await supabase.auth.admin.createUser({
+        phone: phoneNumber,
+        phone_confirm: true, // Auto-confirm phone
+        user_metadata: { phone: phoneNumber }
+      });
+
+      if (createError || !newUser.user) {
+        console.error('Failed to create user:', createError);
+        return new Response(
+          JSON.stringify({ success: false, error: 'Failed to create user account' }),
+          { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+
+      userId = newUser.user.id;
+      console.log('✅ New user created:', userId);
+
+      // Create profile for new user
+      await supabase
+        .from('profiles')
+        .insert({
+          user_id: userId,
+          phone: phoneNumber,
+          is_verified: true,
+          verification_date: new Date().toISOString()
+        });
     }
 
-    console.log('OTP verified successfully for:', phoneNumber);
+    console.log('✅ OTP verified successfully for:', phoneNumber);
 
     return new Response(
-      JSON.stringify({ success: true, message: 'OTP verified successfully', verified: true }),
+      JSON.stringify({ 
+        success: true, 
+        message: 'OTP verified successfully',
+        userId,
+        verified: true
+      }),
       { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
 
   } catch (error) {
-    console.error('Error:', error);
+    console.error('Error in verify-otp function:', error);
     return new Response(
-      JSON.stringify({ error: 'Internal server error' }),
+      JSON.stringify({ success: false, error: 'Internal server error' }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }
