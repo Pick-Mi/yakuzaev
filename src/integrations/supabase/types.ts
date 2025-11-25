@@ -866,6 +866,7 @@ export type Database = {
       }
       profiles: {
         Row: {
+          activity_log: Json | null
           address_matches_id: boolean | null
           address_type: string | null
           apartment_unit: string | null
@@ -912,6 +913,7 @@ export type Database = {
           verification_date: string | null
         }
         Insert: {
+          activity_log?: Json | null
           address_matches_id?: boolean | null
           address_type?: string | null
           apartment_unit?: string | null
@@ -958,6 +960,7 @@ export type Database = {
           verification_date?: string | null
         }
         Update: {
+          activity_log?: Json | null
           address_matches_id?: boolean | null
           address_type?: string | null
           apartment_unit?: string | null
