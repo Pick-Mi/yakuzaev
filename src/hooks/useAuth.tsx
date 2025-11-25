@@ -71,14 +71,29 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         throw new Error(data?.error || 'Invalid OTP');
       }
 
-      console.log('OTP verified successfully');
+      console.log('OTP verified successfully, setting session...');
       
-      // The verify-otp function should handle user creation and session
-      // Trigger a session refresh
-      const { data: sessionData } = await supabase.auth.getSession();
-      if (sessionData?.session) {
-        setSession(sessionData.session);
-        setUser(sessionData.session.user);
+      // If we have an access token, set the session
+      if (data.access_token) {
+        const { data: sessionData, error: sessionError } = await supabase.auth.setSession({
+          access_token: data.access_token,
+          refresh_token: data.access_token
+        });
+
+        if (sessionError) {
+          console.error('Session error:', sessionError);
+        } else if (sessionData?.session) {
+          setSession(sessionData.session);
+          setUser(sessionData.session.user);
+          console.log('✅ User authenticated:', sessionData.session.user.id);
+        }
+      } else {
+        // Fallback: refresh session
+        const { data: sessionData } = await supabase.auth.getSession();
+        if (sessionData?.session) {
+          setSession(sessionData.session);
+          setUser(sessionData.session.user);
+        }
       }
       
       return { error: null };
