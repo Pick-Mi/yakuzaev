@@ -5,10 +5,10 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import BlogHero from "@/components/BlogHero";
 import { supabase } from "@/integrations/supabase/client";
-import { useSchemaMarkup } from "@/hooks/useSchemaMarkup";
+import { useSEOSettings } from "@/hooks/useSEOSettings";
 
 const Blogs = () => {
-  const schemaMarkup = useSchemaMarkup('/blogs');
+  const seoSettings = useSEOSettings('/blogs');
   const [blogs, setBlogs] = useState<Array<{
     id: string;
     title: string;
@@ -44,9 +44,28 @@ const Blogs = () => {
   return (
     <div className="min-h-screen bg-background">
       <Helmet>
-        {schemaMarkup && (
+        {seoSettings?.meta_title && <title>{seoSettings.meta_title}</title>}
+        {seoSettings?.meta_description && (
+          <meta name="description" content={seoSettings.meta_description} />
+        )}
+        {seoSettings?.meta_keywords && (
+          <meta name="keywords" content={seoSettings.meta_keywords} />
+        )}
+        {seoSettings?.og_title && (
+          <meta property="og:title" content={seoSettings.og_title} />
+        )}
+        {seoSettings?.og_description && (
+          <meta property="og:description" content={seoSettings.og_description} />
+        )}
+        {seoSettings?.og_image && (
+          <meta property="og:image" content={seoSettings.og_image} />
+        )}
+        {seoSettings?.canonical_url && (
+          <link rel="canonical" href={seoSettings.canonical_url} />
+        )}
+        {seoSettings?.schema_json && (
           <script type="application/ld+json">
-            {JSON.stringify(schemaMarkup, null, 2)}
+            {JSON.stringify(seoSettings.schema_json, null, 2)}
           </script>
         )}
       </Helmet>
