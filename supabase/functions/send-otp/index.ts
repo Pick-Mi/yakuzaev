@@ -22,7 +22,7 @@ serve(async (req) => {
     }
 
     // Use default OTP for testing (temporary - remove Twilio dependency)
-    const otp = "1234";
+    const otp = "123456";
 
     // Initialize Supabase client
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
@@ -51,10 +51,10 @@ serve(async (req) => {
     }
 
     // Twilio disabled - using default OTP for testing
-    console.log('Default OTP (1234) stored for:', phoneNumber);
+    console.log('Default OTP (123456) stored for:', phoneNumber);
 
     return new Response(
-      JSON.stringify({ success: true, message: 'OTP sent successfully', otp: '1234' }),
+      JSON.stringify({ success: true, message: 'OTP sent successfully', otp: '123456' }),
       { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
 
