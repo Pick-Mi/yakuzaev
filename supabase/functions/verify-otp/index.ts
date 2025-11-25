@@ -124,7 +124,7 @@ serve(async (req) => {
       }
     }
 
-    // Generate magic link to get session tokens
+    // Use the hashed token to create a proper session
     console.log('📝 Generating session for user:', userId);
     const { data: linkData, error: linkError } = await supabase.auth.admin.generateLink({
       type: 'magiclink',
@@ -139,17 +139,26 @@ serve(async (req) => {
       );
     }
 
-    console.log('✅ Session link generated successfully');
+    // Use the hashed_token to verify and create session
+    const hashedToken = linkData.properties.hashed_token;
+    console.log('🔑 Using hashed token to create session');
+
+    // Exchange the token for a session
+    const { data: sessionData, error: sessionError } = await supabase.auth.verifyOtp({
+      type: 'magiclink',
+      token_hash: hashedToken,
+    });
+
+    if (sessionError || !sessionData.session) {
+      console.error('❌ Failed to create session from token:', sessionError);
+      return new Response(
+        JSON.stringify({ success: false, error: 'Failed to create session' }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    console.log('✅ Session created successfully');
     console.log('✅ OTP verified successfully for:', phoneNumber);
-
-    // Extract tokens from the action_link
-    const actionLink = linkData.properties.action_link;
-    const urlParams = new URL(actionLink).hash.substring(1);
-    const params = new URLSearchParams(urlParams);
-    const accessToken = params.get('access_token');
-    const refreshToken = params.get('refresh_token');
-
-    console.log('🔑 Tokens extracted:', { hasAccess: !!accessToken, hasRefresh: !!refreshToken });
 
     return new Response(
       JSON.stringify({ 
@@ -158,8 +167,8 @@ serve(async (req) => {
         userId,
         verified: true,
         session: {
-          access_token: accessToken,
-          refresh_token: refreshToken,
+          access_token: sessionData.session.access_token,
+          refresh_token: sessionData.session.refresh_token,
         }
       }),
       { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
