@@ -32,7 +32,7 @@ const getSessionId = () => {
   return sessionId;
 };
 
-// Log cart activity to profile's activity_log
+// Log cart activity to database
 const logCartActivity = async (
   actionType: 'add' | 'remove' | 'update_quantity' | 'clear',
   item: Partial<CartItem>,
@@ -40,9 +40,7 @@ const logCartActivity = async (
 ) => {
   try {
     const { data: { user } } = await supabase.auth.getUser();
-    
-    // Only log for authenticated users
-    if (!user) return;
+    const sessionId = getSessionId();
 
     // Calculate total cart value
     const totalCartValue = allItems.reduce((sum, cartItem) => {
@@ -62,9 +60,9 @@ const logCartActivity = async (
         : item.price;
     }
 
-    // Create activity log entry
-    const activityEntry = {
-      timestamp: new Date().toISOString(),
+    await supabase.from('cart_activity_logs').insert({
+      user_id: user?.id || null,
+      session_id: sessionId,
       action_type: actionType,
       product_id: String(item.id || ''),
       product_name: item.name || '',
@@ -73,25 +71,9 @@ const logCartActivity = async (
       variant_details: item.selectedVariant || null,
       total_cart_value: totalCartValue,
       total_cart_items: totalCartItems,
-    };
+    });
 
-    // Get current profile to append to activity_log
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('activity_log')
-      .eq('user_id', user.id)
-      .single();
-
-    const currentLogs = Array.isArray(profile?.activity_log) ? profile.activity_log : [];
-    const updatedLogs = [...currentLogs, activityEntry];
-
-    // Update profile with new activity log
-    await supabase
-      .from('profiles')
-      .update({ activity_log: updatedLogs })
-      .eq('user_id', user.id);
-
-    console.log('✅ Cart activity logged to profile:', actionType, item.name);
+    console.log('✅ Cart activity logged for user:', user?.id || 'guest', actionType, item.name);
   } catch (error) {
     console.error('Failed to log cart activity:', error);
   }
