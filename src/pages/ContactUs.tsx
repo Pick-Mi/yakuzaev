@@ -1,11 +1,15 @@
 import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet";
 import { ChevronRight } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
+import { useSEOSettings } from "@/hooks/useSEOSettings";
 
 const ContactUs = () => {
+  const seoSettings = useSEOSettings('/contact');
+  
   const suggestions = [
     { title: "Return an item for a refund", subtitle: "Popular article • 4 min" },
     { title: "Get help with an item that hasn't arrived", subtitle: "Popular article • 4 min" },
@@ -40,6 +44,32 @@ const ContactUs = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
+      <Helmet>
+        {seoSettings?.meta_title && <title>{seoSettings.meta_title}</title>}
+        {seoSettings?.meta_description && (
+          <meta name="description" content={seoSettings.meta_description} />
+        )}
+        {seoSettings?.meta_keywords && (
+          <meta name="keywords" content={seoSettings.meta_keywords} />
+        )}
+        {seoSettings?.og_title && (
+          <meta property="og:title" content={seoSettings.og_title} />
+        )}
+        {seoSettings?.og_description && (
+          <meta property="og:description" content={seoSettings.og_description} />
+        )}
+        {seoSettings?.og_image && (
+          <meta property="og:image" content={seoSettings.og_image} />
+        )}
+        {seoSettings?.canonical_url && (
+          <link rel="canonical" href={seoSettings.canonical_url} />
+        )}
+        {seoSettings?.schema_json && (
+          <script type="application/ld+json">
+            {JSON.stringify(seoSettings.schema_json, null, 2)}
+          </script>
+        )}
+      </Helmet>
       <Header />
       
       <main className="flex-1 container mx-auto px-4 py-8 mt-32 max-w-7xl" style={{ backgroundColor: '#F8F9F9' }}>
