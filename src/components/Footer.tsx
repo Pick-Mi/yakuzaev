@@ -1,10 +1,41 @@
 import { Link } from "react-router-dom";
 import { Facebook, Twitter, Instagram, Linkedin, Youtube, ChevronDown } from "lucide-react";
 import logo from "@/assets/logo.svg";
+import { Helmet } from "react-helmet";
 
 const Footer = () => {
+  const organizationSchema = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Yakuza",
+    "url": "https://yakuza.lovable.app",
+    "logo": "https://yakuza.lovable.app/assets/logo.svg",
+    "description": "Leading electric scooter manufacturer providing innovative and sustainable mobility solutions",
+    "address": {
+      "@type": "PostalAddress",
+      "addressCountry": "India"
+    },
+    "sameAs": [
+      "https://linkedin.com",
+      "https://twitter.com",
+      "https://youtube.com",
+      "https://facebook.com",
+      "https://instagram.com"
+    ],
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "contactType": "Customer Service",
+      "availableLanguage": "English"
+    }
+  };
+
   return (
     <footer className="bg-black text-white relative w-full py-14 px-4 md:px-20">
+      <Helmet>
+        <script type="application/ld+json">
+          {JSON.stringify(organizationSchema, null, 2)}
+        </script>
+      </Helmet>
       <div className="container mx-auto max-w-[1280px]">
         {/* Logo */}
         <div className="mb-16">
