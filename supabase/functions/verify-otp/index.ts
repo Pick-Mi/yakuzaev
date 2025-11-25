@@ -36,12 +36,22 @@ serve(async (req) => {
       .eq('verified', false)
       .order('created_at', { ascending: false })
       .limit(1)
-      .single();
+      .maybeSingle();
 
-    if (fetchError || !otpRecord) {
+    console.log('OTP lookup result:', { found: !!otpRecord, error: fetchError });
+
+    if (fetchError) {
       console.error('OTP fetch error:', fetchError);
       return new Response(
-        JSON.stringify({ success: false, error: 'Invalid or expired OTP' }),
+        JSON.stringify({ success: false, error: 'Database error while fetching OTP' }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    if (!otpRecord) {
+      console.error('No OTP found for phone:', phoneNumber);
+      return new Response(
+        JSON.stringify({ success: false, error: 'No OTP found. Please request a new OTP.' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
