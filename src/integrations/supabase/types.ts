@@ -838,6 +838,8 @@ export type Database = {
           price: number
           promo_card: Json | null
           qa_section: Json | null
+          seo_desc: string | null
+          seo_title: string | null
           sku: string | null
           slug: string
           specification_titles: Json | null
@@ -877,6 +879,8 @@ export type Database = {
           price?: number
           promo_card?: Json | null
           qa_section?: Json | null
+          seo_desc?: string | null
+          seo_title?: string | null
           sku?: string | null
           slug: string
           specification_titles?: Json | null
@@ -916,6 +920,8 @@ export type Database = {
           price?: number
           promo_card?: Json | null
           qa_section?: Json | null
+          seo_desc?: string | null
+          seo_title?: string | null
           sku?: string | null
           slug?: string
           specification_titles?: Json | null
