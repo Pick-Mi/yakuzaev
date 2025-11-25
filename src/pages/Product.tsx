@@ -48,7 +48,7 @@ const Product = () => {
         // Using any type to bypass the current type limitations
         const response = await (supabase as any)
           .from('products')
-          .select('id, name, slug, price, image_url, thumbnail, images, description, is_active, preview_section, features, visual_features, design_features, benefits, promo_card, videos, accessories, qa_section, variants, specification_titles, color_variety, meta_title, meta_description, meta_keywords, og_title, og_description, og_image, canonical_url')
+          .select('id, name, slug, price, image_url, thumbnail, images, description, is_active, preview_section, features, visual_features, design_features, benefits, promo_card, videos, accessories, qa_section, variants, specification_titles, color_variety, seo_title, seo_desc, meta_title, meta_description, meta_keywords, og_title, og_description, og_image, canonical_url')
           .eq('slug', slug)
           .eq('is_active', true)
           .single();
@@ -230,6 +230,8 @@ const Product = () => {
             qa_section: parsedQASection,
             color_variety: parsedColorVariety,
             // SEO Fields
+            seo_title: response.data.seo_title,
+            seo_desc: response.data.seo_desc,
             meta_title: response.data.meta_title,
             meta_description: response.data.meta_description,
             meta_keywords: response.data.meta_keywords,
@@ -363,8 +365,8 @@ const Product = () => {
     const schema: any = {
       "@context": "https://schema.org/",
       "@type": "Product",
-      "name": product.name,
-      "description": product.description || product.meta_description,
+      "name": product.seo_title || product.name,
+      "description": product.seo_desc || product.description || product.meta_description,
       "image": product.image_url || product.thumbnail,
       "brand": {
         "@type": "Brand",
@@ -405,16 +407,17 @@ const Product = () => {
   return (
     <div className="min-h-screen bg-[#F8F9F9]">
       <Helmet>
-        <title>{product.meta_title || `${product.name} - Product Details`}</title>
-        <meta name="description" content={product.meta_description || product.description} />
+        {/* Primary SEO Meta Tags */}
+        <title>{product.seo_title || product.meta_title || `${product.name} - Product Details`}</title>
+        <meta name="description" content={product.seo_desc || product.meta_description || product.description} />
         {product.meta_keywords && (
           <meta name="keywords" content={product.meta_keywords} />
         )}
         {product.canonical_url && <link rel="canonical" href={product.canonical_url} />}
         
         {/* Open Graph Meta Tags */}
-        <meta property="og:title" content={product.og_title || product.meta_title || product.name} />
-        <meta property="og:description" content={product.og_description || product.meta_description || product.description} />
+        <meta property="og:title" content={product.og_title || product.seo_title || product.meta_title || product.name} />
+        <meta property="og:description" content={product.og_description || product.seo_desc || product.meta_description || product.description} />
         <meta property="og:image" content={product.og_image || product.image_url || product.thumbnail} />
         <meta property="og:type" content="product" />
         <meta property="og:price:amount" content={String(getCurrentPrice())} />
@@ -422,8 +425,8 @@ const Product = () => {
         
         {/* Twitter Card Meta Tags */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={product.og_title || product.meta_title || product.name} />
-        <meta name="twitter:description" content={product.og_description || product.meta_description || product.description} />
+        <meta name="twitter:title" content={product.og_title || product.seo_title || product.meta_title || product.name} />
+        <meta name="twitter:description" content={product.og_description || product.seo_desc || product.meta_description || product.description} />
         <meta name="twitter:image" content={product.og_image || product.image_url || product.thumbnail} />
         
         {/* Product Schema with Custom Metadata */}
