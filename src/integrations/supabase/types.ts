@@ -1271,6 +1271,7 @@ export type Database = {
       get_customers_for_admin: {
         Args: never
         Returns: {
+          activity_log: Json
           city: string
           country: string
           created_at: string

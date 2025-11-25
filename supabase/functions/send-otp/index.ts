@@ -21,7 +21,10 @@ serve(async (req) => {
       );
     }
 
-    // Use default OTP for testing (temporary - remove Twilio dependency)
+    console.log('Processing OTP request for phone number:', phoneNumber);
+
+    // DEMO MODE: Using static OTP 123456 for all phone numbers
+    // No SMS service integration - user must manually enter 123456
     const otp = "123456";
 
     // Initialize Supabase client
@@ -50,16 +53,20 @@ serve(async (req) => {
       );
     }
 
-    // Twilio disabled - using default OTP for testing
-    console.log('Default OTP (123456) stored for:', phoneNumber);
+    console.log('✅ Demo OTP (123456) stored successfully for:', phoneNumber);
 
     return new Response(
-      JSON.stringify({ success: true, message: 'OTP sent successfully', otp: '123456' }),
+      JSON.stringify({ 
+        success: true, 
+        message: 'OTP ready - use demo code 123456',
+        otp: '123456',
+        demo: true
+      }),
       { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
 
   } catch (error) {
-    console.error('Error:', error);
+    console.error('Error in send-otp function:', error);
     return new Response(
       JSON.stringify({ error: 'Internal server error' }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
