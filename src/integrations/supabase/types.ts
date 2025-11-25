@@ -812,6 +812,7 @@ export type Database = {
         Row: {
           accessories: Json | null
           benefits: Json | null
+          canonical_url: string | null
           category_id: string | null
           color_variety: Json | null
           cost_price: number | null
@@ -826,7 +827,13 @@ export type Database = {
           image_url: string | null
           images: Json | null
           is_active: boolean
+          meta_description: string | null
+          meta_keywords: string | null
+          meta_title: string | null
           name: string
+          og_description: string | null
+          og_image: string | null
+          og_title: string | null
           preview_section: Json | null
           price: number
           promo_card: Json | null
@@ -844,6 +851,7 @@ export type Database = {
         Insert: {
           accessories?: Json | null
           benefits?: Json | null
+          canonical_url?: string | null
           category_id?: string | null
           color_variety?: Json | null
           cost_price?: number | null
@@ -858,7 +866,13 @@ export type Database = {
           image_url?: string | null
           images?: Json | null
           is_active?: boolean
+          meta_description?: string | null
+          meta_keywords?: string | null
+          meta_title?: string | null
           name: string
+          og_description?: string | null
+          og_image?: string | null
+          og_title?: string | null
           preview_section?: Json | null
           price?: number
           promo_card?: Json | null
@@ -876,6 +890,7 @@ export type Database = {
         Update: {
           accessories?: Json | null
           benefits?: Json | null
+          canonical_url?: string | null
           category_id?: string | null
           color_variety?: Json | null
           cost_price?: number | null
@@ -890,7 +905,13 @@ export type Database = {
           image_url?: string | null
           images?: Json | null
           is_active?: boolean
+          meta_description?: string | null
+          meta_keywords?: string | null
+          meta_title?: string | null
           name?: string
+          og_description?: string | null
+          og_image?: string | null
+          og_title?: string | null
           preview_section?: Json | null
           price?: number
           promo_card?: Json | null
