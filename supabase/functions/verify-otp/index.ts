@@ -88,22 +88,33 @@ serve(async (req) => {
       console.log('✅ Demo OTP accepted for:', phoneNumber);
     }
 
-    // Check if user exists with this phone number
+    // Check if user exists with this phone number or email
+    const userEmail = `${phoneNumber.replace(/\+/g, '')}@phone.user`;
     const { data: existingUsers } = await supabase.auth.admin.listUsers();
-    const userWithPhone = existingUsers?.users?.find(u => u.phone === phoneNumber);
+    const userWithPhone = existingUsers?.users?.find(u => 
+      u.phone === phoneNumber || u.email === userEmail
+    );
 
     let userId: string;
-    let userEmail: string;
 
     if (userWithPhone) {
       // User exists
       userId = userWithPhone.id;
-      userEmail = userWithPhone.email || `${phoneNumber.replace(/\+/g, '')}@phone.user`;
       console.log('✅ Existing user found:', userId);
+      
+      // Update phone number if not set
+      if (!userWithPhone.phone) {
+        await supabase.auth.admin.updateUserById(userId, {
+          phone: phoneNumber,
+          phone_confirm: true,
+          user_metadata: { 
+            phone: phoneNumber,
+            phone_verified: true 
+          }
+        });
+      }
     } else {
       // Create new user with phone number and temporary email
-      userEmail = `${phoneNumber.replace(/\+/g, '')}@phone.user`;
-      
       const { data: newUser, error: createError } = await supabase.auth.admin.createUser({
         phone: phoneNumber,
         phone_confirm: true,
