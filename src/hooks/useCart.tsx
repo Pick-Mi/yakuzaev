@@ -1,4 +1,5 @@
-import { useState, useContext, createContext, ReactNode } from 'react';
+import { useState, useContext, createContext, ReactNode, useEffect } from 'react';
+import { supabase } from '@/integrations/supabase/client';
 
 interface CartItem {
   id: number | string;
@@ -21,25 +22,108 @@ interface CartContextType {
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
+// Generate session ID for guest users
+const getSessionId = () => {
+  let sessionId = localStorage.getItem('cart_session_id');
+  if (!sessionId) {
+    sessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    localStorage.setItem('cart_session_id', sessionId);
+  }
+  return sessionId;
+};
+
+// Log cart activity to database
+const logCartActivity = async (
+  actionType: 'add' | 'remove' | 'update_quantity' | 'clear',
+  item: Partial<CartItem>,
+  allItems: CartItem[]
+) => {
+  try {
+    const { data: { user } } = await supabase.auth.getUser();
+    const sessionId = getSessionId();
+
+    // Calculate total cart value
+    const totalCartValue = allItems.reduce((sum, cartItem) => {
+      const price = typeof cartItem.price === 'string' 
+        ? parseFloat(cartItem.price.replace('$', '').replace(',', ''))
+        : cartItem.price;
+      return sum + (price * cartItem.quantity);
+    }, 0);
+
+    const totalCartItems = allItems.reduce((total, cartItem) => total + cartItem.quantity, 0);
+
+    // Get price as number
+    let productPrice = 0;
+    if (item.price) {
+      productPrice = typeof item.price === 'string'
+        ? parseFloat(item.price.replace('$', '').replace(',', ''))
+        : item.price;
+    }
+
+    await supabase.from('cart_activity_logs').insert({
+      user_id: user?.id || null,
+      session_id: sessionId,
+      action_type: actionType,
+      product_id: String(item.id || ''),
+      product_name: item.name || '',
+      product_price: productPrice,
+      quantity: item.quantity || 0,
+      variant_details: item.selectedVariant || null,
+      total_cart_value: totalCartValue,
+      total_cart_items: totalCartItems,
+    });
+
+    console.log('✅ Cart activity logged:', actionType, item.name);
+  } catch (error) {
+    console.error('Failed to log cart activity:', error);
+  }
+};
+
 export const CartProvider = ({ children }: { children: ReactNode }) => {
-  const [items, setItems] = useState<CartItem[]>([]);
+  const [items, setItems] = useState<CartItem[]>(() => {
+    // Load cart from localStorage on initial mount
+    const savedCart = localStorage.getItem('cart_items');
+    return savedCart ? JSON.parse(savedCart) : [];
+  });
+
+  // Save cart to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('cart_items', JSON.stringify(items));
+  }, [items]);
 
   const addToCart = (item: Omit<CartItem, 'quantity'> & { quantity?: number }) => {
     setItems(current => {
       const existingItem = current.find(i => i.id === item.id);
+      let updatedItems: CartItem[];
+      
       if (existingItem) {
-        return current.map(i => 
+        updatedItems = current.map(i => 
           i.id === item.id 
             ? { ...i, quantity: i.quantity + (item.quantity || 1) }
             : i
         );
+      } else {
+        updatedItems = [...current, { ...item, quantity: item.quantity || 1 }];
       }
-      return [...current, { ...item, quantity: item.quantity || 1 }];
+
+      // Log the activity
+      logCartActivity('add', item, updatedItems);
+      
+      return updatedItems;
     });
   };
 
   const removeFromCart = (id: number | string) => {
-    setItems(current => current.filter(item => item.id !== id));
+    setItems(current => {
+      const itemToRemove = current.find(item => item.id === id);
+      const updatedItems = current.filter(item => item.id !== id);
+      
+      if (itemToRemove) {
+        logCartActivity('remove', itemToRemove, updatedItems);
+      }
+      
+      return updatedItems;
+    });
   };
 
   const updateQuantity = (id: number | string, quantity: number) => {
@@ -47,15 +131,26 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       removeFromCart(id);
       return;
     }
-    setItems(current => 
-      current.map(item => 
+    
+    setItems(current => {
+      const itemToUpdate = current.find(item => item.id === id);
+      const updatedItems = current.map(item => 
         item.id === id ? { ...item, quantity } : item
-      )
-    );
+      );
+      
+      if (itemToUpdate) {
+        logCartActivity('update_quantity', { ...itemToUpdate, quantity }, updatedItems);
+      }
+      
+      return updatedItems;
+    });
   };
 
   const clearCart = () => {
+    // Log clear action before clearing
+    logCartActivity('clear', {}, []);
     setItems([]);
+    localStorage.removeItem('cart_items');
   };
 
   const itemCount = items.reduce((total, item) => total + item.quantity, 0);
