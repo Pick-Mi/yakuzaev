@@ -61,12 +61,26 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const signOut = async () => {
-    const { error } = await supabase.auth.signOut();
-    // Clear local state even if signOut fails (e.g., session expired)
-    // This ensures the user can always logout from the UI
-    setSession(null);
-    setUser(null);
-    return { error };
+    try {
+      // Clear all auth-related storage first
+      localStorage.removeItem('sb-tqhwoizjlvjdiuemirsy-auth-token');
+      sessionStorage.clear();
+      
+      const { error } = await supabase.auth.signOut();
+      
+      // Clear local state regardless of API response
+      setSession(null);
+      setUser(null);
+      
+      console.log('Logout successful');
+      return { error };
+    } catch (error) {
+      console.error('Logout error:', error);
+      // Still clear local state even on error
+      setSession(null);
+      setUser(null);
+      return { error };
+    }
   };
 
   const signInWithEmail = async (email: string, password: string) => {
