@@ -21,8 +21,8 @@ serve(async (req) => {
       );
     }
 
-    // Generate 6-digit OTP
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    // Use default OTP for testing (temporary - remove Twilio dependency)
+    const otp = "1234";
 
     // Initialize Supabase client
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
@@ -50,48 +50,11 @@ serve(async (req) => {
       );
     }
 
-    // Send OTP via Twilio
-    const twilioAccountSid = Deno.env.get('TWILIO_ACCOUNT_SID');
-    const twilioAuthToken = Deno.env.get('TWILIO_AUTH_TOKEN');
-    const twilioPhoneNumber = Deno.env.get('TWILIO_PHONE_NUMBER');
-
-    if (!twilioAccountSid || !twilioAuthToken || !twilioPhoneNumber) {
-      console.error('Twilio credentials not configured');
-      return new Response(
-        JSON.stringify({ error: 'SMS service not configured' }),
-        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
-    const twilioUrl = `https://api.twilio.com/2010-04-01/Accounts/${twilioAccountSid}/Messages.json`;
-    const authHeader = btoa(`${twilioAccountSid}:${twilioAuthToken}`);
-
-    const twilioResponse = await fetch(twilioUrl, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Basic ${authHeader}`,
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: new URLSearchParams({
-        To: phoneNumber,
-        From: twilioPhoneNumber,
-        Body: `Your Yakuza verification code is: ${otp}. Valid for 5 minutes.`
-      }).toString()
-    });
-
-    if (!twilioResponse.ok) {
-      const errorData = await twilioResponse.text();
-      console.error('Twilio error:', errorData);
-      return new Response(
-        JSON.stringify({ error: 'Failed to send OTP' }),
-        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
-    console.log('OTP sent successfully to:', phoneNumber);
+    // Twilio disabled - using default OTP for testing
+    console.log('Default OTP (1234) stored for:', phoneNumber);
 
     return new Response(
-      JSON.stringify({ success: true, message: 'OTP sent successfully' }),
+      JSON.stringify({ success: true, message: 'OTP sent successfully', otp: '1234' }),
       { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
 

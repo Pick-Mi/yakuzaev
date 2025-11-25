@@ -163,7 +163,7 @@ const Auth = () => {
         setOtpCooldown(60); // Set 60 second cooldown after successful send
         toast({
           title: "OTP Sent!",
-          description: "Please check your phone for the verification code.",
+          description: "Your verification code is: 1234 (Test Mode)",
         });
         setStep('otp');
       }
