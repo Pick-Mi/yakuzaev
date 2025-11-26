@@ -9,6 +9,23 @@ export default defineConfig(({ mode }) => ({
     host: "::",
     port: 8080,
   },
+  build: {
+    // Generate source maps for debugging
+    sourcemap: true,
+    // Disable minification for readable output
+    minify: mode === 'production' ? 'esbuild' : false,
+    // Keep readable CSS class names
+    cssMinify: mode === 'production',
+    // Preserve original file structure
+    rollupOptions: {
+      output: {
+        // Preserve module structure
+        preserveModules: false,
+        // Add comments in output
+        banner: '/* Yakuza EV - Built with Lovable */',
+      },
+    },
+  },
   plugins: [
     react(),
     mode === 'development' &&
