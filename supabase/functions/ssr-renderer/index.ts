@@ -27,25 +27,55 @@ function generateHTML(data: {
   schemaMarkup?: any;
   bodyContent?: string;
 }): string {
+  const escapeHtml = (str: string) => str.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${data.title}</title>
-  <meta name="description" content="${data.description}">
-  ${data.keywords ? `<meta name="keywords" content="${data.keywords}">` : ''}
-  ${data.ogTitle ? `<meta property="og:title" content="${data.ogTitle}">` : ''}
-  ${data.ogDescription ? `<meta property="og:description" content="${data.ogDescription}">` : ''}
-  ${data.ogImage ? `<meta property="og:image" content="${data.ogImage}">` : ''}
+  <title>${escapeHtml(data.title)}</title>
+  <meta name="description" content="${escapeHtml(data.description)}">
+  ${data.keywords ? `<meta name="keywords" content="${escapeHtml(data.keywords)}">` : ''}
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
   ${data.canonicalUrl ? `<link rel="canonical" href="${data.canonicalUrl}">` : ''}
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Yakuza EV">
+  ${data.ogTitle ? `<meta property="og:title" content="${escapeHtml(data.ogTitle)}">` : ''}
+  ${data.ogDescription ? `<meta property="og:description" content="${escapeHtml(data.ogDescription)}">` : ''}
+  ${data.ogImage ? `<meta property="og:image" content="${data.ogImage}">` : ''}
+  ${data.canonicalUrl ? `<meta property="og:url" content="${data.canonicalUrl}">` : ''}
+  
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  ${data.ogTitle ? `<meta name="twitter:title" content="${escapeHtml(data.ogTitle)}">` : ''}
+  ${data.ogDescription ? `<meta name="twitter:description" content="${escapeHtml(data.ogDescription)}">` : ''}
+  ${data.ogImage ? `<meta name="twitter:image" content="${data.ogImage}">` : ''}
+  
   ${data.schemaMarkup ? `<script type="application/ld+json">${JSON.stringify(data.schemaMarkup)}</script>` : ''}
-  <meta name="robots" content="index, follow">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', system-ui, -apple-system, sans-serif; line-height: 1.6; color: #1f2937; }
+    img { max-width: 100%; height: auto; display: block; }
+    a { color: #2563eb; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+  </style>
 </head>
 <body>
-  ${data.bodyContent || '<div id="root">Loading...</div>'}
-  <noscript>This page requires JavaScript to run the interactive features.</noscript>
+  <!-- SSR Rendered Content - Visible in View Source -->
+  ${data.bodyContent || '<div id="root"></div>'}
+  
+  <!-- React App Hydration -->
+  <script type="module" src="/src/main.tsx"></script>
+  <noscript>This page requires JavaScript for interactive features.</noscript>
 </body>
 </html>`;
 }
