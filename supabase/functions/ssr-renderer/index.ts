@@ -84,17 +84,64 @@ async function renderProductPage(supabase: any, slug: string) {
     "sku": product.sku
   };
 
+  // Extract additional details
+  const features = product.features ? (Array.isArray(product.features) ? product.features : []) : [];
+  const benefits = product.benefits ? (Array.isArray(product.benefits) ? product.benefits : []) : [];
+  const variants = product.variants ? (Array.isArray(product.variants) ? product.variants : []) : [];
+  const images = product.images ? (Array.isArray(product.images) ? product.images : []) : [];
+
   const bodyContent = `
     <div id="root">
-      <main>
-        <h1>${product.name}</h1>
-        <p>${product.description || ''}</p>
-        <div>
-          <strong>Price:</strong> ₹${product.price}
-        </div>
-        <div>
-          <strong>SKU:</strong> ${product.sku}
-        </div>
+      <main style="max-width: 1200px; margin: 0 auto; padding: 20px; font-family: system-ui;">
+        <article>
+          <h1 style="font-size: 2.5rem; margin-bottom: 1rem;">${product.name}</h1>
+          ${product.image_url || images[0] ? `
+            <img src="${product.image_url || images[0]}" alt="${product.name}" style="max-width: 100%; height: auto; border-radius: 12px;" width="800" height="600" />
+          ` : ''}
+          <div style="margin: 2rem 0;">
+            <p style="font-size: 1.125rem; line-height: 1.75;">${product.description || ''}</p>
+          </div>
+          <div style="display: flex; gap: 2rem; align-items: center; margin: 2rem 0;">
+            <div style="font-size: 2rem; font-weight: bold; color: #2563eb;">₹${product.price.toLocaleString()}</div>
+            <div style="padding: 0.5rem 1rem; background: ${product.stock_quantity > 0 ? '#10b981' : '#ef4444'}; color: white; border-radius: 8px;">
+              ${product.stock_quantity > 0 ? 'In Stock' : 'Out of Stock'}
+            </div>
+          </div>
+          ${product.sku ? `<div style="color: #6b7280;">SKU: ${product.sku}</div>` : ''}
+          
+          ${features.length > 0 ? `
+            <section style="margin: 3rem 0;">
+              <h2 style="font-size: 2rem; margin-bottom: 1rem;">Key Features</h2>
+              <ul style="list-style: disc; padding-left: 2rem; line-height: 2;">
+                ${features.map((f: any) => `<li>${typeof f === 'string' ? f : f.title || f.name || f.text || ''}</li>`).join('')}
+              </ul>
+            </section>
+          ` : ''}
+          
+          ${benefits.length > 0 ? `
+            <section style="margin: 3rem 0;">
+              <h2 style="font-size: 2rem; margin-bottom: 1rem;">Benefits</h2>
+              <ul style="list-style: disc; padding-left: 2rem; line-height: 2;">
+                ${benefits.map((b: any) => `<li>${typeof b === 'string' ? b : b.title || b.name || b.text || ''}</li>`).join('')}
+              </ul>
+            </section>
+          ` : ''}
+          
+          ${variants.length > 0 ? `
+            <section style="margin: 3rem 0;">
+              <h2 style="font-size: 2rem; margin-bottom: 1rem;">Available Variants</h2>
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+                ${variants.map((v: any) => `
+                  <div style="border: 1px solid #e5e7eb; padding: 1.5rem; border-radius: 12px; background: #f9fafb;">
+                    <h3 style="font-size: 1.25rem; margin-bottom: 0.5rem;">${v.name || v.title || ''}</h3>
+                    <p style="font-size: 1.5rem; font-weight: bold; color: #2563eb;">₹${v.price ? v.price.toLocaleString() : 'N/A'}</p>
+                    ${v.description ? `<p style="margin-top: 0.5rem; color: #6b7280;">${v.description}</p>` : ''}
+                  </div>
+                `).join('')}
+              </div>
+            </section>
+          ` : ''}
+        </article>
       </main>
     </div>
   `;
@@ -141,12 +188,26 @@ async function renderBlogPage(supabase: any, slug: string) {
     }
   };
 
+  const publishedDate = new Date(blog.published_at || blog.created_at).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+
   const bodyContent = `
     <div id="root">
-      <article>
-        <h1>${blog.title}</h1>
-        ${blog.featured_image ? `<img src="${blog.featured_image}" alt="${blog.title}">` : ''}
-        <div>${blog.content}</div>
+      <article style="max-width: 900px; margin: 0 auto; padding: 20px; font-family: system-ui;">
+        <header style="margin-bottom: 3rem;">
+          <h1 style="font-size: 2.5rem; margin-bottom: 1rem; line-height: 1.2;">${blog.title}</h1>
+          ${blog.excerpt ? `<p style="font-size: 1.25rem; color: #6b7280; margin-bottom: 1rem;">${blog.excerpt}</p>` : ''}
+          <time datetime="${blog.published_at}" style="color: #9ca3af;">${publishedDate}</time>
+        </header>
+        ${blog.featured_image ? `
+          <img src="${blog.featured_image}" alt="${blog.title}" style="width: 100%; height: auto; border-radius: 12px; margin-bottom: 2rem;" width="1200" height="630" />
+        ` : ''}
+        <div style="line-height: 1.8; font-size: 1.125rem;">
+          ${blog.content}
+        </div>
       </article>
     </div>
   `;
@@ -173,23 +234,58 @@ async function renderHomePage(supabase: any) {
     .eq('is_active', true)
     .maybeSingle();
 
+  const { data: products } = await supabase
+    .from('products')
+    .select('name, slug, price, image_url')
+    .eq('is_active', true)
+    .limit(6);
+
   const schemaMarkup = seoSettings?.schema_json || {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "name": "Yakuza",
-    "url": "https://yourdomain.com"
+    "name": "Yakuza EV",
+    "url": "https://yakuzaev.com"
   };
 
+  const bodyContent = `
+    <div id="root">
+      <main style="font-family: system-ui;">
+        <section style="max-width: 1200px; margin: 0 auto; padding: 40px 20px; text-align: center;">
+          <h1 style="font-size: 3rem; margin-bottom: 1rem;">Yakuza EV - Electric Vehicles</h1>
+          <p style="font-size: 1.5rem; color: #6b7280; margin-bottom: 3rem;">Leading the electric mobility revolution</p>
+        </section>
+        
+        ${products && products.length > 0 ? `
+          <section style="max-width: 1200px; margin: 0 auto; padding: 40px 20px;">
+            <h2 style="font-size: 2rem; margin-bottom: 2rem; text-align: center;">Our Products</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+              ${products.map(p => `
+                <div style="border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden; background: white;">
+                  ${p.image_url ? `<img src="${p.image_url}" alt="${p.name}" style="width: 100%; height: 200px; object-fit: cover;" />` : ''}
+                  <div style="padding: 1.5rem;">
+                    <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem;">${p.name}</h3>
+                    <p style="font-size: 1.25rem; font-weight: bold; color: #2563eb;">₹${p.price.toLocaleString()}</p>
+                    <a href="/products/${p.slug}" style="display: inline-block; margin-top: 1rem; padding: 0.75rem 1.5rem; background: #2563eb; color: white; text-decoration: none; border-radius: 8px;">View Details</a>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </section>
+        ` : ''}
+      </main>
+    </div>
+  `;
+
   return generateHTML({
-    title: seoSettings?.meta_title || 'Yakuza - Electric Vehicles',
-    description: seoSettings?.meta_description || 'Leading electric vehicle manufacturer',
-    keywords: seoSettings?.meta_keywords || '',
-    ogTitle: seoSettings?.og_title || 'Yakuza',
-    ogDescription: seoSettings?.og_description || '',
+    title: seoSettings?.meta_title || 'Yakuza EV - Leading Electric Vehicle Manufacturer',
+    description: seoSettings?.meta_description || 'Discover cutting-edge electric scooters and vehicles from Yakuza EV',
+    keywords: seoSettings?.meta_keywords || 'electric vehicles, electric scooters, yakuza ev',
+    ogTitle: seoSettings?.og_title || 'Yakuza EV',
+    ogDescription: seoSettings?.og_description || 'Leading the electric mobility revolution',
     ogImage: seoSettings?.og_image || '',
-    canonicalUrl: seoSettings?.canonical_url || 'https://yourdomain.com',
+    canonicalUrl: seoSettings?.canonical_url || 'https://yakuzaev.com',
     schemaMarkup,
-    bodyContent: '<div id="root">Loading...</div>'
+    bodyContent
   });
 }
 
@@ -205,17 +301,7 @@ Deno.serve(async (req) => {
 
     console.log('SSR Request:', { pathname, userAgent, isCrawler: isCrawler(userAgent) });
 
-    // If not a crawler, return a simple response indicating no SSR needed
-    if (!isCrawler(userAgent)) {
-      return new Response(
-        JSON.stringify({ message: 'SSR not needed for regular users' }),
-        { 
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-          status: 200 
-        }
-      );
-    }
-
+    // SSR for ALL requests now (not just crawlers)
     const supabase = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_ANON_KEY') ?? ''
