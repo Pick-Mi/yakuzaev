@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Loading...</title>
+  <script>
+    // Fetch and inject SSR content immediately
+    (function() {
+      const path = window.location.pathname + window.location.search;
+      const ssrUrl = `https://tqhwoizjlvjdiuemirsy.supabase.co/functions/v1/ssr-renderer?path=${encodeURIComponent(path)}`;
+      
+      fetch(ssrUrl)
+        .then(response => response.text())
+        .then(html => {
+          // Replace entire document with SSR HTML
+          document.open();
+          document.write(html);
+          document.close();
+        })
+        .catch(error => {
+          console.error('SSR Error:', error);
+          // Fallback to regular SPA
+          window.location.href = '/index.html';
+        });
+    })();
+  </script>
+</head>
+<body>
+  <div style="display: flex; align-items: center; justify-content: center; min-height: 100vh; font-family: system-ui;">
+    <div>Loading...</div>
+  </div>
+</body>
+</html>
