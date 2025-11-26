@@ -92,7 +92,45 @@ async function renderProductPage(supabase: any, slug: string) {
 
   if (error || !product) {
     console.error('Product not found:', error);
-    return null;
+    // Return 404 page with full HTML structure
+    return generateHTML({
+      title: 'Product Not Found - Yakuza EV',
+      description: 'The requested product could not be found',
+      keywords: '',
+      ogTitle: 'Product Not Found',
+      ogDescription: 'Product not available',
+      ogImage: '',
+      canonicalUrl: `https://yakuzaev.com/products/${slug}`,
+      schemaMarkup: null,
+      bodyContent: `
+        <div id="root">
+          <main style="max-width: 1200px; margin: 0 auto; padding: 40px 20px; font-family: system-ui; text-align: center;">
+            <h1 style="font-size: 3rem; margin-bottom: 1rem; color: #ef4444;">404 - Product Not Found</h1>
+            <p style="font-size: 1.25rem; color: #6b7280; margin-bottom: 2rem;">
+              The product "${slug}" could not be found. It may have been removed or the URL is incorrect.
+            </p>
+            <p style="margin-bottom: 1rem;">Available products:</p>
+            <ul style="list-style: none; padding: 0;">
+              <li><a href="/products/neu" style="color: #2563eb; font-size: 1.125rem;">NEU</a></li>
+              <li><a href="/products/aqaba" style="color: #2563eb; font-size: 1.125rem;">AQABA</a></li>
+              <li><a href="/products/cyclone-sway" style="color: #2563eb; font-size: 1.125rem;">Cyclone Sway</a></li>
+            </ul>
+            <a href="/" style="display: inline-block; margin-top: 2rem; padding: 1rem 2rem; background: #2563eb; color: white; text-decoration: none; border-radius: 8px; font-size: 1.125rem;">
+              Return to Homepage
+            </a>
+          </main>
+          <!-- Full Content Visible in View Source -->
+          <script type="application/ld+json">
+          {
+            "@context": "https://schema.org",
+            "@type": "WebPage",
+            "name": "Product Not Found",
+            "description": "The requested product could not be found"
+          }
+          </script>
+        </div>
+      `
+    });
   }
 
   const schemaMarkup = {
@@ -114,65 +152,151 @@ async function renderProductPage(supabase: any, slug: string) {
     "sku": product.sku
   };
 
-  // Extract additional details
-  const features = product.features ? (Array.isArray(product.features) ? product.features : []) : [];
-  const benefits = product.benefits ? (Array.isArray(product.benefits) ? product.benefits : []) : [];
-  const variants = product.variants ? (Array.isArray(product.variants) ? product.variants : []) : [];
-  const images = product.images ? (Array.isArray(product.images) ? product.images : []) : [];
-
   const bodyContent = `
     <div id="root">
+      <!-- ========================================
+           FULL PRODUCT DATA - VISIBLE IN PAGE SOURCE
+           This content is server-side rendered and
+           fully visible to search engines and users
+           viewing the HTML source code.
+           ======================================== -->
       <main style="max-width: 1200px; margin: 0 auto; padding: 20px; font-family: system-ui;">
-        <article>
-          <h1 style="font-size: 2.5rem; margin-bottom: 1rem;">${product.name}</h1>
+        <article itemscope itemtype="https://schema.org/Product">
+          <!-- PRODUCT TITLE -->
+          <h1 itemprop="name" style="font-size: 2.5rem; margin-bottom: 1rem; font-weight: 700; color: #1f2937;">
+            ${product.name}
+          </h1>
+          
+          <!-- PRODUCT IMAGE -->
           ${product.image_url || images[0] ? `
-            <img src="${product.image_url || images[0]}" alt="${product.name}" style="max-width: 100%; height: auto; border-radius: 12px;" width="800" height="600" />
+            <img 
+              itemprop="image"
+              src="${product.image_url || images[0]}" 
+              alt="${product.name} - Electric Scooter" 
+              style="max-width: 100%; height: auto; border-radius: 12px; margin-bottom: 2rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);" 
+              width="800" 
+              height="600" 
+            />
           ` : ''}
-          <div style="margin: 2rem 0;">
-            <p style="font-size: 1.125rem; line-height: 1.75;">${product.description || ''}</p>
+          
+          <!-- PRODUCT DESCRIPTION -->
+          <div itemprop="description" style="margin: 2rem 0; line-height: 1.75;">
+            <p style="font-size: 1.125rem; color: #374151;">
+              ${product.description || 'Premium electric scooter with cutting-edge technology'}
+            </p>
           </div>
-          <div style="display: flex; gap: 2rem; align-items: center; margin: 2rem 0;">
-            <div style="font-size: 2rem; font-weight: bold; color: #2563eb;">₹${product.price.toLocaleString()}</div>
-            <div style="padding: 0.5rem 1rem; background: ${product.stock_quantity > 0 ? '#10b981' : '#ef4444'}; color: white; border-radius: 8px;">
-              ${product.stock_quantity > 0 ? 'In Stock' : 'Out of Stock'}
+          
+          <!-- PRICE AND AVAILABILITY -->
+          <div style="display: flex; gap: 2rem; align-items: center; margin: 2rem 0; padding: 1.5rem; background: #f9fafb; border-radius: 12px; border: 2px solid #e5e7eb;">
+            <div itemprop="offers" itemscope itemtype="https://schema.org/Offer">
+              <meta itemprop="priceCurrency" content="INR" />
+              <meta itemprop="price" content="${product.price}" />
+              <meta itemprop="availability" content="${product.stock_quantity > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock'}" />
+              <div style="font-size: 2.5rem; font-weight: bold; color: #2563eb;">
+                ₹${product.price.toLocaleString('en-IN')}
+              </div>
+            </div>
+            <div style="padding: 0.75rem 1.5rem; background: ${product.stock_quantity > 0 ? '#10b981' : '#ef4444'}; color: white; border-radius: 8px; font-weight: 600; font-size: 1.125rem;">
+              ${product.stock_quantity > 0 ? '✓ In Stock' : '✗ Out of Stock'}
             </div>
           </div>
-          ${product.sku ? `<div style="color: #6b7280;">SKU: ${product.sku}</div>` : ''}
           
+          <!-- SKU -->
+          ${product.sku ? `
+            <div style="color: #6b7280; margin-bottom: 2rem; font-family: monospace; background: #f3f4f6; padding: 0.5rem 1rem; border-radius: 6px; display: inline-block;">
+              <strong>SKU:</strong> <span itemprop="sku">${product.sku}</span>
+            </div>
+          ` : ''}
+          
+          <!-- KEY FEATURES SECTION -->
           ${features.length > 0 ? `
-            <section style="margin: 3rem 0;">
-              <h2 style="font-size: 2rem; margin-bottom: 1rem;">Key Features</h2>
-              <ul style="list-style: disc; padding-left: 2rem; line-height: 2;">
-                ${features.map((f: any) => `<li>${typeof f === 'string' ? f : f.title || f.name || f.text || ''}</li>`).join('')}
+            <section style="margin: 3rem 0; padding: 2rem; background: white; border-radius: 12px; box-shadow: 0 1px 3px 0 rgba(0,0,0,0.1);">
+              <h2 style="font-size: 2rem; margin-bottom: 1.5rem; color: #1f2937; border-bottom: 3px solid #2563eb; padding-bottom: 0.5rem;">
+                🚀 Key Features
+              </h2>
+              <ul style="list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+                ${features.map((f: any) => {
+                  const text = typeof f === 'string' ? f : f.title || f.name || f.text || f.description || '';
+                  return `
+                    <li style="padding: 1rem; background: #f0f9ff; border-left: 4px solid #2563eb; border-radius: 6px;">
+                      <span style="font-size: 1.125rem; color: #1e40af;">▸ ${text}</span>
+                    </li>
+                  `;
+                }).join('')}
               </ul>
             </section>
           ` : ''}
           
+          <!-- BENEFITS SECTION -->
           ${benefits.length > 0 ? `
-            <section style="margin: 3rem 0;">
-              <h2 style="font-size: 2rem; margin-bottom: 1rem;">Benefits</h2>
-              <ul style="list-style: disc; padding-left: 2rem; line-height: 2;">
-                ${benefits.map((b: any) => `<li>${typeof b === 'string' ? b : b.title || b.name || b.text || ''}</li>`).join('')}
+            <section style="margin: 3rem 0; padding: 2rem; background: #f0fdf4; border-radius: 12px; border: 2px solid #86efac;">
+              <h2 style="font-size: 2rem; margin-bottom: 1.5rem; color: #166534; border-bottom: 3px solid #10b981; padding-bottom: 0.5rem;">
+                ✨ Benefits
+              </h2>
+              <ul style="list-style: none; padding: 0; line-height: 2;">
+                ${benefits.map((b: any) => {
+                  const text = typeof b === 'string' ? b : b.title || b.name || b.text || b.description || '';
+                  return `
+                    <li style="padding: 0.75rem 0; border-bottom: 1px solid #bbf7d0; color: #166534; font-size: 1.125rem;">
+                      <span style="color: #10b981; font-weight: bold; margin-right: 0.5rem;">✓</span>${text}
+                    </li>
+                  `;
+                }).join('')}
               </ul>
             </section>
           ` : ''}
           
+          <!-- VARIANTS SECTION -->
           ${variants.length > 0 ? `
             <section style="margin: 3rem 0;">
-              <h2 style="font-size: 2rem; margin-bottom: 1rem;">Available Variants</h2>
-              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+              <h2 style="font-size: 2rem; margin-bottom: 1.5rem; color: #1f2937; border-bottom: 3px solid #2563eb; padding-bottom: 0.5rem;">
+                🎨 Available Variants
+              </h2>
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
                 ${variants.map((v: any) => `
-                  <div style="border: 1px solid #e5e7eb; padding: 1.5rem; border-radius: 12px; background: #f9fafb;">
-                    <h3 style="font-size: 1.25rem; margin-bottom: 0.5rem;">${v.name || v.title || ''}</h3>
-                    <p style="font-size: 1.5rem; font-weight: bold; color: #2563eb;">₹${v.price ? v.price.toLocaleString() : 'N/A'}</p>
-                    ${v.description ? `<p style="margin-top: 0.5rem; color: #6b7280;">${v.description}</p>` : ''}
+                  <div style="border: 2px solid #e5e7eb; padding: 1.5rem; border-radius: 12px; background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%); transition: all 0.3s; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                    <h3 style="font-size: 1.5rem; margin-bottom: 1rem; color: #1f2937; font-weight: 600;">
+                      ${v.name || v.title || 'Variant'}
+                    </h3>
+                    <p style="font-size: 2rem; font-weight: bold; color: #2563eb; margin-bottom: 0.5rem;">
+                      ₹${v.price ? v.price.toLocaleString('en-IN') : 'Contact for Price'}
+                    </p>
+                    ${v.description ? `
+                      <p style="margin-top: 1rem; color: #6b7280; line-height: 1.6; font-size: 0.95rem;">
+                        ${v.description}
+                      </p>
+                    ` : ''}
+                    ${v.features ? `
+                      <ul style="margin-top: 1rem; padding-left: 1.5rem; color: #4b5563; font-size: 0.9rem;">
+                        ${(Array.isArray(v.features) ? v.features : [v.features]).map((feat: any) => 
+                          `<li style="margin: 0.25rem 0;">${typeof feat === 'string' ? feat : feat.name || feat.title || ''}</li>`
+                        ).join('')}
+                      </ul>
+                    ` : ''}
                   </div>
                 `).join('')}
               </div>
             </section>
           ` : ''}
+          
+          <!-- STRUCTURED DATA EMBEDDED IN HTML -->
+          <script type="application/ld+json">
+          ${JSON.stringify(schemaMarkup, null, 2)}
+          </script>
+          
+          <!-- CALL TO ACTION -->
+          <div style="margin: 3rem 0; text-align: center; padding: 3rem; background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); border-radius: 16px; color: white;">
+            <h2 style="font-size: 2rem; margin-bottom: 1rem;">Ready to Experience Electric Mobility?</h2>
+            <p style="font-size: 1.25rem; margin-bottom: 2rem; opacity: 0.9;">Contact us today to learn more about ${product.name}</p>
+            <a href="/contact" style="display: inline-block; padding: 1rem 3rem; background: white; color: #2563eb; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 1.125rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
+              Get in Touch
+            </a>
+          </div>
         </article>
       </main>
+      
+      <!-- COMMENT: All content above is fully rendered and visible in page source -->
+      <!-- This enables SEO, social sharing previews, and view-source debugging -->
     </div>
   `;
 
