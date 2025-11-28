@@ -414,16 +414,16 @@ export type Database = {
       }
       job_applications: {
         Row: {
-          country_code: string | null
+          country_code: string
           created_at: string
           current_ctc: string | null
           current_employer: string | null
           current_location: string | null
           email: string
           expected_ctc: string | null
-          experience_years: string | null
+          experience_years: string
           first_name: string
-          gender: string | null
+          gender: string
           how_found_vacancy: string | null
           id: string
           job_id: string
@@ -433,23 +433,23 @@ export type Database = {
           notice_period: string | null
           preferred_location: string | null
           resume_url: string | null
-          salutation: string | null
+          salutation: string
           skill_set: string | null
           status: string | null
           updated_at: string
           user_id: string | null
         }
         Insert: {
-          country_code?: string | null
+          country_code?: string
           created_at?: string
           current_ctc?: string | null
           current_employer?: string | null
           current_location?: string | null
           email: string
           expected_ctc?: string | null
-          experience_years?: string | null
+          experience_years: string
           first_name: string
-          gender?: string | null
+          gender: string
           how_found_vacancy?: string | null
           id?: string
           job_id: string
@@ -459,23 +459,23 @@ export type Database = {
           notice_period?: string | null
           preferred_location?: string | null
           resume_url?: string | null
-          salutation?: string | null
+          salutation: string
           skill_set?: string | null
           status?: string | null
           updated_at?: string
           user_id?: string | null
         }
         Update: {
-          country_code?: string | null
+          country_code?: string
           created_at?: string
           current_ctc?: string | null
           current_employer?: string | null
           current_location?: string | null
           email?: string
           expected_ctc?: string | null
-          experience_years?: string | null
+          experience_years?: string
           first_name?: string
-          gender?: string | null
+          gender?: string
           how_found_vacancy?: string | null
           id?: string
           job_id?: string
@@ -485,7 +485,7 @@ export type Database = {
           notice_period?: string | null
           preferred_location?: string | null
           resume_url?: string | null
-          salutation?: string | null
+          salutation?: string
           skill_set?: string | null
           status?: string | null
           updated_at?: string
