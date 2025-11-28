@@ -1,8 +1,5 @@
 import { createClient } from '@/lib/supabase/server';
 import { notFound } from 'next/navigation';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
-import ProductClient from './product-client';
 import type { Metadata } from 'next';
 
 interface Props {
@@ -57,14 +54,23 @@ export default async function ProductPage({ params }: Props) {
     notFound();
   }
 
+  // This page demonstrates SSR for metadata/SEO only
+  // Full product page implementation requires migrating Product.tsx component
+  // See NEXTJS_MIGRATION.md for details
+  
   return (
-    <>
-      <Header />
-      <main>
-        <ProductClient slug={slug} initialProduct={product} />
-      </main>
-      <Footer />
-    </>
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="text-center p-8">
+        <h1 className="text-4xl font-bold mb-4">{product.name}</h1>
+        <p className="text-lg mb-4">₹{product.price.toLocaleString('en-IN')}</p>
+        <p className="text-muted-foreground mb-6">
+          Product page component migration in progress
+        </p>
+        <p className="text-sm text-muted-foreground">
+          See NEXTJS_MIGRATION.md for full migration steps
+        </p>
+      </div>
+    </div>
   );
 }
 
