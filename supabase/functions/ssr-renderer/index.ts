@@ -152,6 +152,12 @@ async function renderProductPage(supabase: any, slug: string) {
     "sku": product.sku
   };
 
+  // Extract arrays from JSON fields
+  const images = Array.isArray(product.images) ? product.images : [];
+  const features = Array.isArray(product.features) ? product.features : [];
+  const benefits = Array.isArray(product.benefits) ? product.benefits : [];
+  const variants = Array.isArray(product.variants) ? product.variants : [];
+
   const bodyContent = `
     <div id="root">
       <!-- ========================================
@@ -404,24 +410,23 @@ async function renderHomePage(supabase: any) {
   const bodyContent = `
     <div id="root">
       <main style="font-family: system-ui;">
-        <section style="max-width: 1200px; margin: 0 auto; padding: 40px 20px; text-align: center;">
-          <h1 style="font-size: 3rem; margin-bottom: 1rem;">Yakuza EV - Electric Vehicles</h1>
-          <p style="font-size: 1.5rem; color: #6b7280; margin-bottom: 3rem;">Leading the electric mobility revolution</p>
+        <section style="padding: 60px 20px; background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%); color: white; text-align: center;">
+          <h1 style="font-size: 3rem; margin-bottom: 1rem; font-weight: 800;">Welcome to Yakuza EV</h1>
+          <p style="font-size: 1.5rem; margin-bottom: 2rem; opacity: 0.95;">Premium Electric Scooters for the Modern World</p>
         </section>
-        
         ${products && products.length > 0 ? `
-          <section style="max-width: 1200px; margin: 0 auto; padding: 40px 20px;">
-            <h2 style="font-size: 2rem; margin-bottom: 2rem; text-align: center;">Our Products</h2>
+          <section style="max-width: 1200px; margin: 60px auto; padding: 0 20px;">
+            <h2 style="font-size: 2.5rem; margin-bottom: 2rem; text-align: center; color: #1f2937;">Our Products</h2>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
               ${products.map(p => `
-                <div style="border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden; background: white;">
-                  ${p.image_url ? `<img src="${p.image_url}" alt="${p.name}" style="width: 100%; height: 200px; object-fit: cover;" />` : ''}
+                <article style="border: 2px solid #e5e7eb; border-radius: 12px; overflow: hidden; background: white; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); transition: transform 0.3s;">
+                  ${p.image_url ? `<img src="${p.image_url}" alt="${p.name}" style="width: 100%; height: 250px; object-fit: cover;" />` : ''}
                   <div style="padding: 1.5rem;">
-                    <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem;">${p.name}</h3>
-                    <p style="font-size: 1.25rem; font-weight: bold; color: #2563eb;">₹${p.price.toLocaleString()}</p>
-                    <a href="/products/${p.slug}" style="display: inline-block; margin-top: 1rem; padding: 0.75rem 1.5rem; background: #2563eb; color: white; text-decoration: none; border-radius: 8px;">View Details</a>
+                    <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem; color: #1f2937;">${p.name}</h3>
+                    <p style="font-size: 1.25rem; color: #2563eb; font-weight: 600; margin-bottom: 1rem;">₹${p.price.toLocaleString('en-IN')}</p>
+                    <a href="/products/${p.slug}" style="display: inline-block; padding: 0.75rem 1.5rem; background: #2563eb; color: white; text-decoration: none; border-radius: 8px; font-weight: 600;">View Details</a>
                   </div>
-                </div>
+                </article>
               `).join('')}
             </div>
           </section>
@@ -431,13 +436,52 @@ async function renderHomePage(supabase: any) {
   `;
 
   return generateHTML({
-    title: seoSettings?.meta_title || 'Yakuza EV - Leading Electric Vehicle Manufacturer',
-    description: seoSettings?.meta_description || 'Discover cutting-edge electric scooters and vehicles from Yakuza EV',
-    keywords: seoSettings?.meta_keywords || 'electric vehicles, electric scooters, yakuza ev',
+    title: seoSettings?.meta_title || 'Yakuza EV - Electric Scooters',
+    description: seoSettings?.meta_description || 'Discover premium electric scooters',
+    keywords: seoSettings?.meta_keywords || 'electric scooter, ev, yakuza',
     ogTitle: seoSettings?.og_title || 'Yakuza EV',
-    ogDescription: seoSettings?.og_description || 'Leading the electric mobility revolution',
+    ogDescription: seoSettings?.og_description || '',
     ogImage: seoSettings?.og_image || '',
     canonicalUrl: seoSettings?.canonical_url || 'https://yakuzaev.com',
+    schemaMarkup,
+    bodyContent
+  });
+}
+
+async function renderGenericPage(supabase: any, path: string, title: string, description: string) {
+  console.log('Rendering generic page:', path);
+  
+  const { data: seoSettings } = await supabase
+    .from('page_seo_settings')
+    .select('*')
+    .eq('page_route', path)
+    .eq('is_active', true)
+    .maybeSingle();
+
+  const schemaMarkup = seoSettings?.schema_json || {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": title,
+    "description": description
+  };
+
+  const bodyContent = `
+    <div id="root">
+      <main style="max-width: 1200px; margin: 0 auto; padding: 60px 20px; font-family: system-ui;">
+        <h1 style="font-size: 3rem; margin-bottom: 2rem; color: #1f2937;">${title}</h1>
+        <p style="font-size: 1.25rem; color: #6b7280; line-height: 1.8;">${description}</p>
+      </main>
+    </div>
+  `;
+
+  return generateHTML({
+    title: seoSettings?.meta_title || title,
+    description: seoSettings?.meta_description || description,
+    keywords: seoSettings?.meta_keywords || '',
+    ogTitle: seoSettings?.og_title || title,
+    ogDescription: seoSettings?.og_description || description,
+    ogImage: seoSettings?.og_image || '',
+    canonicalUrl: seoSettings?.canonical_url || `https://yakuzaev.com${path}`,
     schemaMarkup,
     bodyContent
   });
@@ -472,6 +516,16 @@ Deno.serve(async (req) => {
     } else if (pathname.startsWith('/blogs/')) {
       const slug = pathname.replace('/blogs/', '');
       html = await renderBlogPage(supabase, slug);
+    } else if (pathname === '/about-us') {
+      html = await renderGenericPage(supabase, '/about-us', 'About Us - Yakuza EV', 'Learn about Yakuza EV and our mission to revolutionize electric mobility');
+    } else if (pathname === '/contact-us') {
+      html = await renderGenericPage(supabase, '/contact-us', 'Contact Us - Yakuza EV', 'Get in touch with Yakuza EV for inquiries and support');
+    } else if (pathname === '/careers') {
+      html = await renderGenericPage(supabase, '/careers', 'Careers - Yakuza EV', 'Join the Yakuza EV team and build the future of electric mobility');
+    } else if (pathname === '/become-dealer') {
+      html = await renderGenericPage(supabase, '/become-dealer', 'Become a Dealer - Yakuza EV', 'Partner with Yakuza EV and bring electric mobility to your region');
+    } else if (pathname === '/products') {
+      html = await renderGenericPage(supabase, '/products', 'Our Products - Yakuza EV', 'Explore our range of premium electric scooters');
     } else {
       // For other pages, render with basic SEO from page_seo_settings
       const { data: seoSettings } = await supabase
@@ -501,7 +555,9 @@ Deno.serve(async (req) => {
         headers: {
           ...corsHeaders,
           'Content-Type': 'text/html; charset=utf-8',
-          'Cache-Control': 'public, max-age=3600, s-maxage=3600'
+          'Cache-Control': 'public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800',
+          'X-Robots-Tag': 'index, follow',
+          'X-Rendered-By': 'Supabase-SSR-Edge-Function'
         }
       });
     }
