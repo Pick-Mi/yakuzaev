@@ -1,10 +1,7 @@
-'use client';
-
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { useCart } from "@/hooks/useCart";
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import NotificationBar from "./NotificationBar";
 import menuIcon from "@/assets/menu-icon.svg";
@@ -19,8 +16,9 @@ import { X, ArrowUpRight } from "lucide-react";
 const Header = () => {
   const { user } = useAuth();
   const { itemCount } = useCart();
-  const pathname = usePathname();
-  const router = useRouter();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const pathname = location.pathname;
   const [isScrolled, setIsScrolled] = useState(false);
   const [logoUrl, setLogoUrl] = useState<string | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -110,7 +108,7 @@ const Header = () => {
   const handleCartClick = (e: React.MouseEvent) => {
     if (!user) {
       e.preventDefault();
-      router.push('/auth');
+      navigate('/auth');
     }
   };
 
@@ -127,14 +125,14 @@ const Header = () => {
         <nav className={`w-full p-[13px] transition-all duration-300 ${shouldShowFixedHeader ? 'bg-white shadow-sm' : 'bg-transparent'} ${isMenuOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
           <div className="relative h-8 w-full max-w-[1360px] mx-auto">
             {/* Logo */}
-            <Link href="/" className="absolute left-0 top-0 px-4 py-2 h-8 flex items-center justify-center">
+            <Link to="/" className="absolute left-0 top-0 px-4 py-2 h-8 flex items-center justify-center">
               <img src={logo} alt="Logo" className="h-8 w-auto object-contain" />
             </Link>
             
             {/* Navigation Menu - Desktop */}
             <div className="absolute left-1/2 top-2 -translate-x-1/2 hidden md:flex gap-9 items-center">
               <Link 
-                href="/products" 
+                to="/products"
                 className={`text-[14px] font-sans leading-normal hover:opacity-80 transition-all whitespace-nowrap ${
                   pathname === '/products' || pathname.startsWith('/products/') 
                     ? 'font-medium' 
@@ -144,7 +142,7 @@ const Header = () => {
                 Products
               </Link>
               <Link 
-                href="/become-dealer" 
+                to="/become-dealer"
                 className={`text-[14px] font-sans leading-normal hover:opacity-80 transition-all whitespace-nowrap ${
                   pathname === '/become-dealer' 
                     ? 'font-medium' 
@@ -154,7 +152,7 @@ const Header = () => {
                 Become a Dealer
               </Link>
               <Link 
-                href="/about-us" 
+                to="/about-us"
                 className={`text-[14px] font-sans leading-normal hover:opacity-80 transition-all whitespace-nowrap ${
                   pathname === '/about-us' 
                     ? 'font-medium' 
@@ -167,7 +165,7 @@ const Header = () => {
             
             {/* Icons */}
             <div className="absolute right-0 top-1 flex gap-[15px] items-center">
-              <Link href={user ? "/cart" : "/auth"} onClick={handleCartClick}>
+              <Link to={user ? "/cart" : "/auth"} onClick={handleCartClick}>
                 <Button variant="ghost" size="icon" className={`relative h-auto p-1 transition-all ${shouldShowFixedHeader ? 'hover:bg-gray-100' : 'hover:bg-white/10'}`}>
                   <img src={cartIcon} alt="Cart" className={`w-[22px] h-[22px] ${shouldShowFixedHeader ? '[filter:brightness(0)]' : '[filter:brightness(0)_invert(1)]'}`} />
                   {itemCount > 0 && (
@@ -177,7 +175,7 @@ const Header = () => {
                   )}
                 </Button>
               </Link>
-              <Link href={user ? "/profile" : "/auth"}>
+              <Link to={user ? "/profile" : "/auth"}>
                 <Button variant="ghost" size="icon" className={`h-auto p-1 transition-all ${shouldShowFixedHeader ? 'hover:bg-gray-100' : 'hover:bg-white/10'}`}>
                   <img src={profileIcon} alt="Profile" className={`w-[22px] h-[22px] transition-all ${shouldShowFixedHeader ? 'invert' : ''}`} />
                 </Button>
@@ -238,7 +236,7 @@ const Header = () => {
                         <p className="text-white text-2xl font-bold">₹ {featuredProduct.price.toLocaleString()} <span className="text-base font-normal">/ Per Month</span></p>
                       </div>
                       <Link
-                        href={`/products/${featuredProduct.slug}`}
+                        to={`/products/${featuredProduct.slug}`}
                         onClick={() => setIsMenuOpen(false)}
                         className="inline-flex items-center gap-2 px-6 py-2.5 border-2 border-white text-white rounded-full hover:bg-white hover:text-gray-900 transition-colors text-sm"
                       >
@@ -249,7 +247,7 @@ const Header = () => {
                       className="absolute top-6 right-6 p-2 bg-white/10 rounded-full hover:bg-white/20 transition-colors"
                       onClick={() => {
                         setIsMenuOpen(false);
-                        router.push(`/products/${featuredProduct.slug}`);
+                        navigate(`/products/${featuredProduct.slug}`);
                       }}
                     >
                       <ArrowUpRight className="w-5 h-5 text-white" />
@@ -269,14 +267,14 @@ const Header = () => {
                   {/* Column 1 */}
                   <div className="space-y-3">
                     <Link
-                      href="/products"
+                      to="/products"
                       onClick={() => setIsMenuOpen(false)}
                       className="block text-gray-700 text-base hover:opacity-70 transition-opacity"
                     >
                       Products
                     </Link>
                     <Link
-                      href="/careers"
+                      to="/careers"
                       onClick={() => setIsMenuOpen(false)}
                       className="block text-gray-700 text-base hover:opacity-70 transition-opacity"
                     >
@@ -287,14 +285,14 @@ const Header = () => {
                   {/* Column 2 */}
                   <div className="space-y-3">
                     <Link
-                      href="/become-dealer"
+                      to="/become-dealer"
                       onClick={() => setIsMenuOpen(false)}
                       className="block text-gray-700 text-base hover:opacity-70 transition-opacity"
                     >
                       Become a Dealers
                     </Link>
                     <Link
-                      href="/blogs"
+                      to="/blogs"
                       onClick={() => setIsMenuOpen(false)}
                       className="block text-gray-700 text-base hover:opacity-70 transition-opacity"
                     >
@@ -305,28 +303,28 @@ const Header = () => {
                   {/* Column 3 */}
                   <div className="space-y-3">
                     <Link
-                      href={user ? "/profile" : "/auth"}
+                      to={user ? "/profile" : "/auth"}
                       onClick={() => setIsMenuOpen(false)}
                       className="block text-gray-700 text-base hover:opacity-70 transition-opacity"
                     >
                       Account
                     </Link>
                     <Link
-                      href={user ? "/cart" : "/auth"}
+                      to={user ? "/cart" : "/auth"}
                       onClick={() => setIsMenuOpen(false)}
                       className="block text-gray-700 text-base hover:opacity-70 transition-opacity"
                     >
                       Cart
                     </Link>
                     <Link
-                      href="/contact-us"
+                      to="/contact-us"
                       onClick={() => setIsMenuOpen(false)}
                       className="block text-gray-700 text-base hover:opacity-70 transition-opacity"
                     >
                       Contact Us
                     </Link>
                     <Link
-                      href="/source-code"
+                      to="/source-code"
                       onClick={() => setIsMenuOpen(false)}
                       className="block text-gray-700 text-base hover:opacity-70 transition-opacity"
                     >
