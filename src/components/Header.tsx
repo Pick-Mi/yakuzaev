@@ -1,7 +1,10 @@
+'use client';
+
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { useCart } from "@/hooks/useCart";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import NotificationBar from "./NotificationBar";
 import menuIcon from "@/assets/menu-icon.svg";
@@ -12,51 +15,12 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { removeBackground, loadImageFromUrl } from "@/utils/backgroundRemoval";
 import { X, ArrowUpRight } from "lucide-react";
-import { Helmet } from "react-helmet";
 
 const Header = () => {
   const { user } = useAuth();
   const { itemCount } = useCart();
-  const location = useLocation();
-  const navigate = useNavigate();
-
-  const navigationSchema = {
-    "@context": "https://schema.org",
-    "@type": "SiteNavigationElement",
-    "name": "Main Navigation",
-    "hasPart": [
-      {
-        "@type": "WebPage",
-        "name": "Products",
-        "url": "https://yakuza.lovable.app/products"
-      },
-      {
-        "@type": "WebPage",
-        "name": "Become a Dealer",
-        "url": "https://yakuza.lovable.app/become-dealer"
-      },
-      {
-        "@type": "WebPage",
-        "name": "About Us",
-        "url": "https://yakuza.lovable.app/about-us"
-      },
-      {
-        "@type": "WebPage",
-        "name": "Careers",
-        "url": "https://yakuza.lovable.app/careers"
-      },
-      {
-        "@type": "WebPage",
-        "name": "Blogs",
-        "url": "https://yakuza.lovable.app/blogs"
-      },
-      {
-        "@type": "WebPage",
-        "name": "Contact Us",
-        "url": "https://yakuza.lovable.app/contact-us"
-      }
-    ]
-  };
+  const pathname = usePathname();
+  const router = useRouter();
   const [isScrolled, setIsScrolled] = useState(false);
   const [logoUrl, setLogoUrl] = useState<string | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -65,7 +29,7 @@ const Header = () => {
   // Routes where header should be transparent initially
   const transparentRoutes = ['/', '/products', '/become-dealer', '/about-us', '/careers', '/blogs'];
   const shouldBeTransparent = transparentRoutes.some(route => 
-    location.pathname === route || location.pathname.startsWith('/products/')
+    pathname === route || pathname.startsWith('/products/')
   );
   
   // Show fixed header on scroll for transparent routes, always show for others
@@ -146,7 +110,7 @@ const Header = () => {
   const handleCartClick = (e: React.MouseEvent) => {
     if (!user) {
       e.preventDefault();
-      navigate('/auth', { state: { showSignUp: true, from: location } });
+      router.push('/auth');
     }
   };
 
@@ -158,26 +122,21 @@ const Header = () => {
 
   return (
     <>
-      <Helmet>
-        <script type="application/ld+json">
-          {JSON.stringify(navigationSchema, null, 2)}
-        </script>
-      </Helmet>
       <div className={`${isScrolled ? 'fixed' : 'absolute'} top-0 left-0 w-full z-50 transition-all duration-300`}>
         <NotificationBar />
         <nav className={`w-full p-[13px] transition-all duration-300 ${shouldShowFixedHeader ? 'bg-white shadow-sm' : 'bg-transparent'} ${isMenuOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
           <div className="relative h-8 w-full max-w-[1360px] mx-auto">
             {/* Logo */}
-            <Link to="/" className="absolute left-0 top-0 px-4 py-2 h-8 flex items-center justify-center">
+            <Link href="/" className="absolute left-0 top-0 px-4 py-2 h-8 flex items-center justify-center">
               <img src={logo} alt="Logo" className="h-8 w-auto object-contain" />
             </Link>
             
             {/* Navigation Menu - Desktop */}
             <div className="absolute left-1/2 top-2 -translate-x-1/2 hidden md:flex gap-9 items-center">
               <Link 
-                to="/products" 
+                href="/products" 
                 className={`text-[14px] font-sans leading-normal hover:opacity-80 transition-all whitespace-nowrap ${
-                  location.pathname === '/products' || location.pathname.startsWith('/products/') 
+                  pathname === '/products' || pathname.startsWith('/products/') 
                     ? 'font-medium' 
                     : 'font-normal'
                 } ${shouldShowFixedHeader ? 'text-gray-900' : 'text-white'}`}
@@ -185,9 +144,9 @@ const Header = () => {
                 Products
               </Link>
               <Link 
-                to="/become-dealer" 
+                href="/become-dealer" 
                 className={`text-[14px] font-sans leading-normal hover:opacity-80 transition-all whitespace-nowrap ${
-                  location.pathname === '/become-dealer' 
+                  pathname === '/become-dealer' 
                     ? 'font-medium' 
                     : 'font-normal'
                 } ${shouldShowFixedHeader ? 'text-gray-900' : 'text-white'}`}
@@ -195,9 +154,9 @@ const Header = () => {
                 Become a Dealer
               </Link>
               <Link 
-                to="/about-us" 
+                href="/about-us" 
                 className={`text-[14px] font-sans leading-normal hover:opacity-80 transition-all whitespace-nowrap ${
-                  location.pathname === '/about-us' 
+                  pathname === '/about-us' 
                     ? 'font-medium' 
                     : 'font-normal'
                 } ${shouldShowFixedHeader ? 'text-gray-900' : 'text-white'}`}
@@ -208,7 +167,7 @@ const Header = () => {
             
             {/* Icons */}
             <div className="absolute right-0 top-1 flex gap-[15px] items-center">
-              <Link to={user ? "/cart" : "/auth"} onClick={handleCartClick} state={{ showSignUp: true, from: location }}>
+              <Link href={user ? "/cart" : "/auth"} onClick={handleCartClick}>
                 <Button variant="ghost" size="icon" className={`relative h-auto p-1 transition-all ${shouldShowFixedHeader ? 'hover:bg-gray-100' : 'hover:bg-white/10'}`}>
                   <img src={cartIcon} alt="Cart" className={`w-[22px] h-[22px] ${shouldShowFixedHeader ? '[filter:brightness(0)]' : '[filter:brightness(0)_invert(1)]'}`} />
                   {itemCount > 0 && (
@@ -218,7 +177,7 @@ const Header = () => {
                   )}
                 </Button>
               </Link>
-              <Link to={user ? "/profile" : "/auth"} state={{ showSignUp: true, from: location }}>
+              <Link href={user ? "/profile" : "/auth"}>
                 <Button variant="ghost" size="icon" className={`h-auto p-1 transition-all ${shouldShowFixedHeader ? 'hover:bg-gray-100' : 'hover:bg-white/10'}`}>
                   <img src={profileIcon} alt="Profile" className={`w-[22px] h-[22px] transition-all ${shouldShowFixedHeader ? 'invert' : ''}`} />
                 </Button>
@@ -279,7 +238,7 @@ const Header = () => {
                         <p className="text-white text-2xl font-bold">₹ {featuredProduct.price.toLocaleString()} <span className="text-base font-normal">/ Per Month</span></p>
                       </div>
                       <Link
-                        to={`/products/${featuredProduct.slug}`}
+                        href={`/products/${featuredProduct.slug}`}
                         onClick={() => setIsMenuOpen(false)}
                         className="inline-flex items-center gap-2 px-6 py-2.5 border-2 border-white text-white rounded-full hover:bg-white hover:text-gray-900 transition-colors text-sm"
                       >
@@ -290,7 +249,7 @@ const Header = () => {
                       className="absolute top-6 right-6 p-2 bg-white/10 rounded-full hover:bg-white/20 transition-colors"
                       onClick={() => {
                         setIsMenuOpen(false);
-                        navigate(`/products/${featuredProduct.slug}`);
+                        router.push(`/products/${featuredProduct.slug}`);
                       }}
                     >
                       <ArrowUpRight className="w-5 h-5 text-white" />
@@ -310,14 +269,14 @@ const Header = () => {
                   {/* Column 1 */}
                   <div className="space-y-3">
                     <Link
-                      to="/products"
+                      href="/products"
                       onClick={() => setIsMenuOpen(false)}
                       className="block text-gray-700 text-base hover:opacity-70 transition-opacity"
                     >
                       Products
                     </Link>
                     <Link
-                      to="/careers"
+                      href="/careers"
                       onClick={() => setIsMenuOpen(false)}
                       className="block text-gray-700 text-base hover:opacity-70 transition-opacity"
                     >
@@ -328,14 +287,14 @@ const Header = () => {
                   {/* Column 2 */}
                   <div className="space-y-3">
                     <Link
-                      to="/become-dealer"
+                      href="/become-dealer"
                       onClick={() => setIsMenuOpen(false)}
                       className="block text-gray-700 text-base hover:opacity-70 transition-opacity"
                     >
                       Become a Dealers
                     </Link>
                     <Link
-                      to="/blogs"
+                      href="/blogs"
                       onClick={() => setIsMenuOpen(false)}
                       className="block text-gray-700 text-base hover:opacity-70 transition-opacity"
                     >
@@ -346,28 +305,28 @@ const Header = () => {
                   {/* Column 3 */}
                   <div className="space-y-3">
                     <Link
-                      to={user ? "/profile" : "/auth"}
+                      href={user ? "/profile" : "/auth"}
                       onClick={() => setIsMenuOpen(false)}
                       className="block text-gray-700 text-base hover:opacity-70 transition-opacity"
                     >
                       Account
                     </Link>
                     <Link
-                      to={user ? "/cart" : "/auth"}
+                      href={user ? "/cart" : "/auth"}
                       onClick={() => setIsMenuOpen(false)}
                       className="block text-gray-700 text-base hover:opacity-70 transition-opacity"
                     >
                       Cart
                     </Link>
                     <Link
-                      to="/contact-us"
+                      href="/contact-us"
                       onClick={() => setIsMenuOpen(false)}
                       className="block text-gray-700 text-base hover:opacity-70 transition-opacity"
                     >
                       Contact Us
                     </Link>
                     <Link
-                      to="/source-code"
+                      href="/source-code"
                       onClick={() => setIsMenuOpen(false)}
                       className="block text-gray-700 text-base hover:opacity-70 transition-opacity"
                     >
