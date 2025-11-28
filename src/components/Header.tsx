@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { useCart } from "@/hooks/useCart";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import NotificationBar from "./NotificationBar";
 import menuIcon from "@/assets/menu-icon.svg";
@@ -12,13 +12,51 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { removeBackground, loadImageFromUrl } from "@/utils/backgroundRemoval";
 import { X, ArrowUpRight } from "lucide-react";
+import { Helmet } from "react-helmet";
 
 const Header = () => {
   const { user } = useAuth();
   const { itemCount } = useCart();
   const location = useLocation();
   const navigate = useNavigate();
-  const pathname = location.pathname;
+
+  const navigationSchema = {
+    "@context": "https://schema.org",
+    "@type": "SiteNavigationElement",
+    "name": "Main Navigation",
+    "hasPart": [
+      {
+        "@type": "WebPage",
+        "name": "Products",
+        "url": "https://yakuza.lovable.app/products"
+      },
+      {
+        "@type": "WebPage",
+        "name": "Become a Dealer",
+        "url": "https://yakuza.lovable.app/become-dealer"
+      },
+      {
+        "@type": "WebPage",
+        "name": "About Us",
+        "url": "https://yakuza.lovable.app/about-us"
+      },
+      {
+        "@type": "WebPage",
+        "name": "Careers",
+        "url": "https://yakuza.lovable.app/careers"
+      },
+      {
+        "@type": "WebPage",
+        "name": "Blogs",
+        "url": "https://yakuza.lovable.app/blogs"
+      },
+      {
+        "@type": "WebPage",
+        "name": "Contact Us",
+        "url": "https://yakuza.lovable.app/contact-us"
+      }
+    ]
+  };
   const [isScrolled, setIsScrolled] = useState(false);
   const [logoUrl, setLogoUrl] = useState<string | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -27,7 +65,7 @@ const Header = () => {
   // Routes where header should be transparent initially
   const transparentRoutes = ['/', '/products', '/become-dealer', '/about-us', '/careers', '/blogs'];
   const shouldBeTransparent = transparentRoutes.some(route => 
-    pathname === route || pathname.startsWith('/products/')
+    location.pathname === route || location.pathname.startsWith('/products/')
   );
   
   // Show fixed header on scroll for transparent routes, always show for others
@@ -108,7 +146,7 @@ const Header = () => {
   const handleCartClick = (e: React.MouseEvent) => {
     if (!user) {
       e.preventDefault();
-      navigate('/auth');
+      navigate('/auth', { state: { showSignUp: true, from: location } });
     }
   };
 
@@ -120,6 +158,11 @@ const Header = () => {
 
   return (
     <>
+      <Helmet>
+        <script type="application/ld+json">
+          {JSON.stringify(navigationSchema, null, 2)}
+        </script>
+      </Helmet>
       <div className={`${isScrolled ? 'fixed' : 'absolute'} top-0 left-0 w-full z-50 transition-all duration-300`}>
         <NotificationBar />
         <nav className={`w-full p-[13px] transition-all duration-300 ${shouldShowFixedHeader ? 'bg-white shadow-sm' : 'bg-transparent'} ${isMenuOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
@@ -132,9 +175,9 @@ const Header = () => {
             {/* Navigation Menu - Desktop */}
             <div className="absolute left-1/2 top-2 -translate-x-1/2 hidden md:flex gap-9 items-center">
               <Link 
-                to="/products"
+                to="/products" 
                 className={`text-[14px] font-sans leading-normal hover:opacity-80 transition-all whitespace-nowrap ${
-                  pathname === '/products' || pathname.startsWith('/products/') 
+                  location.pathname === '/products' || location.pathname.startsWith('/products/') 
                     ? 'font-medium' 
                     : 'font-normal'
                 } ${shouldShowFixedHeader ? 'text-gray-900' : 'text-white'}`}
@@ -142,9 +185,9 @@ const Header = () => {
                 Products
               </Link>
               <Link 
-                to="/become-dealer"
+                to="/become-dealer" 
                 className={`text-[14px] font-sans leading-normal hover:opacity-80 transition-all whitespace-nowrap ${
-                  pathname === '/become-dealer' 
+                  location.pathname === '/become-dealer' 
                     ? 'font-medium' 
                     : 'font-normal'
                 } ${shouldShowFixedHeader ? 'text-gray-900' : 'text-white'}`}
@@ -152,9 +195,9 @@ const Header = () => {
                 Become a Dealer
               </Link>
               <Link 
-                to="/about-us"
+                to="/about-us" 
                 className={`text-[14px] font-sans leading-normal hover:opacity-80 transition-all whitespace-nowrap ${
-                  pathname === '/about-us' 
+                  location.pathname === '/about-us' 
                     ? 'font-medium' 
                     : 'font-normal'
                 } ${shouldShowFixedHeader ? 'text-gray-900' : 'text-white'}`}
@@ -165,7 +208,7 @@ const Header = () => {
             
             {/* Icons */}
             <div className="absolute right-0 top-1 flex gap-[15px] items-center">
-              <Link to={user ? "/cart" : "/auth"} onClick={handleCartClick}>
+              <Link to={user ? "/cart" : "/auth"} onClick={handleCartClick} state={{ showSignUp: true, from: location }}>
                 <Button variant="ghost" size="icon" className={`relative h-auto p-1 transition-all ${shouldShowFixedHeader ? 'hover:bg-gray-100' : 'hover:bg-white/10'}`}>
                   <img src={cartIcon} alt="Cart" className={`w-[22px] h-[22px] ${shouldShowFixedHeader ? '[filter:brightness(0)]' : '[filter:brightness(0)_invert(1)]'}`} />
                   {itemCount > 0 && (
@@ -175,7 +218,7 @@ const Header = () => {
                   )}
                 </Button>
               </Link>
-              <Link to={user ? "/profile" : "/auth"}>
+              <Link to={user ? "/profile" : "/auth"} state={{ showSignUp: true, from: location }}>
                 <Button variant="ghost" size="icon" className={`h-auto p-1 transition-all ${shouldShowFixedHeader ? 'hover:bg-gray-100' : 'hover:bg-white/10'}`}>
                   <img src={profileIcon} alt="Profile" className={`w-[22px] h-[22px] transition-all ${shouldShowFixedHeader ? 'invert' : ''}`} />
                 </Button>

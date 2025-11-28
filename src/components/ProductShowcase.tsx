@@ -93,7 +93,14 @@ const ProductShowcase = () => {
   }, [toast, activeCategory]);
 
   const handleBookNow = (product: any) => {
-    navigate(`/product-config?productId=${product.id}`);
+    navigate('/product-config', {
+      state: {
+        product,
+        selectedVariant: null,
+        quantity: 1,
+        from: 'Home'
+      }
+    });
   };
 
   const handleExplore = (product: any) => {

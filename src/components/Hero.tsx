@@ -1,131 +1,142 @@
-import { useQuery } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
-import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const Hero = () => {
-  const [currentSlide, setCurrentSlide] = useState(0);
+  const [heroSections, setHeroSections] = useState<any[]>([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
-  const { data: heroSections = [] } = useQuery({
-    queryKey: ['hero-sections'],
-    queryFn: async () => {
-      const { data } = await supabase
-        .from('hero_sections')
-        .select('*')
-        .eq('is_active', true)
-        .order('display_order');
-      return data || [];
-    },
-  });
+  useEffect(() => {
+    const fetchHeroSections = async () => {
+      const { data } = await (supabase as any)
+        .from("hero_sections")
+        .select("*")
+        .eq("is_active", true)
+        .order("display_order", { ascending: true });
+      
+      if (data && data.length > 0) {
+        setHeroSections(data);
+      }
+    };
+    
+    fetchHeroSections();
+  }, []);
 
+  // Auto-scroll effect
   useEffect(() => {
     if (heroSections.length <= 1) return;
 
-    const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % heroSections.length);
-    }, 5000);
+    const interval = setInterval(() => {
+      setCurrentIndex((prevIndex) => 
+        prevIndex === heroSections.length - 1 ? 0 : prevIndex + 1
+      );
+    }, 10000); // Change every 10 seconds
 
-    return () => clearInterval(timer);
+    return () => clearInterval(interval);
   }, [heroSections.length]);
 
-  if (heroSections.length === 0) {
-    return null;
-  }
+  const currentHero = heroSections[currentIndex] || {
+    image_url: "",
+    mobile_image_url: "",
+    tablet_image_url: "",
+    title: "Turn every ride into an adventure."
+  };
 
-  const currentSection = heroSections[currentSlide];
-  const buttons = currentSection?.cta_buttons ? 
-    (typeof currentSection.cta_buttons === 'string' ? 
-      JSON.parse(currentSection.cta_buttons) : 
-      currentSection.cta_buttons) : 
-    [];
+  // Determine which image to use based on screen size
+  const getBackgroundImage = () => {
+    if (window.innerWidth < 768 && currentHero.mobile_image_url) {
+      return currentHero.mobile_image_url;
+    } else if (window.innerWidth >= 768 && window.innerWidth < 1024 && currentHero.tablet_image_url) {
+      return currentHero.tablet_image_url;
+    }
+    return currentHero.image_url;
+  };
+
+  const [backgroundImage, setBackgroundImage] = useState(getBackgroundImage());
+
+  // Update background image on window resize
+  useEffect(() => {
+    const handleResize = () => {
+      setBackgroundImage(getBackgroundImage());
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [currentHero]);
+
+  // Update background image when hero changes
+  useEffect(() => {
+    setBackgroundImage(getBackgroundImage());
+  }, [currentIndex]);
+
+  const handlePrevious = () => {
+    setCurrentIndex((prevIndex) => 
+      prevIndex === 0 ? heroSections.length - 1 : prevIndex - 1
+    );
+  };
+
+  const handleNext = () => {
+    setCurrentIndex((prevIndex) => 
+      prevIndex === heroSections.length - 1 ? 0 : prevIndex + 1
+    );
+  };
 
   return (
-    <section className="relative w-full h-[600px] md:h-[700px] lg:h-screen overflow-hidden">
-      {heroSections.map((section: any, index: number) => {
-        const sectionButtons = section?.cta_buttons ? 
-          (typeof section.cta_buttons === 'string' ? 
-            JSON.parse(section.cta_buttons) : 
-            section.cta_buttons) : 
-          [];
+    <section 
+      className="relative w-full min-h-screen h-[600px] sm:h-[700px] md:h-[829px] bg-black overflow-hidden bg-center bg-cover"
+      style={{
+        backgroundImage: backgroundImage ? `url(${backgroundImage})` : 'none',
+      }}
+    >
+      <div 
+        className="absolute inset-0 bg-center bg-cover transition-opacity duration-1000 ease-in-out"
+        style={{
+          backgroundImage: backgroundImage ? `url(${backgroundImage})` : 'none',
+          opacity: backgroundImage ? 1 : 0,
+        }}
+      />
+      <div className="absolute bottom-8 sm:bottom-16 md:bottom-24 left-4 sm:left-6 md:left-10 right-4 sm:right-auto w-auto sm:w-[601px] max-w-[calc(100%-2rem)] sm:max-w-[90%] flex flex-col gap-4 sm:gap-6 items-start px-2 sm:px-0 animate-fade-in">
+        <h1 className="font-sans font-normal text-[32px] sm:text-[42px] md:text-[52px] leading-[1.3] sm:leading-[1.4] md:leading-[73px] text-white m-0">
+          {currentHero.title}
+        </h1>
+        
+        <div className="flex gap-4 sm:gap-6 items-center flex-wrap w-full sm:w-auto">
+          <Link to="/products" className="w-full sm:w-auto">
+            <Button 
+              className="w-full sm:w-auto flex justify-center items-center gap-[10px] bg-white text-black hover:bg-gray-100 px-[35px] h-[50px] text-[14px] font-medium font-sans rounded-none"
+            >
+              Book Now
+            </Button>
+          </Link>
+          <Link to="/products" className="w-full sm:w-auto">
+            <Button 
+              className="w-full sm:w-auto bg-white/15 text-white hover:bg-white hover:text-black px-12 h-[50px] text-[14px] font-medium font-sans rounded-none"
+            >
+              Explore
+            </Button>
+          </Link>
+        </div>
+      </div>
 
-        return (
-          <div
-            key={section.id}
-            className={`absolute inset-0 transition-opacity duration-1000 ${
-              index === currentSlide ? 'opacity-100' : 'opacity-0'
-            }`}
-          >
-            <picture>
-              <source media="(max-width: 640px)" srcSet={section.mobile_image_url || section.image_url} />
-              <source media="(max-width: 1024px)" srcSet={section.tablet_image_url || section.image_url} />
-              <img
-                src={section.image_url}
-                alt={section.title || 'Hero image'}
-                className="w-full h-full object-cover"
-              />
-            </picture>
-
-            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-
-            <div className="absolute bottom-0 left-0 right-0 p-6 md:p-12 lg:p-16 text-white">
-              {section.title && (
-                <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold mb-4 max-w-4xl">
-                  {section.title}
-                </h1>
-              )}
-              
-              {sectionButtons.length > 0 && (
-                <div className="flex flex-wrap gap-4 mt-6">
-                  {sectionButtons.map((button: any, btnIndex: number) => (
-                    <Link
-                      key={btnIndex}
-                      to={button.url || '#'}
-                      className={`px-6 py-3 font-medium transition-all ${
-                        button.variant === 'outline'
-                          ? 'bg-transparent border-2 border-white hover:bg-white hover:text-black'
-                          : 'bg-white text-black hover:bg-gray-100'
-                      }`}
-                    >
-                      {button.text}
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-        );
-      })}
-
+      {/* Navigation Buttons */}
       {heroSections.length > 1 && (
         <>
           <button
-            onClick={() => setCurrentSlide((prev) => (prev - 1 + heroSections.length) % heroSections.length)}
-            className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/30 hover:bg-white/50 rounded-full p-2 transition-all z-10"
+            onClick={handlePrevious}
+            className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 text-white p-3 rounded-none backdrop-blur-sm transition-colors duration-300"
             aria-label="Previous slide"
           >
-            <ChevronLeft className="w-6 h-6 text-white" />
+            <ChevronLeft size={24} />
           </button>
           <button
-            onClick={() => setCurrentSlide((prev) => (prev + 1) % heroSections.length)}
-            className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/30 hover:bg-white/50 rounded-full p-2 transition-all z-10"
+            onClick={handleNext}
+            className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 text-white p-3 rounded-none backdrop-blur-sm transition-colors duration-300"
             aria-label="Next slide"
           >
-            <ChevronRight className="w-6 h-6 text-white" />
+            <ChevronRight size={24} />
           </button>
-
-          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
-            {heroSections.map((_: any, index: number) => (
-              <button
-                key={index}
-                onClick={() => setCurrentSlide(index)}
-                className={`w-2 h-2 rounded-full transition-all ${
-                  index === currentSlide ? 'bg-white w-8' : 'bg-white/50'
-                }`}
-                aria-label={`Go to slide ${index + 1}`}
-              />
-            ))}
-          </div>
         </>
       )}
     </section>
