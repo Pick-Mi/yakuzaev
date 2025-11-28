@@ -415,6 +415,7 @@ export type Database = {
       job_applications: {
         Row: {
           country_code: string
+          cover_letter_url: string | null
           created_at: string
           current_ctc: string | null
           current_employer: string | null
@@ -441,6 +442,7 @@ export type Database = {
         }
         Insert: {
           country_code?: string
+          cover_letter_url?: string | null
           created_at?: string
           current_ctc?: string | null
           current_employer?: string | null
@@ -467,6 +469,7 @@ export type Database = {
         }
         Update: {
           country_code?: string
+          cover_letter_url?: string | null
           created_at?: string
           current_ctc?: string | null
           current_employer?: string | null
