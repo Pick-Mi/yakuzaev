@@ -1,9 +1,6 @@
-'use client';
-
 import { useState, useEffect, useRef } from "react";
 import { useCart } from "@/hooks/useCart";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
+import { useNavigate, Link } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -15,7 +12,7 @@ const ProductShowcase = () => {
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const { addToCart } = useCart();
-  const router = useRouter();
+  const navigate = useNavigate();
   const { toast } = useToast();
 
   useEffect(() => {
@@ -96,11 +93,11 @@ const ProductShowcase = () => {
   }, [toast, activeCategory]);
 
   const handleBookNow = (product: any) => {
-    router.push(`/product-config?productId=${product.id}`);
+    navigate(`/product-config?productId=${product.id}`);
   };
 
   const handleExplore = (product: any) => {
-    router.push(`/products/${product.slug}`);
+    navigate(`/products/${product.slug}`);
   };
 
   const scrollLeft = () => {
@@ -266,7 +263,7 @@ const ProductShowcase = () => {
         {/* Explore All Bikes CTA - Outside scroll container */}
         <div className="flex justify-center mt-8 sm:mt-10 md:mt-12 px-4 sm:px-0">
           <Link
-            href="/products"
+            to="/products"
             className="bg-black text-white h-[45px] sm:h-[50px] md:h-[55px] px-6 sm:px-8 md:px-10 py-[13px] font-['Poppins'] font-medium text-[14px] sm:text-[15px] md:text-[16px] hover:bg-black/90 transition-colors flex items-center justify-center"
           >
             Explore All Bike
