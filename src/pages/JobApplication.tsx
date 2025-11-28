@@ -149,26 +149,37 @@ const JobApplication = () => {
 
     try {
       let resumeUrl = null;
+      let resumeUploadFailed = false;
 
       // Upload resume if provided
       if (resumeFile) {
         const fileExt = resumeFile.name.split('.').pop();
         const fileName = `${user.id}_${Date.now()}.${fileExt}`;
         
-        const { error: uploadError } = await supabase.storage
-          .from('site-assets')
-          .upload(`resumes/${fileName}`, resumeFile);
+        try {
+          const { error: uploadError } = await supabase.storage
+            .from('site-assets')
+            .upload(`resumes/${fileName}`, resumeFile);
 
-        if (uploadError) throw uploadError;
-
-        const { data: { publicUrl } } = supabase.storage
-          .from('site-assets')
-          .getPublicUrl(`resumes/${fileName}`);
-        
-        resumeUrl = publicUrl;
+          if (uploadError) {
+            console.error('Resume upload error:', uploadError);
+            resumeUploadFailed = true;
+            toast.warning("Resume upload failed. Submitting application without resume.");
+          } else {
+            const { data: { publicUrl } } = supabase.storage
+              .from('site-assets')
+              .getPublicUrl(`resumes/${fileName}`);
+            
+            resumeUrl = publicUrl;
+          }
+        } catch (storageError: any) {
+          console.error('Storage error:', storageError);
+          resumeUploadFailed = true;
+          toast.warning("Resume upload failed due to storage permissions. Submitting application without resume.");
+        }
       }
 
-      // Insert job application
+      // Insert job application (proceed even if resume upload failed)
       const { error: insertError } = await supabase
         .from('job_applications')
         .insert({
@@ -196,6 +207,10 @@ const JobApplication = () => {
 
       if (insertError) throw insertError;
 
+      if (resumeUploadFailed) {
+        toast.success("Application submitted successfully, but without resume. Please contact HR to submit your resume separately.");
+      }
+      
       setShowSuccessDialog(true);
     } catch (error: any) {
       console.error('Error submitting application:', error);
