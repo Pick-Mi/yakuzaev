@@ -10,19 +10,16 @@ export default defineConfig(({ mode }) => ({
     port: 8080,
   },
   build: {
-    // Generate source maps for debugging
-    sourcemap: true,
-    // Disable minification for readable output
+    sourcemap: mode === 'production' ? false : true,
     minify: mode === 'production' ? 'esbuild' : false,
-    // Keep readable CSS class names
     cssMinify: mode === 'production',
-    // Preserve original file structure
     rollupOptions: {
       output: {
-        // Preserve module structure
-        preserveModules: false,
-        // Add comments in output
-        banner: '/* Yakuza EV - Built with Lovable */',
+        manualChunks: {
+          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+          'ui-vendor': ['@radix-ui/react-dialog', '@radix-ui/react-select', '@radix-ui/react-tabs'],
+          'supabase-vendor': ['@supabase/supabase-js'],
+        },
       },
     },
   },
