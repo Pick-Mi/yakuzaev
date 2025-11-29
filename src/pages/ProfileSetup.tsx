@@ -66,20 +66,29 @@ const ProfileSetup = () => {
     setLoading(true);
 
     try {
-      // Get phone from location state
-      const phoneNumber = location.state?.phoneNumber;
+      // Get current user session
+      const { data: sessionData } = await supabase.auth.getSession();
+      if (!sessionData?.session?.user) {
+        throw new Error("No active session found");
+      }
 
-      // Save to localStorage for now (simple approach without authentication)
-      const profileData = {
-        phone: phoneNumber,
-        first_name: firstName.trim(),
-        last_name: lastName.trim(),
-        email: email.trim(),
-        country: country.trim(),
-        gender: gender || null,
-      };
-      
-      localStorage.setItem('userProfile', JSON.stringify(profileData));
+      const userId = sessionData.session.user.id;
+
+      // Update profile in database
+      const { error: updateError } = await supabase
+        .from('profiles')
+        .update({
+          first_name: firstName.trim(),
+          last_name: lastName.trim(),
+          email: email.trim(),
+          country: country.trim(),
+          gender: gender || null,
+        })
+        .eq('user_id', userId);
+
+      if (updateError) {
+        throw updateError;
+      }
 
       toast({
         title: "Success! 🎉",
