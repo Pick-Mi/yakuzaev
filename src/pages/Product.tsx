@@ -203,21 +203,13 @@ const Product = () => {
           }
 
           // Extract schema_markup from custom_metadata if it exists
-          let productSchemaMarkup: any = null;
+          let productSchemaMarkup: string | null = null;
           try {
             if (parsedCustomMetadata && (parsedCustomMetadata as any).schema_markup) {
               const rawSchema = (parsedCustomMetadata as any).schema_markup;
-              
-              // Parse the JSON string from database
-              let parsedSchema = typeof rawSchema === 'string' ? JSON.parse(rawSchema) : rawSchema;
-              
-              // Add @context if missing (required for JSON-LD)
-              if (parsedSchema && !parsedSchema['@context']) {
-                parsedSchema['@context'] = 'http://schema.org';
-              }
-              
-              productSchemaMarkup = parsedSchema;
-              console.log('Product Schema Markup from custom_metadata:', productSchemaMarkup);
+              // Use the raw string exactly as stored in DB (no JSON.parse to avoid errors)
+              productSchemaMarkup = typeof rawSchema === 'string' ? rawSchema : JSON.stringify(rawSchema);
+              console.log('Product Schema Markup from custom_metadata (raw string):', productSchemaMarkup);
             }
           } catch (e) {
             console.error('Error handling schema_markup from custom_metadata:', e);
@@ -454,9 +446,10 @@ const Product = () => {
         
         {/* Schema from custom_metadata.schema_markup (Priority) */}
         {product.schema_markup && (
-          <script type="application/ld+json">
-            {JSON.stringify(product.schema_markup, null, 2)}
-          </script>
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: product.schema_markup }}
+          />
         )}
         
         {/* Fallback: Product Schema with Custom Metadata */}
