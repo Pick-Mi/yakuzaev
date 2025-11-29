@@ -193,13 +193,27 @@ const Product = () => {
           }
 
           // Parse custom_metadata if it's a JSON string
-          let parsedCustomMetadata = {};
+          let parsedCustomMetadata: any = {};
           try {
             parsedCustomMetadata = typeof response.data.custom_metadata === 'string' 
               ? JSON.parse(response.data.custom_metadata) 
               : response.data.custom_metadata || {};
           } catch (e) {
             parsedCustomMetadata = {};
+          }
+
+          // Extract schema_markup from custom_metadata if it exists
+          let productSchemaMarkup = null;
+          try {
+            if (parsedCustomMetadata?.schema_markup) {
+              productSchemaMarkup = typeof parsedCustomMetadata.schema_markup === 'string' 
+                ? JSON.parse(parsedCustomMetadata.schema_markup) 
+                : parsedCustomMetadata.schema_markup;
+              console.log('Product Schema Markup from custom_metadata:', productSchemaMarkup);
+            }
+          } catch (e) {
+            console.error('Error parsing schema_markup from custom_metadata:', e);
+            productSchemaMarkup = null;
           }
 
           const fetchedProduct = {
@@ -246,8 +260,9 @@ const Product = () => {
             scheme_start_date: null,
             scheme_end_date: null,
             scheme_active: false,
-            // Custom Metadata (defaults)
-            custom_metadata: {}
+            // Custom Metadata
+            custom_metadata: parsedCustomMetadata,
+            schema_markup: productSchemaMarkup
           };
           setProduct(fetchedProduct);
           
@@ -429,12 +444,21 @@ const Product = () => {
         <meta name="twitter:description" content={product.og_description || product.seo_desc || product.meta_description || product.description} />
         <meta name="twitter:image" content={product.og_image || product.image_url || product.thumbnail} />
         
-        {/* Product Schema with Custom Metadata */}
-        <script type="application/ld+json">
-          {JSON.stringify(buildProductSchema())}
-        </script>
+        {/* Schema from custom_metadata.schema_markup (Priority) */}
+        {product.schema_markup && (
+          <script type="application/ld+json">
+            {JSON.stringify(product.schema_markup, null, 2)}
+          </script>
+        )}
         
-        {/* Additional Schema from Database */}
+        {/* Fallback: Product Schema with Custom Metadata */}
+        {!product.schema_markup && (
+          <script type="application/ld+json">
+            {JSON.stringify(buildProductSchema())}
+          </script>
+        )}
+        
+        {/* Additional Schema from page_seo_settings table */}
         {schemaMarkup && (
           <script type="application/ld+json">
             {JSON.stringify(schemaMarkup, null, 2)}
