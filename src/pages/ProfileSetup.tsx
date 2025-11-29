@@ -109,7 +109,7 @@ const ProfileSetup = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
+    <div className="min-h-screen flex flex-col" style={{ backgroundColor: '#F8F9F9' }}>
       <Header />
       
       <div className="flex-1 flex items-center justify-center p-4 pt-32 pb-16">
