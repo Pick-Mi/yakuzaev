@@ -36,6 +36,7 @@ import JobApplication from "./pages/JobApplication";
 import ProductRedirect from "./components/ProductRedirect";
 import SourceCodeManagement from "./pages/SourceCodeManagement";
 import PageSourceViewer from "./pages/PageSourceViewer";
+import SSRTester from "./pages/SSRTester";
 
 import NotFound from "./pages/NotFound";
 
@@ -86,6 +87,7 @@ const App = () => (
               <Route path="/careers/:id/apply" element={<JobApplication />} />
               <Route path="/source-code" element={<SourceCodeManagement />} />
               <Route path="/source-code/:pageId" element={<PageSourceViewer />} />
+              <Route path="/ssr-tester" element={<SSRTester />} />
               <Route path="/products/:slug" element={<Product />} />
               
               {/* Redirect old ID-based product URLs to slug-based URLs */}
