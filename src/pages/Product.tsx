@@ -444,7 +444,7 @@ const Product = () => {
         <meta name="twitter:description" content={product.og_description || product.seo_desc || product.meta_description || product.description} />
         <meta name="twitter:image" content={product.og_image || product.image_url || product.thumbnail} />
         
-        {/* Schema from custom_metadata.schema_markup (Priority) */}
+        {/* Schema from custom_metadata.schema_markup (always include if present) */}
         {product.schema_markup && (
           <script
             type="application/ld+json"
@@ -452,12 +452,10 @@ const Product = () => {
           />
         )}
         
-        {/* Fallback: Product Schema with Custom Metadata */}
-        {!product.schema_markup && (
-          <script type="application/ld+json">
-            {JSON.stringify(buildProductSchema())}
-          </script>
-        )}
+        {/* Always include auto-generated Product schema as well */}
+        <script type="application/ld+json">
+          {JSON.stringify(buildProductSchema())}
+        </script>
         
         {/* Additional Schema from page_seo_settings table */}
         {schemaMarkup && (

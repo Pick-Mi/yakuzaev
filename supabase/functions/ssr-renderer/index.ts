@@ -133,7 +133,7 @@ async function renderProductPage(supabase: any, slug: string) {
     });
   }
 
-  const schemaMarkup = {
+  const autoSchemaMarkup = {
     "@context": "https://schema.org",
     "@type": "Product",
     "name": product.seo_title || product.meta_title || product.name,
@@ -152,7 +152,10 @@ async function renderProductPage(supabase: any, slug: string) {
     "sku": product.sku
   };
 
-  // Extract arrays from JSON fields
+  // Schema from custom_metadata.schema_markup if present
+  const customSchemaString = (product.custom_metadata as any)?.schema_markup as string | undefined;
+  const hasCustomSchema = !!customSchemaString;
+
   const images = Array.isArray(product.images) ? product.images : [];
   const features = Array.isArray(product.features) ? product.features : [];
   const benefits = Array.isArray(product.benefits) ? product.benefits : [];
@@ -286,8 +289,13 @@ async function renderProductPage(supabase: any, slug: string) {
           ` : ''}
           
           <!-- STRUCTURED DATA EMBEDDED IN HTML -->
+          ${hasCustomSchema ? `
           <script type="application/ld+json">
-          ${JSON.stringify(schemaMarkup, null, 2)}
+          ${customSchemaString}
+          </script>
+          ` : ''}
+          <script type="application/ld+json">
+          ${JSON.stringify(autoSchemaMarkup, null, 2)}
           </script>
           
           <!-- CALL TO ACTION -->
@@ -314,7 +322,7 @@ async function renderProductPage(supabase: any, slug: string) {
     ogDescription: product.og_description || product.seo_desc || product.description || '',
     ogImage: product.og_image || product.image_url || '',
     canonicalUrl: product.canonical_url || `https://yourdomain.com/products/${slug}`,
-    schemaMarkup,
+    schemaMarkup: hasCustomSchema ? customSchemaString : autoSchemaMarkup,
     bodyContent
   });
 }
