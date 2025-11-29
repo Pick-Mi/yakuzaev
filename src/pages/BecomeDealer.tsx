@@ -12,7 +12,7 @@ const BecomeDealer = () => {
   const schemaMarkup = useSchemaMarkup('/dealer');
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen" style={{ backgroundColor: '#F8F9F9' }}>
       <Helmet>
         {schemaMarkup && (
           <script type="application/ld+json">
@@ -57,7 +57,7 @@ const BecomeDealer = () => {
         </section>
 
         {/* Benefits Section */}
-        <section className="">
+        <section style={{ backgroundColor: '#F8F9F9' }}>
           <div className="container mx-auto max-w-6xl p-[20px] md:p-0 md:py-[70px]">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               <div className="bg-white p-6">
@@ -100,7 +100,7 @@ const BecomeDealer = () => {
         </section>
 
         {/* Official Dealer Section */}
-        <section className="p-[20px] md:py-16 md:px-4">
+        <section className="p-[20px] md:py-16 md:px-4" style={{ backgroundColor: '#F8F9F9' }}>
           <div className="container mx-auto max-w-7xl p-0">
             <h2 className="text-5xl md:text-6xl font-bold mb-16">Official dealer today!</h2>
             
