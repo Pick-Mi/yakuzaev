@@ -48,7 +48,7 @@ const Product = () => {
         // Using any type to bypass the current type limitations
         const response = await (supabase as any)
           .from('products')
-          .select('id, name, slug, price, image_url, thumbnail, images, description, is_active, preview_section, features, visual_features, design_features, benefits, promo_card, videos, accessories, qa_section, variants, specification_titles, color_variety, seo_title, seo_desc, meta_title, meta_description, meta_keywords, og_title, og_description, og_image, canonical_url')
+          .select('id, name, slug, price, image_url, thumbnail, images, description, is_active, preview_section, features, visual_features, design_features, benefits, promo_card, videos, accessories, qa_section, variants, specification_titles, color_variety, custom_metadata, seo_title, seo_desc, meta_title, meta_description, meta_keywords, og_title, og_description, og_image, canonical_url')
           .eq('slug', slug)
           .eq('is_active', true)
           .single();
