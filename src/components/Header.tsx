@@ -10,7 +10,6 @@ import profileIcon from "@/assets/profile-icon.svg";
 import logo from "@/assets/logo.svg";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { removeBackground, loadImageFromUrl } from "@/utils/backgroundRemoval";
 import { X, ArrowUpRight } from "lucide-react";
 import { Helmet } from "react-helmet";
 
@@ -89,30 +88,10 @@ const Header = () => {
           .single();
         
         if (!error && data?.logo_url) {
-          // Load the image
-          const img = await loadImageFromUrl(data.logo_url);
-          
-          // Remove background
-          const blob = await removeBackground(img);
-          
-          // Create object URL from blob
-          const processedUrl = URL.createObjectURL(blob);
-          setLogoUrl(processedUrl);
+          setLogoUrl(data.logo_url);
         }
       } catch (error) {
-        console.error('Error processing logo:', error);
-        // Fallback to original logo if background removal fails
-        try {
-          const { data } = await (supabase as any)
-            .from('site_settings')
-            .select('logo_url')
-            .single();
-          if (data?.logo_url) {
-            setLogoUrl(data.logo_url);
-          }
-        } catch (e) {
-          console.error('Error fetching logo:', e);
-        }
+        console.error('Error fetching logo:', error);
       }
     };
 
