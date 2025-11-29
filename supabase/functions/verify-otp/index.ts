@@ -90,10 +90,33 @@ serve(async (req) => {
 
     // Check if user exists with this phone number or email
     const userEmail = `${phoneNumber.replace(/\+/g, '')}@phone.user`;
-    const { data: existingUsers } = await supabase.auth.admin.listUsers();
-    const userWithPhone = existingUsers?.users?.find(u => 
-      u.phone === phoneNumber || u.email === userEmail
-    );
+    
+    // Try to find existing user more thoroughly
+    let userWithPhone = null;
+    let page = 1;
+    const perPage = 1000;
+    
+    // Search through paginated results
+    while (!userWithPhone) {
+      const { data: usersPage } = await supabase.auth.admin.listUsers({
+        page,
+        perPage
+      });
+      
+      if (!usersPage?.users || usersPage.users.length === 0) {
+        break; // No more users
+      }
+      
+      userWithPhone = usersPage.users.find(u => 
+        u.phone === phoneNumber || u.email === userEmail
+      );
+      
+      if (usersPage.users.length < perPage) {
+        break; // Last page
+      }
+      
+      page++;
+    }
 
     let userId: string;
 
@@ -126,19 +149,42 @@ serve(async (req) => {
         }
       });
 
-      // If phone already exists, try to find the user again
+      // If phone already exists, try to find the user again using email
       if (createError?.message?.includes('already registered') || createError?.message?.includes('phone_exists')) {
-        console.log('⚠️ Phone already registered, looking up existing user...');
-        const { data: retryUsers } = await supabase.auth.admin.listUsers();
-        const existingUser = retryUsers?.users?.find(u => u.phone === phoneNumber);
+        console.log('⚠️ Phone already registered, looking up by email:', userEmail);
         
-        if (existingUser) {
-          userId = existingUser.id;
+        // Try searching all pages again with better pagination
+        let foundUser = null;
+        let searchPage = 1;
+        
+        while (!foundUser && searchPage <= 10) { // Limit to 10 pages for safety
+          const { data: usersPage } = await supabase.auth.admin.listUsers({
+            page: searchPage,
+            perPage: 1000
+          });
+          
+          if (!usersPage?.users || usersPage.users.length === 0) {
+            break;
+          }
+          
+          foundUser = usersPage.users.find(u => 
+            u.phone === phoneNumber || u.email === userEmail
+          );
+          
+          if (usersPage.users.length < 1000) {
+            break; // Last page
+          }
+          
+          searchPage++;
+        }
+        
+        if (foundUser) {
+          userId = foundUser.id;
           console.log('✅ Found existing user after retry:', userId);
         } else {
-          console.error('❌ Could not find existing user with phone:', phoneNumber);
+          console.error('❌ Could not find existing user. Phone:', phoneNumber, 'Email:', userEmail);
           return new Response(
-            JSON.stringify({ success: false, error: 'User account exists but could not be accessed' }),
+            JSON.stringify({ success: false, error: 'Authentication failed. Please try again or contact support.' }),
             { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
           );
         }
