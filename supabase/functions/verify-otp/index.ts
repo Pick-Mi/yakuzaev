@@ -114,7 +114,7 @@ serve(async (req) => {
         });
       }
     } else {
-      // Create new user with phone number and temporary email
+      // Try to create new user with phone number and temporary email
       const { data: newUser, error: createError } = await supabase.auth.admin.createUser({
         phone: phoneNumber,
         phone_confirm: true,
@@ -126,29 +126,45 @@ serve(async (req) => {
         }
       });
 
-      if (createError || !newUser.user) {
+      // If phone already exists, try to find the user again
+      if (createError?.message?.includes('already registered') || createError?.message?.includes('phone_exists')) {
+        console.log('⚠️ Phone already registered, looking up existing user...');
+        const { data: retryUsers } = await supabase.auth.admin.listUsers();
+        const existingUser = retryUsers?.users?.find(u => u.phone === phoneNumber);
+        
+        if (existingUser) {
+          userId = existingUser.id;
+          console.log('✅ Found existing user after retry:', userId);
+        } else {
+          console.error('❌ Could not find existing user with phone:', phoneNumber);
+          return new Response(
+            JSON.stringify({ success: false, error: 'User account exists but could not be accessed' }),
+            { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          );
+        }
+      } else if (createError || !newUser.user) {
         console.error('❌ Failed to create user:', createError);
         return new Response(
           JSON.stringify({ success: false, error: 'Failed to create user account' }),
           { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         );
-      }
+      } else {
+        userId = newUser.user.id;
+        console.log('✅ New user created:', userId);
 
-      userId = newUser.user.id;
-      console.log('✅ New user created:', userId);
+        // Create profile for new user
+        const { error: profileError } = await supabase
+          .from('profiles')
+          .insert({
+            user_id: userId,
+            phone: phoneNumber,
+            is_verified: true,
+            verification_date: new Date().toISOString()
+          });
 
-      // Create profile for new user
-      const { error: profileError } = await supabase
-        .from('profiles')
-        .insert({
-          user_id: userId,
-          phone: phoneNumber,
-          is_verified: true,
-          verification_date: new Date().toISOString()
-        });
-
-      if (profileError) {
-        console.error('⚠️ Profile creation warning:', profileError);
+        if (profileError) {
+          console.error('⚠️ Profile creation warning:', profileError);
+        }
       }
     }
 
