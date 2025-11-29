@@ -203,16 +203,17 @@ const Product = () => {
           }
 
           // Extract schema_markup from custom_metadata if it exists
-          let productSchemaMarkup = null;
+          let productSchemaMarkup: any = null;
           try {
-            if (parsedCustomMetadata?.schema_markup) {
-              productSchemaMarkup = typeof parsedCustomMetadata.schema_markup === 'string' 
-                ? JSON.parse(parsedCustomMetadata.schema_markup) 
-                : parsedCustomMetadata.schema_markup;
-              console.log('Product Schema Markup from custom_metadata:', productSchemaMarkup);
+            if (parsedCustomMetadata && (parsedCustomMetadata as any).schema_markup) {
+              const rawSchema = (parsedCustomMetadata as any).schema_markup;
+              // If it's already a string, use as-is (matches exactly what you saved in DB)
+              // If it's an object, stringify it
+              productSchemaMarkup = typeof rawSchema === 'string' ? rawSchema : JSON.stringify(rawSchema);
+              console.log('Product Schema Markup from custom_metadata (raw):', productSchemaMarkup);
             }
           } catch (e) {
-            console.error('Error parsing schema_markup from custom_metadata:', e);
+            console.error('Error handling schema_markup from custom_metadata:', e);
             productSchemaMarkup = null;
           }
 
@@ -446,9 +447,10 @@ const Product = () => {
         
         {/* Schema from custom_metadata.schema_markup (Priority) */}
         {product.schema_markup && (
-          <script type="application/ld+json">
-            {JSON.stringify(product.schema_markup, null, 2)}
-          </script>
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: product.schema_markup }}
+          />
         )}
         
         {/* Fallback: Product Schema with Custom Metadata */}
