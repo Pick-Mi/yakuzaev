@@ -4,38 +4,81 @@ import { Briefcase, MapPin, Share2, ArrowLeft } from "lucide-react";
 import { FaXTwitter, FaLinkedin, FaTelegram, FaFacebook, FaWhatsapp } from "react-icons/fa6";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { supabase } from "@/integrations/supabase/client";
+import { useEffect, useState } from "react";
+import type { Database } from "@/integrations/supabase/types";
+
+type JobPost = Database['public']['Tables']['job_posts']['Row'];
 
 const JobDetail = () => {
-  const { id } = useParams();
+  const { id } = useParams(); // This is actually the slug
   const navigate = useNavigate();
+  const [job, setJob] = useState<JobPost | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  // In a real app, this would fetch job details from an API
-  const jobData = {
-    title: "Technical Support",
-    type: "Full-time",
-    openings: 10,
-    applied: 10,
-    locations: ["Bengaluru", "Chennai", "Mumbai", "Singapore"],
-    companyDescription: [
-      "Acumen is redefining how businesses and Chartered Accountants manage compliance, financial analytics, and security. Our end-to-end platform empowers professionals with innovative tools that are affordable, easy to implement, and tailored for seamless user experiences. Headquartered in [Location], Acumen operates with a dedicated team spread across multiple locations, supporting organizations worldwide—from startups to enterprises—in optimizing their operations and driving growth.",
-      "Acumen's platform includes modules like Financial Analytics, Compliance Management, Team Collaboration, and more, all backed by cutting-edge technologies to deliver transformative digital solutions.",
-      "We take pride in fostering an inclusive and collaborative work culture. Recognized for our innovation and workplace excellence, Acumen is committed to empowering its team to make a real impact in the professional world."
-    ],
-    aboutRole: [
-      "Acumen is redefining how businesses and Chartered Accountants manage compliance, financial analytics, and security. Our end-to-end platform empowers professionals with innovative tools that are affordable, easy to implement, and tailored for seamless user experiences. Headquartered in [Location], Acumen operates with a dedicated team spread across multiple locations, supporting organizations worldwide—from startups to enterprises—in optimizing their operations and driving growth.",
-      "Acumen's platform includes modules like Financial Analytics, Compliance Management, Team Collaboration, and more, all backed by cutting-edge technologies to deliver transformative digital solutions.",
-      "We take pride in fostering an inclusive and collaborative work culture. Recognized for our innovation and workplace excellence, Acumen is committed to empowering its team to make a real impact in the professional world."
-    ],
-    responsibilities: [
-      { title: "Web Development", description: "Design, develop, test, and deploy responsive and dynamic web applications tailored to user needs." },
-      { title: "Collaboration", description: "Work closely with UI/UX designers to transform designs into functional, visually appealing web pages." },
-      { title: "Optimization", description: "Ensure the performance, scalability, and security of the web applications by implementing industry best practices." },
-      { title: "Integration", description: "Integrate APIs and third-party services into the platform to extend its functionality and enhance user experience." },
-      { title: "Maintenance", description: "Regularly update and maintain web applications, ensuring compatibility with modern browsers and devices." },
-      { title: "Problem Solving", description: "Troubleshoot, debug, and resolve technical issues efficiently." },
-      { title: "Innovation", description: "Stay updated with the latest web development technologies and trends, recommending improvements for the platform." }
-    ]
+  useEffect(() => {
+    const fetchJobDetails = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('job_posts')
+          .select('*')
+          .eq('slug', id)
+          .eq('status', 'active')
+          .maybeSingle();
+
+        if (error) throw error;
+        setJob(data);
+      } catch (error) {
+        console.error('Error fetching job details:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchJobDetails();
+  }, [id]);
+
+  const parseTextList = (text: string | null): string[] => {
+    if (!text) return [];
+    return text.split('\n').filter(line => line.trim() !== '');
   };
+
+  const getLocations = (location: any): string[] => {
+    if (Array.isArray(location)) return location;
+    return [];
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex flex-col bg-background">
+        <Header />
+        <main className="flex-1 flex items-center justify-center" style={{ backgroundColor: '#F8F9F9' }}>
+          <p className="text-muted-foreground">Loading job details...</p>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (!job) {
+    return (
+      <div className="min-h-screen flex flex-col bg-background">
+        <Header />
+        <main className="flex-1 flex items-center justify-center" style={{ backgroundColor: '#F8F9F9' }}>
+          <div className="text-center">
+            <p className="text-muted-foreground mb-4">Job not found</p>
+            <Button onClick={() => navigate('/careers')}>Back to Careers</Button>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  const descriptionParagraphs = parseTextList(job.description);
+  const requirementsList = parseTextList(job.requirements);
+  const responsibilitiesList = parseTextList(job.responsibilities);
+  const locations = getLocations(job.location);
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -47,43 +90,49 @@ const JobDetail = () => {
             <div className="lg:col-span-2 space-y-8">
               {/* Job Title */}
               <div>
-                <h1 className="text-4xl font-bold mb-2 text-foreground">{jobData.title}</h1>
-                <p className="text-muted-foreground">{jobData.type}</p>
+                <h1 className="text-4xl font-bold mb-2 text-foreground">{job.title}</h1>
+                <p className="text-muted-foreground">{job.job_type}</p>
               </div>
 
-              {/* Company Description */}
+              {/* Job Description */}
               <div>
-                <h2 className="text-2xl font-semibold mb-4 text-foreground">Company Description</h2>
+                <h2 className="text-2xl font-semibold mb-4 text-foreground">Job Description</h2>
                 <div className="space-y-4 text-foreground/80">
-                  {jobData.companyDescription.map((paragraph, index) => (
+                  {descriptionParagraphs.map((paragraph, index) => (
                     <p key={index} className="leading-relaxed">{paragraph}</p>
                   ))}
                 </div>
               </div>
 
-              {/* About the Role */}
-              <div>
-                <h2 className="text-2xl font-semibold mb-4 text-foreground">About the Role</h2>
-                <div className="space-y-4 text-foreground/80">
-                  {jobData.aboutRole.map((paragraph, index) => (
-                    <p key={index} className="leading-relaxed">{paragraph}</p>
-                  ))}
+              {/* Requirements */}
+              {requirementsList.length > 0 && (
+                <div>
+                  <h2 className="text-2xl font-semibold mb-4 text-foreground">Requirements</h2>
+                  <ul className="space-y-2 text-foreground/80">
+                    {requirementsList.map((requirement, index) => (
+                      <li key={index} className="leading-relaxed flex">
+                        <span className="mr-2">•</span>
+                        <span>{requirement}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-              </div>
+              )}
 
               {/* Responsibilities */}
-              <div>
-                <h2 className="text-2xl font-semibold mb-4 text-foreground">Responsibilities</h2>
-                <div className="space-y-4">
-                  {jobData.responsibilities.map((item, index) => (
-                    <div key={index}>
-                      <p className="text-foreground">
-                        <span className="font-semibold">{item.title}</span> : {item.description}
-                      </p>
-                    </div>
-                  ))}
+              {responsibilitiesList.length > 0 && (
+                <div>
+                  <h2 className="text-2xl font-semibold mb-4 text-foreground">Responsibilities</h2>
+                  <ul className="space-y-2 text-foreground/80">
+                    {responsibilitiesList.map((responsibility, index) => (
+                      <li key={index} className="leading-relaxed flex">
+                        <span className="mr-2">•</span>
+                        <span>{responsibility}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-              </div>
+              )}
             </div>
 
             {/* Sidebar */}
@@ -93,28 +142,29 @@ const JobDetail = () => {
                 <div className="flex items-center justify-between pb-4 border-b">
                   <div className="flex items-center gap-2">
                     <Briefcase className="w-5 h-5 text-muted-foreground" />
-                    <span className="text-foreground">{jobData.openings} Openings / {jobData.type}</span>
+                    <span className="text-foreground">{job.openings} Openings / {job.job_type}</span>
                   </div>
-                  <span className="text-sm text-muted-foreground">{jobData.applied}+ Applied</span>
                 </div>
 
                 {/* Locations */}
-                <div>
-                  <div className="flex items-center gap-2 mb-3">
-                    <MapPin className="w-5 h-5 text-muted-foreground" />
-                    <span className="font-medium text-foreground">Locations</span>
+                {locations.length > 0 && (
+                  <div>
+                    <div className="flex items-center gap-2 mb-3">
+                      <MapPin className="w-5 h-5 text-muted-foreground" />
+                      <span className="font-medium text-foreground">Locations</span>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      {locations.map((location, index) => (
+                        <span
+                          key={index}
+                          className="px-3 py-1 bg-secondary text-secondary-foreground rounded-md text-sm"
+                        >
+                          {location}
+                        </span>
+                      ))}
+                    </div>
                   </div>
-                  <div className="flex flex-wrap gap-2">
-                    {jobData.locations.map((location, index) => (
-                      <span
-                        key={index}
-                        className="px-3 py-1 bg-secondary text-secondary-foreground rounded-md text-sm"
-                      >
-                        {location}
-                      </span>
-                    ))}
-                  </div>
-                </div>
+                )}
 
                 {/* Share The Job */}
                 <div>
@@ -147,7 +197,7 @@ const JobDetail = () => {
                     Refer a Friend
                   </Button>
                   <Button 
-                    onClick={() => navigate(`/careers/${id}/apply`)}
+                    onClick={() => navigate(`/careers/${job.slug}/apply`)}
                     className="w-full rounded-none bg-black text-white hover:bg-black/90 dark:bg-white dark:text-black dark:hover:bg-white/90"
                   >
                     Apply
