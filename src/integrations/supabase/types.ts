@@ -500,14 +500,13 @@ export type Database = {
         Row: {
           created_at: string | null
           description: string
-          experience_required: string | null
           id: string
           job_type: string | null
-          location: string | null
+          location: Json | null
+          openings: number | null
           posted_by: string | null
           requirements: string | null
           responsibilities: string | null
-          salary_range: string | null
           slug: string
           status: string | null
           title: string
@@ -516,14 +515,13 @@ export type Database = {
         Insert: {
           created_at?: string | null
           description: string
-          experience_required?: string | null
           id?: string
           job_type?: string | null
-          location?: string | null
+          location?: Json | null
+          openings?: number | null
           posted_by?: string | null
           requirements?: string | null
           responsibilities?: string | null
-          salary_range?: string | null
           slug: string
           status?: string | null
           title: string
@@ -532,14 +530,13 @@ export type Database = {
         Update: {
           created_at?: string | null
           description?: string
-          experience_required?: string | null
           id?: string
           job_type?: string | null
-          location?: string | null
+          location?: Json | null
+          openings?: number | null
           posted_by?: string | null
           requirements?: string | null
           responsibilities?: string | null
-          salary_range?: string | null
           slug?: string
           status?: string | null
           title?: string

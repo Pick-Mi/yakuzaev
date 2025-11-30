@@ -5,60 +5,47 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import CareersHero from "@/components/CareersHero";
 import { useSEOSettings } from "@/hooks/useSEOSettings";
+import { supabase } from "@/integrations/supabase/client";
+import { useEffect, useState } from "react";
+import type { Database } from "@/integrations/supabase/types";
 
-const jobOpportunities = [
-  {
-    id: 1,
-    title: "TECHNICAL SUPPORT ENGINEERS",
-    description: "Provide voice-based support to international/domestic customers over the phone (Inbound and Outbound)",
-    type: "Full time",
-    openings: 10,
-    locations: 2,
-  },
-  {
-    id: 2,
-    title: "TECHNICAL SUPPORT ENGINEERS",
-    description: "Provide voice-based support to international/domestic customers over the phone (Inbound and Outbound)",
-    type: "Full time",
-    openings: 10,
-    locations: 2,
-  },
-  {
-    id: 3,
-    title: "TECHNICAL SUPPORT ENGINEERS",
-    description: "Provide voice-based support to international/domestic customers over the phone (Inbound and Outbound)",
-    type: "Full time",
-    openings: 10,
-    locations: 2,
-  },
-  {
-    id: 4,
-    title: "TECHNICAL SUPPORT ENGINEERS",
-    description: "Provide voice-based support to international/domestic customers over the phone (Inbound and Outbound)",
-    type: "Full time",
-    openings: 10,
-    locations: 2,
-  },
-  {
-    id: 5,
-    title: "TECHNICAL SUPPORT ENGINEERS",
-    description: "Provide voice-based support to international/domestic customers over the phone (Inbound and Outbound)",
-    type: "Full time",
-    openings: 10,
-    locations: 2,
-  },
-  {
-    id: 6,
-    title: "TECHNICAL SUPPORT ENGINEERS",
-    description: "Provide voice-based support to international/domestic customers over the phone (Inbound and Outbound)",
-    type: "Full time",
-    openings: 10,
-    locations: 2,
-  },
-];
+type JobPost = Database['public']['Tables']['job_posts']['Row'];
 
 const Careers = () => {
   const seoSettings = useSEOSettings('/careers');
+  const [jobPosts, setJobPosts] = useState<JobPost[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchJobPosts = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('job_posts')
+          .select('*')
+          .eq('status', 'active')
+          .order('created_at', { ascending: false });
+
+        if (error) throw error;
+        setJobPosts(data || []);
+      } catch (error) {
+        console.error('Error fetching job posts:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchJobPosts();
+  }, []);
+
+  const truncateDescription = (text: string, maxLength: number = 100) => {
+    if (text.length <= maxLength) return text;
+    return text.substring(0, maxLength) + '...';
+  };
+
+  const getLocationCount = (location: any): number => {
+    if (Array.isArray(location)) return location.length;
+    return 0;
+  };
   
   return (
     <div className="min-h-screen flex flex-col">
@@ -98,50 +85,60 @@ const Careers = () => {
           </h1>
 
           {/* Job Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {jobOpportunities.map((job) => (
-              <div
-                key={job.id}
-                className="group bg-white p-6 flex flex-col relative h-[280px] hover:shadow-lg transition-shadow overflow-hidden w-full"
-              >
-                <div>
-                  <h2 className="text-lg font-semibold uppercase mb-4 tracking-wide" style={{ color: '#1571BA' }}>
-                    {job.title}
-                  </h2>
-                  <p className="text-base text-muted-foreground mb-6">
-                    {job.description}
-                  </p>
-                </div>
+          {loading ? (
+            <div className="text-center py-12">
+              <p className="text-muted-foreground">Loading job opportunities...</p>
+            </div>
+          ) : jobPosts.length === 0 ? (
+            <div className="text-center py-12">
+              <p className="text-muted-foreground">No job opportunities available at the moment.</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {jobPosts.map((job) => (
+                <div
+                  key={job.id}
+                  className="group bg-white p-6 flex flex-col relative h-[280px] hover:shadow-lg transition-shadow overflow-hidden w-full"
+                >
+                  <div>
+                    <h2 className="text-lg font-semibold uppercase mb-4 tracking-wide" style={{ color: '#1571BA' }}>
+                      {job.title}
+                    </h2>
+                    <p className="text-base text-muted-foreground mb-6">
+                      {truncateDescription(job.description)}
+                    </p>
+                  </div>
 
-                {/* Bottom Info Section */}
-                <div className="absolute bottom-6 left-6 right-6 flex items-center justify-between text-sm transition-all duration-300 group-hover:bottom-[90px]">
-                  <span className="text-green-600 font-medium">{job.type}</span>
-                  <div className="flex items-center gap-3 text-muted-foreground">
-                    <div className="flex items-center gap-1">
-                      <Briefcase className="w-4 h-4" />
-                      <span>{job.openings}</span>
-                      <p className="text-sm">openings</p>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <MapPin className="w-4 h-4" />
-                      <span>{String(job.locations).padStart(2, '0')}</span>
-                      <p className="text-sm">location</p>
+                  {/* Bottom Info Section */}
+                  <div className="absolute bottom-6 left-6 right-6 flex items-center justify-between text-sm transition-all duration-300 group-hover:bottom-[90px]">
+                    <span className="text-green-600 font-medium">{job.job_type}</span>
+                    <div className="flex items-center gap-3 text-muted-foreground">
+                      <div className="flex items-center gap-1">
+                        <Briefcase className="w-4 h-4" />
+                        <span>{job.openings}</span>
+                        <p className="text-sm">openings</p>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <MapPin className="w-4 h-4" />
+                        <span>{String(getLocationCount(job.location)).padStart(2, '0')}</span>
+                        <p className="text-sm">location</p>
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                {/* Apply Now Button - Shows on Hover */}
-                <div className="absolute bottom-6 left-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <Button 
-                    onClick={() => window.location.href = `/careers/${job.id}`}
-                    className="w-full rounded-none bg-black text-white hover:bg-black/90 dark:bg-white dark:text-black dark:hover:bg-white/90"
-                  >
-                    Apply Now
-                  </Button>
+                  {/* Apply Now Button - Shows on Hover */}
+                  <div className="absolute bottom-6 left-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <Button 
+                      onClick={() => window.location.href = `/careers/${job.slug}`}
+                      className="w-full rounded-none bg-black text-white hover:bg-black/90 dark:bg-white dark:text-black dark:hover:bg-white/90"
+                    >
+                      Apply Now
+                    </Button>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
 
           {/* Divider */}
           <div className="my-16 border-t border-border"></div>
