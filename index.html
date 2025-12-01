@@ -4,12 +4,12 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Yakuza EV</title>
+    <title>Yakuza EV - Electric Scooters | Premium EV Solutions</title>
     <meta
       name="description"
-      content="Experience personalized shopping with AI-powered product recommendations. Discover curated products tailored to your preferences with 95% accuracy."
+      content="Discover Yakuza EV's premium electric scooters. Eco-friendly, stylish, and built for performance. Book your EV today at ₹999."
     />
-    <meta name="author" content="AI Product Showcase" />
+    <meta name="author" content="Yakuza EV" />
 
     <!-- Google Fonts - Inter & Poppins -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -19,17 +19,60 @@
       rel="stylesheet"
     />
 
-    <meta property="og:title" content="AI Product Showcase - Discover Products Tailored for You" />
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Yakuza EV - Electric Scooters | Premium EV Solutions" />
     <meta
       property="og:description"
-      content="Experience personalized shopping with AI-powered product recommendations. Discover curated products tailored to your preferences."
+      content="Discover Yakuza EV's premium electric scooters. Eco-friendly, stylish, and built for performance."
     />
-    <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
 
+    <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@lovable_dev" />
-    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+    <meta name="twitter:title" content="Yakuza EV - Electric Scooters | Premium EV Solutions" />
+    <meta name="twitter:description" content="Discover Yakuza EV's premium electric scooters. Eco-friendly, stylish, and built for performance." />
+    
+    <!-- Preconnect to Supabase -->
+    <link rel="preconnect" href="https://tqhwoizjlvjdiuemirsy.supabase.co" />
+    
+    <!-- SSR Enhancement for Crawlers -->
+    <script>
+      (function() {
+        const isCrawler = /googlebot|bingbot|slurp|duckduckbot|baiduspider|yandexbot|facebookexternalhit|twitterbot|linkedinbot|whatsapp|telegrambot|discordbot|slackbot/i.test(navigator.userAgent);
+        
+        if (isCrawler) {
+          const ssrUrl = 'https://tqhwoizjlvjdiuemirsy.supabase.co/functions/v1/ssr-renderer?path=' + encodeURIComponent(window.location.pathname);
+          
+          fetch(ssrUrl)
+            .then(function(response) { return response.text(); })
+            .then(function(html) {
+              var parser = new DOMParser();
+              var doc = parser.parseFromString(html, 'text/html');
+              var ssrHead = doc.querySelector('head');
+              
+              if (ssrHead) {
+                var children = Array.from(ssrHead.children);
+                children.forEach(function(child) {
+                  if (child.tagName === 'META' || child.tagName === 'TITLE' || 
+                      (child.tagName === 'SCRIPT' && child.type === 'application/ld+json')) {
+                    document.head.appendChild(child.cloneNode(true));
+                  }
+                });
+              }
+            })
+            .catch(function(err) { 
+              console.log('SSR enhancement:', err); 
+            });
+        }
+      })();
+    </script>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
   </head>
 
   <body>
