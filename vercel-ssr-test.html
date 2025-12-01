@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SSR Test - Yakuza EV</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+      line-height: 1.6;
+    }
+    h1 { color: #2563eb; margin-bottom: 1rem; }
+    h2 { color: #1f2937; margin-top: 2rem; margin-bottom: 1rem; }
+    .section { background: #f3f4f6; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem; }
+    code { background: #1f2937; color: #10b981; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.875rem; }
+    pre { background: #1f2937; color: #e5e7eb; padding: 1rem; border-radius: 8px; overflow-x: auto; }
+    .test-btn { background: #2563eb; color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 6px; cursor: pointer; font-size: 1rem; margin: 0.5rem 0.5rem 0 0; }
+    .test-btn:hover { background: #1d4ed8; }
+    #result { margin-top: 1rem; padding: 1rem; border-radius: 6px; }
+    .success { background: #d1fae5; color: #065f46; border: 1px solid #10b981; }
+    .error { background: #fee2e2; color: #991b1b; border: 1px solid #ef4444; }
+  </style>
+</head>
+<body>
+  <h1>🔍 SSR Testing Tool - Yakuza EV</h1>
+  
+  <div class="section">
+    <h2>What is SSR Testing?</h2>
+    <p>This tool helps you verify that search engines (Google, Bing, etc.) can see your page content, meta tags, and structured data in the page source.</p>
+    <p><strong>Why it matters:</strong> If crawlers can see the content in source code, your SEO will work correctly and social media previews will display properly.</p>
+  </div>
+
+  <div class="section">
+    <h2>Quick Tests</h2>
+    <button class="test-btn" onclick="testSSR('/')">Test Homepage</button>
+    <button class="test-btn" onclick="testSSR('/products/testing')">Test Product Page</button>
+    <button class="test-btn" onclick="testSSR('/blogs')">Test Blogs Page</button>
+    <button class="test-btn" onclick="testSSR('/careers')">Test Careers Page</button>
+    
+    <div id="result"></div>
+  </div>
+
+  <div class="section">
+    <h2>How to Verify SSR Manually</h2>
+    <ol>
+      <li><strong>View Page Source</strong> - Right-click on your page → "View Page Source" (or press Ctrl+U / Cmd+U)</li>
+      <li><strong>Search for Content</strong> - Press Ctrl+F / Cmd+F and search for:
+        <ul>
+          <li><code>&lt;meta name="description"</code> - Should show your page description</li>
+          <li><code>&lt;meta property="og:title"</code> - Should show Open Graph title</li>
+          <li><code>application/ld+json</code> - Should show structured data (schema)</li>
+          <li>Your actual page content - Product names, blog titles, etc.</li>
+        </ul>
+      </li>
+      <li><strong>What You Should See:</strong>
+        <ul>
+          <li>✅ Full HTML with all meta tags visible in source</li>
+          <li>✅ Schema.org JSON-LD structured data</li>
+          <li>✅ Page content rendered in HTML (not just <code>&lt;div id="root"&gt;&lt;/div&gt;</code>)</li>
+        </ul>
+      </li>
+      <li><strong>What's Wrong (No SSR):</strong>
+        <ul>
+          <li>❌ Only see <code>&lt;div id="root"&gt;&lt;/div&gt;</code> with no content</li>
+          <li>❌ Generic meta tags, not page-specific ones</li>
+          <li>❌ No structured data/schema markup</li>
+        </ul>
+      </li>
+    </ol>
+  </div>
+
+  <div class="section">
+    <h2>External Testing Tools</h2>
+    <ul>
+      <li><a href="https://search.google.com/test/rich-results" target="_blank">Google Rich Results Test</a> - Test how Google sees your page</li>
+      <li><a href="https://www.linkedin.com/post-inspector/" target="_blank">LinkedIn Post Inspector</a> - Check social preview</li>
+      <li><a href="https://cards-dev.twitter.com/validator" target="_blank">Twitter Card Validator</a> - Verify Twitter cards</li>
+      <li><a href="https://developers.facebook.com/tools/debug/" target="_blank">Facebook Sharing Debugger</a> - Test FB sharing</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Current SSR Implementation</h2>
+    <p>Your site uses:</p>
+    <ul>
+      <li><strong>Vercel Edge Middleware</strong> - Intercepts crawler requests</li>
+      <li><strong>Supabase Edge Function</strong> - Generates server-rendered HTML</li>
+      <li><strong>Path:</strong> <code>middleware.js</code> + <code>supabase/functions/ssr-renderer</code></li>
+    </ul>
+    
+    <h3>How It Works:</h3>
+    <pre>1. Crawler visits your site (Google, Facebook bot, etc.)
+2. Vercel middleware detects crawler user-agent
+3. Fetches pre-rendered HTML from Supabase edge function
+4. Returns full HTML with meta tags & schema to crawler
+5. Regular users get fast React SPA (client-side)</pre>
+  </div>
+
+  <script>
+    async function testSSR(path) {
+      const resultDiv = document.getElementById('result');
+      resultDiv.innerHTML = '<p>Testing SSR for: ' + path + '...</p>';
+      resultDiv.className = '';
+      
+      try {
+        const ssrUrl = `https://tqhwoizjlvjdiuemirsy.supabase.co/functions/v1/ssr-renderer?path=${encodeURIComponent(path)}`;
+        const response = await fetch(ssrUrl);
+        
+        if (!response.ok) {
+          throw new Error('SSR endpoint returned: ' + response.status);
+        }
+        
+        const html = await response.text();
+        
+        // Check for important SSR elements
+        const hasMetaDesc = html.includes('<meta name="description"');
+        const hasOgTags = html.includes('property="og:title"');
+        const hasSchema = html.includes('application/ld+json');
+        const hasContent = html.length > 5000; // More than just basic HTML
+        
+        let message = '<h3>✅ SSR Test Results for ' + path + '</h3>';
+        message += '<ul>';
+        message += '<li>' + (hasMetaDesc ? '✅' : '❌') + ' Meta Description Tag</li>';
+        message += '<li>' + (hasOgTags ? '✅' : '❌') + ' Open Graph Tags</li>';
+        message += '<li>' + (hasSchema ? '✅' : '❌') + ' Structured Data (JSON-LD)</li>';
+        message += '<li>' + (hasContent ? '✅' : '❌') + ' Page Content (' + html.length + ' bytes)</li>';
+        message += '</ul>';
+        
+        if (hasMetaDesc && hasOgTags && hasSchema && hasContent) {
+          message += '<p><strong>🎉 Perfect! Your SSR is working correctly.</strong></p>';
+          message += '<p>Crawlers will be able to see all your meta tags and content in the page source.</p>';
+          resultDiv.className = 'success';
+        } else {
+          message += '<p><strong>⚠️ SSR is partially working but missing some elements.</strong></p>';
+          resultDiv.className = 'error';
+        }
+        
+        message += '<details><summary>View Raw HTML (first 2000 chars)</summary><pre>' + html.substring(0, 2000).replace(/</g, '&lt;').replace(/>/g, '&gt;') + '...</pre></details>';
+        
+        resultDiv.innerHTML = message;
+        
+      } catch (error) {
+        resultDiv.innerHTML = '<h3>❌ SSR Test Failed</h3><p>Error: ' + error.message + '</p><p>The SSR endpoint may not be responding correctly.</p>';
+        resultDiv.className = 'error';
+      }
+    }
+  </script>
+</body>
+</html>
