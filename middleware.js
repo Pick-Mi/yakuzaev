@@ -1,12 +1,13 @@
 // Vercel Edge Middleware for SSR
 export const config = {
-  matcher: ['/((?!_next|api|assets|src|.*\\..*).*)'],
+  matcher: ['/((?!_next|api|assets|src|favicon.ico|.*\\..*).*)', '/'],
+  runtime: 'edge',
 };
 
 const CRAWLER_USER_AGENTS = [
   'googlebot', 'bingbot', 'slurp', 'duckduckbot', 'baiduspider',
   'yandexbot', 'facebookexternalhit', 'twitterbot', 'linkedinbot',
-  'whatsapp', 'telegrambot', 'discordbot', 'slackbot'
+  'whatsapp', 'telegrambot', 'discordbot', 'slackbot', 'curl'
 ];
 
 function isCrawler(userAgent) {
@@ -17,17 +18,26 @@ function isCrawler(userAgent) {
 
 export default async function middleware(request) {
   const userAgent = request.headers.get('user-agent') || '';
-  const { pathname } = new URL(request.url);
+  const url = new URL(request.url);
+  const pathname = url.pathname;
   
-  // Check if this is a crawler
+  console.log('SSR Middleware:', pathname, '| User-Agent:', userAgent.substring(0, 50));
+  
+  // Serve SSR content for crawlers
   if (isCrawler(userAgent)) {
     try {
       const ssrUrl = `https://tqhwoizjlvjdiuemirsy.supabase.co/functions/v1/ssr-renderer?path=${encodeURIComponent(pathname)}`;
       
-      const response = await fetch(ssrUrl);
+      console.log('Fetching SSR:', ssrUrl);
+      const response = await fetch(ssrUrl, {
+        headers: {
+          'User-Agent': userAgent
+        }
+      });
       
       if (response.ok) {
         const html = await response.text();
+        console.log('SSR Success - HTML length:', html.length);
         
         return new Response(html, {
           status: 200,
@@ -35,14 +45,18 @@ export default async function middleware(request) {
             'Content-Type': 'text/html; charset=utf-8',
             'Cache-Control': 'public, max-age=3600, s-maxage=3600',
             'X-Robots-Tag': 'index, follow',
+            'X-SSR-Enabled': 'true',
+            'X-Rendered-By': 'Supabase-Edge-Function',
           },
         });
+      } else {
+        console.error('SSR fetch failed:', response.status, response.statusText);
       }
     } catch (error) {
-      console.error('SSR Error:', error);
+      console.error('SSR Error:', error.message);
     }
   }
   
-  // For non-crawlers, continue to the app
-  return;
+  // For regular users, continue to React app
+  return new Response(null, { status: 200 });
 }
