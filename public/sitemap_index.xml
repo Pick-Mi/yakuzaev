@@ -2,11 +2,11 @@
 <?xml-stylesheet type="text/xsl" href="/sitemap-stylesheet.xsl"?>
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 	<sitemap>
-		<loc>https://yakuzaev.vercel.app/post-sitemap.xml</loc>
+		<loc>https://yakuzaev.vercel.app/page-sitemap.xml</loc>
 		<lastmod>2025-12-05T10:00:00+00:00</lastmod>
 	</sitemap>
 	<sitemap>
-		<loc>https://yakuzaev.vercel.app/page-sitemap.xml</loc>
+		<loc>https://yakuzaev.vercel.app/post-sitemap.xml</loc>
 		<lastmod>2025-12-05T10:00:00+00:00</lastmod>
 	</sitemap>
 	<sitemap>
