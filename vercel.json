@@ -4,27 +4,41 @@
     { "source": "/page-sitemap.xml", "destination": "/page-sitemap.xml" },
     { "source": "/post-sitemap.xml", "destination": "/post-sitemap.xml" },
     { "source": "/product-sitemap.xml", "destination": "/product-sitemap.xml" },
+    { "source": "/blog-sitemap.xml", "destination": "/blog-sitemap.xml" },
+    { "source": "/category-sitemap.xml", "destination": "/category-sitemap.xml" },
     { "source": "/sitemap-stylesheet.xsl", "destination": "/sitemap-stylesheet.xsl" },
     { "source": "/robots.txt", "destination": "/robots.txt" },
     { "source": "/(.*)", "destination": "/index.html" }
   ],
   "headers": [
     {
-      "source": "/(.*\\.xml)",
+      "source": "/sitemap.xml",
       "headers": [
-        { "key": "Content-Type", "value": "application/xml; charset=utf-8" }
+        { "key": "Content-Type", "value": "application/xml; charset=utf-8" },
+        { "key": "Cache-Control", "value": "public, max-age=3600, s-maxage=86400" },
+        { "key": "X-Robots-Tag", "value": "noindex" }
+      ]
+    },
+    {
+      "source": "/(.*)-sitemap.xml",
+      "headers": [
+        { "key": "Content-Type", "value": "application/xml; charset=utf-8" },
+        { "key": "Cache-Control", "value": "public, max-age=3600, s-maxage=86400" },
+        { "key": "X-Robots-Tag", "value": "noindex" }
       ]
     },
     {
       "source": "/(.*\\.xsl)",
       "headers": [
-        { "key": "Content-Type", "value": "application/xml; charset=utf-8" }
+        { "key": "Content-Type", "value": "application/xml; charset=utf-8" },
+        { "key": "Cache-Control", "value": "public, max-age=86400" }
       ]
     },
     {
       "source": "/robots.txt",
       "headers": [
-        { "key": "Content-Type", "value": "text/plain; charset=utf-8" }
+        { "key": "Content-Type", "value": "text/plain; charset=utf-8" },
+        { "key": "Cache-Control", "value": "public, max-age=86400" }
       ]
     }
   ]
