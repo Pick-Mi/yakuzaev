@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 	<url>
-		<loc>https://www.yakuzaev.com/products/cyclone-sway</loc>
+		<loc>https://yakuzaev.vercel.app/products/cyclone-sway</loc>
 		<lastmod>2025-12-05</lastmod>
 		<changefreq>weekly</changefreq>
 		<priority>0.8</priority>
 	</url>
 	<url>
-		<loc>https://www.yakuzaev.com/products/nebula</loc>
+		<loc>https://yakuzaev.vercel.app/products/nebula</loc>
 		<lastmod>2025-12-05</lastmod>
 		<changefreq>weekly</changefreq>
 		<priority>0.8</priority>
 	</url>
 	<url>
-		<loc>https://www.yakuzaev.com/products/testing</loc>
+		<loc>https://yakuzaev.vercel.app/products/testing</loc>
 		<lastmod>2025-12-05</lastmod>
 		<changefreq>weekly</changefreq>
 		<priority>0.8</priority>
