@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://yakuzaev.vercel.app/sitemap_index.xml
+Sitemap: https://yakuzaev.vercel.app/sitemap.xml
