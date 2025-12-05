@@ -100,7 +100,7 @@ async function renderProductPage(supabase: any, slug: string) {
       ogTitle: 'Product Not Found',
       ogDescription: 'Product not available',
       ogImage: '',
-      canonicalUrl: `https://yakuzaev.com/products/${slug}`,
+      canonicalUrl: `https://yakuzaev.vercel.app/products/${slug}`,
       schemaMarkup: null,
       bodyContent: `
         <div id="root">
@@ -412,7 +412,7 @@ async function renderHomePage(supabase: any) {
     "@context": "https://schema.org",
     "@type": "WebSite",
     "name": "Yakuza EV",
-    "url": "https://yakuzaev.com"
+    "url": "https://yakuzaev.vercel.app"
   };
 
   const bodyContent = `
@@ -450,7 +450,7 @@ async function renderHomePage(supabase: any) {
     ogTitle: seoSettings?.og_title || 'Yakuza EV',
     ogDescription: seoSettings?.og_description || '',
     ogImage: seoSettings?.og_image || '',
-    canonicalUrl: seoSettings?.canonical_url || 'https://yakuzaev.com',
+    canonicalUrl: seoSettings?.canonical_url || 'https://yakuzaev.vercel.app',
     schemaMarkup,
     bodyContent
   });
@@ -489,7 +489,7 @@ async function renderGenericPage(supabase: any, path: string, title: string, des
     ogTitle: seoSettings?.og_title || title,
     ogDescription: seoSettings?.og_description || description,
     ogImage: seoSettings?.og_image || '',
-    canonicalUrl: seoSettings?.canonical_url || `https://yakuzaev.com${path}`,
+    canonicalUrl: seoSettings?.canonical_url || `https://yakuzaev.vercel.app${path}`,
     schemaMarkup,
     bodyContent
   });
