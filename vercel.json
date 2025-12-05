@@ -1,11 +1,53 @@
 {
   "rewrites": [
     {
-      "source": "/(.*)",
+      "source": "/sitemap.xml",
+      "destination": "/sitemap.xml"
+    },
+    {
+      "source": "/page-sitemap.xml",
+      "destination": "/page-sitemap.xml"
+    },
+    {
+      "source": "/product-sitemap.xml",
+      "destination": "/product-sitemap.xml"
+    },
+    {
+      "source": "/blog-sitemap.xml",
+      "destination": "/blog-sitemap.xml"
+    },
+    {
+      "source": "/category-sitemap.xml",
+      "destination": "/category-sitemap.xml"
+    },
+    {
+      "source": "/robots.txt",
+      "destination": "/robots.txt"
+    },
+    {
+      "source": "/((?!.*\\.(xml|txt|ico|png|jpg|jpeg|svg|webp|gif|js|css|woff|woff2)).*)",
       "destination": "/index.html"
     }
   ],
   "headers": [
+    {
+      "source": "/(.*\\.xml)",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/xml; charset=utf-8"
+        }
+      ]
+    },
+    {
+      "source": "/robots.txt",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "text/plain; charset=utf-8"
+        }
+      ]
+    },
     {
       "source": "/(.*)",
       "headers": [
