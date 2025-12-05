@@ -1,24 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet type="text/xsl" href="/sitemap-stylesheet.xsl"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 	<url>
-		<loc>https://yakuzaev.vercel.app/products/cyclone-sway</loc>
-		<lastmod>2025-12-05T10:00:00+00:00</lastmod>
+		<loc>https://www.yakuzaev.com/products/cyclone-sway</loc>
+		<lastmod>2025-12-05</lastmod>
+		<changefreq>weekly</changefreq>
+		<priority>0.8</priority>
 	</url>
 	<url>
-		<loc>https://yakuzaev.vercel.app/products/neu</loc>
-		<lastmod>2025-12-05T10:00:00+00:00</lastmod>
+		<loc>https://www.yakuzaev.com/products/nebula</loc>
+		<lastmod>2025-12-05</lastmod>
+		<changefreq>weekly</changefreq>
+		<priority>0.8</priority>
 	</url>
 	<url>
-		<loc>https://yakuzaev.vercel.app/products/aqaba</loc>
-		<lastmod>2025-12-05T10:00:00+00:00</lastmod>
-	</url>
-	<url>
-		<loc>https://yakuzaev.vercel.app/products/rubie</loc>
-		<lastmod>2025-12-05T10:00:00+00:00</lastmod>
-	</url>
-	<url>
-		<loc>https://yakuzaev.vercel.app/products/nebula</loc>
-		<lastmod>2025-12-05T10:00:00+00:00</lastmod>
+		<loc>https://www.yakuzaev.com/products/testing</loc>
+		<lastmod>2025-12-05</lastmod>
+		<changefreq>weekly</changefreq>
+		<priority>0.8</priority>
 	</url>
 </urlset>

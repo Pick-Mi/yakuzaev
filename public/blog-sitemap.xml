@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <!-- Blog posts will be dynamically added here -->
-  <!-- Format: /blogs/[slug] -->
+	<url>
+		<loc>https://www.yakuzaev.com/blogs/stories-spark-</loc>
+		<lastmod>2025-12-05</lastmod>
+		<changefreq>monthly</changefreq>
+		<priority>0.6</priority>
+	</url>
+	<url>
+		<loc>https://www.yakuzaev.com/blogs/a-place-to-pause-</loc>
+		<lastmod>2025-12-05</lastmod>
+		<changefreq>monthly</changefreq>
+		<priority>0.6</priority>
+	</url>
+	<url>
+		<loc>https://www.yakuzaev.com/blogs/testing-blog</loc>
+		<lastmod>2025-12-05</lastmod>
+		<changefreq>monthly</changefreq>
+		<priority>0.6</priority>
+	</url>
 </urlset>
