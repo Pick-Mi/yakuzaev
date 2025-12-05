@@ -80,7 +80,6 @@ const App = () => (
               
               <Route path="/about-us" element={<AboutUs />} />
               <Route path="/sitemap" element={<Sitemap />} />
-              <Route path="/sitemap.xml" element={<SitemapXML />} />
               <Route path="/contact-us" element={<ContactUs />} />
               <Route path="/careers" element={<Careers />} />
               <Route path="/careers/:id" element={<JobDetail />} />
