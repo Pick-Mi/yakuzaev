@@ -13,4 +13,4 @@ Allow: /
 User-agent: *
 Allow: /
 
-Sitemap: https://www.yakuzaev.com/sitemap.xml
+Sitemap: https://yakuzaev.vercel.app/sitemap.xml
