@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <sitemap>
-    <loc>https://www.yakuzaev.com/page-sitemap.xml</loc>
+    <loc>https://yakuzaev.vercel.app/page-sitemap.xml</loc>
     <lastmod>2025-12-05</lastmod>
   </sitemap>
   <sitemap>
-    <loc>https://www.yakuzaev.com/product-sitemap.xml</loc>
+    <loc>https://yakuzaev.vercel.app/product-sitemap.xml</loc>
     <lastmod>2025-12-05</lastmod>
   </sitemap>
   <sitemap>
-    <loc>https://www.yakuzaev.com/blog-sitemap.xml</loc>
+    <loc>https://yakuzaev.vercel.app/blog-sitemap.xml</loc>
     <lastmod>2025-12-05</lastmod>
   </sitemap>
   <sitemap>
-    <loc>https://www.yakuzaev.com/category-sitemap.xml</loc>
+    <loc>https://yakuzaev.vercel.app/category-sitemap.xml</loc>
     <lastmod>2025-12-05</lastmod>
   </sitemap>
 </sitemapindex>
