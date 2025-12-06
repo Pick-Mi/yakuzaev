@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Facebook, Twitter, Instagram, Linkedin, Youtube, ChevronDown } from "lucide-react";
 import logo from "@/assets/logo.svg";
-import { Helmet } from "react-helmet";
+
 
 const Footer = () => {
   const organizationSchema = {
@@ -31,11 +31,12 @@ const Footer = () => {
 
   return (
     <footer className="bg-black text-white relative w-full py-14 px-4 md:px-20">
-      <Helmet>
-        <script type="application/ld+json">
-          {JSON.stringify(organizationSchema, null, 2)}
-        </script>
-      </Helmet>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(organizationSchema),
+        }}
+      />
       <div className="container mx-auto max-w-[1280px]">
         {/* Logo */}
         <div className="mb-16">
