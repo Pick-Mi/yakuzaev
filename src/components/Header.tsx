@@ -11,7 +11,7 @@ import logo from "@/assets/logo.svg";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { X, ArrowUpRight } from "lucide-react";
-import { Helmet } from "react-helmet";
+
 
 const Header = () => {
   const { user } = useAuth();
@@ -27,32 +27,32 @@ const Header = () => {
       {
         "@type": "WebPage",
         "name": "Products",
-        "url": "https://yakuza.lovable.app/products"
+        "url": "https://yakuzaev.vercel.app/products"
       },
       {
         "@type": "WebPage",
         "name": "Become a Dealer",
-        "url": "https://yakuza.lovable.app/become-dealer"
+        "url": "https://yakuzaev.vercel.app/become-dealer"
       },
       {
         "@type": "WebPage",
         "name": "About Us",
-        "url": "https://yakuza.lovable.app/about-us"
+        "url": "https://yakuzaev.vercel.app/about-us"
       },
       {
         "@type": "WebPage",
         "name": "Careers",
-        "url": "https://yakuza.lovable.app/careers"
+        "url": "https://yakuzaev.vercel.app/careers"
       },
       {
         "@type": "WebPage",
         "name": "Blogs",
-        "url": "https://yakuza.lovable.app/blogs"
+        "url": "https://yakuzaev.vercel.app/blogs"
       },
       {
         "@type": "WebPage",
         "name": "Contact Us",
-        "url": "https://yakuza.lovable.app/contact-us"
+        "url": "https://yakuzaev.vercel.app/contact-us"
       }
     ]
   };
@@ -137,11 +137,12 @@ const Header = () => {
 
   return (
     <>
-      <Helmet>
-        <script type="application/ld+json">
-          {JSON.stringify(navigationSchema, null, 2)}
-        </script>
-      </Helmet>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(navigationSchema),
+        }}
+      />
       <div className={`${isScrolled ? 'fixed' : 'absolute'} top-0 left-0 w-full z-50 transition-all duration-300`}>
         <NotificationBar />
         <nav className={`w-full p-[13px] transition-all duration-300 ${shouldShowFixedHeader ? 'bg-white shadow-sm' : 'bg-transparent'} ${isMenuOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
