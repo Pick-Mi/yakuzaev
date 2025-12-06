@@ -7,9 +7,9 @@ const Footer = () => {
   const organizationSchema = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    "name": "Yakuza",
-    "url": "https://yakuza.lovable.app",
-    "logo": "https://yakuza.lovable.app/assets/logo.svg",
+    "name": "Yakuza EV",
+    "url": "https://yakuzaev.vercel.app",
+    "logo": "https://yakuzaev.vercel.app/assets/logo.svg",
     "description": "Leading electric scooter manufacturer providing innovative and sustainable mobility solutions",
     "address": {
       "@type": "PostalAddress",
