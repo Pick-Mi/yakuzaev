@@ -4,39 +4,8 @@ import logo from "@/assets/logo.svg";
 
 
 const Footer = () => {
-  const organizationSchema = {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    "name": "Yakuza EV",
-    "url": "https://yakuzaev.vercel.app",
-    "logo": "https://yakuzaev.vercel.app/assets/logo.svg",
-    "description": "Leading electric scooter manufacturer providing innovative and sustainable mobility solutions",
-    "address": {
-      "@type": "PostalAddress",
-      "addressCountry": "India"
-    },
-    "sameAs": [
-      "https://linkedin.com",
-      "https://twitter.com",
-      "https://youtube.com",
-      "https://facebook.com",
-      "https://instagram.com"
-    ],
-    "contactPoint": {
-      "@type": "ContactPoint",
-      "contactType": "Customer Service",
-      "availableLanguage": "English"
-    }
-  };
-
   return (
     <footer className="bg-black text-white relative w-full py-14 px-4 md:px-20">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(organizationSchema),
-        }}
-      />
       <div className="container mx-auto max-w-[1280px]">
         {/* Logo */}
         <div className="mb-16">
