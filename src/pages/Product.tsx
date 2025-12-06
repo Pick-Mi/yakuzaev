@@ -206,9 +206,21 @@ const Product = () => {
           try {
             if (parsedCustomMetadata && (parsedCustomMetadata as any).schema_markup) {
               const rawSchema = (parsedCustomMetadata as any).schema_markup;
-              // Use the raw string exactly as stored in DB (no JSON.parse to avoid errors)
-              productSchemaMarkup = typeof rawSchema === 'string' ? rawSchema : JSON.stringify(rawSchema);
-              console.log('Product Schema Markup from custom_metadata (raw string):', productSchemaMarkup);
+              // If it's a string, try to parse it first to validate, then stringify
+              // If it's an object, stringify it directly
+              if (typeof rawSchema === 'string') {
+                // Try to parse and re-stringify to ensure valid JSON
+                try {
+                  const parsed = JSON.parse(rawSchema);
+                  productSchemaMarkup = JSON.stringify(parsed);
+                } catch {
+                  // If parsing fails, use as-is (might be malformed)
+                  productSchemaMarkup = rawSchema;
+                }
+              } else if (typeof rawSchema === 'object') {
+                productSchemaMarkup = JSON.stringify(rawSchema);
+              }
+              console.log('Product Schema Markup from custom_metadata:', productSchemaMarkup);
             }
           } catch (e) {
             console.error('Error handling schema_markup from custom_metadata:', e);
