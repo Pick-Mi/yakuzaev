@@ -1,13 +1,5 @@
 {
   "rewrites": [
-    { "source": "/sitemap.xml", "destination": "/sitemap.xml" },
-    { "source": "/page-sitemap.xml", "destination": "/page-sitemap.xml" },
-    { "source": "/post-sitemap.xml", "destination": "/post-sitemap.xml" },
-    { "source": "/product-sitemap.xml", "destination": "/product-sitemap.xml" },
-    { "source": "/blog-sitemap.xml", "destination": "/blog-sitemap.xml" },
-    { "source": "/category-sitemap.xml", "destination": "/category-sitemap.xml" },
-    { "source": "/sitemap-stylesheet.xsl", "destination": "/sitemap-stylesheet.xsl" },
-    { "source": "/robots.txt", "destination": "/robots.txt" },
     {
       "source": "/products/:slug",
       "destination": "https://tqhwoizjlvjdiuemirsy.supabase.co/functions/v1/ssr-renderer?path=/products/:slug",
@@ -30,7 +22,7 @@
         }
       ]
     },
-    { "source": "/(.*)", "destination": "/index.html" }
+    { "source": "/((?!.*\\.xml$)(?!robots\\.txt$).*)", "destination": "/index.html" }
   ],
   "headers": [
     {
