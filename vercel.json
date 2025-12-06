@@ -1,6 +1,6 @@
 {
   "rewrites": [
-    { "source": "/sitemap_index.xml", "destination": "/sitemap_index.xml" },
+    { "source": "/sitemap.xml", "destination": "/sitemap.xml" },
     { "source": "/page-sitemap.xml", "destination": "/page-sitemap.xml" },
     { "source": "/post-sitemap.xml", "destination": "/post-sitemap.xml" },
     { "source": "/product-sitemap.xml", "destination": "/product-sitemap.xml" },
@@ -34,7 +34,7 @@
   ],
   "headers": [
     {
-      "source": "/sitemap_index.xml",
+      "source": "/sitemap.xml",
       "headers": [
         { "key": "Content-Type", "value": "text/xml; charset=utf-8" },
         { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" },
