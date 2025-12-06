@@ -8,6 +8,28 @@
     { "source": "/category-sitemap.xml", "destination": "/category-sitemap.xml" },
     { "source": "/sitemap-stylesheet.xsl", "destination": "/sitemap-stylesheet.xsl" },
     { "source": "/robots.txt", "destination": "/robots.txt" },
+    {
+      "source": "/products/:slug",
+      "destination": "https://tqhwoizjlvjdiuemirsy.supabase.co/functions/v1/ssr-renderer?path=/products/:slug",
+      "has": [
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": ".*(googlebot|bingbot|slurp|duckduckbot|baiduspider|yandexbot|facebookexternalhit|twitterbot|linkedinbot|whatsapp|telegrambot|applebot).*"
+        }
+      ]
+    },
+    {
+      "source": "/blogs/:slug",
+      "destination": "https://tqhwoizjlvjdiuemirsy.supabase.co/functions/v1/ssr-renderer?path=/blogs/:slug",
+      "has": [
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": ".*(googlebot|bingbot|slurp|duckduckbot|baiduspider|yandexbot|facebookexternalhit|twitterbot|linkedinbot|whatsapp|telegrambot|applebot).*"
+        }
+      ]
+    },
     { "source": "/(.*)", "destination": "/index.html" }
   ],
   "headers": [

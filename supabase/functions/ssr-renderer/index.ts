@@ -152,8 +152,16 @@ async function renderProductPage(supabase: any, slug: string) {
     "sku": product.sku
   };
 
-  // Schema from custom_metadata.schema_markup if present
-  const customSchemaString = (product.custom_metadata as any)?.schema_markup as string | undefined;
+  // Schema from custom_metadata.schema_markup if present (can be object or string)
+  const rawSchema = (product.custom_metadata as any)?.schema_markup;
+  let customSchemaString: string | null = null;
+  if (rawSchema) {
+    if (typeof rawSchema === 'string') {
+      customSchemaString = rawSchema;
+    } else if (typeof rawSchema === 'object') {
+      customSchemaString = JSON.stringify(rawSchema);
+    }
+  }
   const hasCustomSchema = !!customSchemaString;
 
   const images = Array.isArray(product.images) ? product.images : [];
@@ -321,7 +329,7 @@ async function renderProductPage(supabase: any, slug: string) {
     ogTitle: product.og_title || product.seo_title || product.name,
     ogDescription: product.og_description || product.seo_desc || product.description || '',
     ogImage: product.og_image || product.image_url || '',
-    canonicalUrl: product.canonical_url || `https://yourdomain.com/products/${slug}`,
+    canonicalUrl: product.canonical_url || `https://yakuzaev.vercel.app/products/${slug}`,
     schemaMarkup: hasCustomSchema ? customSchemaString : autoSchemaMarkup,
     bodyContent
   });
@@ -386,7 +394,7 @@ async function renderBlogPage(supabase: any, slug: string) {
     ogTitle: blog.title,
     ogDescription: blog.excerpt || '',
     ogImage: blog.featured_image || '',
-    canonicalUrl: `https://yourdomain.com/blogs/${slug}`,
+    canonicalUrl: `https://yakuzaev.vercel.app/blogs/${slug}`,
     schemaMarkup,
     bodyContent
   });
