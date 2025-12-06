@@ -11,6 +11,45 @@ import { useSEOSettings } from "@/hooks/useSEOSettings";
 const Index = () => {
   const seoSettings = useSEOSettings('/');
 
+  // Organization schema for the entire site
+  const organizationSchema = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Yakuza EV",
+    "url": "https://yakuzaev.vercel.app",
+    "logo": "https://yakuzaev.vercel.app/assets/logo.svg",
+    "description": "Leading electric scooter manufacturer providing innovative and sustainable mobility solutions",
+    "address": {
+      "@type": "PostalAddress",
+      "addressCountry": "India"
+    },
+    "sameAs": [
+      "https://linkedin.com",
+      "https://twitter.com",
+      "https://youtube.com",
+      "https://facebook.com",
+      "https://instagram.com"
+    ],
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "contactType": "Customer Service",
+      "availableLanguage": "English"
+    }
+  };
+
+  // WebSite schema with search action
+  const websiteSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Yakuza EV",
+    "url": "https://yakuzaev.vercel.app",
+    "description": "Leading electric scooter manufacturer providing innovative and sustainable mobility solutions",
+    "publisher": {
+      "@type": "Organization",
+      "name": "Yakuza EV"
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Helmet>
@@ -33,12 +72,24 @@ const Index = () => {
         {seoSettings?.canonical_url && (
           <link rel="canonical" href={seoSettings.canonical_url} />
         )}
-        {seoSettings?.schema_json && (
-          <script type="application/ld+json">
-            {JSON.stringify(seoSettings.schema_json, null, 2)}
-          </script>
-        )}
       </Helmet>
+      
+      {/* Organization Schema */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(organizationSchema),
+        }}
+      />
+      
+      {/* WebSite Schema */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(websiteSchema),
+        }}
+      />
+      
       <Header />
       <Hero />
       <ProductShowcase />
