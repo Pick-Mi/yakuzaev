@@ -28,11 +28,10 @@ import { ArrowLeft, Star, Heart, Shield, Truck, RotateCcw, Minus, Plus } from "l
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Helmet } from "react-helmet";
-import { useSchemaMarkup } from "@/hooks/useSchemaMarkup";
+
 
 const Product = () => {
   const { slug } = useParams();
-  const schemaMarkup = useSchemaMarkup(`/products/${slug}`);
   const navigate = useNavigate();
   const { addToCart } = useCart();
   const { toast } = useToast();
@@ -444,26 +443,24 @@ const Product = () => {
         <meta name="twitter:description" content={product.og_description || product.seo_desc || product.meta_description || product.description} />
         <meta name="twitter:image" content={product.og_image || product.image_url || product.thumbnail} />
         
-        {/* Schema from custom_metadata.schema_markup (always include if present) */}
-        {product.schema_markup && (
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{ __html: product.schema_markup }}
-          />
-        )}
-        
-        {/* Always include auto-generated Product schema as well */}
-        <script type="application/ld+json">
-          {JSON.stringify(buildProductSchema())}
-        </script>
-        
-        {/* Additional Schema from page_seo_settings table */}
-        {schemaMarkup && (
-          <script type="application/ld+json">
-            {JSON.stringify(schemaMarkup, null, 2)}
-          </script>
-        )}
       </Helmet>
+      
+      {/* Product Schema - outside Helmet for proper rendering */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(buildProductSchema()),
+        }}
+      />
+      
+      {/* Custom schema from DB */}
+      {product.schema_markup && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: product.schema_markup }}
+        />
+      )}
+      
       <Header />
       
       {/* Hero Section */}
