@@ -386,45 +386,72 @@ const Product = () => {
     );
   }
 
-  // Build Product Schema with custom metadata
+  // Build Product Schema with custom metadata - Properly structured for Google
   const buildProductSchema = () => {
-    const schema: any = {
-      "@context": "https://schema.org/",
+    const currentPrice = getCurrentPrice();
+    const priceValidUntil = product.scheme_end_date || new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+    const productUrl = `https://yakuzaev.vercel.app/product/${product.slug}`;
+    const productImage = product.image_url || product.thumbnail || product.og_image;
+    
+    const schema: Record<string, any> = {
+      "@context": "https://schema.org",
       "@type": "Product",
       "name": product.seo_title || product.name,
-      "description": product.seo_desc || product.description || product.meta_description,
-      "image": product.image_url || product.thumbnail,
+      "description": product.seo_desc || product.description || product.meta_description || "",
+      "url": productUrl,
+      "image": productImage ? [productImage] : [],
       "brand": {
         "@type": "Brand",
-        "name": product.custom_metadata?.brand || "Your Brand"
+        "name": product.custom_metadata?.brand || "Yakuza EV"
       },
-      "sku": product.sku,
+      "manufacturer": {
+        "@type": "Organization",
+        "name": "Yakuza EV"
+      },
       "offers": {
         "@type": "Offer",
-        "url": window.location.href,
+        "url": productUrl,
         "priceCurrency": "INR",
-        "price": getCurrentPrice(),
+        "price": currentPrice,
         "availability": "https://schema.org/InStock",
-        "priceValidUntil": product.scheme_end_date || new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+        "priceValidUntil": priceValidUntil,
+        "seller": {
+          "@type": "Organization",
+          "name": "Yakuza EV"
+        }
       }
     };
 
-    // Add aggregateRating if available
+    // Add SKU if available
+    if (product.sku) {
+      schema.sku = product.sku;
+    }
+
+    // Add aggregateRating with proper structure
     if (product.rating && product.reviewCount) {
       schema.aggregateRating = {
         "@type": "AggregateRating",
         "ratingValue": product.rating,
+        "bestRating": 5,
+        "worstRating": 1,
         "reviewCount": product.reviewCount
       };
     }
 
-    // Add custom metadata as additionalProperty
-    if (product.custom_metadata && Object.keys(product.custom_metadata).length > 0) {
-      schema.additionalProperty = Object.entries(product.custom_metadata).map(([key, value]) => ({
-        "@type": "PropertyValue",
-        "name": key.replace(/_/g, ' '),
-        "value": typeof value === 'object' ? JSON.stringify(value) : String(value)
-      }));
+    // Add additionalProperty for custom metadata (excluding schema_markup and internal fields)
+    const excludeKeys = ['schema_markup', 'brand'];
+    const customProps = product.custom_metadata 
+      ? Object.entries(product.custom_metadata)
+          .filter(([key]) => !excludeKeys.includes(key))
+          .map(([key, value]) => ({
+            "@type": "PropertyValue",
+            "name": key.replace(/_/g, ' ').replace(/\b\w/g, (c: string) => c.toUpperCase()),
+            "value": typeof value === 'object' ? JSON.stringify(value) : String(value)
+          }))
+      : [];
+    
+    if (customProps.length > 0) {
+      schema.additionalProperty = customProps;
     }
 
     return schema;
