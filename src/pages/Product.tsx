@@ -238,8 +238,8 @@ const Product = () => {
             image_url: response.data.image_url,
             images: parsedImages,
             image: response.data.thumbnail || (parsedImages.length > 0 ? parsedImages[0] : response.data.image_url),
-            rating: 5,
-            reviewCount: Math.floor(Math.random() * 200) + 10,
+            rating: parsedCustomMetadata?.rating || null,
+            reviewCount: parsedCustomMetadata?.review_count || null,
             recommended: true,
             description: response.data.description || "High-quality product for your needs.",
             variants: parsedVariants,
@@ -427,8 +427,8 @@ const Product = () => {
       schema.sku = product.sku;
     }
 
-    // Add aggregateRating with proper structure
-    if (product.rating && product.reviewCount) {
+    // Add aggregateRating only if values exist in database (custom_metadata)
+    if (product.rating !== null && product.reviewCount !== null) {
       schema.aggregateRating = {
         "@type": "AggregateRating",
         "ratingValue": product.rating,
