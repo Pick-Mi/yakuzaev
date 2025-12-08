@@ -484,21 +484,13 @@ const Product = () => {
         
       </Helmet>
       
-      {/* Product Schema - outside Helmet for proper rendering */}
+      {/* Single Product Schema - merged to avoid duplicates */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(buildProductSchema()),
         }}
       />
-      
-      {/* Custom schema from DB */}
-      {product.schema_markup && (
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: product.schema_markup }}
-        />
-      )}
       
       <Header />
       
