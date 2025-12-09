@@ -384,50 +384,13 @@ const Product = () => {
     );
   }
 
-  // Build Product Schema with custom metadata - Properly structured for Google
+  // Build Product Schema - minimal structure
   const buildProductSchema = () => {
-    const currentPrice = getCurrentPrice();
-    const priceValidUntil = product.scheme_end_date || new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
-    const productUrl = `https://yakuzaev.vercel.app/product/${product.slug}`;
-    const productImage = product.image_url || product.thumbnail || product.og_image;
-    
     const schema: Record<string, any> = {
       "@context": "https://schema.org",
       "@type": "Product",
-      "name": product.seo_title || product.name,
-      "description": product.seo_desc || product.description || product.meta_description || "",
-      "url": productUrl,
-      "image": productImage ? [productImage] : [],
-      "offers": {
-        "@type": "Offer",
-        "url": productUrl,
-        "priceCurrency": "INR",
-        "price": currentPrice,
-        "availability": "https://schema.org/InStock"
-      }
+      "name": product.seo_title || product.name
     };
-
-    // Add SKU if available
-    if (product.sku) {
-      schema.sku = product.sku;
-    }
-
-
-    // Add additionalProperty for custom metadata (excluding schema_markup and internal fields)
-    const excludeKeys = ['schema_markup', 'brand'];
-    const customProps = product.custom_metadata 
-      ? Object.entries(product.custom_metadata)
-          .filter(([key]) => !excludeKeys.includes(key))
-          .map(([key, value]) => ({
-            "@type": "PropertyValue",
-            "name": key.replace(/_/g, ' ').replace(/\b\w/g, (c: string) => c.toUpperCase()),
-            "value": typeof value === 'object' ? JSON.stringify(value) : String(value)
-          }))
-      : [];
-    
-    if (customProps.length > 0) {
-      schema.additionalProperty = customProps;
-    }
 
     return schema;
   };
