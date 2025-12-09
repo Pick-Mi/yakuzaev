@@ -155,11 +155,30 @@ async function renderProductPage(supabase: any, slug: string) {
   // Schema from custom_metadata.schema_markup if present (can be object or string)
   const rawSchema = (product.custom_metadata as any)?.schema_markup;
   let customSchemaString: string | null = null;
+  let schemaImageUrl: string | null = null;
+  
   if (rawSchema) {
+    let schemaObj: any = null;
     if (typeof rawSchema === 'string') {
       customSchemaString = rawSchema;
+      try {
+        schemaObj = JSON.parse(rawSchema);
+      } catch (e) {
+        console.log('Could not parse schema string for image extraction');
+      }
     } else if (typeof rawSchema === 'object') {
+      schemaObj = rawSchema;
       customSchemaString = JSON.stringify(rawSchema);
+    }
+    
+    // Extract first image URL from schema's image array
+    if (schemaObj?.image && Array.isArray(schemaObj.image) && schemaObj.image.length > 0) {
+      const firstImage = schemaObj.image[0];
+      if (typeof firstImage === 'string') {
+        schemaImageUrl = firstImage;
+      } else if (firstImage?.url) {
+        schemaImageUrl = firstImage.url;
+      }
     }
   }
   const hasCustomSchema = !!customSchemaString;
@@ -328,7 +347,7 @@ async function renderProductPage(supabase: any, slug: string) {
     keywords: product.meta_keywords || '',
     ogTitle: product.og_title || product.seo_title || product.name,
     ogDescription: product.og_description || product.seo_desc || product.description || '',
-    ogImage: product.og_image || product.image_url || product.thumbnail || (images.length > 0 ? images[0] : ''),
+    ogImage: schemaImageUrl || product.og_image || product.image_url || product.thumbnail || (images.length > 0 ? images[0] : ''),
     canonicalUrl: product.canonical_url || `https://yakuzaev.vercel.app/products/${slug}`,
     schemaMarkup: hasCustomSchema ? customSchemaString : autoSchemaMarkup,
     bodyContent
