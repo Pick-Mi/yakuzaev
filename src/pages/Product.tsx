@@ -384,16 +384,6 @@ const Product = () => {
     );
   }
 
-  // Build Product Schema - minimal structure
-  const buildProductSchema = () => {
-    const schema: Record<string, any> = {
-      "@context": "https://schema.org",
-      "@type": "Product",
-      "name": product.seo_title || product.name
-    };
-
-    return schema;
-  };
 
   return (
     <div className="min-h-screen bg-[#F8F9F9]">
@@ -422,13 +412,6 @@ const Product = () => {
         
       </Helmet>
       
-      {/* Product Schema - outside Helmet for proper rendering */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(buildProductSchema()),
-        }}
-      />
       
       {/* Custom schema from DB */}
       {product.schema_markup && (
