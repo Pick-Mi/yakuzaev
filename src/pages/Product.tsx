@@ -398,25 +398,12 @@ const Product = () => {
       "description": product.seo_desc || product.description || product.meta_description || "",
       "url": productUrl,
       "image": productImage ? [productImage] : [],
-      "brand": {
-        "@type": "Brand",
-        "name": product.custom_metadata?.brand || "Yakuza EV"
-      },
-      "manufacturer": {
-        "@type": "Organization",
-        "name": "Yakuza EV"
-      },
       "offers": {
         "@type": "Offer",
         "url": productUrl,
         "priceCurrency": "INR",
         "price": currentPrice,
-        "availability": "https://schema.org/InStock",
-        "priceValidUntil": priceValidUntil,
-        "seller": {
-          "@type": "Organization",
-          "name": "Yakuza EV"
-        }
+        "availability": "https://schema.org/InStock"
       }
     };
 
