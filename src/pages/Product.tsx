@@ -238,8 +238,6 @@ const Product = () => {
             image_url: response.data.image_url,
             images: parsedImages,
             image: response.data.thumbnail || (parsedImages.length > 0 ? parsedImages[0] : response.data.image_url),
-            rating: parsedCustomMetadata?.rating || null,
-            reviewCount: parsedCustomMetadata?.review_count || null,
             recommended: true,
             description: response.data.description || "High-quality product for your needs.",
             variants: parsedVariants,
@@ -427,16 +425,6 @@ const Product = () => {
       schema.sku = product.sku;
     }
 
-    // Add aggregateRating only if values exist in database (custom_metadata)
-    if (product.rating !== null && product.reviewCount !== null) {
-      schema.aggregateRating = {
-        "@type": "AggregateRating",
-        "ratingValue": product.rating,
-        "bestRating": 5,
-        "worstRating": 1,
-        "reviewCount": product.reviewCount
-      };
-    }
 
     // Add additionalProperty for custom metadata (excluding schema_markup and internal fields)
     const excludeKeys = ['schema_markup', 'brand'];
