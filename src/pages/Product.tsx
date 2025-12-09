@@ -399,7 +399,7 @@ const Product = () => {
         {/* Open Graph Meta Tags */}
         <meta property="og:title" content={product.og_title || product.seo_title || product.meta_title || product.name} />
         <meta property="og:description" content={product.og_description || product.seo_desc || product.meta_description || product.description} />
-        <meta property="og:image" content={product.og_image || product.image_url || product.thumbnail} />
+        <meta property="og:image" content={product.og_image || product.image_url || product.thumbnail || ''} />
         <meta property="og:type" content="product" />
         <meta property="og:price:amount" content={String(getCurrentPrice())} />
         <meta property="og:price:currency" content="INR" />

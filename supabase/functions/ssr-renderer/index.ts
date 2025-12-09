@@ -138,7 +138,7 @@ async function renderProductPage(supabase: any, slug: string) {
     "@type": "Product",
     "name": product.seo_title || product.meta_title || product.name,
     "description": product.seo_desc || product.meta_description || product.description,
-    "image": product.og_image || product.image_url,
+    "image": product.og_image || product.image_url || product.thumbnail,
     "brand": {
       "@type": "Brand",
       "name": "Yakuza"
@@ -328,7 +328,7 @@ async function renderProductPage(supabase: any, slug: string) {
     keywords: product.meta_keywords || '',
     ogTitle: product.og_title || product.seo_title || product.name,
     ogDescription: product.og_description || product.seo_desc || product.description || '',
-    ogImage: product.og_image || product.image_url || '',
+    ogImage: product.og_image || product.image_url || product.thumbnail || (images.length > 0 ? images[0] : ''),
     canonicalUrl: product.canonical_url || `https://yakuzaev.vercel.app/products/${slug}`,
     schemaMarkup: hasCustomSchema ? customSchemaString : autoSchemaMarkup,
     bodyContent
