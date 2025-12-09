@@ -139,12 +139,6 @@ const JobApplication = () => {
   };
 
   const onSubmit = async (data: ApplicationForm) => {
-    if (!user) {
-      toast.error("Please login to apply");
-      navigate("/auth");
-      return;
-    }
-
     setIsSubmitting(true);
 
     try {
@@ -154,7 +148,7 @@ const JobApplication = () => {
       // Upload resume if provided
       if (resumeFile) {
         const fileExt = resumeFile.name.split('.').pop();
-        const fileName = `${user.id}_${Date.now()}.${fileExt}`;
+        const fileName = `guest_${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
         
         try {
           const { error: uploadError } = await supabase.storage
@@ -183,7 +177,7 @@ const JobApplication = () => {
       const { error: insertError } = await supabase
         .from('job_applications')
         .insert({
-          user_id: user.id,
+          user_id: user?.id || null,
           job_id: id || 'unknown',
           job_title: jobData.title,
           salutation: data.salutation,
