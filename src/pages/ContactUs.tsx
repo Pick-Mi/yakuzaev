@@ -123,10 +123,10 @@ const ContactUs = () => {
               </Button>
             </div>
 
-            {/* Type of Issue & Help Topics - Desktop only (fixed in sidebar) */}
+            {/* Type of Issue & Topics - Desktop only (fixed in sidebar - only first 2 sections) */}
             {helpSections.length > 0 && (
               <div className="hidden lg:block mt-6 space-y-6">
-                {helpSections.map((section) => (
+                {helpSections.slice(0, 2).map((section) => (
                   <div key={section.id} className="bg-white p-6 shadow-sm rounded-none">
                     <h3 className="text-base font-bold mb-3 text-gray-900 uppercase tracking-wide">{section.title}</h3>
                     <div className="space-y-2">
