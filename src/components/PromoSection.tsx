@@ -47,55 +47,52 @@ const PromoSection = () => {
 
   return (
     <section className="w-full bg-[#f8f9f9] relative py-8 sm:py-10 lg:py-0 min-h-[500px] sm:min-h-[600px] lg:h-[612px] overflow-hidden">
-      <div className="relative bg-white mx-auto my-4 sm:my-6 lg:my-0 lg:h-[522px] overflow-hidden lg:top-[45px] lg:w-[1300px] max-w-[95%] p-6 sm:p-8 lg:p-0 flex flex-col-reverse lg:flex-col items-center lg:items-start lg:block">
-        {/* Text Content - Shows at bottom on mobile/tablet */}
-        <div className="flex flex-col items-center lg:items-start w-full lg:w-auto order-2 lg:order-none mt-6 lg:mt-0">
-          {/* Main Title */}
-          <h2 className="font-['Inter'] font-medium leading-[1.4] sm:leading-[1.5] lg:leading-[54px] lg:absolute lg:left-[40px] text-[#212121] text-[18px] sm:text-[22px] md:text-[26px] lg:text-[28px] lg:top-[51px] lg:w-[267px] mb-4 sm:mb-6 lg:mb-0 text-center lg:text-left">
-            {title}
-          </h2>
-          
-          {/* Price */}
-          <div className="font-['Inter'] font-extrabold leading-[1.3] sm:leading-[1.4] lg:leading-[54px] lg:absolute lg:left-[167.5px] lg:-translate-x-1/2 text-[#212121] text-[28px] sm:text-[36px] md:text-[44px] lg:text-[48px] text-center lg:text-left lg:whitespace-nowrap lg:top-[217px] mb-4 sm:mb-6 lg:mb-0">
-            {subtitle}
-          </div>
-          
-          {/* Features */}
-          <div className="flex flex-wrap sm:flex-nowrap gap-3 sm:gap-[20px] items-center justify-center lg:justify-start lg:absolute lg:left-[40px] lg:top-[337px] mb-4 sm:mb-6 lg:mb-0">
-            <span className="font-['Poppins'] leading-normal text-[#4b4f54] opacity-50 text-[12px] sm:text-[14px] md:text-[15px] lg:text-[15.932px] whitespace-nowrap">
-              {feature1}
-            </span>
-            <div className="relative h-[14.936px] w-0">
-              <div className="absolute bottom-0 left-[-0.5px] right-[-0.5px] top-0 w-[1px] bg-[#B5B5B4]"></div>
-            </div>
-            <span className="font-['Poppins'] leading-normal text-[#212121] opacity-50 text-[12px] sm:text-[14px] md:text-[15px] lg:text-[15.932px] whitespace-nowrap">
-              {feature2}
-            </span>
-          </div>
-          
-          {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 md:gap-[15px] items-stretch sm:items-center justify-center lg:justify-start lg:absolute lg:left-[calc(50%-434.5px)] lg:-translate-x-1/2 lg:top-[415px] w-full max-w-[400px] sm:max-w-none sm:w-auto lg:w-[351px] mb-0 lg:mb-0 px-4 sm:px-0">
-            <Link
-              to="/products"
-              className="w-full sm:flex-1 bg-black h-[48px] sm:h-[50px] md:h-[52px] lg:h-[55px] flex items-center justify-center overflow-hidden transition-all hover:bg-[#333] hover:scale-[1.02] active:scale-[0.98] px-[25px]"
-            >
-              <span className="font-['Poppins'] font-medium leading-normal text-white text-[14px] sm:text-[15px] lg:text-[16px] whitespace-nowrap">
-                Book Now
-              </span>
-            </Link>
-            <Link
-              to="/products"
-              className="w-full sm:flex-1 bg-[#f8f9f9] border border-transparent h-[48px] sm:h-[50px] md:h-[52px] lg:h-[55px] flex items-center justify-center overflow-hidden transition-all hover:bg-[#e8e9ea] hover:border-[#d0d0d0] hover:scale-[1.02] active:scale-[0.98] px-[25px]"
-            >
-              <span className="font-['Inter'] font-medium leading-normal text-black text-[13px] sm:text-[14px] lg:text-[14px] whitespace-nowrap">
-                Explore 
-              </span>
-            </Link>
-          </div>
+      <div className="relative bg-white mx-auto my-4 sm:my-6 lg:my-0 lg:h-[522px] overflow-hidden lg:top-[45px] lg:w-[1300px] max-w-[95%] p-6 sm:p-8 lg:p-0 flex flex-col items-center lg:items-start lg:block">
+        {/* Main Title */}
+        <h2 className="font-['Inter'] font-medium leading-[1.4] sm:leading-[1.5] lg:leading-[54px] lg:absolute lg:left-[40px] text-[#212121] text-[18px] sm:text-[22px] md:text-[26px] lg:text-[28px] lg:top-[51px] lg:w-[267px] mb-4 sm:mb-6 lg:mb-0 text-center lg:text-left">
+          {title}
+        </h2>
+        
+        {/* Price */}
+        <div className="font-['Inter'] font-extrabold leading-[1.3] sm:leading-[1.4] lg:leading-[54px] lg:absolute lg:left-[167.5px] lg:-translate-x-1/2 text-[#212121] text-[28px] sm:text-[36px] md:text-[44px] lg:text-[48px] text-center lg:text-left lg:whitespace-nowrap lg:top-[217px] mb-4 sm:mb-6 lg:mb-0">
+          {subtitle}
         </div>
         
-        {/* Product Images Grid - Shows at top on mobile/tablet */}
-        <div className="grid grid-cols-2 gap-2 sm:gap-3 md:gap-4 w-full lg:block lg:absolute lg:inset-0 order-1 lg:order-none">
+        {/* Features */}
+        <div className="flex flex-wrap sm:flex-nowrap gap-3 sm:gap-[20px] items-center justify-center lg:justify-start lg:absolute lg:left-[40px] lg:top-[337px] mb-4 sm:mb-6 lg:mb-0">
+          <span className="font-['Poppins'] leading-normal text-[#4b4f54] opacity-50 text-[12px] sm:text-[14px] md:text-[15px] lg:text-[15.932px] whitespace-nowrap">
+            {feature1}
+          </span>
+          <div className="relative h-[14.936px] w-0">
+            <div className="absolute bottom-0 left-[-0.5px] right-[-0.5px] top-0 w-[1px] bg-[#B5B5B4]"></div>
+          </div>
+          <span className="font-['Poppins'] leading-normal text-[#212121] opacity-50 text-[12px] sm:text-[14px] md:text-[15px] lg:text-[15.932px] whitespace-nowrap">
+            {feature2}
+          </span>
+        </div>
+        
+        {/* Action Buttons */}
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 md:gap-[15px] items-stretch sm:items-center justify-center lg:justify-start lg:absolute lg:left-[calc(50%-434.5px)] lg:-translate-x-1/2 lg:top-[415px] w-full max-w-[400px] sm:max-w-none sm:w-auto lg:w-[351px] mb-6 lg:mb-0 px-4 sm:px-0">
+          <Link
+            to="/products"
+            className="w-full sm:flex-1 bg-black h-[48px] sm:h-[50px] md:h-[52px] lg:h-[55px] flex items-center justify-center overflow-hidden transition-all hover:bg-[#333] hover:scale-[1.02] active:scale-[0.98] px-[25px]"
+          >
+            <span className="font-['Poppins'] font-medium leading-normal text-white text-[14px] sm:text-[15px] lg:text-[16px] whitespace-nowrap">
+              Book Now
+            </span>
+          </Link>
+          <Link
+            to="/products"
+            className="w-full sm:flex-1 bg-[#f8f9f9] border border-transparent h-[48px] sm:h-[50px] md:h-[52px] lg:h-[55px] flex items-center justify-center overflow-hidden transition-all hover:bg-[#e8e9ea] hover:border-[#d0d0d0] hover:scale-[1.02] active:scale-[0.98] px-[25px]"
+          >
+            <span className="font-['Inter'] font-medium leading-normal text-black text-[13px] sm:text-[14px] lg:text-[14px] whitespace-nowrap">
+              Explore 
+            </span>
+          </Link>
+        </div>
+        
+        {/* Product Images Grid */}
+        <div className="grid grid-cols-2 gap-2 sm:gap-3 md:gap-4 w-full lg:block lg:absolute lg:inset-0">
           {/* Main Image - Top Right */}
           <div className="col-span-2 sm:col-span-1 lg:absolute bg-[#d9d9d9] h-[180px] sm:h-[220px] md:h-[260px] lg:h-[288px] lg:right-0 lg:top-0 sm:w-full lg:w-[572px]">
             <img
