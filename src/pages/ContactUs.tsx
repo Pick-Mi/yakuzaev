@@ -123,6 +123,29 @@ const ContactUs = () => {
               </Button>
             </div>
 
+            {/* Type of Issue & Help Topics - Desktop only (fixed in sidebar) */}
+            {helpSections.length > 0 && (
+              <div className="hidden lg:block mt-6 space-y-6">
+                {helpSections.map((section) => (
+                  <div key={section.id} className="bg-white p-6 shadow-sm rounded-none">
+                    <h3 className="text-base font-bold mb-3 text-gray-900 uppercase tracking-wide">{section.title}</h3>
+                    <div className="space-y-2">
+                      {section.subtitles.map((item, index) => (
+                        <button
+                          key={index}
+                          className="w-full text-left hover:bg-gray-50 transition-colors p-2 rounded"
+                        >
+                          <span className="font-normal text-sm text-gray-700 hover:text-blue-600">
+                            {getSubtitleTitle(item)}
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
             {/* Suggestions for you - Mobile/Tablet only */}
             <div className="bg-white p-6 shadow-sm rounded-none mt-6 lg:hidden">
               <h2 className="text-xl font-semibold mb-3 text-gray-900">Suggestions for you</h2>
