@@ -219,7 +219,7 @@ const JobApplication = () => {
       <Header />
       
       {/* Fixed Job Info Section - Below Header */}
-      <div className="fixed top-16 left-0 right-0 bg-white dark:bg-neutral-950 border-b border-border z-40">
+      <div className="fixed top-[100px] left-0 right-0 bg-white dark:bg-neutral-950 border-b border-border z-40">
         <div className="max-w-7xl mx-auto px-10 py-4">
           <div className="flex items-center justify-between">
             <div>
@@ -250,7 +250,7 @@ const JobApplication = () => {
         </div>
       </div>
       
-      <main className="flex-1 pt-36" style={{ backgroundColor: '#F8F9F9' }}>
+      <main className="flex-1 pt-[200px]" style={{ backgroundColor: '#F8F9F9' }}>
         <div className="max-w-7xl mx-auto px-10 py-12">
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
