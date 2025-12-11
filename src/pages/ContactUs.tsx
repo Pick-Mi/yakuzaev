@@ -219,8 +219,8 @@ const ContactUs = () => {
               </div>
             </section>
 
-            {/* All Help Sections - Desktop only */}
-            {helpSections.map((section) => (
+            {/* Remaining Help Sections - Desktop only (skip first 2 shown in sidebar) */}
+            {helpSections.slice(2).map((section) => (
               <section key={section.id} className="bg-white p-6 shadow-sm rounded-none">
                 <h2 className="text-2xl font-semibold mb-2 text-gray-900">{section.title}</h2>
                 <p className="text-sm text-gray-600 mb-6">Find answers to common questions</p>
