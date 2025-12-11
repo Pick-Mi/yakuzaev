@@ -100,31 +100,6 @@ const ContactUs = () => {
       
       <main className="flex-1 container mx-auto px-4 py-8 mt-32 max-w-7xl" style={{ backgroundColor: '#F8F9F9' }}>
         
-        {/* Suggestions - Top Section */}
-        <section className="bg-white p-6 shadow-sm rounded-none mb-8">
-          <h2 className="text-2xl font-semibold mb-2 text-gray-900">Suggestions for you</h2>
-          <p className="text-sm text-gray-600 mb-6">Select an action or article to learn more</p>
-          
-          <div className="space-y-3">
-            {latestSuggestions.map((suggestion, index) => (
-              <button
-                key={index}
-                className="w-full text-left hover:bg-gray-50 transition-colors p-3 rounded group"
-              >
-                <div className="flex items-start justify-between gap-3">
-                  <div className="flex-1">
-                    <h3 className="font-normal text-base text-gray-900 mb-1 underline group-hover:text-blue-600">
-                      {suggestion.title}
-                    </h3>
-                    <p className="text-sm text-gray-500">{suggestion.subtitle}</p>
-                  </div>
-                  <ChevronRight className="w-5 h-5 text-gray-400 flex-shrink-0 mt-1" />
-                </div>
-              </button>
-            ))}
-          </div>
-        </section>
-
         <div className="grid lg:grid-cols-[280px_1fr] gap-8">
           {/* Left Sidebar */}
           <aside className="space-y-6 lg:sticky lg:top-32 lg:self-start">
@@ -144,6 +119,31 @@ const ContactUs = () => {
                   Contact With WhatsApp
                 </a>
               </Button>
+            </div>
+
+            {/* Suggestions for you */}
+            <div className="bg-white p-6 shadow-sm rounded-none">
+              <h2 className="text-xl font-semibold mb-3 text-gray-900">Suggestions for you</h2>
+              <p className="text-sm text-gray-600 mb-4">Select an action or article to learn more</p>
+              
+              <div className="space-y-2">
+                {latestSuggestions.map((suggestion, index) => (
+                  <button
+                    key={index}
+                    className="w-full text-left hover:bg-gray-50 transition-colors p-2 rounded group"
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex-1">
+                        <h3 className="font-normal text-sm text-gray-900 underline group-hover:text-blue-600">
+                          {suggestion.title}
+                        </h3>
+                        <p className="text-xs text-gray-500">{suggestion.subtitle}</p>
+                      </div>
+                      <ChevronRight className="w-4 h-4 text-gray-400 flex-shrink-0 mt-0.5" />
+                    </div>
+                  </button>
+                ))}
+              </div>
             </div>
 
             {/* Type of Issue & Help Topics from Database */}
