@@ -349,6 +349,33 @@ export type Database = {
         }
         Relationships: []
       }
+      email_otp_verifications: {
+        Row: {
+          created_at: string | null
+          email: string
+          expires_at: string
+          id: string
+          otp_code: string
+          verified: boolean | null
+        }
+        Insert: {
+          created_at?: string | null
+          email: string
+          expires_at: string
+          id?: string
+          otp_code: string
+          verified?: boolean | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string
+          expires_at?: string
+          id?: string
+          otp_code?: string
+          verified?: boolean | null
+        }
+        Relationships: []
+      }
       feature_section: {
         Row: {
           created_at: string
