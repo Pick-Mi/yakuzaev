@@ -1,8 +1,32 @@
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { supabase } from "@/integrations/supabase/client";
+
+interface CustomPage {
+  id: string;
+  page_name: string;
+  page_slug: string;
+  is_active: boolean;
+}
 
 const Sitemap = () => {
+  const [customPages, setCustomPages] = useState<CustomPage[]>([]);
+
+  useEffect(() => {
+    const fetchCustomPages = async () => {
+      const { data } = await supabase
+        .from('page_management')
+        .select('id, page_name, page_slug, is_active')
+        .eq('is_active', true)
+        .order('page_name');
+      
+      if (data) setCustomPages(data);
+    };
+    fetchCustomPages();
+  }, []);
+
   const sitePages = [
     {
       title: "Main Pages",
@@ -67,6 +91,30 @@ const Sitemap = () => {
               </ul>
             </div>
           ))}
+
+          {/* Dynamic Custom Pages Section */}
+          {customPages.length > 0 && (
+            <div className="space-y-6">
+              <h2 className="text-2xl font-semibold border-b pb-3">
+                Other Pages
+              </h2>
+              <ul className="space-y-3">
+                {customPages.map((page) => (
+                  <li key={page.id}>
+                    <Link 
+                      to={page.page_slug}
+                      className="text-lg hover:text-primary transition-colors inline-flex items-center gap-2"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                      {page.page_name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
       </main>
 
