@@ -254,6 +254,37 @@ const JobApplication = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-64 pb-12">
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+            {/* Mobile/Tablet - Autofill Card at Top */}
+            <div className="lg:hidden bg-white dark:bg-neutral-950 p-8 space-y-6">
+              <h2 className="text-xl font-semibold text-foreground">Autofill Application</h2>
+              <p className="text-sm text-muted-foreground">Upload your resume/CV and let AI auto-fill your application.</p>
+              
+              <div className="border-2 border-dashed border-border rounded-lg p-12 text-center bg-muted/20 min-h-[200px] flex flex-col items-center justify-center">
+                <input
+                  type="file"
+                  id="resume-mobile"
+                  accept=".pdf,.doc,.docx"
+                  onChange={handleResumeUpload}
+                  className="hidden"
+                  disabled={isParsingResume}
+                />
+                <label htmlFor="resume-mobile" className={`${isParsingResume ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}>
+                  <Upload className={`mx-auto h-12 w-12 text-muted-foreground mb-4 ${isParsingResume ? 'animate-pulse' : ''}`} />
+                  <p className="text-sm text-foreground mb-1 font-medium">
+                    {isParsingResume ? "Scanning resume with AI..." : "Upload your resume / CV"}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    {resumeFile ? resumeFile.name : "Word File / PDF file"}
+                  </p>
+                  {resumeFile && !isParsingResume && (
+                    <p className="text-xs text-green-600 dark:text-green-400 mt-2">
+                      ✓ Resume scanned - fields auto-filled
+                    </p>
+                  )}
+                </label>
+              </div>
+            </div>
+
             {/* Two Column Layout */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               {/* Left Column - Personal Details, Job Info, and CTA */}
@@ -415,8 +446,8 @@ const JobApplication = () => {
                 </Button>
               </div>
 
-              {/* Right Column - Autofill Application (Sticky) */}
-              <div className="bg-white dark:bg-neutral-950 p-8 space-y-6 sticky top-60 self-start">
+              {/* Right Column - Autofill Application (Sticky) - Desktop Only */}
+              <div className="hidden lg:block bg-white dark:bg-neutral-950 p-8 space-y-6 sticky top-60 self-start">
                 <h2 className="text-xl font-semibold text-foreground">Autofill Application</h2>
                 <p className="text-sm text-muted-foreground">Upload your resume/CV and let AI auto-fill your application.</p>
                 
