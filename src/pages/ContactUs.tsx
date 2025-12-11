@@ -10,10 +10,15 @@ import { useSEOSettings } from "@/hooks/useSEOSettings";
 import { supabase } from "@/integrations/supabase/client";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
+interface SubtitleItem {
+  title: string;
+  paragraph: string;
+}
+
 interface HelpSection {
   id: string;
   title: string;
-  subtitles: string[];
+  subtitles: SubtitleItem[];
   display_order: number;
 }
 
@@ -30,7 +35,7 @@ const ContactUs = () => {
         .order('display_order');
       
       if (data && !error) {
-        setHelpSections(data as HelpSection[]);
+        setHelpSections(data as unknown as HelpSection[]);
       }
     };
     
@@ -109,24 +114,24 @@ const ContactUs = () => {
                     <h3 className="text-base font-bold mb-4 text-gray-900 uppercase tracking-wide">{section.title}</h3>
                                     {/* Desktop view - simple list */}
                                     <div className="hidden lg:block space-y-3">
-                                      {section.subtitles.map((subtitle, index) => (
+                                      {section.subtitles.map((item, index) => (
                                         <button
                                           key={index}
                                           className="block w-full text-left text-base text-gray-700 hover:text-gray-900 transition-colors"
                                         >
-                                          {subtitle}
+                                          {item.title}
                                         </button>
                                       ))}
                                     </div>
                                     {/* Mobile/Tablet view - accordion */}
                                     <Accordion type="single" collapsible className="lg:hidden">
-                                      {section.subtitles.map((subtitle, index) => (
+                                      {section.subtitles.map((item, index) => (
                                         <AccordionItem key={index} value={`item-${index}`} className="border-b-0">
                                           <AccordionTrigger className="text-base text-gray-700 hover:text-gray-900 py-2 hover:no-underline">
-                                            {subtitle}
+                                            {item.title}
                                           </AccordionTrigger>
                                           <AccordionContent className="text-sm text-gray-600 pb-3">
-                                            More information about this topic will be displayed here.
+                                            {item.paragraph || "More information about this topic will be displayed here."}
                                           </AccordionContent>
                                         </AccordionItem>
                                       ))}
@@ -174,24 +179,24 @@ const ContactUs = () => {
                 
                 {/* Desktop view - simple list */}
                 <div className="hidden lg:block space-y-4">
-                  {deliveryQuestions.map((question, index) => (
+                  {deliveryQuestions.map((item, index) => (
                     <button
                       key={index}
                       className="block w-full text-left text-base text-gray-700 hover:text-gray-900 hover:underline transition-colors py-1"
                     >
-                      {question}
+                      {item.title}
                     </button>
                   ))}
                 </div>
                 {/* Mobile/Tablet view - accordion */}
                 <Accordion type="single" collapsible className="lg:hidden">
-                  {deliveryQuestions.map((question, index) => (
+                  {deliveryQuestions.map((item, index) => (
                     <AccordionItem key={index} value={`delivery-${index}`} className="border-b-0">
                       <AccordionTrigger className="text-base text-gray-700 hover:text-gray-900 py-2 hover:no-underline">
-                        {question}
+                        {item.title}
                       </AccordionTrigger>
                       <AccordionContent className="text-sm text-gray-600 pb-3">
-                        More information about this topic will be displayed here.
+                        {item.paragraph || "More information about this topic will be displayed here."}
                       </AccordionContent>
                     </AccordionItem>
                   ))}
