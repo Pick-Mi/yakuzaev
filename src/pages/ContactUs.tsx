@@ -12,15 +12,27 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 
 interface SubtitleItem {
   title: string;
-  paragraph: string;
+  paragraph?: string;
 }
 
 interface HelpSection {
   id: string;
   title: string;
-  subtitles: SubtitleItem[];
+  subtitles: (string | SubtitleItem)[];
   display_order: number;
 }
+
+// Helper to get title from subtitle item (handles both string and object)
+const getSubtitleTitle = (item: string | SubtitleItem): string => {
+  if (typeof item === 'string') return item;
+  return item.title || '';
+};
+
+// Helper to get paragraph from subtitle item
+const getSubtitleParagraph = (item: string | SubtitleItem): string => {
+  if (typeof item === 'string') return '';
+  return item.paragraph || '';
+};
 
 const ContactUs = () => {
   const seoSettings = useSEOSettings('/contact');
@@ -119,7 +131,7 @@ const ContactUs = () => {
                                           key={index}
                                           className="block w-full text-left text-base text-gray-700 hover:text-gray-900 transition-colors"
                                         >
-                                          {item.title}
+                                          {getSubtitleTitle(item)}
                                         </button>
                                       ))}
                                     </div>
@@ -128,10 +140,10 @@ const ContactUs = () => {
                                       {section.subtitles.map((item, index) => (
                                         <AccordionItem key={index} value={`item-${index}`} className="border-b-0">
                                           <AccordionTrigger className="text-base text-gray-700 hover:text-gray-900 py-2 hover:no-underline">
-                                            {item.title}
+                                            {getSubtitleTitle(item)}
                                           </AccordionTrigger>
                                           <AccordionContent className="text-sm text-gray-600 pb-3">
-                                            {item.paragraph || "More information about this topic will be displayed here."}
+                                            {getSubtitleParagraph(item) || "More information about this topic will be displayed here."}
                                           </AccordionContent>
                                         </AccordionItem>
                                       ))}
@@ -184,7 +196,7 @@ const ContactUs = () => {
                       key={index}
                       className="block w-full text-left text-base text-gray-700 hover:text-gray-900 hover:underline transition-colors py-1"
                     >
-                      {item.title}
+                      {getSubtitleTitle(item)}
                     </button>
                   ))}
                 </div>
@@ -193,10 +205,10 @@ const ContactUs = () => {
                   {deliveryQuestions.map((item, index) => (
                     <AccordionItem key={index} value={`delivery-${index}`} className="border-b-0">
                       <AccordionTrigger className="text-base text-gray-700 hover:text-gray-900 py-2 hover:no-underline">
-                        {item.title}
+                        {getSubtitleTitle(item)}
                       </AccordionTrigger>
                       <AccordionContent className="text-sm text-gray-600 pb-3">
-                        {item.paragraph || "More information about this topic will be displayed here."}
+                        {getSubtitleParagraph(item) || "More information about this topic will be displayed here."}
                       </AccordionContent>
                     </AccordionItem>
                   ))}
