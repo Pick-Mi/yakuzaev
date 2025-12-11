@@ -530,6 +530,62 @@ const BookingConfirmation = () => {
       navigate('/');
     }
   }, [product, navigate]);
+
+  // Auto-load profile data if user is already logged in
+  useEffect(() => {
+    const loadLoggedInUserData = async () => {
+      if (user) {
+        try {
+          const { data, error } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('user_id', user.id)
+            .single();
+          
+          if (error && error.code !== 'PGRST116') {
+            console.error('Error loading profile:', error);
+            return;
+          }
+          
+          if (data) {
+            setFirstName(data.first_name || '');
+            setLastName(data.last_name || '');
+            setEmail(data.email || '');
+            setAddress(data.street_address || '');
+            setCity(data.city || '');
+            setState(data.state_province || '');
+            setPincode(data.postal_code || '');
+            setDocumentType(data.document_type || 'aadhaar');
+            setAadhaarNumber(data.document_number || '');
+            setConsentChecked(data.consent_given || false);
+            setAddressMatchChecked(data.address_matches_id || false);
+            
+            // Extract phone number from profile
+            if (data.phone) {
+              // Parse phone to extract country code and number
+              const phone = data.phone;
+              const matchedCountry = countryCodes.find(c => phone.startsWith(c.code));
+              if (matchedCountry) {
+                setCountryCode(matchedCountry.code);
+                setPhoneNumber(phone.replace(matchedCountry.code, ''));
+              } else {
+                // Default to +91 if no match
+                setPhoneNumber(phone.replace(/^\+\d+/, ''));
+              }
+            }
+            
+            // Set verified if user is logged in
+            setIsVerified(true);
+          }
+        } catch (error) {
+          console.error('Error loading profile:', error);
+        }
+      }
+    };
+    
+    loadLoggedInUserData();
+  }, [user]);
+
   useEffect(() => {
     if (isVerified && user) {
       loadProfileData();
