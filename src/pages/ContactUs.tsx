@@ -2,13 +2,39 @@ import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { ChevronRight } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
+import { useEffect, useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { useSEOSettings } from "@/hooks/useSEOSettings";
+import { supabase } from "@/integrations/supabase/client";
+
+interface HelpSection {
+  id: string;
+  title: string;
+  subtitles: string[];
+  display_order: number;
+}
 
 const ContactUs = () => {
   const seoSettings = useSEOSettings('/contact');
+  const [helpSections, setHelpSections] = useState<HelpSection[]>([]);
+  
+  useEffect(() => {
+    const fetchHelpSections = async () => {
+      const { data, error } = await supabase
+        .from('contact_help_sections')
+        .select('*')
+        .eq('is_active', true)
+        .order('display_order');
+      
+      if (data && !error) {
+        setHelpSections(data as HelpSection[]);
+      }
+    };
+    
+    fetchHelpSections();
+  }, []);
   
   const suggestions = [
     { title: "Return an item for a refund", subtitle: "Popular article • 4 min" },
@@ -17,30 +43,9 @@ const ContactUs = () => {
     { title: "Creating a listing", subtitle: "Popular article • 4 min" },
   ];
 
-  const deliveryQuestions = [
-    "What should I do if my order is approved but hasn't been shipped yet?",
-    "Can I take the shipment after opening and checking the contents inside?",
-    "How quickly can I get my order delivered?",
-    "What are the standard shipping speeds and delivery charges?",
-    "When will I get my to order once its status changes to 'Out for Delivery'?",
-    "Why am I unable to order products like television, air - conditioner, refrigerator, washing machine, furniture, microwave, microwave, microwave, treadmill, etc. at my location?",
-  ];
-
-  const issueTypes = [
-    "Help with your issues",
-    "Help with your order",
-    "Help with other issues",
-  ];
-
-  const helpTopics = [
-    "Deliver related",
-    "Login and my account",
-    "Refunds related",
-    "Yakuza EMI",
-    "Payment",
-    "Returns & Pickup related",
-    "Cancellation related",
-  ];
+  // Get delivery related section for the main content
+  const deliverySection = helpSections.find(s => s.title.toLowerCase().includes('delivery'));
+  const deliveryQuestions = deliverySection?.subtitles || [];
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -95,40 +100,28 @@ const ContactUs = () => {
               </Button>
             </div>
 
-            {/* Type of Issue & Help Topics */}
+            {/* Type of Issue & Help Topics from Database */}
             <div className="bg-white p-6 shadow-sm rounded-none">
-              {/* Type of Issue */}
-              <div>
-                <h3 className="text-base font-bold mb-4 text-gray-900 uppercase tracking-wide">TYPE OF ISSUE</h3>
-                <div className="space-y-3">
-                  {issueTypes.map((issue, index) => (
-                    <button
-                      key={index}
-                      className="block w-full text-left text-base text-gray-700 hover:text-gray-900 transition-colors"
-                    >
-                      {issue}
-                    </button>
-                  ))}
+              {helpSections.filter(s => !s.title.toLowerCase().includes('delivery')).map((section, sectionIndex, filteredArr) => (
+                <div key={section.id}>
+                  <div>
+                    <h3 className="text-base font-bold mb-4 text-gray-900 uppercase tracking-wide">{section.title}</h3>
+                    <div className="space-y-3">
+                      {section.subtitles.map((subtitle, index) => (
+                        <button
+                          key={index}
+                          className="block w-full text-left text-base text-gray-700 hover:text-gray-900 transition-colors"
+                        >
+                          {subtitle}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  {sectionIndex < filteredArr.length - 1 && (
+                    <hr className="my-6 border-gray-200" />
+                  )}
                 </div>
-              </div>
-
-              {/* Horizontal Divider */}
-              <hr className="my-6 border-gray-200" />
-
-              {/* Help Topics */}
-              <div>
-                <h3 className="text-base font-bold mb-4 text-gray-900 uppercase tracking-wide">HELP TOPICS</h3>
-                <div className="space-y-3">
-                  {helpTopics.map((topic, index) => (
-                    <button
-                      key={index}
-                      className="block w-full text-left text-base text-gray-700 hover:text-gray-900 transition-colors"
-                    >
-                      {topic}
-                    </button>
-                  ))}
-                </div>
-              </div>
+              ))}
             </div>
           </aside>
 
@@ -159,25 +152,27 @@ const ContactUs = () => {
               </div>
             </section>
 
-            {/* Delivery Related */}
-            <section className="bg-white p-6 shadow-sm rounded-none">
-              <h2 className="text-2xl font-semibold mb-6 text-gray-900">Delivery related</h2>
-              
-              <div className="space-y-4">
-                {deliveryQuestions.map((question, index) => (
-                  <button
-                    key={index}
-                    className="block w-full text-left text-base text-gray-700 hover:text-gray-900 hover:underline transition-colors py-1"
-                  >
-                    {question}
-                  </button>
-                ))}
-              </div>
+            {/* Delivery Related from Database */}
+            {deliverySection && (
+              <section className="bg-white p-6 shadow-sm rounded-none">
+                <h2 className="text-2xl font-semibold mb-6 text-gray-900">{deliverySection.title}</h2>
+                
+                <div className="space-y-4">
+                  {deliveryQuestions.map((question, index) => (
+                    <button
+                      key={index}
+                      className="block w-full text-left text-base text-gray-700 hover:text-gray-900 hover:underline transition-colors py-1"
+                    >
+                      {question}
+                    </button>
+                  ))}
+                </div>
 
-              <button className="mt-8 text-base font-semibold text-gray-900 hover:text-gray-700 transition-colors">
-                View More
-              </button>
-            </section>
+                <button className="mt-8 text-base font-semibold text-gray-900 hover:text-gray-700 transition-colors">
+                  View More
+                </button>
+              </section>
+            )}
           </div>
         </div>
       </main>
