@@ -251,7 +251,7 @@ const JobApplication = () => {
       </div>
       
       <main className="flex-1" style={{ backgroundColor: '#F8F9F9' }}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-64 pb-12">
+        <div className="max-w-7xl mx-auto px-10 pt-64 pb-12">
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
             {/* Mobile/Tablet - Autofill Card at Top */}
