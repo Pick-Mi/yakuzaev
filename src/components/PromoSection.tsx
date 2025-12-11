@@ -46,7 +46,7 @@ const PromoSection = () => {
   }, []);
 
   return (
-    <section className="w-full bg-[#f8f9f9] relative py-10 px-10 min-h-[500px] sm:min-h-[600px] lg:h-[612px] overflow-hidden">
+    <section className="w-full bg-[#f8f9f9] relative py-5 min-h-[500px] sm:min-h-[600px] lg:h-[612px] overflow-hidden">
       <div className="relative bg-white mx-auto my-4 sm:my-6 lg:my-0 lg:h-[522px] overflow-hidden lg:top-[45px] lg:w-[1300px] max-w-[95%] p-6 sm:p-8 lg:p-0 flex flex-col items-center lg:items-start lg:block">
         {/* Main Title */}
         <h2 className="font-['Inter'] font-medium leading-[1.4] sm:leading-[1.5] lg:leading-[54px] lg:absolute lg:left-[40px] text-[#212121] text-[18px] sm:text-[22px] md:text-[26px] lg:text-[28px] lg:top-[51px] lg:w-[267px] mb-4 sm:mb-6 lg:mb-0 text-center lg:text-left">
