@@ -162,8 +162,8 @@ const Auth = () => {
       } else {
         setOtpCooldown(60); // Set 60 second cooldown after successful send
         toast({
-          title: "Demo OTP",
-          description: "Use this code: 123456",
+          title: "OTP Sent",
+          description: "Check your phone for the verification code.",
         });
         setStep('otp');
       }
@@ -184,12 +184,12 @@ const Auth = () => {
 
     try {
       const fullPhone = countryCode + phoneNumber;
-      const { error } = await verifyOTP(fullPhone, otp);
+      const { error, isNewUser } = await verifyOTP(fullPhone, otp);
 
       if (error) {
         toast({
           title: "Incorrect OTP",
-          description: "The verification code you entered is incorrect. Please try again.",
+          description: error.message || "The verification code you entered is incorrect. Please try again.",
           variant: "destructive",
         });
         setOtp(''); // Clear OTP input
@@ -197,31 +197,14 @@ const Auth = () => {
         return;
       }
 
-      // Get the authenticated user session
-      const { data: session } = await supabase.auth.getSession();
-      if (session?.session?.user) {
-        // Update profile with phone number
-        await supabase
-          .from('profiles')
-          .update({ phone: fullPhone })
-          .eq('user_id', session.session.user.id);
-
-        // Check if user already has a complete profile
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('first_name, last_name, email')
-          .eq('user_id', session.session.user.id)
-          .single();
-
-        // If profile exists with required fields, redirect to home
-        if (profile && profile.first_name && profile.email) {
-          toast({
-            title: "Welcome Back!",
-            description: "You have been signed in successfully.",
-          });
-          navigate(from, { replace: true });
-          return;
-        }
+      // If existing user with complete profile, redirect directly
+      if (!isNewUser) {
+        toast({
+          title: "Welcome Back!",
+          description: "You have been signed in successfully.",
+        });
+        navigate(from, { replace: true });
+        return;
       }
 
       // New user - show success dialog and redirect to profile setup
