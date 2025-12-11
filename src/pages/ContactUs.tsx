@@ -123,9 +123,9 @@ const ContactUs = () => {
               </Button>
             </div>
 
-            {/* Help Sections - Desktop only (scrollable area) */}
+            {/* Help Sections - Desktop only (fixed) */}
             {helpSections.length > 0 && (
-              <div className="hidden lg:block mt-6 space-y-6 lg:max-h-[calc(100vh-420px)] lg:overflow-y-auto lg:pr-2">
+              <div className="hidden lg:block mt-6 space-y-6">
                 {helpSections.map((section) => (
                   <div key={section.id} className="bg-white p-6 shadow-sm rounded-none">
                     <h3 className="text-base font-bold mb-3 text-gray-900 uppercase tracking-wide">{section.title}</h3>
