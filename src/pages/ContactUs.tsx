@@ -123,29 +123,6 @@ const ContactUs = () => {
               </Button>
             </div>
 
-            {/* Help Sections - Desktop only (fixed) */}
-            {helpSections.length > 0 && (
-              <div className="hidden lg:block mt-6 space-y-6">
-                {helpSections.map((section) => (
-                  <div key={section.id} className="bg-white p-6 shadow-sm rounded-none">
-                    <h3 className="text-base font-bold mb-3 text-gray-900 uppercase tracking-wide">{section.title}</h3>
-                    <div className="space-y-2">
-                      {section.subtitles.map((item, index) => (
-                        <button
-                          key={index}
-                          className="w-full text-left hover:bg-gray-50 transition-colors p-2 rounded"
-                        >
-                          <span className="font-normal text-sm text-gray-700 hover:text-blue-600">
-                            {getSubtitleTitle(item)}
-                          </span>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-
             {/* Suggestions for you - Mobile/Tablet only */}
             <div className="bg-white p-6 shadow-sm rounded-none mt-6 lg:hidden">
               <h2 className="text-xl font-semibold mb-3 text-gray-900">Suggestions for you</h2>
@@ -192,40 +169,15 @@ const ContactUs = () => {
             ))}
           </aside>
 
-          {/* Main Content */}
-          {/* Suggestions - Desktop only */}
-          <section className="hidden lg:block bg-white p-6 shadow-sm rounded-none">
-            <h2 className="text-2xl font-semibold mb-2 text-gray-900">Suggestions for you</h2>
-            <p className="text-sm text-gray-600 mb-6">Select an action or article to learn more</p>
-            
-            <div className="space-y-3">
-              {latestSuggestions.map((suggestion, index) => (
-                <button
-                  key={index}
-                  className="w-full text-left hover:bg-gray-50 transition-colors p-3 rounded group"
-                >
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="flex-1">
-                      <h3 className="font-normal text-base text-gray-900 mb-1 underline group-hover:text-blue-600">
-                        {suggestion.title}
-                      </h3>
-                      <p className="text-sm text-gray-500">{suggestion.subtitle}</p>
-                    </div>
-                    <ChevronRight className="w-5 h-5 text-gray-400 flex-shrink-0 mt-1" />
-                  </div>
-                </button>
-              ))}
-            </div>
-          </section>
-
-          {/* Delivery Section - Desktop only */}
-          {helpSections.filter(s => s.title.toLowerCase().includes('delivery')).map((section) => (
-            <section key={section.id} className="hidden lg:block bg-white p-6 shadow-sm rounded-none mt-6">
-              <h2 className="text-2xl font-semibold mb-2 text-gray-900">{section.title}</h2>
-              <p className="text-sm text-gray-600 mb-6">Find answers to common delivery questions</p>
+          {/* Main Content - Desktop only */}
+          <div className="hidden lg:block space-y-6">
+            {/* Suggestions */}
+            <section className="bg-white p-6 shadow-sm rounded-none">
+              <h2 className="text-2xl font-semibold mb-2 text-gray-900">Suggestions for you</h2>
+              <p className="text-sm text-gray-600 mb-6">Select an action or article to learn more</p>
               
               <div className="space-y-3">
-                {section.subtitles.map((item, index) => (
+                {latestSuggestions.map((suggestion, index) => (
                   <button
                     key={index}
                     className="w-full text-left hover:bg-gray-50 transition-colors p-3 rounded group"
@@ -233,11 +185,9 @@ const ContactUs = () => {
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex-1">
                         <h3 className="font-normal text-base text-gray-900 mb-1 underline group-hover:text-blue-600">
-                          {getSubtitleTitle(item)}
+                          {suggestion.title}
                         </h3>
-                        {getSubtitleParagraph(item) && (
-                          <p className="text-sm text-gray-500">{getSubtitleParagraph(item)}</p>
-                        )}
+                        <p className="text-sm text-gray-500">{suggestion.subtitle}</p>
                       </div>
                       <ChevronRight className="w-5 h-5 text-gray-400 flex-shrink-0 mt-1" />
                     </div>
@@ -245,7 +195,36 @@ const ContactUs = () => {
                 ))}
               </div>
             </section>
-          ))}
+
+            {/* All Help Sections - Desktop only */}
+            {helpSections.map((section) => (
+              <section key={section.id} className="bg-white p-6 shadow-sm rounded-none">
+                <h2 className="text-2xl font-semibold mb-2 text-gray-900">{section.title}</h2>
+                <p className="text-sm text-gray-600 mb-6">Find answers to common questions</p>
+                
+                <div className="space-y-3">
+                  {section.subtitles.map((item, index) => (
+                    <button
+                      key={index}
+                      className="w-full text-left hover:bg-gray-50 transition-colors p-3 rounded group"
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="flex-1">
+                          <h3 className="font-normal text-base text-gray-900 mb-1 underline group-hover:text-blue-600">
+                            {getSubtitleTitle(item)}
+                          </h3>
+                          {getSubtitleParagraph(item) && (
+                            <p className="text-sm text-gray-500">{getSubtitleParagraph(item)}</p>
+                          )}
+                        </div>
+                        <ChevronRight className="w-5 h-5 text-gray-400 flex-shrink-0 mt-1" />
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </section>
+            ))}
+          </div>
 
         </div>
       </main>
