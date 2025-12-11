@@ -22,6 +22,15 @@ interface HelpSection {
   display_order: number;
 }
 
+interface CustomPage {
+  id: string;
+  page_name: string;
+  page_slug: string;
+  source_code: string;
+  description: string | null;
+  type: string;
+}
+
 // Helper to get title from subtitle item (handles both string and object)
 const getSubtitleTitle = (item: string | SubtitleItem): string => {
   if (typeof item === 'string') return item;
@@ -37,21 +46,35 @@ const getSubtitleParagraph = (item: string | SubtitleItem): string => {
 const ContactUs = () => {
   const seoSettings = useSEOSettings('/contact');
   const [helpSections, setHelpSections] = useState<HelpSection[]>([]);
+  const [customPages, setCustomPages] = useState<CustomPage[]>([]);
+  const [selectedPage, setSelectedPage] = useState<CustomPage | null>(null);
   
   useEffect(() => {
-    const fetchHelpSections = async () => {
-      const { data, error } = await supabase
+    const fetchData = async () => {
+      // Fetch help sections
+      const { data: helpData } = await supabase
         .from('contact_help_sections')
         .select('*')
         .eq('is_active', true)
         .order('display_order');
       
-      if (data && !error) {
-        setHelpSections(data as unknown as HelpSection[]);
+      if (helpData) {
+        setHelpSections(helpData as unknown as HelpSection[]);
+      }
+
+      // Fetch custom pages
+      const { data: pagesData } = await supabase
+        .from('page_management')
+        .select('*')
+        .eq('is_active', true)
+        .order('created_at', { ascending: false });
+      
+      if (pagesData) {
+        setCustomPages(pagesData as unknown as CustomPage[]);
       }
     };
     
-    fetchHelpSections();
+    fetchData();
   }, []);
   
   // Get latest 4 items from all sections for suggestions
@@ -247,6 +270,96 @@ const ContactUs = () => {
                 </div>
               </section>
             ))}
+
+            {/* Custom Pages Section */}
+            {customPages.length > 0 && (
+              <section className="bg-white p-6 shadow-sm rounded-none">
+                <h2 className="text-2xl font-semibold mb-2 text-gray-900">Custom Pages</h2>
+                <p className="text-sm text-gray-600 mb-6">Browse our information pages</p>
+                
+                <div className="space-y-3">
+                  {customPages.map((page) => (
+                    <button
+                      key={page.id}
+                      onClick={() => setSelectedPage(selectedPage?.id === page.id ? null : page)}
+                      className="w-full text-left hover:bg-gray-50 transition-colors p-3 rounded group"
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="flex-1">
+                          <h3 className="font-normal text-base text-gray-900 mb-1 underline group-hover:text-blue-600">
+                            {page.page_name}
+                          </h3>
+                          {page.description && (
+                            <p className="text-sm text-gray-500">{page.description}</p>
+                          )}
+                        </div>
+                        <ChevronRight className={`w-5 h-5 text-gray-400 flex-shrink-0 mt-1 transition-transform ${selectedPage?.id === page.id ? 'rotate-90' : ''}`} />
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {/* Selected Custom Page Content */}
+            {selectedPage && (
+              <section className="bg-white p-6 shadow-sm rounded-none">
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-2xl font-semibold text-gray-900">{selectedPage.page_name}</h2>
+                  <button 
+                    onClick={() => setSelectedPage(null)}
+                    className="text-sm text-blue-600 hover:text-blue-800"
+                  >
+                    Close
+                  </button>
+                </div>
+                <div 
+                  className="prose prose-sm max-w-none custom-page-content"
+                  dangerouslySetInnerHTML={{ __html: selectedPage.source_code }}
+                  style={{
+                    lineHeight: '1.7',
+                  }}
+                />
+                <style>{`
+                  .custom-page-content p {
+                    margin-bottom: 1rem;
+                    text-align: justify;
+                  }
+                  .custom-page-content h2 {
+                    font-size: 1.25rem;
+                    font-weight: 600;
+                    margin-top: 1.5rem;
+                    margin-bottom: 0.75rem;
+                  }
+                  .custom-page-content h5 {
+                    font-size: 1rem;
+                    font-weight: 600;
+                    margin-top: 1.25rem;
+                    margin-bottom: 0.5rem;
+                  }
+                  .custom-page-content ol, .custom-page-content ul {
+                    margin-left: 1.5rem;
+                    margin-bottom: 1rem;
+                  }
+                  .custom-page-content li {
+                    margin-bottom: 0.5rem;
+                  }
+                  .custom-page-content a {
+                    color: #2563eb;
+                    text-decoration: underline;
+                  }
+                  .custom-page-content a:hover {
+                    color: #1d4ed8;
+                  }
+                  .custom-page-content .ql-align-justify {
+                    text-align: justify;
+                  }
+                  .custom-page-content .ql-size-large {
+                    font-size: 1.25rem;
+                  }
+                `}</style>
+              </section>
+            )}
           </div>
 
         </div>
