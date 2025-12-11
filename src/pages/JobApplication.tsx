@@ -218,9 +218,9 @@ const JobApplication = () => {
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
       
-      {/* Fixed Job Info Section */}
-      <div className="fixed top-16 left-0 right-0 bg-white dark:bg-neutral-950 border-b border-border z-40">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      {/* Job Info Section */}
+      <div className="bg-white dark:bg-neutral-950 border-b border-border mt-16">
+        <div className="max-w-7xl mx-auto px-10 py-6">
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-bold text-foreground">{jobData.title}</h1>
@@ -251,7 +251,7 @@ const JobApplication = () => {
       </div>
       
       <main className="flex-1" style={{ backgroundColor: '#F8F9F9' }}>
-        <div className="max-w-7xl mx-auto px-10 pt-40 pb-12">
+        <div className="max-w-7xl mx-auto px-10 py-12">
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
             {/* Mobile/Tablet - Autofill Card at Top */}
@@ -447,7 +447,7 @@ const JobApplication = () => {
               </div>
 
               {/* Right Column - Autofill Application (Sticky) - Desktop Only */}
-              <div className="hidden lg:block bg-white dark:bg-neutral-950 p-8 space-y-6 sticky top-60 self-start">
+              <div className="hidden lg:block bg-white dark:bg-neutral-950 p-8 space-y-6 sticky top-20 self-start">
                 <h2 className="text-xl font-semibold text-foreground">Autofill Application</h2>
                 <p className="text-sm text-muted-foreground">Upload your resume/CV and let AI auto-fill your application.</p>
                 
