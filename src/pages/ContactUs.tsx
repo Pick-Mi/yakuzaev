@@ -100,9 +100,13 @@ const ContactUs = () => {
         
         <div className="grid lg:grid-cols-[280px_1fr] gap-8 items-start">
           {/* Left Sidebar */}
-          <aside className="space-y-6 lg:sticky lg:top-32 lg:self-start lg:max-h-[calc(100vh-160px)] lg:overflow-y-auto">
-            <h1 className="text-3xl font-semibold text-foreground">Customer Service</h1>
-            {/* Need Help Card - contains help sections on desktop */}
+          <aside className="lg:sticky lg:top-32 lg:self-start lg:max-h-[calc(100vh-160px)] lg:overflow-y-auto">
+            {/* Customer Service Title - Fixed section */}
+            <div className="mb-6">
+              <h1 className="text-3xl font-semibold text-foreground">Customer Service</h1>
+            </div>
+
+            {/* Need Help Card - Separate fixed section */}
             <div className="bg-white p-6 shadow-sm rounded-none">
               <h2 className="text-xl font-semibold mb-3 text-gray-900">Need more help?</h2>
               <p className="text-sm text-gray-600 mb-4 leading-relaxed">
@@ -117,33 +121,33 @@ const ContactUs = () => {
                   Contact With WhatsApp
                 </a>
               </Button>
-
-              {/* Help Sections - Desktop only (inside the card) */}
-              {helpSections.length > 0 && (
-                <div className="hidden lg:block mt-6 pt-6 border-t border-gray-200 space-y-6">
-                  {helpSections.map((section) => (
-                    <div key={section.id}>
-                      <h3 className="text-base font-bold mb-3 text-gray-900 uppercase tracking-wide">{section.title}</h3>
-                      <div className="space-y-2">
-                        {section.subtitles.map((item, index) => (
-                          <button
-                            key={index}
-                            className="w-full text-left hover:bg-gray-50 transition-colors p-2 rounded"
-                          >
-                            <span className="font-normal text-sm text-gray-700 hover:text-blue-600">
-                              {getSubtitleTitle(item)}
-                            </span>
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
             </div>
 
+            {/* Help Sections - Desktop only (separate section below) */}
+            {helpSections.length > 0 && (
+              <div className="hidden lg:block mt-6 space-y-6">
+                {helpSections.map((section) => (
+                  <div key={section.id} className="bg-white p-6 shadow-sm rounded-none">
+                    <h3 className="text-base font-bold mb-3 text-gray-900 uppercase tracking-wide">{section.title}</h3>
+                    <div className="space-y-2">
+                      {section.subtitles.map((item, index) => (
+                        <button
+                          key={index}
+                          className="w-full text-left hover:bg-gray-50 transition-colors p-2 rounded"
+                        >
+                          <span className="font-normal text-sm text-gray-700 hover:text-blue-600">
+                            {getSubtitleTitle(item)}
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
             {/* Suggestions for you - Mobile/Tablet only */}
-            <div className="bg-white p-6 shadow-sm rounded-none lg:hidden">
+            <div className="bg-white p-6 shadow-sm rounded-none mt-6 lg:hidden">
               <h2 className="text-xl font-semibold mb-3 text-gray-900">Suggestions for you</h2>
               <p className="text-sm text-gray-600 mb-4">Select an action or article to learn more</p>
               
@@ -169,7 +173,7 @@ const ContactUs = () => {
 
             {/* Type of Issue & Help Topics from Database - Mobile/Tablet only */}
             {helpSections.map((section) => (
-              <div key={section.id} className="bg-white p-6 shadow-sm rounded-none lg:hidden">
+              <div key={section.id} className="bg-white p-6 shadow-sm rounded-none mt-6 lg:hidden">
                 <h3 className="text-base font-bold mb-4 text-gray-900 uppercase tracking-wide">{section.title}</h3>
                 {/* Mobile/Tablet view - accordion */}
                 <Accordion type="single" collapsible>
