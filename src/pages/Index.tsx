@@ -65,7 +65,7 @@ const Index = () => {
       
       <Header />
       <Hero />
-      <ProductShowcase />
+      <ProductShowcase className="py-[40px]" />
       <FearlessDesign />
       <PromoSection />
       <BlogSection />
