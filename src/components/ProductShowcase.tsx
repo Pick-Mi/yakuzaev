@@ -110,7 +110,7 @@ const ProductShowcase = () => {
       });
     }
   };
-  return <section className="relative bg-[#F8F9F9] py-10 sm:py-16 md:py-20 overflow-hidden">
+  return <section className="relative bg-[#F8F9F9] py-10 overflow-hidden">
       <div className="mx-auto px-0 sm:px-8 lg:px-[70px] md:px-[40px]">
         {/* Header */}
         <h2 className="font-['Inter'] font-medium text-[28px] sm:text-[36px] md:text-[48px] text-[#12141d] mb-10 sm:mb-16 md:mb-20 px-4 sm:px-0">
