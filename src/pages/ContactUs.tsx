@@ -187,6 +187,31 @@ const ContactUs = () => {
 
           {/* Main Content */}
           <div className="space-y-10">
+            {/* Suggestions - Desktop only */}
+            <section className="hidden lg:block bg-white p-6 shadow-sm rounded-none">
+              <h2 className="text-2xl font-semibold mb-2 text-gray-900">Suggestions for you</h2>
+              <p className="text-sm text-gray-600 mb-6">Select an action or article to learn more</p>
+              
+              <div className="space-y-3">
+                {latestSuggestions.map((suggestion, index) => (
+                  <button
+                    key={index}
+                    className="w-full text-left hover:bg-gray-50 transition-colors p-3 rounded group"
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex-1">
+                        <h3 className="font-normal text-base text-gray-900 mb-1 underline group-hover:text-blue-600">
+                          {suggestion.title}
+                        </h3>
+                        <p className="text-sm text-gray-500">{suggestion.subtitle}</p>
+                      </div>
+                      <ChevronRight className="w-5 h-5 text-gray-400 flex-shrink-0 mt-1" />
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </section>
+
             {/* Delivery Related from Database */}
             {deliverySection && (
               <section className="bg-white p-6 shadow-sm rounded-none">
