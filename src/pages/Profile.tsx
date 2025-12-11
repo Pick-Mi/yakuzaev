@@ -554,10 +554,32 @@ const Profile = () => {
         )}
       </Helmet>
       <Header />
-      <div className="container mx-auto px-4 py-8 mt-32 bg-white">
+      <div className="container mx-auto px-4 md:px-4 py-8 mt-32 bg-white">
+        {/* Mobile: Title */}
+        <h1 className="text-2xl font-bold mb-6 md:hidden">Account</h1>
+        
+        {/* Mobile: Horizontal Tabs */}
+        <div className="md:hidden mb-6 border-b border-gray-200 overflow-x-auto">
+          <nav className="flex whitespace-nowrap">
+            {menuItems.slice(0, 3).map((item) => (
+              <button
+                key={item.id}
+                onClick={() => handleSectionChange(item.id)}
+                className={`px-4 py-3 text-sm transition-colors border-b-2 ${
+                  activeSection === item.id
+                    ? "border-orange-500 text-foreground font-medium"
+                    : "border-transparent text-muted-foreground"
+                }`}
+              >
+                {item.id === "profile" ? "Profile Details" : item.id === "address" ? "Delivery Addresses" : "Identification"}
+              </button>
+            ))}
+          </nav>
+        </div>
+
         <div className="flex gap-8 bg-white">
-          {/* Sidebar */}
-          <aside className="w-64 flex-shrink-0 bg-white">
+          {/* Sidebar - Hidden on mobile */}
+          <aside className="hidden md:block w-64 flex-shrink-0 bg-white">
             <h1 className="text-2xl font-bold mb-6">Account</h1>
             <nav className="space-y-1 bg-white">
               {menuItems.map((item) => {
@@ -592,9 +614,9 @@ const Profile = () => {
             {activeSection === "profile" && (
               <div className="space-y-8 bg-white">
                 {/* Personal Information */}
-                <div className="p-8">
+                <div className="md:p-8">
                   <div className="flex justify-between items-center mb-8">
-                    <h2 className="text-2xl font-semibold">Personal Information</h2>
+                    <h2 className="text-xl md:text-2xl font-semibold">Personal Information</h2>
                     {!editMode ? (
                       <Button
                         variant="outline"
@@ -625,12 +647,12 @@ const Profile = () => {
                     )}
                   </div>
 
-                  <div className="grid grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {/* Full Name */}
-                    <div className="col-span-2">
-                      <Label className="text-sm text-gray-600 mb-2 block">Full Name</Label>
+                    <div className="md:col-span-2">
+                      <Label className="text-sm text-muted-foreground mb-2 block">Full Name</Label>
                       {editMode ? (
-                        <div className="flex gap-2">
+                        <div className="flex flex-col md:flex-row gap-2">
                           <Input
                             value={editedProfile.first_name}
                             onChange={(e) => setEditedProfile({ ...editedProfile, first_name: e.target.value })}
@@ -645,15 +667,15 @@ const Profile = () => {
                           />
                         </div>
                       ) : (
-                        <div className="bg-gray-50 p-3">
+                        <div className="border-b border-gray-200 py-3 md:bg-gray-50 md:p-3 md:border-none">
                           <p className="text-base font-medium">{profile.first_name} {profile.last_name}</p>
                         </div>
                       )}
                     </div>
 
                     {/* Phone Number */}
-                    <div>
-                      <Label className="text-sm text-gray-600 mb-2 block">Phone Number</Label>
+                    <div className="md:col-span-1">
+                      <Label className="text-sm text-muted-foreground mb-2 block">Phone Number</Label>
                       {editMode ? (
                         <Input
                           value={editedProfile.phone}
@@ -662,31 +684,31 @@ const Profile = () => {
                           className="rounded-none bg-white border border-gray-300"
                         />
                       ) : (
-                        <div className="bg-gray-50 p-3">
+                        <div className="border-b border-gray-200 py-3 md:bg-gray-50 md:p-3 md:border-none">
                           <p className="text-base font-medium">{profile.phone || "Not provided"}</p>
                         </div>
                       )}
                     </div>
 
                     {/* Email */}
-                    <div>
-                      <Label className="text-sm text-gray-600 mb-2 block">Email</Label>
-                      <div className="bg-gray-50 p-3">
+                    <div className="md:col-span-1">
+                      <Label className="text-sm text-muted-foreground mb-2 block">Email</Label>
+                      <div className="border-b border-gray-200 py-3 md:bg-gray-50 md:p-3 md:border-none">
                         <p className="text-base font-medium">{profile.email}</p>
                       </div>
                     </div>
 
                     {/* Password */}
-                    <div>
-                      <Label className="text-sm text-gray-600 mb-2 block">Password</Label>
-                      <div className="bg-gray-50 p-3">
+                    <div className="md:col-span-1">
+                      <Label className="text-sm text-muted-foreground mb-2 block">Password</Label>
+                      <div className="border-b border-gray-200 py-3 md:bg-gray-50 md:p-3 md:border-none">
                         <p className="text-base font-medium">••••••</p>
                       </div>
                     </div>
 
                     {/* Country */}
-                    <div>
-                      <Label className="text-sm text-gray-600 mb-2 block">Country</Label>
+                    <div className="md:col-span-1">
+                      <Label className="text-sm text-muted-foreground mb-2 block">Country</Label>
                       {editMode ? (
                         <Input
                           value={editedProfile.country}
@@ -695,15 +717,15 @@ const Profile = () => {
                           className="rounded-none bg-white border border-gray-300"
                         />
                       ) : (
-                        <div className="bg-gray-50 p-3">
+                        <div className="border-b border-gray-200 py-3 md:bg-gray-50 md:p-3 md:border-none">
                           <p className="text-base font-medium">{profile.country}</p>
                         </div>
                       )}
                     </div>
 
                     {/* Gender */}
-                    <div className="col-span-2">
-                      <Label className="text-sm text-gray-600 mb-2 block">Gender</Label>
+                    <div className="md:col-span-2">
+                      <Label className="text-sm text-muted-foreground mb-2 block">Gender</Label>
                       {editMode ? (
                         <select
                           value={editedProfile.gender}
@@ -716,7 +738,7 @@ const Profile = () => {
                           <option value="Other">Other</option>
                         </select>
                       ) : (
-                        <div className="bg-gray-50 p-3">
+                        <div className="border-b border-gray-200 py-3 md:bg-gray-50 md:p-3 md:border-none">
                           <p className="text-base font-medium capitalize">{profile.gender || "Not specified"}</p>
                         </div>
                       )}
@@ -725,38 +747,38 @@ const Profile = () => {
                 </div>
 
                 {/* Divider */}
-                <div className="h-px bg-gray-200"></div>
+                <div className="h-px bg-gray-200 mt-8"></div>
 
                 {/* Delete Account Section */}
-                <div className="p-8">
+                <div className="md:p-8 pt-8">
                   <div className="flex items-center gap-2 mb-4">
                     <AlertTriangle className="w-5 h-5 text-orange-500" />
-                    <h2 className="text-xl font-semibold text-orange-500">Delete Account</h2>
+                    <h2 className="text-lg md:text-xl font-semibold text-orange-500">Delete Account</h2>
                   </div>
 
-                  <h3 className="text-lg font-semibold mb-2">We're sorry to see you go!</h3>
-                  <p className="text-sm text-gray-700 mb-4">
+                  <h3 className="text-base md:text-lg font-semibold mb-2">We're sorry to see you go!</h3>
+                  <p className="text-sm text-muted-foreground mb-4">
                     Deleting your account will permanently remove your profile, order history, saved addresses, and wallet balance. Once deleted, your data cannot be recovered.
                   </p>
 
-                  <h4 className="font-semibold mb-2">Before You Continue</h4>
-                  <ul className="list-disc list-inside text-sm text-gray-700 space-y-1 mb-4">
+                  <h4 className="font-semibold text-sm mb-2">Before You Continue</h4>
+                  <ul className="list-disc list-inside text-sm text-muted-foreground space-y-1 mb-4">
                     <li>All past orders and invoices will be permanently deleted.</li>
                     <li>Any unused coupons or wallet credits will be lost.</li>
                     <li>You won't be able to access your purchase history after deletion.</li>
                   </ul>
 
-                  <p className="text-sm text-gray-700 mb-4">
-                    <strong>Are You Sure You Want to Delete Your Account?</strong>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    <strong className="text-orange-500">Are You Sure You Want to Delete Your Account?</strong>
                     <br />
-                    If you still wish to proceed, click "<span className="text-red-600 font-semibold">Delete My Account</span>" below.
+                    If you still wish to proceed, click "<span className="text-orange-500 font-semibold">Delete My Account</span>" below.
                     <br />
                     We value your time with us and hope to see you again in the future.
                   </p>
 
                   <Button
                     onClick={() => setDeleteDialogOpen(true)}
-                    className="bg-red-600 hover:bg-red-700 text-white rounded-none"
+                    className="bg-orange-500 hover:bg-orange-600 text-white rounded-none text-sm"
                   >
                     Delete My Account
                   </Button>
@@ -765,9 +787,9 @@ const Profile = () => {
             )}
 
             {activeSection === "address" && (
-              <div className="border border-gray-200 p-8">
+              <div className="md:border md:border-gray-200 md:p-8">
                 <div className="flex justify-between items-center mb-6">
-                  <h2 className="text-2xl font-semibold">Delivery Addresses</h2>
+                  <h2 className="text-xl md:text-2xl font-semibold">Delivery Addresses</h2>
                   <Button
                     onClick={() => {
                       setEditingAddress(null);
@@ -784,10 +806,11 @@ const Profile = () => {
                       });
                       setAddressDialogOpen(true);
                     }}
-                    className="bg-black hover:bg-gray-800 rounded-none"
+                    className="bg-black hover:bg-gray-800 rounded-none text-sm"
                   >
                     <Plus className="w-4 h-4 mr-2" />
-                    Add New Address
+                    <span className="hidden md:inline">Add New Address</span>
+                    <span className="md:hidden">Add</span>
                   </Button>
                 </div>
 
@@ -848,15 +871,16 @@ const Profile = () => {
             )}
 
             {activeSection === "identification" && (
-              <div className="border border-gray-200 p-8">
+              <div className="md:border md:border-gray-200 md:p-8">
                 <div className="flex justify-between items-center mb-6">
-                  <h2 className="text-2xl font-semibold">Identification Details</h2>
+                  <h2 className="text-xl md:text-2xl font-semibold">Identification Details</h2>
                   <Button
                     onClick={() => setEditMode(true)}
-                    className="bg-black hover:bg-gray-800 rounded-none"
+                    className="bg-black hover:bg-gray-800 rounded-none text-sm"
                   >
                     <Plus className="w-4 h-4 mr-2" />
-                    Add New Document
+                    <span className="hidden md:inline">Add New Document</span>
+                    <span className="md:hidden">Add</span>
                   </Button>
                 </div>
 
