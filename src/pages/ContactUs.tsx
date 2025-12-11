@@ -126,7 +126,7 @@ const ContactUs = () => {
                                             {subtitle}
                                           </AccordionTrigger>
                                           <AccordionContent className="text-sm text-gray-600 pb-3">
-                                            More information about {subtitle.toLowerCase()} will be displayed here.
+                                            More information about this topic will be displayed here.
                                           </AccordionContent>
                                         </AccordionItem>
                                       ))}
