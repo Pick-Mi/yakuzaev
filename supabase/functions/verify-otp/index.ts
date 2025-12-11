@@ -40,6 +40,7 @@ serve(async (req) => {
     console.log('OTP lookup result:', { found: !!otpRecord, error: fetchError });
 
     if (fetchError) {
+      console.error('OTP fetch error:', fetchError);
       return new Response(
         JSON.stringify({ success: false, error: 'Database error' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -47,6 +48,7 @@ serve(async (req) => {
     }
 
     if (!otpRecord) {
+      console.error('No OTP record found');
       return new Response(
         JSON.stringify({ success: false, error: 'No OTP found. Please request a new OTP.' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -55,6 +57,7 @@ serve(async (req) => {
 
     // Check expiry
     if (new Date() > new Date(otpRecord.expires_at)) {
+      console.error('OTP expired');
       return new Response(
         JSON.stringify({ success: false, error: 'OTP has expired. Please request a new one.' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -63,6 +66,7 @@ serve(async (req) => {
 
     // Verify OTP code
     if (otpRecord.otp_code !== otp) {
+      console.error('OTP mismatch:', { expected: otpRecord.otp_code, received: otp });
       return new Response(
         JSON.stringify({ success: false, error: 'Invalid OTP. Please try again.' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -75,134 +79,114 @@ serve(async (req) => {
       .update({ verified: true })
       .eq('id', otpRecord.id);
 
-    console.log('✅ OTP verified successfully');
+    console.log('✅ OTP code verified');
 
-    // Generate email for phone user
-    const userEmail = `${phoneNumber.replace(/\+/g, '')}@phone.user`;
+    // Generate unique email for phone user
+    const baseEmail = `${phoneNumber.replace(/\+/g, '')}@phone.user`;
     let userId: string | null = null;
     let isNewUser = false;
+    let userEmail = baseEmail;
 
-    // Step 1: Try to find user by listing all users
-    const { data: listData } = await supabase.auth.admin.listUsers({ perPage: 1000 });
-    const existingUser = listData?.users?.find(u => 
-      u.phone === phoneNumber || u.email === userEmail
-    );
+    // Step 1: Check if profile exists with this phone
+    const { data: existingProfile } = await supabase
+      .from('profiles')
+      .select('user_id, first_name')
+      .eq('phone', phoneNumber)
+      .maybeSingle();
 
-    if (existingUser) {
-      userId = existingUser.id;
-      console.log('✅ Found existing user:', userId);
+    if (existingProfile?.user_id) {
+      // Verify user still exists in auth
+      const { data: userData } = await supabase.auth.admin.getUserById(existingProfile.user_id);
+      if (userData?.user) {
+        userId = existingProfile.user_id;
+        userEmail = userData.user.email || baseEmail;
+        isNewUser = !existingProfile.first_name;
+        console.log('✅ Found existing user from profile:', userId);
+      }
+    }
+
+    // Step 2: If not found via profile, search auth users
+    if (!userId) {
+      const { data: listData } = await supabase.auth.admin.listUsers({ perPage: 1000 });
+      const existingUser = listData?.users?.find(u => 
+        u.phone === phoneNumber || u.email === baseEmail || u.email?.startsWith(`${phoneNumber.replace(/\+/g, '')}_`)
+      );
+
+      if (existingUser) {
+        userId = existingUser.id;
+        userEmail = existingUser.email || baseEmail;
+        
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('first_name')
+          .eq('user_id', userId)
+          .maybeSingle();
+        
+        isNewUser = !profile?.first_name;
+        console.log('✅ Found existing user from auth:', userId);
+      }
+    }
+
+    // Step 3: Create new user if not found
+    if (!userId) {
+      console.log('Creating new user...');
       
-      // Check if profile is complete
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('first_name')
-        .eq('user_id', userId)
-        .maybeSingle();
-      
-      isNewUser = !profile?.first_name;
-    } else {
-      // Step 2: Try to create new user
-      const { data: newUser, error: createError } = await supabase.auth.admin.createUser({
+      // Try creating with phone first
+      let createResult = await supabase.auth.admin.createUser({
         phone: phoneNumber,
         phone_confirm: true,
-        email: userEmail,
+        email: baseEmail,
         email_confirm: true,
         user_metadata: { phone: phoneNumber, phone_verified: true }
       });
 
-      if (createError) {
-        console.log('Create user error:', createError.message);
+      // If phone_exists error, create without phone (email only)
+      if (createResult.error?.message?.includes('Phone number already registered') || 
+          createResult.error?.message?.includes('phone_exists')) {
+        console.log('Phone exists error, creating with email only...');
         
-        // Phone exists but not found in list - search more pages
-        if (createError.message?.includes('Phone number already registered')) {
-          let foundUser = null;
-          for (let page = 2; page <= 5 && !foundUser; page++) {
-            const { data: pageData } = await supabase.auth.admin.listUsers({ page, perPage: 1000 });
-            if (!pageData?.users?.length) break;
-            foundUser = pageData.users.find(u => u.phone === phoneNumber || u.email === userEmail);
-          }
-          
-          if (foundUser) {
-            userId = foundUser.id;
-            console.log('✅ Found user on later page:', userId);
-            
-            const { data: profile } = await supabase
-              .from('profiles')
-              .select('first_name')
-              .eq('user_id', userId)
-              .maybeSingle();
-            
-            isNewUser = !profile?.first_name;
-          } else {
-            // User exists but can't be found - this shouldn't happen
-            // Try to delete the old phone association and create fresh
-            console.log('⚠️ Phone registered but user not found, attempting recovery...');
-            
-            // Create with unique email as workaround
-            const uniqueEmail = `${phoneNumber.replace(/\+/g, '')}_${Date.now()}@phone.user`;
-            const { data: recoveryUser, error: recoveryError } = await supabase.auth.admin.createUser({
-              email: uniqueEmail,
-              email_confirm: true,
-              user_metadata: { phone: phoneNumber, phone_verified: true }
-            });
-            
-            if (recoveryError || !recoveryUser.user) {
-              console.error('❌ Recovery failed:', recoveryError);
-              return new Response(
-                JSON.stringify({ success: false, error: 'Account issue. Please contact support.' }),
-                { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-              );
-            }
-            
-            userId = recoveryUser.user.id;
-            isNewUser = true;
-            
-            // Create profile
-            await supabase.from('profiles').upsert({
-              user_id: userId,
-              phone: phoneNumber,
-              is_verified: true,
-              verification_date: new Date().toISOString()
-            }, { onConflict: 'user_id' });
-          }
-        } else {
-          console.error('❌ Unexpected create error:', createError);
-          return new Response(
-            JSON.stringify({ success: false, error: 'Failed to create account' }),
-            { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-          );
-        }
-      } else if (newUser?.user) {
-        userId = newUser.user.id;
-        isNewUser = true;
-        console.log('✅ Created new user:', userId);
+        // Use unique email to avoid conflicts
+        userEmail = `${phoneNumber.replace(/\+/g, '')}_${Date.now()}@phone.user`;
         
-        // Create profile
-        await supabase.from('profiles').upsert({
-          user_id: userId,
-          phone: phoneNumber,
-          is_verified: true,
-          verification_date: new Date().toISOString()
-        }, { onConflict: 'user_id' });
+        createResult = await supabase.auth.admin.createUser({
+          email: userEmail,
+          email_confirm: true,
+          user_metadata: { phone: phoneNumber, phone_verified: true }
+        });
+      }
+
+      if (createResult.error || !createResult.data?.user) {
+        console.error('❌ Failed to create user:', createResult.error);
+        return new Response(
+          JSON.stringify({ success: false, error: 'Failed to create account. Please try again.' }),
+          { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+
+      userId = createResult.data.user.id;
+      userEmail = createResult.data.user.email || userEmail;
+      isNewUser = true;
+      console.log('✅ Created new user:', userId);
+
+      // Create profile
+      const { error: profileError } = await supabase.from('profiles').upsert({
+        user_id: userId,
+        phone: phoneNumber,
+        is_verified: true,
+        verification_date: new Date().toISOString()
+      }, { onConflict: 'user_id' });
+
+      if (profileError) {
+        console.log('Profile upsert warning:', profileError.message);
       }
     }
 
-    if (!userId) {
-      return new Response(
-        JSON.stringify({ success: false, error: 'Failed to authenticate' }),
-        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
-    // Get user email for session
-    const { data: userData } = await supabase.auth.admin.getUserById(userId);
-    const sessionEmail = userData?.user?.email || userEmail;
-
     // Generate session
-    console.log('📝 Generating session for:', userId);
+    console.log('📝 Generating session for user:', userId, 'email:', userEmail);
+    
     const { data: linkData, error: linkError } = await supabase.auth.admin.generateLink({
       type: 'magiclink',
-      email: sessionEmail,
+      email: userEmail,
     });
 
     if (linkError || !linkData) {
@@ -226,7 +210,7 @@ serve(async (req) => {
       );
     }
 
-    console.log('✅ Authentication complete. isNewUser:', isNewUser);
+    console.log('✅ Authentication complete. userId:', userId, 'isNewUser:', isNewUser);
 
     return new Response(
       JSON.stringify({ 
