@@ -120,7 +120,7 @@ const FearlessDesign = () => {
         {loading ? (
           <div className="text-center text-[#4b4f54] py-20">Loading products...</div>
         ) : products.length > 0 ? (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 md:gap-10">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-[30px]">
             {products.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
