@@ -100,13 +100,13 @@ const ContactUs = () => {
         
         <div className="grid lg:grid-cols-[280px_1fr] gap-8 items-start">
           {/* Left Sidebar */}
-          <aside className="lg:sticky lg:top-32 lg:self-start lg:max-h-[calc(100vh-160px)] lg:overflow-y-auto">
-            {/* Customer Service Title - Fixed section */}
+          <aside className="lg:sticky lg:top-32 lg:self-start">
+            {/* Fixed section - Customer Service Title */}
             <div className="mb-6">
               <h1 className="text-3xl font-semibold text-foreground">Customer Service</h1>
             </div>
 
-            {/* Need Help Card - Separate fixed section */}
+            {/* Fixed section - Need Help Card */}
             <div className="bg-white p-6 shadow-sm rounded-none">
               <h2 className="text-xl font-semibold mb-3 text-gray-900">Need more help?</h2>
               <p className="text-sm text-gray-600 mb-4 leading-relaxed">
@@ -123,9 +123,9 @@ const ContactUs = () => {
               </Button>
             </div>
 
-            {/* Help Sections - Desktop only (separate section below) */}
+            {/* Help Sections - Desktop only (scrollable area) */}
             {helpSections.length > 0 && (
-              <div className="hidden lg:block mt-6 space-y-6">
+              <div className="hidden lg:block mt-6 space-y-6 lg:max-h-[calc(100vh-420px)] lg:overflow-y-auto lg:pr-2">
                 {helpSections.map((section) => (
                   <div key={section.id} className="bg-white p-6 shadow-sm rounded-none">
                     <h3 className="text-base font-bold mb-3 text-gray-900 uppercase tracking-wide">{section.title}</h3>
