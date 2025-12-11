@@ -27,7 +27,7 @@ const Footer = () => {
   }, []);
 
   return (
-    <footer className="bg-black text-white relative w-full py-14 px-4 md:px-20">
+    <footer className="bg-black text-white relative w-full py-14">
       <div className="container mx-auto max-w-[1280px]">
         {/* Logo */}
         <div className="mb-16">
