@@ -54,9 +54,7 @@ const ContactUs = () => {
     fetchHelpSections();
   }, []);
   
-  // Get delivery related section for the main content
-  const deliverySection = helpSections.find(s => s.title.toLowerCase().includes('delivery'));
-  const deliveryQuestions = deliverySection?.subtitles || [];
+  // Get latest 4 items from all sections for suggestions
 
   // Get latest 4 items from all sections for suggestions
   const latestSuggestions = helpSections
@@ -146,8 +144,8 @@ const ContactUs = () => {
               </div>
             </div>
 
-            {/* Type of Issue & Help Topics from Database - Each in separate card */}
-            {helpSections.filter(s => !s.title.toLowerCase().includes('delivery')).map((section) => (
+            {/* Type of Issue & Help Topics from Database - Each in separate card (including Delivery) */}
+            {helpSections.map((section) => (
               <div key={section.id} className="bg-white p-6 shadow-sm rounded-none">
                 <h3 className="text-base font-bold mb-4 text-gray-900 uppercase tracking-wide">{section.title}</h3>
                 {/* Desktop view - simple list */}
@@ -204,41 +202,6 @@ const ContactUs = () => {
             </div>
           </section>
 
-          {/* Delivery Related from Database */}
-          {deliverySection && (
-            <section className="bg-white p-6 shadow-sm rounded-none mt-10">
-              <h2 className="text-2xl font-semibold mb-6 text-gray-900">{deliverySection.title}</h2>
-              
-              {/* Desktop view - simple list */}
-              <div className="hidden lg:block space-y-4">
-                {deliveryQuestions.map((item, index) => (
-                  <button
-                    key={index}
-                    className="block w-full text-left text-base text-gray-700 hover:text-gray-900 hover:underline transition-colors py-1"
-                  >
-                    {getSubtitleTitle(item)}
-                  </button>
-                ))}
-              </div>
-              {/* Mobile/Tablet view - accordion */}
-              <Accordion type="single" collapsible className="lg:hidden">
-                {deliveryQuestions.map((item, index) => (
-                  <AccordionItem key={index} value={`delivery-${index}`} className="border-b-0">
-                    <AccordionTrigger className="text-base text-gray-700 hover:text-gray-900 py-2 hover:no-underline">
-                      {getSubtitleTitle(item)}
-                    </AccordionTrigger>
-                    <AccordionContent className="text-sm text-gray-600 pb-3">
-                      {getSubtitleParagraph(item) || "More information about this topic will be displayed here."}
-                    </AccordionContent>
-                  </AccordionItem>
-                ))}
-              </Accordion>
-
-              <button className="mt-8 text-base font-semibold text-gray-900 hover:text-gray-700 transition-colors">
-                View More
-              </button>
-            </section>
-          )}
         </div>
       </main>
 
