@@ -144,9 +144,9 @@ const ContactUs = () => {
               </div>
             </div>
 
-            {/* Type of Issue & Help Topics from Database - Each in separate card (including Delivery) */}
+            {/* Type of Issue & Help Topics from Database - Mobile/Tablet only */}
             {helpSections.map((section) => (
-              <div key={section.id} className="bg-white p-6 shadow-sm rounded-none">
+              <div key={section.id} className="bg-white p-6 shadow-sm rounded-none lg:hidden">
                 <h3 className="text-base font-bold mb-4 text-gray-900 uppercase tracking-wide">{section.title}</h3>
                 {/* Desktop view - simple list */}
                 <div className="hidden lg:block space-y-3">
