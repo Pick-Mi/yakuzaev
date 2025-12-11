@@ -749,6 +749,21 @@ const Profile = () => {
                 {/* Divider */}
                 <div className="h-px bg-gray-200 mt-8"></div>
 
+                {/* Logout CTA - Mobile Only */}
+                <div className="md:hidden flex justify-center py-6">
+                  <Button
+                    variant="outline"
+                    onClick={signOut}
+                    className="w-full max-w-xs border-gray-300 text-foreground"
+                  >
+                    <LogOut className="w-4 h-4 mr-2" />
+                    Logout
+                  </Button>
+                </div>
+
+                {/* Divider */}
+                <div className="md:hidden h-px bg-gray-200"></div>
+
                 {/* Delete Account Section */}
                 <div className="md:p-8 pt-8">
                   <div className="flex items-center gap-2 mb-4">
