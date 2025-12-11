@@ -215,12 +215,9 @@ const ContactUs = () => {
                     >
                       <div className="flex items-start justify-between gap-3">
                         <div className="flex-1">
-                          <h3 className="font-normal text-base text-gray-900 mb-1 underline group-hover:text-blue-600">
+                          <h3 className="font-normal text-base text-gray-900 underline group-hover:text-blue-600">
                             {getSubtitleTitle(item)}
                           </h3>
-                          {getSubtitleParagraph(item) && (
-                            <p className="text-sm text-gray-500">{getSubtitleParagraph(item)}</p>
-                          )}
                         </div>
                         <ChevronRight className="w-5 h-5 text-gray-400 flex-shrink-0 mt-1" />
                       </div>
