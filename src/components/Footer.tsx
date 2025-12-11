@@ -1,9 +1,31 @@
 import { Link } from "react-router-dom";
 import { Facebook, Twitter, Instagram, Linkedin, Youtube, ChevronDown } from "lucide-react";
+import { useEffect, useState } from "react";
 import logo from "@/assets/logo.svg";
+import { supabase } from "@/integrations/supabase/client";
 
+interface CustomPage {
+  id: string;
+  page_name: string;
+  page_slug: string;
+}
 
 const Footer = () => {
+  const [customPages, setCustomPages] = useState<CustomPage[]>([]);
+
+  useEffect(() => {
+    const fetchCustomPages = async () => {
+      const { data } = await supabase
+        .from('page_management')
+        .select('id, page_name, page_slug')
+        .eq('is_active', true)
+        .order('page_name');
+      
+      if (data) setCustomPages(data);
+    };
+    fetchCustomPages();
+  }, []);
+
   return (
     <footer className="bg-black text-white relative w-full py-14 px-4 md:px-20">
       <div className="container mx-auto max-w-[1280px]">
@@ -101,9 +123,13 @@ const Footer = () => {
             Copyright © 2025 yakuza. All Rights Reserved.
           </p>
 
-          {/* Privacy Links */}
-          <div className="flex gap-4 text-xs" style={{ fontFamily: 'Poppins, sans-serif' }}>
-            <Link to="/privacy-policy" className="hover:underline">Privacy Policy</Link>
+          {/* Privacy Links - Dynamic Custom Pages */}
+          <div className="flex gap-4 text-xs flex-wrap" style={{ fontFamily: 'Poppins, sans-serif' }}>
+            {customPages.map((page) => (
+              <Link key={page.id} to={page.page_slug} className="hover:underline">
+                {page.page_name}
+              </Link>
+            ))}
             <Link to="/sitemap" className="hover:underline">Sitemap</Link>
           </div>
         </div>

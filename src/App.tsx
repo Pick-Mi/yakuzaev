@@ -38,6 +38,7 @@ import SourceCodeManagement from "./pages/SourceCodeManagement";
 import PageSourceViewer from "./pages/PageSourceViewer";
 import SSRTester from "./pages/SSRTester";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
+import CustomPage from "./pages/CustomPage";
 
 import NotFound from "./pages/NotFound";
 
@@ -126,6 +127,9 @@ const App = () => (
               
               {/* Redirect old /product/:id URLs to /products/:id */}
               <Route path="/product/:id" element={<ProductRedirect />} />
+              
+              {/* Dynamic Custom Pages from Database */}
+              <Route path="/:slug" element={<CustomPage />} />
               
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
