@@ -179,68 +179,66 @@ const ContactUs = () => {
           </aside>
 
           {/* Main Content */}
-          <div className="space-y-10">
-            {/* Suggestions - Desktop only */}
-            <section className="hidden lg:block bg-white p-6 shadow-sm rounded-none">
-              <h2 className="text-2xl font-semibold mb-2 text-gray-900">Suggestions for you</h2>
-              <p className="text-sm text-gray-600 mb-6">Select an action or article to learn more</p>
+          {/* Suggestions - Desktop only */}
+          <section className="hidden lg:block bg-white p-6 shadow-sm rounded-none">
+            <h2 className="text-2xl font-semibold mb-2 text-gray-900">Suggestions for you</h2>
+            <p className="text-sm text-gray-600 mb-6">Select an action or article to learn more</p>
+            
+            <div className="space-y-3">
+              {latestSuggestions.map((suggestion, index) => (
+                <button
+                  key={index}
+                  className="w-full text-left hover:bg-gray-50 transition-colors p-3 rounded group"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex-1">
+                      <h3 className="font-normal text-base text-gray-900 mb-1 underline group-hover:text-blue-600">
+                        {suggestion.title}
+                      </h3>
+                      <p className="text-sm text-gray-500">{suggestion.subtitle}</p>
+                    </div>
+                    <ChevronRight className="w-5 h-5 text-gray-400 flex-shrink-0 mt-1" />
+                  </div>
+                </button>
+              ))}
+            </div>
+          </section>
+
+          {/* Delivery Related from Database */}
+          {deliverySection && (
+            <section className="bg-white p-6 shadow-sm rounded-none mt-10">
+              <h2 className="text-2xl font-semibold mb-6 text-gray-900">{deliverySection.title}</h2>
               
-              <div className="space-y-3">
-                {latestSuggestions.map((suggestion, index) => (
+              {/* Desktop view - simple list */}
+              <div className="hidden lg:block space-y-4">
+                {deliveryQuestions.map((item, index) => (
                   <button
                     key={index}
-                    className="w-full text-left hover:bg-gray-50 transition-colors p-3 rounded group"
+                    className="block w-full text-left text-base text-gray-700 hover:text-gray-900 hover:underline transition-colors py-1"
                   >
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="flex-1">
-                        <h3 className="font-normal text-base text-gray-900 mb-1 underline group-hover:text-blue-600">
-                          {suggestion.title}
-                        </h3>
-                        <p className="text-sm text-gray-500">{suggestion.subtitle}</p>
-                      </div>
-                      <ChevronRight className="w-5 h-5 text-gray-400 flex-shrink-0 mt-1" />
-                    </div>
+                    {getSubtitleTitle(item)}
                   </button>
                 ))}
               </div>
-            </section>
-
-            {/* Delivery Related from Database */}
-            {deliverySection && (
-              <section className="bg-white p-6 shadow-sm rounded-none">
-                <h2 className="text-2xl font-semibold mb-6 text-gray-900">{deliverySection.title}</h2>
-                
-                {/* Desktop view - simple list */}
-                <div className="hidden lg:block space-y-4">
-                  {deliveryQuestions.map((item, index) => (
-                    <button
-                      key={index}
-                      className="block w-full text-left text-base text-gray-700 hover:text-gray-900 hover:underline transition-colors py-1"
-                    >
+              {/* Mobile/Tablet view - accordion */}
+              <Accordion type="single" collapsible className="lg:hidden">
+                {deliveryQuestions.map((item, index) => (
+                  <AccordionItem key={index} value={`delivery-${index}`} className="border-b-0">
+                    <AccordionTrigger className="text-base text-gray-700 hover:text-gray-900 py-2 hover:no-underline">
                       {getSubtitleTitle(item)}
-                    </button>
-                  ))}
-                </div>
-                {/* Mobile/Tablet view - accordion */}
-                <Accordion type="single" collapsible className="lg:hidden">
-                  {deliveryQuestions.map((item, index) => (
-                    <AccordionItem key={index} value={`delivery-${index}`} className="border-b-0">
-                      <AccordionTrigger className="text-base text-gray-700 hover:text-gray-900 py-2 hover:no-underline">
-                        {getSubtitleTitle(item)}
-                      </AccordionTrigger>
-                      <AccordionContent className="text-sm text-gray-600 pb-3">
-                        {getSubtitleParagraph(item) || "More information about this topic will be displayed here."}
-                      </AccordionContent>
-                    </AccordionItem>
-                  ))}
-                </Accordion>
+                    </AccordionTrigger>
+                    <AccordionContent className="text-sm text-gray-600 pb-3">
+                      {getSubtitleParagraph(item) || "More information about this topic will be displayed here."}
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
 
-                <button className="mt-8 text-base font-semibold text-gray-900 hover:text-gray-700 transition-colors">
-                  View More
-                </button>
-              </section>
-            )}
-          </div>
+              <button className="mt-8 text-base font-semibold text-gray-900 hover:text-gray-700 transition-colors">
+                View More
+              </button>
+            </section>
+          )}
         </div>
       </main>
 
