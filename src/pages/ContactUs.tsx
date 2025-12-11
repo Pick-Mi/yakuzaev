@@ -54,16 +54,19 @@ const ContactUs = () => {
     fetchHelpSections();
   }, []);
   
-  const suggestions = [
-    { title: "Return an item for a refund", subtitle: "Popular article • 4 min" },
-    { title: "Get help with an item that hasn't arrived", subtitle: "Popular article • 4 min" },
-    { title: "Shipping your items", subtitle: "Popular article • 2 min" },
-    { title: "Creating a listing", subtitle: "Popular article • 4 min" },
-  ];
-
   // Get delivery related section for the main content
   const deliverySection = helpSections.find(s => s.title.toLowerCase().includes('delivery'));
   const deliveryQuestions = deliverySection?.subtitles || [];
+
+  // Get latest 4 items from all sections for suggestions
+  const latestSuggestions = helpSections
+    .flatMap(section => 
+      section.subtitles.map(item => ({
+        title: getSubtitleTitle(item),
+        subtitle: "Popular article • 4 min"
+      }))
+    )
+    .slice(0, 4);
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -165,7 +168,7 @@ const ContactUs = () => {
               <p className="text-sm text-gray-600 mb-6">Select an action or article to learn more</p>
               
               <div className="space-y-3">
-                {suggestions.map((suggestion, index) => (
+                {latestSuggestions.map((suggestion, index) => (
                   <button
                     key={index}
                     className="w-full text-left hover:bg-gray-50 transition-colors p-3 rounded group"
