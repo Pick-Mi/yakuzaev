@@ -26,6 +26,7 @@ const Profile = () => {
   const [orders, setOrders] = useState<any[]>([]);
   const [editMode, setEditMode] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
   const [addresses, setAddresses] = useState<any[]>([]);
   const [addressDialogOpen, setAddressDialogOpen] = useState(false);
   const [editingAddress, setEditingAddress] = useState<any>(null);
@@ -577,7 +578,7 @@ const Profile = () => {
                 );
               })}
               <button
-                onClick={handleLogout}
+                onClick={() => setLogoutDialogOpen(true)}
                 className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-white transition-colors"
               >
                 <LogOut className="w-5 h-5 text-gray-600" />
@@ -1137,6 +1138,33 @@ const Profile = () => {
               className="bg-red-600 hover:bg-red-700 text-white rounded-none"
             >
               Delete Account
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Logout Confirmation Dialog */}
+      <Dialog open={logoutDialogOpen} onOpenChange={setLogoutDialogOpen}>
+        <DialogContent className="rounded-none">
+          <DialogHeader>
+            <DialogTitle>Confirm Logout</DialogTitle>
+          </DialogHeader>
+          <p className="text-sm text-gray-700 py-4">
+            Are you sure you want to logout from your account?
+          </p>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setLogoutDialogOpen(false)}
+              className="rounded-none"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleLogout}
+              className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-none"
+            >
+              Logout
             </Button>
           </DialogFooter>
         </DialogContent>
