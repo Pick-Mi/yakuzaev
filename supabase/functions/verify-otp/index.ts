@@ -28,7 +28,7 @@ serve(async (req) => {
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    // Check if it's the demo OTP
+    // Verify OTP from database (skip for demo OTP)
     const isDemoOTP = otp === '123456';
     
     if (!isDemoOTP) {
@@ -88,56 +88,24 @@ serve(async (req) => {
       console.log('✅ Demo OTP accepted for:', phoneNumber);
     }
 
-    // Check if user exists with this phone number or email
+    // Generate email for this phone user
     const userEmail = `${phoneNumber.replace(/\+/g, '')}@phone.user`;
-    
-    // Try to find existing user more thoroughly
-    let userWithPhone = null;
-    let page = 1;
-    const perPage = 1000;
-    
-    // Search through paginated results
-    while (!userWithPhone) {
-      const { data: usersPage } = await supabase.auth.admin.listUsers({
-        page,
-        perPage
-      });
-      
-      if (!usersPage?.users || usersPage.users.length === 0) {
-        break; // No more users
-      }
-      
-      userWithPhone = usersPage.users.find(u => 
-        u.phone === phoneNumber || u.email === userEmail
-      );
-      
-      if (usersPage.users.length < perPage) {
-        break; // Last page
-      }
-      
-      page++;
-    }
-
     let userId: string;
+    let isNewUser = false;
 
-    if (userWithPhone) {
-      // User exists
-      userId = userWithPhone.id;
-      console.log('✅ Existing user found:', userId);
-      
-      // Update phone number if not set
-      if (!userWithPhone.phone) {
-        await supabase.auth.admin.updateUserById(userId, {
-          phone: phoneNumber,
-          phone_confirm: true,
-          user_metadata: { 
-            phone: phoneNumber,
-            phone_verified: true 
-          }
-        });
-      }
+    // First, check if profile exists with this phone number
+    const { data: existingProfile } = await supabase
+      .from('profiles')
+      .select('user_id, first_name, last_name, email')
+      .eq('phone', phoneNumber)
+      .maybeSingle();
+
+    if (existingProfile?.user_id) {
+      userId = existingProfile.user_id;
+      isNewUser = !existingProfile.first_name; // If no name set, treat as incomplete profile
+      console.log('✅ Found existing profile for user:', userId, 'isNewUser:', isNewUser);
     } else {
-      // Try to create new user with phone number and temporary email
+      // Try to create new user
       const { data: newUser, error: createError } = await supabase.auth.admin.createUser({
         phone: phoneNumber,
         phone_confirm: true,
@@ -149,76 +117,100 @@ serve(async (req) => {
         }
       });
 
-      // If phone already exists, try to find the user again using email
-      if (createError?.message?.includes('already registered') || createError?.message?.includes('phone_exists')) {
-        console.log('⚠️ Phone already registered, looking up by email:', userEmail);
+      if (createError) {
+        console.log('Create user error:', createError.message);
         
-        // Try searching all pages again with better pagination
-        let foundUser = null;
-        let searchPage = 1;
-        
-        while (!foundUser && searchPage <= 10) { // Limit to 10 pages for safety
-          const { data: usersPage } = await supabase.auth.admin.listUsers({
-            page: searchPage,
-            perPage: 1000
-          });
+        // If user already exists, find them by email
+        if (createError.message?.includes('already') || createError.message?.includes('exists')) {
+          // List users and find by email or phone
+          const { data: listData } = await supabase.auth.admin.listUsers({ perPage: 1000 });
           
-          if (!usersPage?.users || usersPage.users.length === 0) {
-            break;
-          }
-          
-          foundUser = usersPage.users.find(u => 
+          const existingUser = listData?.users?.find(u => 
             u.phone === phoneNumber || u.email === userEmail
           );
           
-          if (usersPage.users.length < 1000) {
-            break; // Last page
+          if (existingUser) {
+            userId = existingUser.id;
+            
+            // Check if profile has name
+            const { data: profile } = await supabase
+              .from('profiles')
+              .select('first_name')
+              .eq('user_id', userId)
+              .maybeSingle();
+            
+            isNewUser = !profile?.first_name;
+            console.log('✅ Found existing user:', userId, 'isNewUser:', isNewUser);
+          } else {
+            // Last resort: create user with different email
+            const uniqueEmail = `${phoneNumber.replace(/\+/g, '')}_${Date.now()}@phone.user`;
+            const { data: retryUser, error: retryError } = await supabase.auth.admin.createUser({
+              phone: phoneNumber,
+              phone_confirm: true,
+              email: uniqueEmail,
+              email_confirm: true,
+              user_metadata: { 
+                phone: phoneNumber,
+                phone_verified: true 
+              }
+            });
+            
+            if (retryError || !retryUser.user) {
+              console.error('❌ Failed to create user on retry:', retryError);
+              return new Response(
+                JSON.stringify({ success: false, error: 'Failed to create account. Please try again.' }),
+                { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+              );
+            }
+            
+            userId = retryUser.user.id;
+            isNewUser = true;
+            console.log('✅ Created user with unique email:', userId);
+            
+            // Create profile
+            await supabase.from('profiles').insert({
+              user_id: userId,
+              phone: phoneNumber,
+              is_verified: true,
+              verification_date: new Date().toISOString()
+            });
           }
-          
-          searchPage++;
-        }
-        
-        if (foundUser) {
-          userId = foundUser.id;
-          console.log('✅ Found existing user after retry:', userId);
         } else {
-          console.error('❌ Could not find existing user. Phone:', phoneNumber, 'Email:', userEmail);
+          console.error('❌ Unexpected error creating user:', createError);
           return new Response(
-            JSON.stringify({ success: false, error: 'Authentication failed. Please try again or contact support.' }),
+            JSON.stringify({ success: false, error: 'Failed to create account' }),
             { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
           );
         }
-      } else if (createError || !newUser.user) {
-        console.error('❌ Failed to create user:', createError);
-        return new Response(
-          JSON.stringify({ success: false, error: 'Failed to create user account' }),
-          { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        );
-      } else {
+      } else if (newUser?.user) {
         userId = newUser.user.id;
+        isNewUser = true;
         console.log('✅ New user created:', userId);
 
         // Create profile for new user
-        const { error: profileError } = await supabase
-          .from('profiles')
-          .insert({
-            user_id: userId,
-            phone: phoneNumber,
-            is_verified: true,
-            verification_date: new Date().toISOString()
-          });
-
-        if (profileError) {
-          console.error('⚠️ Profile creation warning:', profileError);
-        }
+        await supabase.from('profiles').insert({
+          user_id: userId,
+          phone: phoneNumber,
+          is_verified: true,
+          verification_date: new Date().toISOString()
+        });
+      } else {
+        return new Response(
+          JSON.stringify({ success: false, error: 'Failed to create account' }),
+          { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
       }
     }
 
-    // Use the hashed token to create a proper session
+    // Get the user's email for session generation
+    const { data: userData } = await supabase.auth.admin.getUserById(userId);
+    const sessionEmail = userData?.user?.email || userEmail;
+
+    // Generate magic link for session
     console.log('📝 Generating session for user:', userId);
     const { data: linkData, error: linkError } = await supabase.auth.admin.generateLink({
       type: 'magiclink',
-      email: userEmail,
+      email: sessionEmail,
     });
 
     if (linkError || !linkData) {
@@ -229,32 +221,29 @@ serve(async (req) => {
       );
     }
 
-    // Use the hashed_token to verify and create session
-    const hashedToken = linkData.properties.hashed_token;
-    console.log('🔑 Using hashed token to create session');
-
     // Exchange the token for a session
+    const hashedToken = linkData.properties.hashed_token;
     const { data: sessionData, error: sessionError } = await supabase.auth.verifyOtp({
       type: 'magiclink',
       token_hash: hashedToken,
     });
 
     if (sessionError || !sessionData.session) {
-      console.error('❌ Failed to create session from token:', sessionError);
+      console.error('❌ Failed to create session:', sessionError);
       return new Response(
         JSON.stringify({ success: false, error: 'Failed to create session' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    console.log('✅ Session created successfully');
-    console.log('✅ OTP verified successfully for:', phoneNumber);
+    console.log('✅ OTP verified successfully. isNewUser:', isNewUser);
 
     return new Response(
       JSON.stringify({ 
         success: true, 
         message: 'OTP verified successfully',
         userId,
+        isNewUser,
         verified: true,
         session: {
           access_token: sessionData.session.access_token,

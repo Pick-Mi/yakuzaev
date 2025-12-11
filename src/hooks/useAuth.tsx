@@ -7,7 +7,7 @@ interface AuthContextType {
   session: Session | null;
   loading: boolean;
   signInWithPhone: (phone: string) => Promise<{ error: any }>;
-  verifyOTP: (phone: string, token: string) => Promise<{ error: any }>;
+  verifyOTP: (phone: string, token: string) => Promise<{ error: any; isNewUser?: boolean }>;
   signInWithEmail: (email: string, password: string) => Promise<{ error: any }>;
   signUpWithEmail: (email: string, password: string) => Promise<{ error: any }>;
   signOut: () => Promise<{ error: any }>;
@@ -58,7 +58,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const verifyOTP = async (phone: string, token: string) => {
+  const verifyOTP = async (phone: string, token: string): Promise<{ error: any; isNewUser?: boolean }> => {
     try {
       console.log('📞 Verifying OTP for:', phone);
       
@@ -80,7 +80,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       console.log('✅ OTP verified, session data received:', { 
         hasSession: !!data.session,
         hasAccessToken: !!data.session?.access_token,
-        hasRefreshToken: !!data.session?.refresh_token 
+        hasRefreshToken: !!data.session?.refresh_token,
+        isNewUser: data.isNewUser
       });
       
       // Set the session using the returned session data
@@ -112,7 +113,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         throw new Error('No session tokens received');
       }
       
-      return { error: null };
+      return { error: null, isNewUser: data.isNewUser };
     } catch (error: any) {
       console.error('❌ Verify OTP error:', error);
       return { error };
