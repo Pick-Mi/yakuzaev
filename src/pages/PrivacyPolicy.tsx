@@ -22,7 +22,7 @@ const PrivacyPolicy = () => {
       <Header />
       
       <main className="pt-20 py-0 px-0 mx-0">
-        <div className="container mx-auto max-w-4xl px-10 py-12">
+        <div className="container mx-auto max-w-4xl py-12 px-0">
           <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-8">
             Privacy Policy
           </h1>
