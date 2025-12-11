@@ -18,9 +18,7 @@ const DealerApplicationFlow = () => {
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
   const [isVerifying, setIsVerifying] = useState(false);
-  
-  // Test OTP for development
-  const TEST_OTP = "1234";
+  const [isSendingOtp, setIsSendingOtp] = useState(false);
 
   const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,12 +28,37 @@ const DealerApplicationFlow = () => {
       return;
     }
 
-    // Store email in session storage for later use
-    sessionStorage.setItem("dealer_application_email", email);
-    
-    toast.success(`OTP sent to ${email}`);
-    toast.info(`Test OTP: ${TEST_OTP}`, { duration: 10000 });
-    setCurrentStep("otp");
+    setIsSendingOtp(true);
+
+    try {
+      const { data, error } = await supabase.functions.invoke('send-email-otp', {
+        body: { email }
+      });
+
+      if (error) {
+        console.error('Error sending OTP:', error);
+        toast.error('Failed to send verification code. Please try again.');
+        setIsSendingOtp(false);
+        return;
+      }
+
+      if (data?.error) {
+        toast.error(data.error);
+        setIsSendingOtp(false);
+        return;
+      }
+
+      // Store email in session storage for later use
+      sessionStorage.setItem("dealer_application_email", email);
+      
+      toast.success(`Verification code sent to ${email}`);
+      setCurrentStep("otp");
+    } catch (err) {
+      console.error('Error:', err);
+      toast.error('Something went wrong. Please try again.');
+    } finally {
+      setIsSendingOtp(false);
+    }
   };
 
   const handleOTPVerify = async () => {
@@ -46,15 +69,32 @@ const DealerApplicationFlow = () => {
 
     setIsVerifying(true);
 
-    // For testing, accept the test OTP
-    if (otp === TEST_OTP) {
+    try {
+      const { data, error } = await supabase.functions.invoke('verify-email-otp', {
+        body: { email, otp }
+      });
+
+      if (error) {
+        console.error('Error verifying OTP:', error);
+        toast.error('Failed to verify code. Please try again.');
+        setIsVerifying(false);
+        return;
+      }
+
+      if (data?.error) {
+        toast.error(data.error);
+        setIsVerifying(false);
+        return;
+      }
+
       toast.success("Email verified successfully!");
       setCurrentStep("form");
-    } else {
-      toast.error("Invalid OTP. Please try again.");
+    } catch (err) {
+      console.error('Error:', err);
+      toast.error('Something went wrong. Please try again.');
+    } finally {
+      setIsVerifying(false);
     }
-    
-    setIsVerifying(false);
   };
 
   const renderWelcome = () => (
@@ -113,9 +153,10 @@ const DealerApplicationFlow = () => {
           <div className="flex flex-col items-center gap-4 pt-4">
             <Button 
               type="submit"
+              disabled={isSendingOtp}
               className="px-10 h-12 bg-black text-white hover:bg-black/90 rounded-none"
             >
-              Continue
+              {isSendingOtp ? "Sending..." : "Continue"}
             </Button>
             <Button
               type="button"
@@ -174,10 +215,14 @@ const DealerApplicationFlow = () => {
             <Button
               type="button"
               variant="link"
+              disabled={isSendingOtp}
               className="p-0 h-auto text-blue-600 hover:text-blue-700"
-              onClick={() => handleEmailSubmit(new Event("submit") as any)}
+              onClick={async () => {
+                setOtp("");
+                await handleEmailSubmit({ preventDefault: () => {} } as React.FormEvent);
+              }}
             >
-              Resend
+              {isSendingOtp ? "Sending..." : "Resend"}
             </Button>
           </div>
 
