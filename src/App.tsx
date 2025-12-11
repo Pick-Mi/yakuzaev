@@ -38,6 +38,7 @@ import SourceCodeManagement from "./pages/SourceCodeManagement";
 import PageSourceViewer from "./pages/PageSourceViewer";
 import SSRTester from "./pages/SSRTester";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsConditions from "./pages/TermsConditions";
 import CustomPage from "./pages/CustomPage";
 
 import NotFound from "./pages/NotFound";
@@ -90,6 +91,7 @@ const App = () => (
               <Route path="/source-code/:pageId" element={<PageSourceViewer />} />
               <Route path="/ssr-tester" element={<SSRTester />} />
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+              <Route path="/terms-conditions" element={<TermsConditions />} />
               <Route path="/products/:slug" element={<Product />} />
               
               {/* Redirect old ID-based product URLs to slug-based URLs */}

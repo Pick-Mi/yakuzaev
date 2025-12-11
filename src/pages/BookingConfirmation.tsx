@@ -1205,7 +1205,7 @@ const BookingConfirmation = () => {
                 <div className="pt-4 border-t">
                   <p className="text-sm text-muted-foreground text-center">
                     By clicking Place Order, you agree to the Yakuza EV{' '}
-                    <a href="/terms" className="underline hover:no-underline">
+                    <a href="/terms-conditions" target="_blank" rel="noopener noreferrer" className="underline hover:no-underline">
                       Terms & Conditions
                     </a>
                   </p>
