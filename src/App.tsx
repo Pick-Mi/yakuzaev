@@ -37,6 +37,7 @@ import ProductRedirect from "./components/ProductRedirect";
 import SourceCodeManagement from "./pages/SourceCodeManagement";
 import PageSourceViewer from "./pages/PageSourceViewer";
 import SSRTester from "./pages/SSRTester";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 
 import NotFound from "./pages/NotFound";
 
@@ -87,6 +88,7 @@ const App = () => (
               <Route path="/source-code" element={<SourceCodeManagement />} />
               <Route path="/source-code/:pageId" element={<PageSourceViewer />} />
               <Route path="/ssr-tester" element={<SSRTester />} />
+              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
               <Route path="/products/:slug" element={<Product />} />
               
               {/* Redirect old ID-based product URLs to slug-based URLs */}
