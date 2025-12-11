@@ -44,19 +44,6 @@ const Sitemap = () => {
           </p>
         </div>
 
-        <div className="flex justify-end mb-8">
-          <a 
-            href="/sitemap.xml" 
-            download
-            className="inline-flex items-center gap-2 px-6 py-3 bg-black text-white hover:bg-black/90 transition-colors"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-            </svg>
-            Download sitemap.xml
-          </a>
-        </div>
-
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-12">
           {sitePages.map((section, idx) => (
             <div key={idx} className="space-y-6">
