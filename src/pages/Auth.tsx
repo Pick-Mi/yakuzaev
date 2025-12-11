@@ -145,7 +145,7 @@ const Auth = () => {
       if (error) {
         // Check if it's a rate limit error
         if (error.message.includes('security purposes') || error.message.includes('rate')) {
-          const waitTime = 60; // Default to 60 seconds
+          const waitTime = 30;
           setOtpCooldown(waitTime);
           toast({
             title: "Too Many Requests",
@@ -160,7 +160,7 @@ const Auth = () => {
           });
         }
       } else {
-        setOtpCooldown(60); // Set 60 second cooldown after successful send
+        setOtpCooldown(30); // Set 30 second cooldown after successful send
         toast({
           title: "OTP Sent",
           description: "Check your phone for the verification code.",
@@ -594,15 +594,20 @@ const Auth = () => {
                   </form>
 
                   <div className="text-center text-sm text-gray-600">
-                    Didn't receive SMS?{' '}
-                    <button
-                      type="button"
-                      className="text-blue-600 font-medium hover:underline"
-                      onClick={handlePhoneSubmit}
-                      disabled={otpCooldown > 0}
-                    >
-                      {otpCooldown > 0 ? `Wait ${otpCooldown}s` : 'Resend Code'}
-                    </button>
+                    {otpCooldown > 0 ? (
+                      <span>Resend code in <span className="font-semibold text-gray-900">{otpCooldown}s</span></span>
+                    ) : (
+                      <>
+                        Didn't receive SMS?{' '}
+                        <button
+                          type="button"
+                          className="text-blue-600 font-medium hover:underline"
+                          onClick={handlePhoneSubmit}
+                        >
+                          Resend Code
+                        </button>
+                      </>
+                    )}
                   </div>
                 </div>
               )}
@@ -918,14 +923,20 @@ const Auth = () => {
                   </form>
 
                   <div className="text-center text-sm text-gray-600">
-                    Didn't receive SMS?{' '}
-                    <button
-                      type="button"
-                      className="text-blue-600 font-medium hover:underline"
-                      onClick={handlePhoneSubmit}
-                    >
-                      Resend Code
-                    </button>
+                    {otpCooldown > 0 ? (
+                      <span>Resend code in <span className="font-semibold text-gray-900">{otpCooldown}s</span></span>
+                    ) : (
+                      <>
+                        Didn't receive SMS?{' '}
+                        <button
+                          type="button"
+                          className="text-blue-600 font-medium hover:underline"
+                          onClick={handlePhoneSubmit}
+                        >
+                          Resend Code
+                        </button>
+                      </>
+                    )}
                   </div>
 
                   <div className="text-center text-xs text-gray-500 pt-4">
