@@ -102,22 +102,6 @@ const Footer = () => {
 
         {/* Bottom Section */}
         <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-          {/* Country Selector */}
-          <div className="relative">
-            <div className="flex items-center gap-3 bg-white/10 px-3 py-2 rounded cursor-pointer hover:bg-white/15 transition-colors">
-              <div className="w-6 h-5">
-                <svg viewBox="0 0 25 19" fill="none">
-                  <rect width="25" height="6.333" fill="#FF9933"/>
-                  <rect y="6.333" width="25" height="6.333" fill="white"/>
-                  <rect y="12.667" width="25" height="6.333" fill="#138808"/>
-                  <circle cx="12.5" cy="9.5" r="3" fill="#000080"/>
-                </svg>
-              </div>
-              <span className="text-sm" style={{ fontFamily: 'PingFang HK, sans-serif' }}>India</span>
-              <ChevronDown className="w-4 h-4" />
-            </div>
-          </div>
-
           {/* Copyright */}
           <p className="text-sm font-light" style={{ fontFamily: 'Poppins, sans-serif' }}>
             Copyright © 2025 yakuza. All Rights Reserved.
