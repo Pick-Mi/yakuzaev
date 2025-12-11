@@ -103,6 +103,7 @@ const Footer = () => {
 
           {/* Privacy Links */}
           <div className="flex gap-4 text-xs" style={{ fontFamily: 'Poppins, sans-serif' }}>
+            <Link to="/privacy-policy" className="hover:underline">Privacy Policy</Link>
             <Link to="/sitemap" className="hover:underline">Sitemap</Link>
           </div>
         </div>
