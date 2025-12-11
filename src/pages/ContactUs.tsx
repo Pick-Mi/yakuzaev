@@ -211,16 +211,11 @@ const ContactUs = () => {
                   {section.subtitles.map((item, index) => (
                     <button
                       key={index}
-                      className="w-full text-left hover:bg-gray-50 transition-colors p-3 rounded group"
+                      className="w-full text-left hover:bg-gray-50 transition-colors p-3 rounded"
                     >
-                      <div className="flex items-start justify-between gap-3">
-                        <div className="flex-1">
-                          <h3 className="font-normal text-base text-gray-900 underline group-hover:text-blue-600">
-                            {getSubtitleTitle(item)}
-                          </h3>
-                        </div>
-                        <ChevronRight className="w-5 h-5 text-gray-400 flex-shrink-0 mt-1" />
-                      </div>
+                      <h3 className="font-normal text-base text-gray-900 hover:text-blue-600">
+                        {getSubtitleTitle(item)}
+                      </h3>
                     </button>
                   ))}
                 </div>
