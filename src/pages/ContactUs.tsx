@@ -8,6 +8,7 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { useSEOSettings } from "@/hooks/useSEOSettings";
 import { supabase } from "@/integrations/supabase/client";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 interface HelpSection {
   id: string;
@@ -106,16 +107,30 @@ const ContactUs = () => {
                 <div key={section.id}>
                   <div>
                     <h3 className="text-base font-bold mb-4 text-gray-900 uppercase tracking-wide">{section.title}</h3>
-                    <div className="space-y-3">
-                      {section.subtitles.map((subtitle, index) => (
-                        <button
-                          key={index}
-                          className="block w-full text-left text-base text-gray-700 hover:text-gray-900 transition-colors"
-                        >
-                          {subtitle}
-                        </button>
-                      ))}
-                    </div>
+                                    {/* Desktop view - simple list */}
+                                    <div className="hidden lg:block space-y-3">
+                                      {section.subtitles.map((subtitle, index) => (
+                                        <button
+                                          key={index}
+                                          className="block w-full text-left text-base text-gray-700 hover:text-gray-900 transition-colors"
+                                        >
+                                          {subtitle}
+                                        </button>
+                                      ))}
+                                    </div>
+                                    {/* Mobile/Tablet view - accordion */}
+                                    <Accordion type="single" collapsible className="lg:hidden">
+                                      {section.subtitles.map((subtitle, index) => (
+                                        <AccordionItem key={index} value={`item-${index}`} className="border-b-0">
+                                          <AccordionTrigger className="text-base text-gray-700 hover:text-gray-900 py-2 hover:no-underline">
+                                            {subtitle}
+                                          </AccordionTrigger>
+                                          <AccordionContent className="text-sm text-gray-600 pb-3">
+                                            More information about {subtitle.toLowerCase()} will be displayed here.
+                                          </AccordionContent>
+                                        </AccordionItem>
+                                      ))}
+                                    </Accordion>
                   </div>
                   {sectionIndex < filteredArr.length - 1 && (
                     <hr className="my-6 border-gray-200" />
@@ -157,7 +172,8 @@ const ContactUs = () => {
               <section className="bg-white p-6 shadow-sm rounded-none">
                 <h2 className="text-2xl font-semibold mb-6 text-gray-900">{deliverySection.title}</h2>
                 
-                <div className="space-y-4">
+                {/* Desktop view - simple list */}
+                <div className="hidden lg:block space-y-4">
                   {deliveryQuestions.map((question, index) => (
                     <button
                       key={index}
@@ -167,6 +183,19 @@ const ContactUs = () => {
                     </button>
                   ))}
                 </div>
+                {/* Mobile/Tablet view - accordion */}
+                <Accordion type="single" collapsible className="lg:hidden">
+                  {deliveryQuestions.map((question, index) => (
+                    <AccordionItem key={index} value={`delivery-${index}`} className="border-b-0">
+                      <AccordionTrigger className="text-base text-gray-700 hover:text-gray-900 py-2 hover:no-underline">
+                        {question}
+                      </AccordionTrigger>
+                      <AccordionContent className="text-sm text-gray-600 pb-3">
+                        More information about this topic will be displayed here.
+                      </AccordionContent>
+                    </AccordionItem>
+                  ))}
+                </Accordion>
 
                 <button className="mt-8 text-base font-semibold text-gray-900 hover:text-gray-700 transition-colors">
                   View More
