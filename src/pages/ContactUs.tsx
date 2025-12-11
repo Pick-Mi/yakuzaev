@@ -146,43 +146,36 @@ const ContactUs = () => {
               </div>
             </div>
 
-            {/* Type of Issue & Help Topics from Database */}
-            <div className="bg-white p-6 shadow-sm rounded-none">
-              {helpSections.filter(s => !s.title.toLowerCase().includes('delivery')).map((section, sectionIndex, filteredArr) => (
-                <div key={section.id}>
-                  <div>
-                    <h3 className="text-base font-bold mb-4 text-gray-900 uppercase tracking-wide">{section.title}</h3>
-                                    {/* Desktop view - simple list */}
-                                    <div className="hidden lg:block space-y-3">
-                                      {section.subtitles.map((item, index) => (
-                                        <button
-                                          key={index}
-                                          className="block w-full text-left text-base text-gray-700 hover:text-gray-900 transition-colors"
-                                        >
-                                          {getSubtitleTitle(item)}
-                                        </button>
-                                      ))}
-                                    </div>
-                                    {/* Mobile/Tablet view - accordion */}
-                                    <Accordion type="single" collapsible className="lg:hidden">
-                                      {section.subtitles.map((item, index) => (
-                                        <AccordionItem key={index} value={`item-${index}`} className="border-b-0">
-                                          <AccordionTrigger className="text-base text-gray-700 hover:text-gray-900 py-2 hover:no-underline">
-                                            {getSubtitleTitle(item)}
-                                          </AccordionTrigger>
-                                          <AccordionContent className="text-sm text-gray-600 pb-3">
-                                            {getSubtitleParagraph(item) || "More information about this topic will be displayed here."}
-                                          </AccordionContent>
-                                        </AccordionItem>
-                                      ))}
-                                    </Accordion>
-                  </div>
-                  {sectionIndex < filteredArr.length - 1 && (
-                    <hr className="my-6 border-gray-200" />
-                  )}
+            {/* Type of Issue & Help Topics from Database - Each in separate card */}
+            {helpSections.filter(s => !s.title.toLowerCase().includes('delivery')).map((section) => (
+              <div key={section.id} className="bg-white p-6 shadow-sm rounded-none">
+                <h3 className="text-base font-bold mb-4 text-gray-900 uppercase tracking-wide">{section.title}</h3>
+                {/* Desktop view - simple list */}
+                <div className="hidden lg:block space-y-3">
+                  {section.subtitles.map((item, index) => (
+                    <button
+                      key={index}
+                      className="block w-full text-left text-base text-gray-700 hover:text-gray-900 transition-colors"
+                    >
+                      {getSubtitleTitle(item)}
+                    </button>
+                  ))}
                 </div>
-              ))}
-            </div>
+                {/* Mobile/Tablet view - accordion */}
+                <Accordion type="single" collapsible className="lg:hidden">
+                  {section.subtitles.map((item, index) => (
+                    <AccordionItem key={index} value={`item-${section.id}-${index}`} className="border-b-0">
+                      <AccordionTrigger className="text-base text-gray-700 hover:text-gray-900 py-2 hover:no-underline">
+                        {getSubtitleTitle(item)}
+                      </AccordionTrigger>
+                      <AccordionContent className="text-sm text-gray-600 pb-3">
+                        {getSubtitleParagraph(item) || "More information about this topic will be displayed here."}
+                      </AccordionContent>
+                    </AccordionItem>
+                  ))}
+                </Accordion>
+              </div>
+            ))}
           </aside>
 
           {/* Main Content */}
