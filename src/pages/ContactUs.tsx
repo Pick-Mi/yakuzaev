@@ -121,8 +121,8 @@ const ContactUs = () => {
               </Button>
             </div>
 
-            {/* Suggestions for you */}
-            <div className="bg-white p-6 shadow-sm rounded-none">
+            {/* Suggestions for you - Mobile/Tablet only */}
+            <div className="bg-white p-6 shadow-sm rounded-none lg:hidden">
               <h2 className="text-xl font-semibold mb-3 text-gray-900">Suggestions for you</h2>
               <p className="text-sm text-gray-600 mb-4">Select an action or article to learn more</p>
               
