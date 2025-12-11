@@ -100,7 +100,7 @@ const ContactUs = () => {
       
       <main className="flex-1 container mx-auto px-4 py-8 mt-32 max-w-7xl" style={{ backgroundColor: '#F8F9F9' }}>
         
-        <div className="grid lg:grid-cols-[280px_1fr] gap-8">
+        <div className="grid lg:grid-cols-[280px_1fr] gap-8 items-start">
           {/* Left Sidebar */}
           <aside className="space-y-6 lg:sticky lg:top-32 lg:self-start">
             <h1 className="text-3xl font-semibold text-foreground">Customer Service</h1>
