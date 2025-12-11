@@ -76,7 +76,7 @@ const ContactUs = () => {
         
         <div className="grid lg:grid-cols-[280px_1fr] gap-8">
           {/* Left Sidebar */}
-          <aside className="space-y-6 sticky top-32 self-start">
+          <aside className="space-y-6 lg:sticky lg:top-32 lg:self-start">
             <h1 className="text-3xl font-semibold text-foreground">Customer Service</h1>
             {/* Need Help Card */}
             <div className="bg-white p-6 shadow-sm rounded-none">
