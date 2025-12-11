@@ -67,7 +67,7 @@ const Index = () => {
       <Hero />
       <ProductShowcase />
       <FearlessDesign />
-      <PromoSection className="px-[20px]" />
+      <PromoSection />
       <BlogSection />
       <Footer />
     </div>;
