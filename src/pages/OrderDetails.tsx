@@ -121,15 +121,18 @@ const OrderDetails = () => {
                     // Remove commas and parse the price
                     const priceValue = priceSpec.value.toString().replace(/,/g, '');
                     variantPrice = parseFloat(priceValue);
+                    console.log('✓ Variant price found in specifications:', variantName, '→', variantPrice);
                   }
                 } else if (variant.price) {
                   variantPrice = parseFloat(variant.price);
+                  console.log('✓ Variant price found directly:', variantName, '→', variantPrice);
                 }
               }
             }
             
             // Store the variant price in order_items_data
             data.order_items_data[0].variant_price = variantPrice;
+            console.log('✓ Stored variant_price in order_items_data:', variantPrice);
             
             // Find color hex code from color_variety first (doesn't require variant match)
             let colorHex = null;
@@ -880,15 +883,16 @@ const OrderDetails = () => {
                   {(() => {
                     // Calculate total paid from all transactions
                     const totalPaid = transactions.reduce((sum, txn) => sum + parseFloat(txn.amount.toString()), 0);
-                    // For booking orders, if variantPrice equals total_amount (booking amount), 
-                    // it means variant_price wasn't fetched - in this case, show remaining payment UI
-                    const bookingAmount = parseFloat(order.total_amount.toString());
-                    const hasValidVariantPrice = firstItem.variant_price && parseFloat(firstItem.variant_price.toString()) > bookingAmount;
-                    const actualProductPrice = hasValidVariantPrice ? variantPrice : variantPrice;
-                    const remainingAmount = actualProductPrice - totalPaid;
-                    // Only mark as fully paid if we have a valid variant price AND total paid covers it
-                    // If variant price equals booking amount, we likely didn't fetch the real price - show payment option
-                    const isFullyPaid = hasValidVariantPrice && totalPaid >= actualProductPrice;
+                    // Get variant price - this is the actual product price from database
+                    const actualVariantPrice = firstItem.variant_price ? parseFloat(firstItem.variant_price.toString()) : 0;
+                    // Calculate remaining amount: variant price - total paid
+                    const remainingAmount = actualVariantPrice - totalPaid;
+                    // Check if there's a remaining amount to pay
+                    const hasRemainingPayment = actualVariantPrice > 0 && remainingAmount > 0;
+                    // Fully paid means total paid covers the variant price
+                    const isFullyPaid = actualVariantPrice > 0 && totalPaid >= actualVariantPrice;
+                    
+                    console.log('Payment calculation:', { actualVariantPrice, totalPaid, remainingAmount, hasRemainingPayment, isFullyPaid });
 
                     return isFullyPaid ? (
                       // Show simple summary when fully paid
@@ -935,15 +939,15 @@ const OrderDetails = () => {
                         <div className="flex justify-between text-base">
                           <span className="text-foreground">Product price</span>
                           <span className="font-medium">
-                            {hasValidVariantPrice 
-                              ? `₹${actualProductPrice.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+                            {actualVariantPrice > 0 
+                              ? `₹${actualVariantPrice.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
                               : 'View product for details'}
                           </span>
                         </div>
                           
                         <div className="flex justify-between text-base">
-                          <span className="text-foreground">Booking amount paid</span>
-                          <span className="font-medium text-green-600">-₹{parseFloat(order.total_amount.toString()).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                          <span className="text-foreground">Amount paid</span>
+                          <span className="font-medium text-green-600">-₹{totalPaid.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                         </div>
 
                         <div className="flex justify-between text-base">
@@ -956,46 +960,39 @@ const OrderDetails = () => {
                           </button>
                         </div>
                         
-                        {hasValidVariantPrice && (
+                        {hasRemainingPayment && (
                           <>
-                            <div className="flex justify-between text-base">
-                              <span className="text-foreground">Remaining amount</span>
-                              <span className="font-medium">₹{remainingAmount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-                            </div>
-
                             <div className="border-t-2 border-dashed border-gray-300 my-4"></div>
 
                             <div className="flex justify-between text-base font-bold">
-                              <span>Amount to pay</span>
+                              <span>Remaining amount</span>
                               <span>₹{remainingAmount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                             </div>
+
+                            <Button 
+                              className="w-full mt-6 rounded-none"
+                              onClick={() => setShowPaymentDialog(true)}
+                            >
+                              Make Payment - ₹{remainingAmount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                            </Button>
                           </>
                         )}
-
-                        <Button 
-                          className="w-full mt-6 rounded-none"
-                          onClick={() => setShowPaymentDialog(true)}
-                        >
-                          Make Payment
-                        </Button>
                       </div>
                     );
                   })()}
 
                   {/* Payment Note */}
                   {(() => {
-                    const bookingAmount = parseFloat(order.total_amount.toString());
-                    const hasValidVariantPrice = firstItem.variant_price && parseFloat(firstItem.variant_price.toString()) > bookingAmount;
-                    const remainingAmount = hasValidVariantPrice 
-                      ? variantPrice - bookingAmount 
-                      : 0; // If no valid variant price, we can't calculate remaining
-                    return (remainingAmount > 0 || !hasValidVariantPrice) && (
+                    const actualVariantPrice = firstItem.variant_price ? parseFloat(firstItem.variant_price.toString()) : 0;
+                    const totalPaid = transactions.reduce((sum, txn) => sum + parseFloat(txn.amount.toString()), 0);
+                    const remainingAmount = actualVariantPrice - totalPaid;
+                    const hasRemainingPayment = actualVariantPrice > 0 && remainingAmount > 0;
+                    
+                    return hasRemainingPayment && (
                       <div className="mt-6 flex items-start gap-3 text-sm text-muted-foreground">
                         <Info className="w-5 h-5 mt-0.5 flex-shrink-0" />
                         <p>
-                          {hasValidVariantPrice 
-                            ? `Remaining amount: ₹${remainingAmount.toLocaleString('en-IN')}. You can pay online or at the time of delivery.`
-                            : 'You can complete the remaining payment online or at the time of delivery.'}
+                          Remaining amount: ₹{remainingAmount.toLocaleString('en-IN')}. You can pay online or at the time of delivery.
                         </p>
                       </div>
                     );
@@ -1122,13 +1119,10 @@ const OrderDetails = () => {
             </DialogDescription>
           </DialogHeader>
           {order && (() => {
-            // Calculate the actual remaining amount
+            // Calculate the actual remaining amount using variant price from DB
+            const actualVariantPrice = firstItem.variant_price ? parseFloat(firstItem.variant_price.toString()) : 0;
             const totalPaid = transactions.reduce((sum, txn) => sum + parseFloat(txn.amount.toString()), 0);
-            const bookingAmount = parseFloat(order.total_amount.toString());
-            const hasValidVariantPrice = firstItem.variant_price && parseFloat(firstItem.variant_price.toString()) > bookingAmount;
-            const actualRemainingAmount = hasValidVariantPrice 
-              ? variantPrice - totalPaid
-              : variantPrice - bookingAmount; // Fallback calculation
+            const actualRemainingAmount = actualVariantPrice > 0 ? actualVariantPrice - totalPaid : 0;
             
             return (
               <PayUPayment
