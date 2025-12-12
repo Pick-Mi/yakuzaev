@@ -7,6 +7,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 const Hero = () => {
   const [heroSections, setHeroSections] = useState<any[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   useEffect(() => {
     const fetchHeroSections = async () => {
@@ -66,10 +67,19 @@ const Hero = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, [currentHero]);
 
-  // Update background image when hero changes
+  // Preload and update background image when hero changes
   useEffect(() => {
-    setBackgroundImage(getBackgroundImage());
-  }, [currentIndex]);
+    const newImage = getBackgroundImage();
+    if (newImage) {
+      setImageLoaded(false);
+      const img = new Image();
+      img.onload = () => {
+        setBackgroundImage(newImage);
+        setImageLoaded(true);
+      };
+      img.src = newImage;
+    }
+  }, [currentIndex, heroSections]);
 
   const handlePrevious = () => {
     setCurrentIndex((prevIndex) => 
@@ -86,15 +96,16 @@ const Hero = () => {
   return (
     <section 
       className="relative w-full min-h-screen h-[600px] sm:h-[700px] md:h-[829px] bg-black overflow-hidden bg-center bg-cover"
-      style={{
-        backgroundImage: backgroundImage ? `url(${backgroundImage})` : 'none',
-      }}
     >
+      {/* Loading skeleton */}
+      {!imageLoaded && (
+        <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 animate-pulse" />
+      )}
       <div 
-        className="absolute inset-0 bg-center bg-cover transition-opacity duration-1000 ease-in-out"
+        className="absolute inset-0 bg-center bg-cover transition-opacity duration-500 ease-in-out"
         style={{
           backgroundImage: backgroundImage ? `url(${backgroundImage})` : 'none',
-          opacity: backgroundImage ? 1 : 0,
+          opacity: imageLoaded ? 1 : 0,
         }}
       />
       <div className="absolute bottom-8 sm:bottom-16 md:bottom-24 left-4 sm:left-6 md:left-10 right-4 sm:right-auto w-auto sm:w-[601px] max-w-[calc(100%-2rem)] sm:max-w-[90%] flex flex-col gap-4 sm:gap-6 items-start px-2 sm:px-0 animate-fade-in">
