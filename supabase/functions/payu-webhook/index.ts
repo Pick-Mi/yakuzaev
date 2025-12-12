@@ -115,8 +115,14 @@ serve(async (req) => {
       
       
       // Build redirect URL - use origin from udf3 (passed during payment init)
-      // This ensures redirect goes back to the same domain user started from
-      const originUrl = params.udf3 || Deno.env.get('SITE_URL') || 'https://preview--yakuzaev.lovable.app'
+      // Fallback to SITE_URL env variable if udf3 is empty
+      // Default to yakuzaev.vercel.app as the production domain
+      let originUrl = params.udf3
+      if (!originUrl || originUrl === '') {
+        originUrl = Deno.env.get('SITE_URL') || 'https://yakuzaev.vercel.app'
+      }
+      
+      console.log('Using origin URL for redirect:', originUrl)
       
       const redirectPath = status === 'success' ? '/payment-success' : '/payment-failure'
       const redirectUrl = new URL(redirectPath, originUrl)
