@@ -1,50 +1,99 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import logo from "@/assets/logo.svg";
 
-type Step = "welcome" | "verifying" | "form";
+type Step = "welcome" | "email" | "otp" | "form";
 
 const DealerApplicationFlow = () => {
   const navigate = useNavigate();
-  const { user, signInWithGoogle } = useAuth();
+  const { user } = useAuth();
   const [currentStep, setCurrentStep] = useState<Step>("welcome");
-  const [isSigningIn, setIsSigningIn] = useState(false);
+  const [email, setEmail] = useState("");
+  const [otp, setOtp] = useState("");
+  const [isVerifying, setIsVerifying] = useState(false);
+  const [isSendingOtp, setIsSendingOtp] = useState(false);
 
-  // Check if user is already authenticated
-  useEffect(() => {
-    if (user) {
-      // User is authenticated, store email and proceed to form
-      sessionStorage.setItem("dealer_application_email", user.email || "");
-      setCurrentStep("form");
+  const handleEmailSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      toast.error("Please enter a valid email address");
+      return;
     }
-  }, [user]);
 
-  const handleGoogleSignIn = async () => {
-    setIsSigningIn(true);
-    setCurrentStep("verifying");
+    setIsSendingOtp(true);
 
     try {
-      const { error } = await signInWithGoogle();
+      const { data, error } = await supabase.functions.invoke('send-email-otp', {
+        body: { email }
+      });
 
       if (error) {
-        console.error('Error signing in with Google:', error);
-        toast.error('Failed to sign in with Google. Please try again.');
-        setCurrentStep("welcome");
-        setIsSigningIn(false);
+        console.error('Error sending OTP:', error);
+        toast.error('Failed to send verification code. Please try again.');
+        setIsSendingOtp(false);
         return;
       }
 
-      // The OAuth flow will redirect, so we don't need to do anything else here
-      // The useEffect above will handle the redirect after successful auth
+      if (data?.error) {
+        toast.error(data.error);
+        setIsSendingOtp(false);
+        return;
+      }
+
+      // Store email in session storage for later use
+      sessionStorage.setItem("dealer_application_email", email);
+      
+      toast.success(`Verification code sent to ${email}`);
+      setCurrentStep("otp");
     } catch (err) {
       console.error('Error:', err);
       toast.error('Something went wrong. Please try again.');
-      setCurrentStep("welcome");
     } finally {
-      setIsSigningIn(false);
+      setIsSendingOtp(false);
+    }
+  };
+
+  const handleOTPVerify = async () => {
+    if (otp.length !== 4) {
+      toast.error("Please enter complete OTP");
+      return;
+    }
+
+    setIsVerifying(true);
+
+    try {
+      const { data, error } = await supabase.functions.invoke('verify-email-otp', {
+        body: { email, otp }
+      });
+
+      if (error) {
+        console.error('Error verifying OTP:', error);
+        toast.error('Failed to verify code. Please try again.');
+        setIsVerifying(false);
+        return;
+      }
+
+      if (data?.error) {
+        toast.error(data.error);
+        setIsVerifying(false);
+        return;
+      }
+
+      toast.success("Email verified successfully!");
+      setCurrentStep("form");
+    } catch (err) {
+      console.error('Error:', err);
+      toast.error('Something went wrong. Please try again.');
+    } finally {
+      setIsVerifying(false);
     }
   };
 
@@ -60,33 +109,132 @@ const DealerApplicationFlow = () => {
           </p>
         </div>
 
-        <div className="flex flex-col items-center gap-4">
+        <div className="flex justify-center">
           <Button 
             className="px-8 h-12 text-base bg-black text-white hover:bg-black/90 rounded-none"
-            onClick={handleGoogleSignIn}
-            disabled={isSigningIn}
+            onClick={() => setCurrentStep("email")}
           >
-            {isSigningIn ? "Signing in..." : "Let's Do it"}
+            Let's Do it
           </Button>
-          <p className="text-sm text-muted-foreground">
-            Sign in with Google to continue
-          </p>
         </div>
       </div>
     </div>
   );
 
-  const renderVerifying = () => (
-    <div className="min-h-[80vh] flex items-center justify-center px-4">
-      <div className="max-w-lg w-full bg-white p-8 md:p-12 shadow-sm text-center">
-        <div className="space-y-4">
-          <div className="w-16 h-16 mx-auto border-4 border-black border-t-transparent rounded-full animate-spin" />
+  const renderEmailStep = () => (
+    <div className="min-h-[calc(100vh-8rem)] flex items-center justify-center px-4">
+      <div className="max-w-lg w-full bg-white p-8 md:p-12 shadow-sm">
+        <div className="text-center space-y-3 mb-8">
           <h2 className="text-2xl md:text-3xl font-normal">
-            Verifying your account...
+            Enter your email ID to log in.
           </h2>
-          <p className="text-sm text-muted-foreground">
-            Please complete the Google sign-in in the popup window.
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            Lorem Ipsum is simply dummy text of the printing and typesetting industry.<br />
+            Lorem Ipsum has been the industry's standard dummy text
           </p>
+        </div>
+
+        <form onSubmit={handleEmailSubmit} className="space-y-6">
+          <div className="space-y-2">
+            <Label htmlFor="email" className="text-sm font-normal">
+              Email ID
+            </Label>
+            <Input
+              id="email"
+              type="email"
+              placeholder="Placeholder"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="h-12 bg-background"
+              required
+            />
+          </div>
+
+          <div className="flex flex-col items-center gap-4 pt-4">
+            <Button 
+              type="submit"
+              disabled={isSendingOtp}
+              className="px-10 h-12 bg-black text-white hover:bg-black/90 rounded-none"
+            >
+              {isSendingOtp ? "Sending..." : "Continue"}
+            </Button>
+            <Button
+              type="button"
+              variant="link"
+              onClick={() => setCurrentStep("welcome")}
+              className="text-sm"
+            >
+              Back
+            </Button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+
+  const renderOTPStep = () => (
+    <div className="min-h-[calc(100vh-8rem)] flex items-center justify-center px-4">
+      <div className="max-w-2xl w-full bg-white p-12 md:p-16 shadow-sm">
+        <div className="text-center space-y-4 mb-8">
+          <h2 className="text-2xl md:text-3xl font-normal">
+            Verify your Authenticator app
+          </h2>
+          <p className="text-sm">
+            We emailed you a four digit code to <span className="font-medium">{email}</span>
+            <br />
+            <Button
+              type="button"
+              variant="link"
+              className="p-0 h-auto text-blue-600 hover:text-blue-700"
+              onClick={() => setCurrentStep("email")}
+            >
+              Change
+            </Button>{" "}
+            enter the code below to confirm your email address.
+          </p>
+        </div>
+
+        <div className="space-y-8">
+          <div className="flex justify-center gap-3">
+            <InputOTP
+              maxLength={4}
+              value={otp}
+              onChange={(value) => setOtp(value)}
+            >
+              <InputOTPGroup className="gap-3">
+                <InputOTPSlot index={0} className="w-14 h-14 text-xl" />
+                <InputOTPSlot index={1} className="w-14 h-14 text-xl" />
+                <InputOTPSlot index={2} className="w-14 h-14 text-xl" />
+                <InputOTPSlot index={3} className="w-14 h-14 text-xl" />
+              </InputOTPGroup>
+            </InputOTP>
+          </div>
+
+          <div className="text-center text-sm">
+            If you didn't receive a code ?{" "}
+            <Button
+              type="button"
+              variant="link"
+              disabled={isSendingOtp}
+              className="p-0 h-auto text-blue-600 hover:text-blue-700"
+              onClick={async () => {
+                setOtp("");
+                await handleEmailSubmit({ preventDefault: () => {} } as React.FormEvent);
+              }}
+            >
+              {isSendingOtp ? "Sending..." : "Resend"}
+            </Button>
+          </div>
+
+          <div className="flex justify-center">
+            <Button 
+              onClick={handleOTPVerify}
+              disabled={isVerifying || otp.length !== 4}
+              className="px-12 h-12 bg-black text-white hover:bg-black/90 rounded-none"
+            >
+              {isVerifying ? "Verifying..." : "Verify"}
+            </Button>
+          </div>
         </div>
       </div>
     </div>
@@ -113,7 +261,8 @@ const DealerApplicationFlow = () => {
       {/* Main Content */}
       <main className="flex-1 pt-16">
         {currentStep === "welcome" && renderWelcome()}
-        {currentStep === "verifying" && renderVerifying()}
+        {currentStep === "email" && renderEmailStep()}
+        {currentStep === "otp" && renderOTPStep()}
         {currentStep === "form" && renderFormStep()}
       </main>
 
