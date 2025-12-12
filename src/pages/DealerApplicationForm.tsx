@@ -229,16 +229,16 @@ const DealerApplication = () => {
   }, [userEmail, formData, existingEnquiryId]);
 
   const handleNext = async () => {
-    // Save data before moving to next step
-    await saveFormData();
-
     if (currentStep < steps.length - 1) {
+      // Save data before moving to next step (but not on final submit)
+      await saveFormData();
       const nextStep = currentStep + 1;
       setCurrentStep(nextStep);
       if (nextStep > maxStepReached) {
         setMaxStepReached(nextStep);
       }
     } else {
+      // On final step, go directly to submit without saving as draft first
       handleSubmit();
     }
   };
