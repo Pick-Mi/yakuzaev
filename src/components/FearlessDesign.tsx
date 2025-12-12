@@ -19,9 +19,9 @@ const ProductCard = ({ product }: ProductCardProps) => {
   const { name, thumbnail, feature1, feature2, price } = product;
 
   return (
-    <div className="bg-white w-full overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 group h-[600px] flex flex-col">
-      {/* Product Image - shrinks on hover */}
-      <div className="w-full bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden transition-all duration-300 group-hover:h-[280px] h-[380px]">
+    <div className="bg-white w-full overflow-hidden shadow-sm h-auto flex flex-col">
+      {/* Product Image */}
+      <div className="w-full bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden h-[280px]">
         <img
           src={thumbnail}
           alt={name}
@@ -29,7 +29,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
         />
       </div>
       
-      {/* Product Info - fixed height */}
+      {/* Product Info */}
       <div className="px-6 py-6 bg-white flex-1 flex flex-col">
         <div className="flex items-start justify-between gap-6">
           {/* Left: Product Name & Tagline */}
@@ -51,8 +51,8 @@ const ProductCard = ({ product }: ProductCardProps) => {
           </div>
         </div>
 
-        {/* Hover Action Buttons */}
-        <div className="overflow-hidden transition-all duration-300 max-h-0 opacity-0 group-hover:max-h-40 group-hover:opacity-100 group-hover:mt-4">
+        {/* Action Buttons - Always visible */}
+        <div className="mt-4">
           <div className="w-full h-px bg-gray-300 mb-4" />
           <div className="flex flex-col gap-3">
             <Link to={`/products/${product.slug}`} className="w-full">
