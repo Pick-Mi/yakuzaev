@@ -94,75 +94,6 @@ const JobDetail = () => {
                 <p className="text-muted-foreground">{job.job_type}</p>
               </div>
 
-              {/* Mobile/Tablet Apply Section - Shows only on mobile/tablet */}
-              <div className="lg:hidden bg-white dark:bg-neutral-950 p-6 space-y-6 border border-border">
-                {/* Openings Info */}
-                <div className="flex items-center justify-between pb-4 border-b">
-                  <div className="flex items-center gap-2">
-                    <Briefcase className="w-5 h-5 text-muted-foreground" />
-                    <span className="text-foreground">{job.openings} Openings / {job.job_type}</span>
-                  </div>
-                </div>
-
-                {/* Locations */}
-                {locations.length > 0 && (
-                  <div>
-                    <div className="flex items-center gap-2 mb-3">
-                      <MapPin className="w-5 h-5 text-muted-foreground" />
-                      <span className="font-medium text-foreground">Locations</span>
-                    </div>
-                    <div className="flex flex-wrap gap-2">
-                      {locations.map((location, index) => (
-                        <span
-                          key={index}
-                          className="px-3 py-1 bg-secondary text-secondary-foreground rounded-md text-sm"
-                        >
-                          {location}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Share The Job */}
-                <div>
-                  <div className="flex items-center gap-2 mb-3">
-                    <Share2 className="w-5 h-5 text-muted-foreground" />
-                    <span className="font-medium text-foreground">Share The Job</span>
-                  </div>
-                  <div className="flex gap-3">
-                    <button className="p-2 hover:bg-secondary rounded-full transition-colors">
-                      <FaXTwitter className="w-5 h-5 text-foreground" />
-                    </button>
-                    <button className="p-2 hover:bg-secondary rounded-full transition-colors">
-                      <FaLinkedin className="w-5 h-5 text-blue-600" />
-                    </button>
-                    <button className="p-2 hover:bg-secondary rounded-full transition-colors">
-                      <FaTelegram className="w-5 h-5 text-blue-500" />
-                    </button>
-                    <button className="p-2 hover:bg-secondary rounded-full transition-colors">
-                      <FaFacebook className="w-5 h-5 text-blue-600" />
-                    </button>
-                    <button className="p-2 hover:bg-secondary rounded-full transition-colors">
-                      <FaWhatsapp className="w-5 h-5 text-green-600" />
-                    </button>
-                  </div>
-                </div>
-
-                {/* Action Buttons */}
-                <div className="space-y-3 pt-4">
-                  <Button variant="outline" className="w-full rounded-none">
-                    Refer a Friend
-                  </Button>
-                  <Button 
-                    onClick={() => navigate(`/careers/${job.slug}/apply`)}
-                    className="w-full rounded-none bg-black text-white hover:bg-black/90 dark:bg-white dark:text-black dark:hover:bg-white/90"
-                  >
-                    Apply
-                  </Button>
-                </div>
-              </div>
-
               {/* Job Description */}
               <div>
                 <h2 className="text-2xl font-semibold mb-4 text-foreground">Job Description</h2>
@@ -204,8 +135,8 @@ const JobDetail = () => {
               )}
             </div>
 
-            {/* Desktop Sidebar - Hidden on mobile/tablet */}
-            <div className="hidden lg:block lg:col-span-1">
+            {/* Sidebar */}
+            <div className="lg:col-span-1">
               <div className="bg-white dark:bg-neutral-950 p-6 sticky top-24 space-y-6">
                 {/* Openings Info */}
                 <div className="flex items-center justify-between pb-4 border-b">
