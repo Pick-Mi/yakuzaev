@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -24,23 +24,12 @@ const DealerApplication = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [currentStep, setCurrentStep] = useState(0);
-  const [maxStepReached, setMaxStepReached] = useState(0); // Track highest step reached
+  const [maxStepReached, setMaxStepReached] = useState(0);
   const [userEmail, setUserEmail] = useState("");
   const [userName, setUserName] = useState("");
+  const [existingEnquiryId, setExistingEnquiryId] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   
-  // Get verified email from session storage on mount
-  useEffect(() => {
-    const storedEmail = sessionStorage.getItem("dealer_application_email");
-    if (storedEmail) {
-      setUserEmail(storedEmail);
-      // Extract name from email (part before @)
-      const emailName = storedEmail.split("@")[0];
-      // Capitalize first letter
-      const displayName = emailName.charAt(0).toUpperCase() + emailName.slice(1);
-      setUserName(displayName);
-    }
-  }, []);
-
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -64,11 +53,140 @@ const DealerApplication = () => {
     gstNumber: "",
   });
 
-  const handleNext = () => {
+  // Load existing application data for this email
+  const loadExistingData = useCallback(async (email: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('dealer_enquiries')
+        .select('*')
+        .eq('email', email.toLowerCase())
+        .eq('status', 'draft')
+        .order('updated_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (error) {
+        console.error('Error loading existing data:', error);
+        return;
+      }
+
+      if (data) {
+        console.log('Found existing application:', data);
+        setExistingEnquiryId(data.id);
+        setFormData({
+          firstName: data.first_name || "",
+          lastName: data.last_name || "",
+          email: data.email || email,
+          mobile: data.phone || "",
+          city: data.city || "",
+          state: data.state || "",
+          pincode: data.pincode || "",
+          areaType: data.area_type || "",
+          preferredLocation: data.preferred_location || "",
+          spaceOwnership: data.space_ownership || "",
+          sitePhotos: [],
+          investmentCapacity: data.investment_capacity || "",
+          spaceAvailable: data.space_available || "",
+          hasExistingBusiness: data.has_existing_business || "",
+          businessName: data.business_name || "",
+          yearsInBusiness: data.years_in_business || "",
+          businessType: data.business_type || "",
+          experience: "",
+          documents: [],
+          gstNumber: data.gst_number || "",
+        });
+        toast({
+          title: "Welcome back!",
+          description: "We've restored your previous application progress.",
+        });
+      } else {
+        // Set email for new application
+        setFormData(prev => ({ ...prev, email }));
+      }
+    } catch (err) {
+      console.error('Error loading data:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [toast]);
+
+  // Get verified email from session storage on mount
+  useEffect(() => {
+    const storedEmail = sessionStorage.getItem("dealer_application_email");
+    if (storedEmail) {
+      setUserEmail(storedEmail);
+      const emailName = storedEmail.split("@")[0];
+      const displayName = emailName.charAt(0).toUpperCase() + emailName.slice(1);
+      setUserName(displayName);
+      loadExistingData(storedEmail);
+    } else {
+      setIsLoading(false);
+    }
+  }, [loadExistingData]);
+
+  // Save form data to database (as draft)
+  const saveFormData = useCallback(async () => {
+    if (!userEmail) return;
+
+    const saveData = {
+      first_name: formData.firstName,
+      last_name: formData.lastName,
+      email: userEmail.toLowerCase(),
+      phone: formData.mobile,
+      city: formData.city,
+      state: formData.state,
+      pincode: formData.pincode,
+      area_type: formData.areaType,
+      preferred_location: formData.preferredLocation,
+      space_ownership: formData.spaceOwnership,
+      space_available: formData.spaceAvailable,
+      investment_capacity: formData.investmentCapacity,
+      has_existing_business: formData.hasExistingBusiness,
+      business_name: formData.businessName,
+      years_in_business: formData.yearsInBusiness,
+      business_type: formData.businessType,
+      gst_number: formData.gstNumber,
+      status: 'draft',
+      updated_at: new Date().toISOString(),
+    };
+
+    try {
+      if (existingEnquiryId) {
+        // Update existing record
+        const { error } = await supabase
+          .from('dealer_enquiries')
+          .update(saveData)
+          .eq('id', existingEnquiryId);
+
+        if (error) {
+          console.error('Error updating draft:', error);
+        }
+      } else {
+        // Create new draft
+        const { data, error } = await supabase
+          .from('dealer_enquiries')
+          .insert([saveData])
+          .select('id')
+          .single();
+
+        if (error) {
+          console.error('Error creating draft:', error);
+        } else if (data) {
+          setExistingEnquiryId(data.id);
+        }
+      }
+    } catch (err) {
+      console.error('Error saving form data:', err);
+    }
+  }, [userEmail, formData, existingEnquiryId]);
+
+  const handleNext = async () => {
+    // Save data before moving to next step
+    await saveFormData();
+
     if (currentStep < steps.length - 1) {
       const nextStep = currentStep + 1;
       setCurrentStep(nextStep);
-      // Update max step reached
       if (nextStep > maxStepReached) {
         setMaxStepReached(nextStep);
       }
@@ -85,11 +203,10 @@ const DealerApplication = () => {
 
   const handleSubmit = async () => {
     try {
-      // Prepare data for submission
       const submissionData = {
         first_name: formData.firstName,
         last_name: formData.lastName,
-        email: formData.email,
+        email: formData.email || userEmail,
         phone: formData.mobile,
         city: formData.city,
         state: formData.state,
@@ -105,16 +222,27 @@ const DealerApplication = () => {
         business_type: formData.businessType,
         gst_number: formData.gstNumber,
         status: 'pending',
-        // Store file names for now (in production, upload to storage first)
         site_photos: formData.sitePhotos.map(f => f.name),
-        documents: formData.documents.map(f => f.name)
+        documents: formData.documents.map(f => f.name),
+        updated_at: new Date().toISOString(),
       };
 
-      const { error } = await supabase
-        .from('dealer_enquiries')
-        .insert([submissionData]);
+      if (existingEnquiryId) {
+        // Update existing record to pending
+        const { error } = await supabase
+          .from('dealer_enquiries')
+          .update(submissionData)
+          .eq('id', existingEnquiryId);
 
-      if (error) throw error;
+        if (error) throw error;
+      } else {
+        // Insert new record
+        const { error } = await supabase
+          .from('dealer_enquiries')
+          .insert([submissionData]);
+
+        if (error) throw error;
+      }
 
       toast({
         title: "Application Submitted Successfully!",
@@ -231,7 +359,12 @@ const DealerApplication = () => {
       </header>
 
       <main className="container mx-auto max-w-6xl px-4 py-8">
-
+        {isLoading ? (
+          <div className="flex items-center justify-center py-20">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-black"></div>
+          </div>
+        ) : (
+        <>
         {/* Form Content */}
         <div className="max-w-2xl mx-auto bg-white p-6 sm:p-8 rounded-lg">
           <h2 className="text-3xl sm:text-4xl font-bold text-center mb-2">
@@ -681,6 +814,8 @@ const DealerApplication = () => {
         <footer className="text-center py-8 mt-12">
           <p className="text-sm text-muted-foreground">Copyright © 2025 Yakuza</p>
         </footer>
+        </>
+        )}
       </main>
     </div>
   );
