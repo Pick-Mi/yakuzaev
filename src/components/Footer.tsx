@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import { Facebook, Twitter, Instagram, Linkedin, Youtube, ChevronDown } from "lucide-react";
 import { useEffect, useState } from "react";
 import logo from "@/assets/logo.svg";
 import { supabase } from "@/integrations/supabase/client";
@@ -10,8 +9,17 @@ interface CustomPage {
   page_slug: string;
 }
 
+interface SocialLink {
+  id: string;
+  platform_name: string;
+  url: string;
+  icon_url: string | null;
+  display_order: number;
+}
+
 const Footer = () => {
   const [customPages, setCustomPages] = useState<CustomPage[]>([]);
+  const [socialLinks, setSocialLinks] = useState<SocialLink[]>([]);
 
   useEffect(() => {
     const fetchCustomPages = async () => {
@@ -23,7 +31,19 @@ const Footer = () => {
       
       if (data) setCustomPages(data);
     };
+
+    const fetchSocialLinks = async () => {
+      const { data } = await supabase
+        .from('social_media_links')
+        .select('id, platform_name, url, icon_url, display_order')
+        .eq('is_active', true)
+        .order('display_order');
+      
+      if (data) setSocialLinks(data);
+    };
+
     fetchCustomPages();
+    fetchSocialLinks();
   }, []);
 
   return (
@@ -77,23 +97,25 @@ const Footer = () => {
 
           {/* Social Icons */}
           <div className="flex gap-8 items-center">
-            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="hover:opacity-70 transition-opacity">
-              <Linkedin className="w-[28px] h-[28px]" strokeWidth={0} fill="white" />
-            </a>
-            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="hover:opacity-70 transition-opacity">
-              <svg className="w-[28px] h-[28px]" viewBox="0 0 24 24" fill="white">
-                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-              </svg>
-            </a>
-            <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="hover:opacity-70 transition-opacity">
-              <Youtube className="w-[32px] h-[32px]" strokeWidth={0} fill="white" />
-            </a>
-            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="hover:opacity-70 transition-opacity">
-              <Facebook className="w-[28px] h-[28px]" strokeWidth={0} fill="white" />
-            </a>
-            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="hover:opacity-70 transition-opacity">
-              <Instagram className="w-[28px] h-[28px]" strokeWidth={0} fill="white" />
-            </a>
+            {socialLinks.map((link) => (
+              <a
+                key={link.id}
+                href={link.url || "#"}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:opacity-70 transition-opacity"
+              >
+                {link.icon_url ? (
+                  <img
+                    src={link.icon_url}
+                    alt={link.platform_name}
+                    className="w-7 h-7 object-contain"
+                  />
+                ) : (
+                  <span className="w-7 h-7 bg-white/20 rounded-full" />
+                )}
+              </a>
+            ))}
           </div>
         </div>
 
