@@ -114,12 +114,12 @@ serve(async (req) => {
       }
       
       
-      // Build redirect URL - always go to payment-success/failure page with params
-      // This ensures session is restored before navigating to protected routes
-      const baseUrl = Deno.env.get('SITE_URL') || 'https://preview--yakuzaev.lovable.app'
+      // Build redirect URL - use origin from udf3 (passed during payment init)
+      // This ensures redirect goes back to the same domain user started from
+      const originUrl = params.udf3 || Deno.env.get('SITE_URL') || 'https://preview--yakuzaev.lovable.app'
       
       const redirectPath = status === 'success' ? '/payment-success' : '/payment-failure'
-      const redirectUrl = new URL(redirectPath, baseUrl)
+      const redirectUrl = new URL(redirectPath, originUrl)
       
       // Add all parameters to URL for verification
       Object.entries(params).forEach(([key, value]) => {
