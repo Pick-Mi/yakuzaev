@@ -138,7 +138,7 @@ export default function PayUPayment({
       }
 
       // Create success and failure URLs - pointing to webhook endpoint
-      const baseUrl = window.location.origin;
+      const originUrl = window.location.origin;
       const webhookUrl = 'https://tqhwoizjlvjdiuemirsy.supabase.co/functions/v1/payu-webhook';
       const surl = webhookUrl;
       const furl = webhookUrl;
@@ -154,7 +154,7 @@ export default function PayUPayment({
         furl: furl,
         udf1: user.id,
         udf2: actualOrderId, 
-        udf3: '',
+        udf3: originUrl, // Pass origin URL for redirect after payment
         udf4: '',
         udf5: ''
       };
