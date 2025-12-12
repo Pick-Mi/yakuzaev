@@ -35,7 +35,8 @@ const DealerApplicationFlow = () => {
       const { error } = await supabase.auth.signInWithOtp({
         email: email.toLowerCase(),
         options: {
-          shouldCreateUser: false,
+          shouldCreateUser: true,
+          emailRedirectTo: `${window.location.origin}/dealer-application-flow`,
         }
       });
 
