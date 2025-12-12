@@ -1,6 +1,5 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.0";
-import { Resend } from "npm:resend@2.0.0";
+import { SMTPClient } from "https://deno.land/x/denomailer@1.6.0/mod.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -64,17 +63,16 @@ serve(async (req) => {
 
     console.log('Sending order confirmation email for order:', orderId, 'to:', customerEmail);
 
-    // Initialize Resend
-    const resendApiKey = Deno.env.get('RESEND_API_KEY');
-    if (!resendApiKey) {
-      console.error('RESEND_API_KEY not configured');
+    const gmailUser = Deno.env.get('GMAIL_USER');
+    const gmailPassword = Deno.env.get('GMAIL_APP_PASSWORD');
+
+    if (!gmailUser || !gmailPassword) {
+      console.error('Gmail credentials not configured');
       return new Response(
         JSON.stringify({ error: 'Email service not configured' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
-
-    const resend = new Resend(resendApiKey);
 
     // Generate order items HTML
     const itemsHtml = items?.length > 0 
@@ -118,9 +116,7 @@ serve(async (req) => {
             <!-- Header -->
             <div style="text-align: center; margin-bottom: 30px;">
               <div style="width: 60px; height: 60px; background-color: #22c55e; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 16px;">
-                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="20 6 9 17 4 12"></polyline>
-                </svg>
+                <span style="color: white; font-size: 28px;">✓</span>
               </div>
               <h1 style="color: #000000; font-size: 24px; margin: 0;">Order Confirmed!</h1>
               <p style="color: #666666; font-size: 14px; margin-top: 8px;">Thank you for your order, ${customerName || 'valued customer'}!</p>
@@ -203,20 +199,29 @@ serve(async (req) => {
       </html>
     `;
 
-    const { error: emailError } = await resend.emails.send({
-      from: 'Yakuza <onboarding@resend.dev>',
-      to: [customerEmail],
+    // Create SMTP client for Gmail
+    const client = new SMTPClient({
+      connection: {
+        hostname: "smtp.gmail.com",
+        port: 465,
+        tls: true,
+        auth: {
+          username: gmailUser,
+          password: gmailPassword,
+        },
+      },
+    });
+
+    // Send email
+    await client.send({
+      from: gmailUser,
+      to: customerEmail,
       subject: `Order Confirmed - #${orderNumber || orderId.slice(0, 8).toUpperCase()}`,
+      content: "Your order has been confirmed!",
       html: emailHtml,
     });
 
-    if (emailError) {
-      console.error('Email sending error:', emailError);
-      return new Response(
-        JSON.stringify({ error: 'Failed to send order confirmation email', details: emailError }),
-        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
+    await client.close();
 
     console.log('✅ Order confirmation email sent successfully to:', customerEmail);
 
@@ -231,7 +236,7 @@ serve(async (req) => {
   } catch (error) {
     console.error('Error in send-order-confirmation function:', error);
     return new Response(
-      JSON.stringify({ error: 'Internal server error' }),
+      JSON.stringify({ error: error.message }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }
