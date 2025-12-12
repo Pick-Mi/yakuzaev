@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.0";
-import { Resend } from "npm:resend@2.0.0";
+import { SMTPClient } from "https://deno.land/x/denomailer@1.6.0/mod.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -74,69 +74,80 @@ serve(async (req) => {
       );
     }
 
-    // Send email via Resend
-    const resendApiKey = Deno.env.get('RESEND_API_KEY');
-    if (!resendApiKey) {
-      console.error('RESEND_API_KEY not configured');
+    // Get Gmail credentials
+    const gmailUser = Deno.env.get('GMAIL_USER');
+    const gmailPassword = Deno.env.get('GMAIL_APP_PASSWORD');
+
+    if (!gmailUser || !gmailPassword) {
+      console.error('Gmail credentials not configured');
       return new Response(
         JSON.stringify({ error: 'Email service not configured' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    const resend = new Resend(resendApiKey);
-
-    const { error: emailError } = await resend.emails.send({
-      from: 'Yakuza <onboarding@resend.dev>',
-      to: [email],
-      subject: 'Your Dealer Application Verification Code',
-      html: `
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <meta charset="utf-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        </head>
-        <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f4f4f4;">
-          <div style="max-width: 600px; margin: 0 auto; padding: 40px 20px;">
-            <div style="background-color: #ffffff; border-radius: 8px; padding: 40px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);">
-              <div style="text-align: center; margin-bottom: 30px;">
-                <h1 style="color: #000000; font-size: 24px; margin: 0;">Dealer Application</h1>
-                <p style="color: #666666; font-size: 14px; margin-top: 8px;">Email Verification</p>
-              </div>
-              
-              <p style="color: #333333; font-size: 16px; line-height: 1.6; margin-bottom: 24px;">
-                Thank you for your interest in becoming a dealer. Please use the verification code below to continue with your application:
-              </p>
-              
-              <div style="background-color: #f8f8f8; border: 2px dashed #e0e0e0; border-radius: 8px; padding: 24px; text-align: center; margin-bottom: 24px;">
-                <p style="color: #666666; font-size: 12px; margin: 0 0 8px 0; text-transform: uppercase; letter-spacing: 1px;">Your Verification Code</p>
-                <p style="color: #000000; font-size: 36px; font-weight: bold; letter-spacing: 8px; margin: 0;">${otp}</p>
-              </div>
-              
-              <p style="color: #999999; font-size: 14px; line-height: 1.6; margin-bottom: 0;">
-                This code will expire in 10 minutes. If you didn't request this code, please ignore this email.
-              </p>
+    const emailHtml = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      </head>
+      <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f4f4f4;">
+        <div style="max-width: 600px; margin: 0 auto; padding: 40px 20px;">
+          <div style="background-color: #ffffff; border-radius: 8px; padding: 40px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);">
+            <div style="text-align: center; margin-bottom: 30px;">
+              <h1 style="color: #000000; font-size: 24px; margin: 0;">Dealer Application</h1>
+              <p style="color: #666666; font-size: 14px; margin-top: 8px;">Email Verification</p>
             </div>
             
-            <div style="text-align: center; margin-top: 24px;">
-              <p style="color: #999999; font-size: 12px; margin: 0;">
-                © 2025 Yakuza. All rights reserved.
-              </p>
+            <p style="color: #333333; font-size: 16px; line-height: 1.6; margin-bottom: 24px;">
+              Thank you for your interest in becoming a dealer. Please use the verification code below to continue with your application:
+            </p>
+            
+            <div style="background-color: #f8f8f8; border: 2px dashed #e0e0e0; border-radius: 8px; padding: 24px; text-align: center; margin-bottom: 24px;">
+              <p style="color: #666666; font-size: 12px; margin: 0 0 8px 0; text-transform: uppercase; letter-spacing: 1px;">Your Verification Code</p>
+              <p style="color: #000000; font-size: 36px; font-weight: bold; letter-spacing: 8px; margin: 0;">${otp}</p>
             </div>
+            
+            <p style="color: #999999; font-size: 14px; line-height: 1.6; margin-bottom: 0;">
+              This code will expire in 10 minutes. If you didn't request this code, please ignore this email.
+            </p>
           </div>
-        </body>
-        </html>
-      `,
+          
+          <div style="text-align: center; margin-top: 24px;">
+            <p style="color: #999999; font-size: 12px; margin: 0;">
+              © 2025 Yakuza. All rights reserved.
+            </p>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+
+    // Create SMTP client for Gmail
+    const client = new SMTPClient({
+      connection: {
+        hostname: "smtp.gmail.com",
+        port: 465,
+        tls: true,
+        auth: {
+          username: gmailUser,
+          password: gmailPassword,
+        },
+      },
     });
 
-    if (emailError) {
-      console.error('Email sending error:', emailError);
-      return new Response(
-        JSON.stringify({ error: 'Failed to send verification email' }),
-        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
+    // Send email
+    await client.send({
+      from: gmailUser,
+      to: email,
+      subject: 'Your Dealer Application Verification Code',
+      content: `Your verification code is: ${otp}`,
+      html: emailHtml,
+    });
+
+    await client.close();
 
     console.log('✅ Email OTP sent successfully to:', email);
 
@@ -151,7 +162,7 @@ serve(async (req) => {
   } catch (error) {
     console.error('Error in send-email-otp function:', error);
     return new Response(
-      JSON.stringify({ error: 'Internal server error' }),
+      JSON.stringify({ error: error.message || 'Internal server error' }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }
