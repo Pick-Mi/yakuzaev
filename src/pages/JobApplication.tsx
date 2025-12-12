@@ -19,7 +19,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { Upload, Share2, CheckCircle2 } from "lucide-react";
+import { Upload, Share2, CheckCircle2, X, Plus } from "lucide-react";
 import { FaXTwitter, FaLinkedin, FaTelegram, FaFacebook, FaWhatsapp } from "react-icons/fa6";
 import {
   AlertDialog,
@@ -65,6 +65,8 @@ const JobApplication = () => {
   const [resumeFile, setResumeFile] = useState<File | null>(null);
   const [isParsingResume, setIsParsingResume] = useState(false);
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
+  const [skills, setSkills] = useState<string[]>([]);
+  const [skillInput, setSkillInput] = useState("");
   const [jobData, setJobData] = useState<JobData>({
     title: "",
     type: "",
@@ -152,7 +154,11 @@ const JobApplication = () => {
           if (data.currentCtc) setValue("currentCtc", data.currentCtc);
           if (data.expectedCtc) setValue("expectedCtc", data.expectedCtc);
           if (data.noticePeriod) setValue("noticePeriod", data.noticePeriod);
-          if (data.skillSet) setValue("skillSet", data.skillSet);
+          if (data.skillSet) {
+            const parsedSkills = data.skillSet.split(',').map((s: string) => s.trim()).filter(Boolean);
+            setSkills(parsedSkills);
+            setValue("skillSet", data.skillSet);
+          }
           if (data.currentLocation) setValue("currentLocation", data.currentLocation);
           
           toast.success("Resume scanned! Fields auto-filled (you can edit them)");
@@ -436,7 +442,71 @@ const JobApplication = () => {
 
                     <div className="space-y-2">
                       <Label htmlFor="skillSet">Skill Set</Label>
-                      <Input {...register("skillSet")} placeholder="HTML, CSS, JavaScript" className="bg-background" />
+                      <div className="space-y-3">
+                        {/* Skills chips display */}
+                        {skills.length > 0 && (
+                          <div className="flex flex-wrap gap-2">
+                            {skills.map((skill, index) => (
+                              <span
+                                key={index}
+                                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 text-primary rounded-full text-sm font-medium"
+                              >
+                                {skill}
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    const newSkills = skills.filter((_, i) => i !== index);
+                                    setSkills(newSkills);
+                                    setValue("skillSet", newSkills.join(", "));
+                                  }}
+                                  className="hover:bg-primary/20 rounded-full p-0.5 transition-colors"
+                                >
+                                  <X className="w-3.5 h-3.5" />
+                                </button>
+                              </span>
+                            ))}
+                          </div>
+                        )}
+                        {/* Add skill input */}
+                        <div className="flex gap-2">
+                          <Input
+                            value={skillInput}
+                            onChange={(e) => setSkillInput(e.target.value)}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter" || e.key === ",") {
+                                e.preventDefault();
+                                const newSkill = skillInput.trim();
+                                if (newSkill && !skills.includes(newSkill)) {
+                                  const newSkills = [...skills, newSkill];
+                                  setSkills(newSkills);
+                                  setValue("skillSet", newSkills.join(", "));
+                                  setSkillInput("");
+                                }
+                              }
+                            }}
+                            placeholder="Type a skill and press Enter"
+                            className="bg-background flex-1"
+                          />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            onClick={() => {
+                              const newSkill = skillInput.trim();
+                              if (newSkill && !skills.includes(newSkill)) {
+                                const newSkills = [...skills, newSkill];
+                                setSkills(newSkills);
+                                setValue("skillSet", newSkills.join(", "));
+                                setSkillInput("");
+                              }
+                            }}
+                            className="shrink-0"
+                          >
+                            <Plus className="w-4 h-4" />
+                          </Button>
+                        </div>
+                        <input type="hidden" {...register("skillSet")} />
+                      </div>
                     </div>
 
                     <div className="space-y-2">
