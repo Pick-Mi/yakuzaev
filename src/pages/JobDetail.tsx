@@ -87,7 +87,7 @@ const JobDetail = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-12">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Main Content */}
-            <div className="lg:col-span-2 space-y-8">
+            <div className="lg:col-span-2 space-y-8 bg-white dark:bg-neutral-950 p-[15px]">
               {/* Job Title */}
               <div>
                 <h1 className="text-4xl font-bold mb-2 text-foreground">{job.title}</h1>
