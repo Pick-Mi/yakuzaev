@@ -31,27 +31,6 @@ const DealerApplicationFlow = () => {
     setIsSendingOtp(true);
 
     try {
-      // Check if email is in approved dealer list
-      const { data: approvedEmail, error: checkError } = await supabase
-        .from('approved_dealer_emails')
-        .select('id, email')
-        .eq('email', email.toLowerCase())
-        .eq('is_active', true)
-        .maybeSingle();
-
-      if (checkError) {
-        console.error('Error checking approved emails:', checkError);
-        toast.error('Failed to verify email. Please try again.');
-        setIsSendingOtp(false);
-        return;
-      }
-
-      if (!approvedEmail) {
-        toast.error('This email is not authorized for dealer registration. Please contact support.');
-        setIsSendingOtp(false);
-        return;
-      }
-
       const { data, error } = await supabase.functions.invoke('send-email-otp', {
         body: { email }
       });
