@@ -444,15 +444,21 @@ const OrderDetails = () => {
   const timeline = getOrderTimeline();
   const deliveryAddress = order.delivery_address || order.customer_details?.address || {};
 
-  // Get the actual product price - prioritize database-fetched variant_price
-  // Priority: variant_price (from DB) > unit_price (from order) > total_price (from order)
-  const variantPrice = firstItem.variant_price 
-    ? parseFloat(firstItem.variant_price.toString()) 
-    : firstItem.unit_price 
-      ? parseFloat(firstItem.unit_price.toString()) 
-      : firstItem.total_price 
-        ? parseFloat(firstItem.total_price.toString())
-        : parseFloat(order.total_amount.toString());
+  // Get the actual product price - for booking orders, we MUST use the variant_price from DB
+  // The unit_price/total_price in booking orders contain the booking amount, not the product price
+  // Priority for booking: variant_price (from DB) only, fallback to a reasonable default
+  // Priority for regular: variant_price > unit_price > total_price > total_amount
+  const variantPrice = order.order_type === 'booking'
+    ? (firstItem.variant_price 
+        ? parseFloat(firstItem.variant_price.toString()) 
+        : parseFloat(order.total_amount.toString())) // Will be overridden if variant_price is fetched
+    : (firstItem.variant_price 
+        ? parseFloat(firstItem.variant_price.toString()) 
+        : firstItem.unit_price 
+          ? parseFloat(firstItem.unit_price.toString()) 
+          : firstItem.total_price 
+            ? parseFloat(firstItem.total_price.toString())
+            : parseFloat(order.total_amount.toString()));
 
   // Calculate price details from order_summary if available
   const orderSummary = order.order_summary || {};
@@ -874,8 +880,15 @@ const OrderDetails = () => {
                   {(() => {
                     // Calculate total paid from all transactions
                     const totalPaid = transactions.reduce((sum, txn) => sum + parseFloat(txn.amount.toString()), 0);
-                    const remainingAmount = variantPrice - totalPaid;
-                    const isFullyPaid = totalPaid >= variantPrice;
+                    // For booking orders, if variantPrice equals total_amount (booking amount), 
+                    // it means variant_price wasn't fetched - in this case, show remaining payment UI
+                    const bookingAmount = parseFloat(order.total_amount.toString());
+                    const hasValidVariantPrice = firstItem.variant_price && parseFloat(firstItem.variant_price.toString()) > bookingAmount;
+                    const actualProductPrice = hasValidVariantPrice ? variantPrice : variantPrice;
+                    const remainingAmount = actualProductPrice - totalPaid;
+                    // Only mark as fully paid if we have a valid variant price AND total paid covers it
+                    // If variant price equals booking amount, we likely didn't fetch the real price - show payment option
+                    const isFullyPaid = hasValidVariantPrice && totalPaid >= actualProductPrice;
 
                     return isFullyPaid ? (
                       // Show simple summary when fully paid
@@ -922,13 +935,15 @@ const OrderDetails = () => {
                         <div className="flex justify-between text-base">
                           <span className="text-foreground">Product price</span>
                           <span className="font-medium">
-                            ₹{variantPrice.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                            {hasValidVariantPrice 
+                              ? `₹${actualProductPrice.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+                              : 'View product for details'}
                           </span>
                         </div>
                           
                         <div className="flex justify-between text-base">
-                          <span className="text-foreground">Booking amount</span>
-                          <span className="font-medium">-₹{parseFloat(order.total_amount.toString()).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                          <span className="text-foreground">Booking amount paid</span>
+                          <span className="font-medium text-green-600">-₹{parseFloat(order.total_amount.toString()).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                         </div>
 
                         <div className="flex justify-between text-base">
@@ -941,17 +956,21 @@ const OrderDetails = () => {
                           </button>
                         </div>
                         
-                        <div className="flex justify-between text-base">
-                          <span className="text-foreground">Sub Total</span>
-                          <span className="font-medium">₹{remainingAmount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-                        </div>
+                        {hasValidVariantPrice && (
+                          <>
+                            <div className="flex justify-between text-base">
+                              <span className="text-foreground">Remaining amount</span>
+                              <span className="font-medium">₹{remainingAmount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                            </div>
 
-                        <div className="border-t-2 border-dashed border-gray-300 my-4"></div>
+                            <div className="border-t-2 border-dashed border-gray-300 my-4"></div>
 
-                        <div className="flex justify-between text-base font-bold">
-                          <span>Total amount</span>
-                          <span>₹{remainingAmount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-                        </div>
+                            <div className="flex justify-between text-base font-bold">
+                              <span>Amount to pay</span>
+                              <span>₹{remainingAmount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                            </div>
+                          </>
+                        )}
 
                         <Button 
                           className="w-full mt-6 rounded-none"
@@ -965,11 +984,19 @@ const OrderDetails = () => {
 
                   {/* Payment Note */}
                   {(() => {
-                    const remainingAmount = variantPrice - parseFloat(order.total_amount.toString());
-                    return remainingAmount > 0 && (
+                    const bookingAmount = parseFloat(order.total_amount.toString());
+                    const hasValidVariantPrice = firstItem.variant_price && parseFloat(firstItem.variant_price.toString()) > bookingAmount;
+                    const remainingAmount = hasValidVariantPrice 
+                      ? variantPrice - bookingAmount 
+                      : 0; // If no valid variant price, we can't calculate remaining
+                    return (remainingAmount > 0 || !hasValidVariantPrice) && (
                       <div className="mt-6 flex items-start gap-3 text-sm text-muted-foreground">
                         <Info className="w-5 h-5 mt-0.5 flex-shrink-0" />
-                        <p>Otherwise, you can pay the remaining amount at the time of delivery.</p>
+                        <p>
+                          {hasValidVariantPrice 
+                            ? `Remaining amount: ₹${remainingAmount.toLocaleString('en-IN')}. You can pay online or at the time of delivery.`
+                            : 'You can complete the remaining payment online or at the time of delivery.'}
+                        </p>
                       </div>
                     );
                   })()}
@@ -1094,20 +1121,30 @@ const OrderDetails = () => {
               Pay the remaining amount for your order
             </DialogDescription>
           </DialogHeader>
-          {order && (
-            <PayUPayment
-              amount={variantPrice - parseFloat(order.total_amount.toString())}
-              productInfo={`${firstItem.product_name} - ${firstItem.variant} - ${firstItem.color} (Remaining Payment)`}
-              customerDetails={{
-                firstName: order.customer_details?.first_name || order.customer_name?.split(' ')[0] || '',
-                email: order.customer_details?.email || '',
-                phone: order.customer_details?.phone || order.customer_details?.mobile || ''
-              }}
-              orderId={order.id}
-              onSuccess={handlePaymentSuccess}
-              onFailure={handlePaymentFailure}
-            />
-          )}
+          {order && (() => {
+            // Calculate the actual remaining amount
+            const totalPaid = transactions.reduce((sum, txn) => sum + parseFloat(txn.amount.toString()), 0);
+            const bookingAmount = parseFloat(order.total_amount.toString());
+            const hasValidVariantPrice = firstItem.variant_price && parseFloat(firstItem.variant_price.toString()) > bookingAmount;
+            const actualRemainingAmount = hasValidVariantPrice 
+              ? variantPrice - totalPaid
+              : variantPrice - bookingAmount; // Fallback calculation
+            
+            return (
+              <PayUPayment
+                amount={Math.max(actualRemainingAmount, 1)} // Ensure minimum 1 rupee for testing
+                productInfo={`${firstItem.product_name || firstItem.name} - ${firstItem.variant} - ${firstItem.color} (Remaining Payment)`}
+                customerDetails={{
+                  firstName: order.customer_details?.first_name || order.customer_name?.split(' ')[0] || '',
+                  email: order.customer_details?.email || '',
+                  phone: order.customer_details?.phone || order.customer_details?.mobile || ''
+                }}
+                orderId={order.id}
+                onSuccess={handlePaymentSuccess}
+                onFailure={handlePaymentFailure}
+              />
+            );
+          })()}
         </DialogContent>
       </Dialog>
     </div>
