@@ -1072,15 +1072,16 @@ const Profile = () => {
                       const deliveryDate = order.estimated_delivery_date || order.created_at;
                       
                       return (
-                        <div key={order.id} className="border border-gray-200 p-6">
-                          <div className="mb-4">
-                            <h3 className="text-base font-semibold text-gray-900">
+                        <div key={order.id} className="border border-gray-200 p-4 md:p-6">
+                          <div className="mb-3 md:mb-4">
+                            <h3 className="text-sm md:text-base font-semibold text-gray-900">
                               Delivered on {format(new Date(deliveryDate), 'MMM dd, yyyy')}
                             </h3>
                           </div>
 
-                          <div className="flex gap-6">
-                            <div className="w-32 h-32 flex-shrink-0 bg-gray-100 overflow-hidden">
+                          <div className="flex flex-col md:flex-row gap-4 md:gap-6">
+                            {/* Product Image */}
+                            <div className="w-full md:w-32 h-40 md:h-32 flex-shrink-0 bg-gray-100 overflow-hidden">
                               {firstItem?.image_url ? (
                                 <img 
                                   src={firstItem.image_url} 
@@ -1094,22 +1095,35 @@ const Profile = () => {
                               )}
                             </div>
 
+                            {/* Product Details */}
                             <div className="flex-1">
-                              <h4 className="font-semibold text-lg text-gray-900 mb-2">
-                                {firstItem?.product_name || firstItem?.name || 'Product'}
-                              </h4>
+                              <div className="flex items-start justify-between gap-2 mb-2">
+                                <h4 className="font-semibold text-base md:text-lg text-gray-900">
+                                  {firstItem?.product_name || firstItem?.name || 'Product'}
+                                </h4>
+                                <Badge 
+                                  variant="secondary" 
+                                  className={`md:hidden flex-shrink-0 ${
+                                    order.order_type === 'booking' 
+                                      ? 'bg-orange-100 text-orange-600 hover:bg-orange-100' 
+                                      : 'bg-green-100 text-green-600 hover:bg-green-100'
+                                  }`}
+                                >
+                                  {order.order_type === 'booking' ? 'Booking' : 'Purchased'}
+                                </Badge>
+                              </div>
 
-                              <p className="text-sm text-gray-500 mb-2">
+                              <p className="text-xs md:text-sm text-gray-500 mb-2">
                                 Return or Replace: Eligible through {format(new Date(deliveryDate), 'MMM dd, yyyy')}
                               </p>
 
                               {firstItem?.variant && (
-                                <p className="text-sm text-gray-700 mb-1">
+                                <p className="text-xs md:text-sm text-gray-700 mb-1">
                                   Variant : <span className="font-medium">({firstItem.variant})</span>
                                 </p>
                               )}
 
-                              <div className="flex items-center gap-2 text-sm">
+                              <div className="flex items-center gap-2 text-xs md:text-sm">
                                 <span className="text-gray-700">Colour :</span>
                                 <span className="font-medium text-gray-900">{firstItem?.color || 'Black'}</span>
                                 <div 
@@ -1117,9 +1131,23 @@ const Profile = () => {
                                   style={{ backgroundColor: firstItem?.color_hex || '#000000' }}
                                 ></div>
                               </div>
+
+                              {/* Mobile Price and Button */}
+                              <div className="flex items-center justify-between mt-4 md:hidden">
+                                <p className="text-xl font-bold text-gray-900">
+                                  ₹{order.total_amount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                </p>
+                                <Button 
+                                  onClick={() => navigate(`/orders/${order.id}`)}
+                                  className="bg-black text-white hover:bg-gray-800 px-6 rounded-none text-sm"
+                                >
+                                  View Order
+                                </Button>
+                              </div>
                             </div>
 
-                            <div className="flex flex-col items-end justify-between gap-4">
+                            {/* Desktop Price and Badge */}
+                            <div className="hidden md:flex flex-col items-end justify-between gap-4">
                               <Badge 
                                 variant="secondary" 
                                 className={
