@@ -207,22 +207,34 @@ const OrderDetails = () => {
           // Find all transactions with this order ID in payu_response
           const orderTransactions = transactionData.filter((t: any) => t.payu_response?.order_id === id);
           
-          if (orderTransactions.length > 0) {
+          // Deduplicate by transaction_id - keep only the latest entry per transaction_id
+          const uniqueTransactions = orderTransactions.reduce((acc: any[], txn: any) => {
+            const existingIndex = acc.findIndex((t: any) => t.transaction_id === txn.transaction_id);
+            if (existingIndex === -1) {
+              acc.push(txn);
+            } else if (new Date(txn.created_at) > new Date(acc[existingIndex].created_at)) {
+              // Keep the more recent one
+              acc[existingIndex] = txn;
+            }
+            return acc;
+          }, []);
+          
+          if (uniqueTransactions.length > 0) {
             // Set the latest transaction
             setTransaction({
-              id: orderTransactions[0].id,
-              payment_id: orderTransactions[0].payment_id,
-              transaction_id: orderTransactions[0].transaction_id,
-              amount: orderTransactions[0].amount,
-              status: orderTransactions[0].status,
-              payu_response: orderTransactions[0].payu_response,
-              created_at: orderTransactions[0].created_at,
-              customer_name: orderTransactions[0].customer_name,
-              customer_email: orderTransactions[0].customer_email
+              id: uniqueTransactions[0].id,
+              payment_id: uniqueTransactions[0].payment_id,
+              transaction_id: uniqueTransactions[0].transaction_id,
+              amount: uniqueTransactions[0].amount,
+              status: uniqueTransactions[0].status,
+              payu_response: uniqueTransactions[0].payu_response,
+              created_at: uniqueTransactions[0].created_at,
+              customer_name: uniqueTransactions[0].customer_name,
+              customer_email: uniqueTransactions[0].customer_email
             });
             
-            // Set all transactions for payment history
-            setTransactions(orderTransactions.map((t: any) => ({
+            // Set all unique transactions for payment history
+            setTransactions(uniqueTransactions.map((t: any) => ({
               id: t.id,
               payment_id: t.payment_id,
               transaction_id: t.transaction_id,
