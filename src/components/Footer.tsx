@@ -109,10 +109,10 @@ const Footer = () => {
                   <img
                     src={link.icon_url}
                     alt={link.platform_name}
-                    className="w-7 h-7 object-contain"
+                    className="w-5 h-5 object-contain"
                   />
                 ) : (
-                  <span className="w-7 h-7 bg-white/20 rounded-full" />
+                  <span className="w-5 h-5 bg-white/20 rounded-full" />
                 )}
               </a>
             ))}
