@@ -29,6 +29,8 @@ const DealerApplication = () => {
   const [userName, setUserName] = useState("");
   const [existingEnquiryId, setExistingEnquiryId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   
   const [formData, setFormData] = useState({
     firstName: "",
@@ -56,6 +58,52 @@ const DealerApplication = () => {
   // Load existing application data for this email
   const loadExistingData = useCallback(async (email: string) => {
     try {
+      // First check for submitted applications (pending status)
+      const { data: pendingData, error: pendingError } = await supabase
+        .from('dealer_enquiries')
+        .select('*')
+        .eq('email', email.toLowerCase())
+        .eq('status', 'pending')
+        .order('updated_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (pendingError) {
+        console.error('Error checking pending applications:', pendingError);
+      }
+
+      if (pendingData) {
+        // User already submitted, show read-only view
+        console.log('Found submitted application:', pendingData);
+        setIsSubmitted(true);
+        setFormData({
+          firstName: pendingData.first_name || "",
+          lastName: pendingData.last_name || "",
+          email: pendingData.email || email,
+          mobile: pendingData.phone || "",
+          city: pendingData.city || "",
+          state: pendingData.state || "",
+          pincode: pendingData.pincode || "",
+          areaType: pendingData.area_type || "",
+          preferredLocation: pendingData.preferred_location || "",
+          spaceOwnership: pendingData.space_ownership || "",
+          sitePhotos: [],
+          investmentCapacity: pendingData.investment_capacity || "",
+          spaceAvailable: pendingData.space_available || "",
+          hasExistingBusiness: pendingData.has_existing_business || "",
+          businessName: pendingData.business_name || "",
+          yearsInBusiness: pendingData.years_in_business || "",
+          businessType: pendingData.business_type || "",
+          experience: "",
+          documents: [],
+          gstNumber: pendingData.gst_number || "",
+        });
+        setCurrentStep(5); // Go to review step
+        setIsLoading(false);
+        return;
+      }
+
+      // Check for draft applications
       const { data, error } = await supabase
         .from('dealer_enquiries')
         .select('*')
@@ -71,7 +119,7 @@ const DealerApplication = () => {
       }
 
       if (data) {
-        console.log('Found existing application:', data);
+        console.log('Found existing draft:', data);
         setExistingEnquiryId(data.id);
         setFormData({
           firstName: data.first_name || "",
@@ -202,6 +250,7 @@ const DealerApplication = () => {
   };
 
   const handleSubmit = async () => {
+    setIsSubmitting(true);
     try {
       const submissionData = {
         first_name: formData.firstName,
@@ -244,11 +293,25 @@ const DealerApplication = () => {
         if (error) throw error;
       }
 
+      // Send confirmation email
+      try {
+        await supabase.functions.invoke('send-dealer-confirmation', {
+          body: {
+            email: formData.email || userEmail,
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+          }
+        });
+      } catch (emailErr) {
+        console.error('Failed to send confirmation email:', emailErr);
+        // Don't fail the submission if email fails
+      }
+
+      setIsSubmitted(true);
       toast({
         title: "Application Submitted Successfully!",
-        description: "We'll review your application and get back to you soon.",
+        description: "Your application has been sent to the Yakuza Team. They will connect with you soon.",
       });
-      navigate("/become-dealer");
     } catch (error) {
       console.error('Error submitting application:', error);
       toast({
@@ -256,6 +319,8 @@ const DealerApplication = () => {
         description: "There was an error submitting your application. Please try again.",
         variant: "destructive"
       });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -664,9 +729,27 @@ const DealerApplication = () => {
           {/* Step 5: Review */}
           {currentStep === 5 && (
             <div className="space-y-8">
-              <p className="text-center text-muted-foreground mb-6">
-                Please review your application details before submitting
-              </p>
+              {isSubmitted ? (
+                <div className="text-center py-8">
+                  <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <span className="text-white text-3xl">✓</span>
+                  </div>
+                  <h3 className="text-2xl font-bold mb-4">Application Submitted!</h3>
+                  <p className="text-muted-foreground mb-8">
+                    Your application has been sent to the Yakuza Team.<br />
+                    They will review your details and connect with you soon.
+                  </p>
+                  <div className="bg-muted/50 rounded-lg p-4 max-w-md mx-auto">
+                    <p className="text-sm text-muted-foreground">
+                      A confirmation email has been sent to <strong>{formData.email || userEmail}</strong>
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <p className="text-center text-muted-foreground mb-6">
+                  Please review your application details before submitting
+                </p>
+              )}
               
               {/* Personal Details */}
               <div>
@@ -788,26 +871,41 @@ const DealerApplication = () => {
             </div>
           )}
 
-          {/* Navigation Buttons */}
-          <div className="flex justify-center gap-4 mt-12">
-            <Button
-              onClick={handlePrevious}
-              disabled={currentStep === 0}
-              className={`px-12 h-12 text-base rounded-none ${
-                currentStep === 0 
-                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed' 
-                  : 'bg-gray-300 text-gray-700 hover:bg-gray-400'
-              }`}
-            >
-              Previous
-            </Button>
-            <Button
-              onClick={handleNext}
-              className="px-12 h-12 text-base bg-black text-white hover:bg-black/90 rounded-none"
-            >
-              {currentStep === steps.length - 1 ? "Submit" : "Next"}
-            </Button>
-          </div>
+          {/* Navigation Buttons - Hidden when submitted */}
+          {!isSubmitted && (
+            <div className="flex justify-center gap-4 mt-12">
+              <Button
+                onClick={handlePrevious}
+                disabled={currentStep === 0}
+                className={`px-12 h-12 text-base rounded-none ${
+                  currentStep === 0 
+                    ? 'bg-gray-300 text-gray-500 cursor-not-allowed' 
+                    : 'bg-gray-300 text-gray-700 hover:bg-gray-400'
+                }`}
+              >
+                Previous
+              </Button>
+              <Button
+                onClick={handleNext}
+                disabled={isSubmitting}
+                className="px-12 h-12 text-base bg-black text-white hover:bg-black/90 rounded-none"
+              >
+                {isSubmitting ? "Submitting..." : currentStep === steps.length - 1 ? "Submit" : "Next"}
+              </Button>
+            </div>
+          )}
+          
+          {/* Back to Home button when submitted */}
+          {isSubmitted && (
+            <div className="flex justify-center mt-12">
+              <Button
+                onClick={() => navigate("/")}
+                className="px-12 h-12 text-base bg-black text-white hover:bg-black/90 rounded-none"
+              >
+                Back to Home
+              </Button>
+            </div>
+          )}
         </div>
 
         {/* Footer */}
