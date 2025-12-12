@@ -466,8 +466,8 @@ const OrderDetails = () => {
     <div className="min-h-screen bg-background">
       <Header />
       <div className="container mx-auto px-4 pt-32 pb-8 max-w-7xl">
-        {/* Breadcrumb */}
-        <nav className="text-sm text-muted-foreground mb-6 flex items-center gap-2">
+        {/* Breadcrumb - Hidden on mobile */}
+        <nav className="hidden md:flex text-sm text-muted-foreground mb-6 items-center gap-2">
           <span className="hover:text-foreground cursor-pointer" onClick={() => navigate('/')}>Home</span>
           <ChevronRight className="w-4 h-4" />
           <span className="hover:text-foreground cursor-pointer" onClick={() => navigate('/orders')}>My Orders</span>
