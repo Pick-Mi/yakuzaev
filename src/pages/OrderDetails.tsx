@@ -466,11 +466,11 @@ const OrderDetails = () => {
     <div className="min-h-screen bg-background">
       <Header />
       <div className="container mx-auto px-4 pt-32 pb-8 max-w-7xl">
-        {/* Breadcrumb - Hidden on mobile */}
-        <nav className="hidden md:flex text-sm text-muted-foreground mb-6 items-center gap-2">
+        {/* Breadcrumb */}
+        <nav className="text-sm text-muted-foreground mb-6 flex items-center gap-2">
           <span className="hover:text-foreground cursor-pointer" onClick={() => navigate('/')}>Home</span>
-          <ChevronRight className="w-4 h-4" />
-          <span className="hover:text-foreground cursor-pointer" onClick={() => navigate('/orders')}>My Orders</span>
+          <ChevronRight className="w-4 h-4 hidden md:block" />
+          <span className="hover:text-foreground cursor-pointer hidden md:inline" onClick={() => navigate('/orders')}>My Orders</span>
           <ChevronRight className="w-4 h-4" />
           <span className="text-foreground">OD{order.order_number || order.id.slice(0, 12)}</span>
         </nav>
