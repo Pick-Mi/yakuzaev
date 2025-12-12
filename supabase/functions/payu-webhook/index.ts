@@ -91,6 +91,74 @@ serve(async (req) => {
         } else {
           console.log('Order payment status updated to completed for order:', orderId)
         }
+
+        // Fetch order details to send confirmation email
+        const { data: orderData, error: fetchError } = await supabase
+          .from('orders')
+          .select('*')
+          .eq('id', orderId)
+          .single()
+
+        if (fetchError) {
+          console.error('Error fetching order for email:', fetchError)
+        } else if (orderData && params.email) {
+          // Send order confirmation email
+          console.log('Sending order confirmation email...')
+          
+          // Parse order items from order_items_data
+          const orderItems = orderData.order_items_data || []
+          const items = Array.isArray(orderItems) 
+            ? orderItems.map((item: any) => ({
+                name: item.name || item.product_name || 'Product',
+                quantity: item.quantity || 1,
+                price: item.price || item.total_price || 0,
+                variant: item.variant || item.color || ''
+              }))
+            : []
+
+          // Build shipping address from order data
+          const shippingAddress = orderData.shipping_address || orderData.delivery_address || {}
+
+          try {
+            const emailResponse = await fetch(
+              `${Deno.env.get('SUPABASE_URL')}/functions/v1/send-order-confirmation`,
+              {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${Deno.env.get('SUPABASE_ANON_KEY')}`
+                },
+                body: JSON.stringify({
+                  orderId: orderId,
+                  orderNumber: orderData.order_number,
+                  customerName: params.firstname || '',
+                  customerEmail: params.email,
+                  customerPhone: params.phone || '',
+                  items: items,
+                  totalAmount: amount,
+                  shippingAddress: {
+                    street: shippingAddress.street || shippingAddress.address || '',
+                    city: shippingAddress.city || '',
+                    state: shippingAddress.state || '',
+                    postalCode: shippingAddress.postal_code || shippingAddress.pincode || '',
+                    country: shippingAddress.country || 'India'
+                  },
+                  paymentMethod: params.mode || 'PayU',
+                  transactionId: transactionId
+                })
+              }
+            )
+
+            if (emailResponse.ok) {
+              console.log('✅ Order confirmation email sent successfully')
+            } else {
+              const errorText = await emailResponse.text()
+              console.error('Failed to send order confirmation email:', errorText)
+            }
+          } catch (emailError) {
+            console.error('Error sending order confirmation email:', emailError)
+          }
+        }
       } else if (status === 'failure') {
         // Handle failed payment
         console.log('Payment failed for order:', orderId)
