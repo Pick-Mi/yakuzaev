@@ -594,39 +594,47 @@ const OrderDetails = () => {
 
               {/* Product Card */}
               <div className="bg-white border-b pb-6 mb-6">
-                <div className="flex gap-6">
-                  <div className="w-52 h-52 bg-muted flex items-center justify-center overflow-hidden flex-shrink-0">
+                <div className="flex flex-col md:flex-row gap-4 md:gap-6">
+                  {/* Product Image */}
+                  <div className="w-full md:w-52 h-48 md:h-52 bg-muted flex items-center justify-center overflow-hidden flex-shrink-0">
                     <img src={firstItem.image_url || heroScooter} alt={firstItem.name || 'Product'} className="w-full h-full object-cover" />
                   </div>
-                  <div className="flex-1 space-y-3">
-                    <h2 className="text-2xl font-semibold">
-                      {firstItem.product_name || firstItem.name || 'Product'}
-                    </h2>
-                    <Badge 
-                      variant="secondary" 
-                      className={
-                        order.order_type === 'booking' 
-                          ? 'bg-orange-100 text-orange-600 hover:bg-orange-100' 
-                          : 'bg-green-100 text-green-600 hover:bg-green-100'
-                      }
-                    >
-                      {order.order_type === 'booking' ? 'Booking' : 'Purchased'}
-                    </Badge>
-                    <p className="text-sm">
+                  
+                  {/* Product Details */}
+                  <div className="flex-1 space-y-2 md:space-y-3">
+                    <div className="flex items-start justify-between gap-2">
+                      <h2 className="text-xl md:text-2xl font-semibold">
+                        {firstItem.product_name || firstItem.name || 'Product'}
+                      </h2>
+                      <Badge 
+                        variant="secondary" 
+                        className={`flex-shrink-0 ${
+                          order.order_type === 'booking' 
+                            ? 'bg-orange-100 text-orange-600 hover:bg-orange-100' 
+                            : 'bg-green-100 text-green-600 hover:bg-green-100'
+                        }`}
+                      >
+                        {order.order_type === 'booking' ? 'Booking' : 'Purchased'}
+                      </Badge>
+                    </div>
+                    
+                    <p className="text-xs md:text-sm">
                       <span className="text-foreground">Variant : </span>
                       <span className="font-medium">{firstItem.variant || 'YAKUZA NEU 43V'}</span>
                     </p>
-                    <div className="flex items-center gap-2 text-sm">
+                    
+                    <div className="flex items-center gap-2 text-xs md:text-sm">
                       <span className="text-foreground">Colour :</span>
                       <span className="font-medium">{firstItem.color || 'Blue'}</span>
                       <div 
-                        className="w-5 h-5 border border-gray-300" 
+                        className="w-4 h-4 md:w-5 md:h-5 border border-gray-300" 
                         style={{
                           backgroundColor: firstItem.color_hex || '#000000'
                         }} 
                       />
                     </div>
-                    <p className="text-3xl font-bold pt-2">
+                    
+                    <p className="text-2xl md:text-3xl font-bold pt-2">
                       ₹{(firstItem.variant_price 
                         ? parseFloat(firstItem.variant_price.toString()) 
                         : parseFloat(order.total_amount.toString())
