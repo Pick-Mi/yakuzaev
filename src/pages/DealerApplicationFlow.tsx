@@ -31,20 +31,17 @@ const DealerApplicationFlow = () => {
     setIsSendingOtp(true);
 
     try {
-      // Use edge function to send OTP via Resend
-      const { data, error } = await supabase.functions.invoke('send-email-otp', {
-        body: { email: email.toLowerCase() }
+      // Use Supabase Auth's built-in OTP email functionality
+      const { error } = await supabase.auth.signInWithOtp({
+        email: email.toLowerCase(),
+        options: {
+          shouldCreateUser: false,
+        }
       });
 
       if (error) {
         console.error('Error sending OTP:', error);
-        toast.error('Failed to send verification code. Please try again.');
-        setIsSendingOtp(false);
-        return;
-      }
-
-      if (data?.error) {
-        toast.error(data.error);
+        toast.error(error.message || 'Failed to send verification code. Please try again.');
         setIsSendingOtp(false);
         return;
       }
@@ -71,20 +68,16 @@ const DealerApplicationFlow = () => {
     setIsVerifying(true);
 
     try {
-      // Use edge function to verify OTP
-      const { data, error } = await supabase.functions.invoke('verify-email-otp', {
-        body: { email: email.toLowerCase(), otp }
+      // Use Supabase Auth's built-in OTP verification
+      const { error } = await supabase.auth.verifyOtp({
+        email: email.toLowerCase(),
+        token: otp,
+        type: 'email'
       });
 
       if (error) {
         console.error('Error verifying OTP:', error);
-        toast.error('Failed to verify code. Please try again.');
-        setIsVerifying(false);
-        return;
-      }
-
-      if (data?.error) {
-        toast.error(data.error);
+        toast.error(error.message || 'Invalid verification code. Please try again.');
         setIsVerifying(false);
         return;
       }
