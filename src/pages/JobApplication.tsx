@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -51,6 +51,12 @@ const applicationSchema = z.object({
 
 type ApplicationForm = z.infer<typeof applicationSchema>;
 
+interface JobData {
+  title: string;
+  type: string;
+  locations: string[];
+}
+
 const JobApplication = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -59,11 +65,35 @@ const JobApplication = () => {
   const [resumeFile, setResumeFile] = useState<File | null>(null);
   const [isParsingResume, setIsParsingResume] = useState(false);
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
+  const [jobData, setJobData] = useState<JobData>({
+    title: "",
+    type: "",
+    locations: [],
+  });
 
-  const jobData = {
-    title: "Technical Support",
-    type: "Full-time",
-  };
+  // Fetch job details from database
+  useEffect(() => {
+    const fetchJobData = async () => {
+      if (!id) return;
+      
+      const { data, error } = await supabase
+        .from('job_posts')
+        .select('title, job_type, location')
+        .eq('slug', id)
+        .maybeSingle();
+      
+      if (data) {
+        const locations = Array.isArray(data.location) ? data.location as string[] : [];
+        setJobData({
+          title: data.title || "",
+          type: data.job_type || "",
+          locations: locations,
+        });
+      }
+    };
+    
+    fetchJobData();
+  }, [id]);
 
   const {
     register,
@@ -426,10 +456,15 @@ const JobApplication = () => {
                           <SelectValue placeholder="Select" />
                         </SelectTrigger>
                         <SelectContent className="bg-popover z-50">
-                          <SelectItem value="Bengaluru">Bengaluru</SelectItem>
-                          <SelectItem value="Chennai">Chennai</SelectItem>
-                          <SelectItem value="Mumbai">Mumbai</SelectItem>
-                          <SelectItem value="Singapore">Singapore</SelectItem>
+                          {jobData.locations.length > 0 ? (
+                            jobData.locations.map((location) => (
+                              <SelectItem key={location} value={location}>
+                                {location}
+                              </SelectItem>
+                            ))
+                          ) : (
+                            <SelectItem value="any" disabled>No locations available</SelectItem>
+                          )}
                         </SelectContent>
                       </Select>
                     </div>
