@@ -19,9 +19,9 @@ const ProductCard = ({ product }: ProductCardProps) => {
   const { name, thumbnail, feature1, feature2, price } = product;
 
   return (
-    <div className="bg-white w-full overflow-hidden shadow-sm h-auto flex flex-col">
-      {/* Product Image */}
-      <div className="w-full bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden h-[280px]">
+    <div className="bg-white w-full overflow-hidden shadow-sm lg:hover:shadow-lg transition-all duration-300 group h-auto lg:h-[600px] flex flex-col">
+      {/* Product Image - shrinks on hover (desktop only) */}
+      <div className="w-full bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden transition-all duration-300 h-[280px] lg:h-[380px] lg:group-hover:h-[280px]">
         <img
           src={thumbnail}
           alt={name}
@@ -51,8 +51,8 @@ const ProductCard = ({ product }: ProductCardProps) => {
           </div>
         </div>
 
-        {/* Action Buttons - Always visible */}
-        <div className="mt-4">
+        {/* Action Buttons - Always visible on mobile/tablet, hover on desktop */}
+        <div className="mt-4 lg:overflow-hidden lg:transition-all lg:duration-300 lg:max-h-0 lg:opacity-0 lg:group-hover:max-h-40 lg:group-hover:opacity-100 lg:group-hover:mt-4 lg:mt-0">
           <div className="w-full h-px bg-gray-300 mb-4" />
           <div className="flex flex-col gap-3">
             <Link to={`/products/${product.slug}`} className="w-full">
