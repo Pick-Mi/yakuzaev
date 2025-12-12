@@ -114,26 +114,19 @@ serve(async (req) => {
       }
       
       
-      // Build redirect URL with order ID from udf2
+      // Build redirect URL - always go to payment-success/failure page with params
+      // This ensures session is restored before navigating to protected routes
       const baseUrl = Deno.env.get('SITE_URL') || 'https://preview--yakuzaev.lovable.app'
-      const orderIdFromUdf = params.udf2 // Order ID stored in udf2
       
-      // Redirect to order details page if order ID is available, otherwise to generic success/failure page
-      let redirectPath = status === 'success' ? '/payment-success' : '/payment-failure'
-      if (orderIdFromUdf) {
-        redirectPath = `/orders/${orderIdFromUdf}`
-      }
-      
+      const redirectPath = status === 'success' ? '/payment-success' : '/payment-failure'
       const redirectUrl = new URL(redirectPath, baseUrl)
       
-      // Only add parameters if going to generic payment page (not order details)
-      if (!orderIdFromUdf) {
-        Object.entries(params).forEach(([key, value]) => {
-          if (value) {
-            redirectUrl.searchParams.set(key, value)
-          }
-        })
-      }
+      // Add all parameters to URL for verification
+      Object.entries(params).forEach(([key, value]) => {
+        if (value) {
+          redirectUrl.searchParams.set(key, value)
+        }
+      })
       
       console.log('Redirecting to:', redirectUrl.toString())
       
