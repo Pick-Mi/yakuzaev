@@ -559,9 +559,9 @@ const Profile = () => {
         <h1 className="text-2xl font-bold mb-6 md:hidden">Account</h1>
         
         {/* Mobile: Horizontal Tabs */}
-        <div className="md:hidden mb-6 border-b border-gray-200 overflow-x-auto">
+        <div className="md:hidden mb-6 border-b border-gray-200 overflow-x-auto scrollbar-hide">
           <nav className="flex whitespace-nowrap">
-            {menuItems.slice(0, 3).map((item) => (
+            {menuItems.map((item) => (
               <button
                 key={item.id}
                 onClick={() => handleSectionChange(item.id)}
@@ -571,7 +571,7 @@ const Profile = () => {
                     : "border-transparent text-muted-foreground"
                 }`}
               >
-                {item.id === "profile" ? "Profile Details" : item.id === "address" ? "Delivery Addresses" : "Identification"}
+                {item.label}
               </button>
             ))}
           </nav>
