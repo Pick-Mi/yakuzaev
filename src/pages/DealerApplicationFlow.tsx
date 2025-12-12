@@ -31,19 +31,17 @@ const DealerApplicationFlow = () => {
     setIsSendingOtp(true);
 
     try {
-      const { data, error } = await supabase.functions.invoke('send-email-otp', {
-        body: { email }
+      // Use Supabase Auth's built-in OTP email functionality
+      const { error } = await supabase.auth.signInWithOtp({
+        email: email.toLowerCase(),
+        options: {
+          shouldCreateUser: true,
+        }
       });
 
       if (error) {
         console.error('Error sending OTP:', error);
-        toast.error('Failed to send verification code. Please try again.');
-        setIsSendingOtp(false);
-        return;
-      }
-
-      if (data?.error) {
-        toast.error(data.error);
+        toast.error(error.message || 'Failed to send verification code. Please try again.');
         setIsSendingOtp(false);
         return;
       }
@@ -62,7 +60,7 @@ const DealerApplicationFlow = () => {
   };
 
   const handleOTPVerify = async () => {
-    if (otp.length !== 4) {
+    if (otp.length !== 6) {
       toast.error("Please enter complete OTP");
       return;
     }
@@ -70,19 +68,16 @@ const DealerApplicationFlow = () => {
     setIsVerifying(true);
 
     try {
-      const { data, error } = await supabase.functions.invoke('verify-email-otp', {
-        body: { email, otp }
+      // Use Supabase Auth's built-in OTP verification
+      const { error } = await supabase.auth.verifyOtp({
+        email: email.toLowerCase(),
+        token: otp,
+        type: 'email'
       });
 
       if (error) {
         console.error('Error verifying OTP:', error);
-        toast.error('Failed to verify code. Please try again.');
-        setIsVerifying(false);
-        return;
-      }
-
-      if (data?.error) {
-        toast.error(data.error);
+        toast.error(error.message || 'Invalid verification code. Please try again.');
         setIsVerifying(false);
         return;
       }
@@ -177,10 +172,10 @@ const DealerApplicationFlow = () => {
       <div className="max-w-2xl w-full bg-white p-12 md:p-16 shadow-sm">
         <div className="text-center space-y-4 mb-8">
           <h2 className="text-2xl md:text-3xl font-normal">
-            Verify your Authenticator app
+            Verify your email
           </h2>
           <p className="text-sm">
-            We emailed you a four digit code to <span className="font-medium">{email}</span>
+            We emailed you a six digit code to <span className="font-medium">{email}</span>
             <br />
             <Button
               type="button"
@@ -197,15 +192,17 @@ const DealerApplicationFlow = () => {
         <div className="space-y-8">
           <div className="flex justify-center gap-3">
             <InputOTP
-              maxLength={4}
+              maxLength={6}
               value={otp}
               onChange={(value) => setOtp(value)}
             >
-              <InputOTPGroup className="gap-3">
-                <InputOTPSlot index={0} className="w-14 h-14 text-xl" />
-                <InputOTPSlot index={1} className="w-14 h-14 text-xl" />
-                <InputOTPSlot index={2} className="w-14 h-14 text-xl" />
-                <InputOTPSlot index={3} className="w-14 h-14 text-xl" />
+              <InputOTPGroup className="gap-2">
+                <InputOTPSlot index={0} className="w-12 h-12 text-xl" />
+                <InputOTPSlot index={1} className="w-12 h-12 text-xl" />
+                <InputOTPSlot index={2} className="w-12 h-12 text-xl" />
+                <InputOTPSlot index={3} className="w-12 h-12 text-xl" />
+                <InputOTPSlot index={4} className="w-12 h-12 text-xl" />
+                <InputOTPSlot index={5} className="w-12 h-12 text-xl" />
               </InputOTPGroup>
             </InputOTP>
           </div>
@@ -229,7 +226,7 @@ const DealerApplicationFlow = () => {
           <div className="flex justify-center">
             <Button 
               onClick={handleOTPVerify}
-              disabled={isVerifying || otp.length !== 4}
+              disabled={isVerifying || otp.length !== 6}
               className="px-12 h-12 bg-black text-white hover:bg-black/90 rounded-none"
             >
               {isVerifying ? "Verifying..." : "Verify"}
